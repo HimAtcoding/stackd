@@ -1,1 +1,340 @@
 @import "tailwindcss";
+
+/* Pressed and focus states, also forced with data attributes on /dev/components */
+@custom-variant pressed (&:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]));
+@custom-variant focus-ring (&:is(:focus-visible, [data-focus]));
+@custom-variant field-focus (&:is(:focus, [data-focus]):not(:read-only));
+
+:root {
+  --blue-600: #0364fa;
+  --blue-700: #0252d1;
+  --blue-100: #d9ebfa;
+  --blue-50: #e2f0fd;
+  --blue-50-border: #cfe3fa;
+  --sky-200: #b8e7fd;
+  --sky-100: #d3effd;
+  --sky-50: #eaf6fe;
+  --surface: #fafcfe;
+  --white: #ffffff;
+  --navy-900: #051042;
+  --slate-700: #3f4a6e;
+  --slate-600: #5e6b96;
+  --slate-400: #8590ac;
+  --border: #e3ecf7;
+  --border-strong: #cfdaec;
+  --field-border: #8090b8;
+  --surface-pressed: #f1f6fc;
+  --tint-sky: #e4f4fd;
+  --tint-indigo: #eaedfd;
+  --node-empty: #e9f3fc;
+  --green-600: #40a459;
+  --mint-100: #d2f3ec;
+  --mint-800: #0a6c44;
+  --coral-500: #fc5e3c;
+  --coral-700: #b8361b;
+  --coral-50: #fee3e0;
+  --coral-25: #fcebec;
+  --amber-50: #fcf1d2;
+  --amber-500: #eaa005;
+  --yellow-400: #fdc940;
+  --confetti-sky: #4fa8f7;
+
+  --gutter-card: 16px;
+  --gutter-text: 24px;
+  --card-pad: 16px;
+  --tile-pad: 12px;
+  --gap-grid: 12px;
+  --gap-section: 20px;
+  --gap-title: 12px;
+
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-sheet: 24px;
+  --r-full: 999px;
+
+  --shadow-card: 0 1px 2px rgba(5, 16, 66, 0.04), 0 6px 16px rgba(5, 16, 66, 0.05);
+  --shadow-float: 0 4px 12px rgba(5, 16, 66, 0.1);
+  --shadow-cta: 0 8px 20px rgba(3, 100, 250, 0.28);
+
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+
+  /* Safe areas as variables so screenshots can simulate an installed iPhone app */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --strip-h: 24px;
+}
+
+@theme {
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-blue-600: var(--blue-600);
+  --color-blue-700: var(--blue-700);
+  --color-blue-100: var(--blue-100);
+  --color-blue-50: var(--blue-50);
+  --color-blue-50-border: var(--blue-50-border);
+  --color-sky-200: var(--sky-200);
+  --color-sky-100: var(--sky-100);
+  --color-sky-50: var(--sky-50);
+  --color-surface: var(--surface);
+  --color-white: var(--white);
+  --color-navy-900: var(--navy-900);
+  --color-slate-700: var(--slate-700);
+  --color-slate-600: var(--slate-600);
+  --color-slate-400: var(--slate-400);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-field-border: var(--field-border);
+  --color-surface-pressed: var(--surface-pressed);
+  --color-tint-sky: var(--tint-sky);
+  --color-tint-indigo: var(--tint-indigo);
+  --color-node-empty: var(--node-empty);
+  --color-green-600: var(--green-600);
+  --color-mint-100: var(--mint-100);
+  --color-mint-800: var(--mint-800);
+  --color-coral-500: var(--coral-500);
+  --color-coral-700: var(--coral-700);
+  --color-coral-50: var(--coral-50);
+  --color-coral-25: var(--coral-25);
+  --color-amber-50: var(--amber-50);
+  --color-amber-500: var(--amber-500);
+  --color-yellow-400: var(--yellow-400);
+  --color-confetti-sky: var(--confetti-sky);
+
+  --radius-*: initial;
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-sheet: var(--r-sheet);
+  --radius-full: var(--r-full);
+
+  --shadow-*: initial;
+
+  --font-sans: var(--font-figtree), -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+@utility shadow-float {
+  box-shadow: var(--shadow-float);
+}
+@utility shadow-cta {
+  box-shadow: var(--shadow-cta);
+}
+
+/* Type scale from 00-foundations */
+@utility type-celebrate {
+  font-size: 72px;
+  line-height: 68px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+@utility type-display {
+  font-size: 38px;
+  line-height: 42px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+@utility type-title-1 {
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+@utility type-title-2 {
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+@utility type-title-3 {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+}
+@utility type-headline {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+}
+@utility type-row-title {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+@utility type-body-lg {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+}
+@utility type-body {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+}
+@utility type-body-md {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+}
+@utility type-label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+}
+@utility type-pill {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+}
+@utility type-caption {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+}
+@utility type-tab {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+}
+@utility type-button-lg {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+}
+@utility type-button {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+}
+@utility type-link {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+}
+@utility type-segment {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+}
+@utility type-demo {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--sky-50);
+    color: var(--navy-900);
+    font-family: var(--font-sans);
+  }
+  :where(:focus-visible, [data-focus]) {
+    outline: 2px solid var(--blue-600);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Ring spinner: primary button (white) and social buttons (navy) */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+/* One non-triggered moment on Welcome and Sign in: the husky fades up once its art loads */
+@keyframes art-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.art-reveal {
+  opacity: 0;
+}
+.art-reveal[data-loaded] {
+  animation: art-reveal var(--dur-slow) var(--ease-out) 120ms both;
+}
+
+/* Toast enter and exit */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+.toast-in {
+  animation: toast-in var(--dur-base) var(--ease-out) both;
+}
+.toast-out {
+  animation: toast-out 160ms var(--ease-out) both;
+}
+
+/* 200 ms crossfade for navigations tagged "crossfade" */
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+  .art-reveal,
+  .art-reveal[data-loaded] {
+    animation: none;
+    opacity: 1;
+  }
+  .toast-in {
+    animation: fade-in var(--dur-fast) linear both;
+  }
+  .toast-out {
+    animation: fade-out var(--dur-fast) linear both;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--dur-fast);
+  }
+}

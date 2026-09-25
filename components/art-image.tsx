@@ -1,0 +1,42 @@
+"use client";
+
+import Image from "next/image";
+import { useState, type CSSProperties } from "react";
+import { cn } from "@/lib/cn";
+
+type ArtImageProps = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  fill?: boolean;
+  priority?: boolean;
+  reveal?: boolean;
+  className?: string;
+  style?: CSSProperties;
+};
+
+// Art never blocks layout: a file that fails to load is simply hidden.
+export function ArtImage({ src, alt, width, height, fill, priority, reveal, className, style }: ArtImageProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      fill={fill}
+      preload={priority}
+      placeholder="empty"
+      unoptimized={src.endsWith(".svg")}
+      data-loaded={loaded ? "" : undefined}
+      onLoad={() => setLoaded(true)}
+      onError={() => setFailed(true)}
+      className={cn(reveal && "art-reveal", className)}
+      style={style}
+    />
+  );
+}
