@@ -21,7 +21,6 @@ Everything in normal prose is the spec as written (tightened, not changed in mea
 | `07-requirement-search.md` | Requirement → valid courses, and multi-university coverage |
 | `08-recommendation-engine.md` | Modes, scoring factors, semester planning. All post-MVP. |
 | `09-mvp-scope.md` | What ships first, what explicitly does not |
-| `10-ux-flows.md` | Screens, copy rules, empty and error states (not yet added to this repo) |
 | `11-tech-architecture.md` | Stack, layer separation, repo layout |
 | `12-data-pipeline.md` | How academic data gets in, gets validated, and gets refreshed |
 | `13-distribution-and-app-store.md` | Launch, growth, SEO, and the honest path to an App Store listing |
