@@ -8,3 +8,7 @@ build/
 .DS_Store
 *.log
 .claude/settings.local.json
+/coverage
+*.pem
+*.tsbuildinfo
+next-env.d.ts
