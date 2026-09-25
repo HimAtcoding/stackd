@@ -45,7 +45,11 @@ Alignment: everything is centered on the vertical axis. This is the only centere
 
 1. **Background**: `linear-gradient(180deg, var(--sky-200) 0%, var(--sky-100) 45%, var(--sky-50) 100%)`, full screen including under the status bar.
 2. **Scene art** (`welcome-scene`): `position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 560px; object-fit: cover; object-position: center bottom;`. On viewports shorter than 760, height is `calc(100dvh - 300px)`, minimum 360.
-3. **Husky** (`husky-welcome`): a separate image so it can animate later. Positioned within the scene: width 300, `left: 50%`, translateX(-55%), bottom = 176 + safe-area bottom. In the mockup it sits in front of the book stack, slightly left of center.
+3. **Husky** (`husky-welcome`): a separate image so it can animate later. It sits in a zone between the text and the bottom stack, and shrinks to fit that zone, so it never goes behind the text. The mockup has no status bar, so at full size it would overlap the body text on a real phone.
+   - **Zone**: from 16 below the body text down to 176 + safe-area bottom above the bottom edge. Build it as a `flex: 1; min-height: 0` item in the page's column, with `padding-bottom: calc(176px + env(safe-area-inset-bottom))`.
+   - **Husky**: `height: min(380px, 100%)`, `width: auto`, aligned to the zone's bottom, centered with translateX(-5%) (slightly left of center, as drawn, in front of the book stack).
+   - At 393 × 852 the zone is about 265 tall, so the husky renders about 265 × 209. At 430 × 932 it's about 330 tall.
+   - If the zone is under 160 tall (small phones like 320 × 568), hide the husky. The scene art still shows. Use a container query (`container-type: size` on the zone, `@container (max-height: 159px)`).
 4. **Bottom scrim**: `position: absolute; bottom: 0; height: calc(152px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(234,246,254,0) 0%, rgba(234,246,254,.92) 48px);`. The mockup has no scrim. It's needed because the disclaimer line sits over art. Minimal deviation.
 5. **Content column**: the text at the top and the CTA stack at the bottom.
 
@@ -76,7 +80,8 @@ Reading order: wordmark, headline (`h1`), body, CTA, footer line. The scene and 
 
 ## Test
 
-- At 320 × 568 (iPhone SE 1st gen), headline, body, CTA, and footer line don't overlap, and the art shrinks.
+- At 320 × 568 (iPhone SE 1st gen), headline, body, CTA, and footer line don't overlap, the scene art shrinks, and the husky is hidden.
+- At 393 × 852 the husky's top edge is at least 16 below the body text.
 - At 430 × 932, the art stays anchored to the bottom with no gap under it.
 - The CTA's bottom edge sits at least 12 above the home indicator.
 - Deleting `welcome-scene` leaves a working screen.

@@ -150,3 +150,7 @@ In the order they unblock screens:
 8. `husky-model-sheet`: before any new pose is drawn
 
 Until each arrives, the build uses a labelled placeholder: a `--tint-sky` block the same size with the asset ID in `caption` text. Layouts don't shift when the real file lands.
+
+- **Small art** (under 48 on either side, like `burst-dashes` and the provider logos): the box shows no text. The asset ID goes in a `data-asset` attribute instead.
+- **Background decoration** (`home-clouds`, `celebrate-clouds-*`, `confetti-static`): no placeholder at all. These have no layout role, and the screen is complete without them.
+- **`logo-apple`** placeholder: 17 × 20, the Apple glyph's proportions.

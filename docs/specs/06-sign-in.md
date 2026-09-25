@@ -110,6 +110,8 @@ The labelled divider component (00): 24 tall, 12 below the button. Two 1 px `--b
 
 Social button component (00), 48 tall, gap 12, the first one 12 below the divider.
 
+**While an Apple or Google sign-in is pending**: the tapped button shows a 20 px `--navy-900` ring spinner (2 px stroke, 800 ms linear) in place of its logo, and its label stays. The other social button and the Sign in button get `disabled`, and both fields become `readOnly`. The Sign in button shows no spinner, because it isn't the thing the student tapped. Everything returns to normal when the call resolves.
+
 | Button | Logo | Label | Action |
 |---|---|---|---|
 | Apple | Apple logo, black `#000000`, 20 tall | "Continue with Apple" | `auth.signInWithOAuth("apple")` |

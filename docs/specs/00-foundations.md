@@ -295,7 +295,7 @@ Motion only answers a user action. The one exception allowed per screen is noted
 
 ## Data rule
 
-No copy that describes the student's academic situation lives in a component. Names, counts, statuses, dates, and the journey steps all come from `data/demo/*.json`, and each record has `"demo": true`. Deleting those files must give empty states, not blank screens. Copy that is part of the interface itself ("Upcoming", "Keep going") lives in components.
+No copy that describes the student's academic situation lives in a component. Names, counts, statuses, dates, and the journey steps all come from JSON files in `data/seed/` (the folder `CLAUDE.md` and `11-tech-architecture.md` already name), and each record has `"demo": true`. File names used in the screen specs (`home.json`, `essays.json`, `universities/uc-davis.json`) are relative to `data/seed/`. Deleting those files must give empty states, not blank screens. Copy that is part of the interface itself ("Upcoming", "Keep going") lives in components.
 
 ## Normalizations (reversible)
 

@@ -53,7 +53,8 @@ Tab bar: Home · Explore · Essays · Mentors
 - Switching between Sign in and Create account replaces the history entry, so Back doesn't bounce between them.
 - The email field's contents follow the student across the three auth screens, in memory only.
 - Signing in or creating an account replaces the history entry with Home, so Back never returns to an auth screen.
-- Every screen except Welcome and the three auth screens needs a session. Without one, redirect to `/sign-in`.
+- Every screen except Welcome and the three auth screens needs a session. Without one: if `stackd.seenWelcome` isn't set, redirect to `/welcome`; otherwise redirect to `/sign-in`.
+- Tab bar destinations that aren't built yet (`/explore`, `/essays`, `/mentors`) render the placeholder screen, never a 404.
 - Tabs switch instantly and keep their own scroll position.
 - The university screen is pushed over Home. Back returns to Home at the same scroll position.
 - The task-complete modal returns to the screen it covered ("Keep going") or goes to Home ("View progress").

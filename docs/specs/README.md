@@ -48,7 +48,7 @@ Each step depends on the one before it.
 |---|---|---|---|
 | 1 | Tokens, Figtree, Phosphor, shared components, tab bar, demo strip, placeholder screen | `00`, `flows-and-states` | A component page at `/dev/components` renders every shared component in every state |
 | 2 | Welcome | `01` | The test list in `01` passes at 320, 393, and 430 wide |
-| 3 | Sign in, demo auth, and the signed-out redirect | `06` | The test list in `06` passes, and a signed-out visit to `/` lands on Sign in |
+| 3 | Sign in, demo auth, and the signed-out redirect | `06` | The test list in `06` passes. A visit to `/` with no session lands on Welcome if Welcome hasn't been seen, and on Sign in if it has |
 | 4 | Create account | `07` | The test list in `07` passes |
 | 5 | Forgot password | `08` | The test list in `08` passes |
 | 6 | Home | `02` | The test list in `02` passes, including the greeting from Create account |
