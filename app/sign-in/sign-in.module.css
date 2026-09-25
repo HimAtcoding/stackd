@@ -1,0 +1,13 @@
+.screen {
+  background: linear-gradient(180deg, var(--sky-100) 0, var(--sky-50) 320px) no-repeat, var(--sky-50);
+}
+
+.husky {
+  --husky-w: 176px;
+  width: var(--husky-w);
+}
+@media (max-width: 359px) {
+  .husky {
+    --husky-w: 144px;
+  }
+}

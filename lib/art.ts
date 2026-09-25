@@ -4,6 +4,7 @@ export const ART = {
   wordmark: { src: "/art/brand/wordmark.svg" },
   "welcome-scene": { src: "/art/scenes/welcome-scene.png" },
   "husky-welcome": { src: "/art/husky/husky-welcome.png", width: 300, height: 380 },
+  "home-clouds": { src: "/art/scenes/home-clouds.png" },
   "husky-wave": { src: "/art/husky/husky-wave.png", width: 176, height: 186 },
   "burst-dashes": { src: "/art/decor/burst-dashes.svg", width: 28, height: 28 },
   "logo-apple": { src: "/art/brand/logo-apple.svg", width: 17, height: 20 },
