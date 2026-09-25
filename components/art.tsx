@@ -15,7 +15,7 @@ type ArtProps = {
   style?: CSSProperties;
   // Accessible name. Without one the art is decorative.
   label?: string;
-  priority?: boolean;
+  preload?: boolean;
   // Fade the art up once it has loaded (Welcome and Sign in husky).
   reveal?: boolean;
 };
@@ -27,7 +27,7 @@ function exists(src: string) {
 }
 
 // Renders the real file when it's in /public, otherwise the labelled placeholder from art-assets.md.
-export function Art({ id, width, height, fill, className, style, label, priority, reveal }: ArtProps) {
+export function Art({ id, width, height, fill, className, style, label, preload, reveal }: ArtProps) {
   const { src } = ART[id];
   const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": true };
 
@@ -60,7 +60,7 @@ export function Art({ id, width, height, fill, className, style, label, priority
       width={fill ? undefined : width}
       height={fill ? undefined : height}
       fill={fill}
-      priority={priority}
+      preload={preload}
       reveal={reveal}
       className={className}
       style={style}

@@ -1,0 +1,32 @@
+.screen {
+  background: linear-gradient(180deg, var(--sky-200) 0%, var(--sky-100) 45%, var(--sky-50) 100%);
+}
+
+.scene {
+  height: 560px;
+}
+@media (max-height: 759px) {
+  .scene {
+    height: max(360px, calc(100dvh - 300px));
+  }
+}
+
+/* The husky shrinks to fit between the body text and the bottom stack */
+.zone {
+  container-type: size;
+  padding-bottom: calc(176px + var(--safe-bottom));
+}
+.husky {
+  aspect-ratio: 300 / 380;
+  translate: -5% 0;
+}
+@container (max-height: 159px) {
+  .husky {
+    display: none;
+  }
+}
+
+.scrim {
+  height: calc(152px + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(234, 246, 254, 0) 0%, rgba(234, 246, 254, 0.92) 48px);
+}

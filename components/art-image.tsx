@@ -10,14 +10,14 @@ type ArtImageProps = {
   width?: number;
   height?: number;
   fill?: boolean;
-  priority?: boolean;
+  preload?: boolean;
   reveal?: boolean;
   className?: string;
   style?: CSSProperties;
 };
 
 // Art never blocks layout: a file that fails to load is simply hidden.
-export function ArtImage({ src, alt, width, height, fill, priority, reveal, className, style }: ArtImageProps) {
+export function ArtImage({ src, alt, width, height, fill, preload, reveal, className, style }: ArtImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   if (failed) return null;
@@ -29,7 +29,7 @@ export function ArtImage({ src, alt, width, height, fill, priority, reveal, clas
       width={width}
       height={height}
       fill={fill}
-      preload={priority}
+      preload={preload}
       placeholder="empty"
       unoptimized={src.endsWith(".svg")}
       data-loaded={loaded ? "" : undefined}
