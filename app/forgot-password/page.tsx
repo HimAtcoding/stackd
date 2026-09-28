@@ -1,6 +1,11 @@
-import { PlaceholderScreen } from "@/components/placeholder-screen";
+import { AuthScreen } from "@/components/auth/auth-screen";
+import { ForgotPasswordFlow } from "./forgot-password-flow";
 
-// Forgot password is built in step 5.
+// No husky, wordmark or clouds: a short errand for a student who's already stuck (08).
 export default function ForgotPasswordPage() {
-  return <PlaceholderScreen version="signed-out" />;
+  return (
+    <AuthScreen>
+      <ForgotPasswordFlow />
+    </AuthScreen>
+  );
 }

@@ -1,6 +1,11 @@
-import { PlaceholderScreen } from "@/components/placeholder-screen";
+import { AuthScreen, AuthTop, providerLogos } from "@/components/auth/auth-screen";
+import { SignUpForm } from "./sign-up-form";
 
-// Create account is built in step 4.
 export default function SignUpPage() {
-  return <PlaceholderScreen version="signed-out" />;
+  return (
+    <AuthScreen clouds>
+      <AuthTop headline="Let's get started!" subtitle="Save your plan and pick up where you left off." />
+      <SignUpForm {...providerLogos()} />
+    </AuthScreen>
+  );
 }

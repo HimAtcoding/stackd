@@ -52,9 +52,14 @@ export function TextField({ id, label, icon, trailing, hint, error, className, d
         />
         {trailing && <span className="absolute right-0.5 top-1/2 flex -translate-y-1/2">{trailing}</span>}
       </div>
-      {hint && !error ? (
-        <p id={messageId} className="pt-1.5 text-slate-600 type-label font-normal">
-          {hint}
+      {hint ? (
+        // With a hint the line is always there; a failed check swaps the hint for the error.
+        <p
+          id={messageId}
+          className={cn("flex items-start gap-1.5 pt-1.5 type-label", error ? "font-medium text-coral-700" : "font-normal text-slate-600")}
+        >
+          {error && <WarningCircleIcon weight="fill" size={16} aria-hidden className="mt-px shrink-0" />}
+          <span>{error ?? hint}</span>
         </p>
       ) : (
         <Expand open={Boolean(error)}>
