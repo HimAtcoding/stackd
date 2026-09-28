@@ -1,43 +1,69 @@
 import { Art } from "@/components/art";
 import { PageTransition } from "@/components/page-transition";
+import { RevealGroup } from "@/components/reveal-group";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GetStarted, WelcomeRedirect } from "./welcome-client";
 import styles from "./welcome.module.css";
+
+const HUSKY_HEIGHT = "min(350px, 100cqh)";
 
 export default function WelcomePage() {
   return (
     <PageTransition>
       <WelcomeRedirect />
-      <main className={`${styles.screen} relative mx-auto flex h-dvh min-h-fit max-w-[480px] flex-col overflow-hidden`}>
-        <div className={`${styles.scene} absolute inset-x-0 bottom-0`}>
+      <main className="relative mx-auto flex h-dvh min-h-fit max-w-[480px] flex-col bg-sky-100">
+        {/* The scene fills the whole screen, sky painted in, so there's no CSS gradient over it */}
+        <div className="fixed inset-0">
           <Art id="welcome-scene" fill preload className="object-cover object-bottom" />
         </div>
+        <div aria-hidden className={`${styles.scrim} fixed inset-x-0 bottom-0`} />
 
         <div
-          className="relative flex flex-1 flex-col items-center px-6 text-center"
-          style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)" }}
+          className="relative flex flex-1 flex-col"
+          style={{
+            paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)",
+            paddingBottom: "calc(var(--safe-bottom) + 12px)",
+          }}
         >
-          <Art id="wordmark" width={252} height={70} label="Stackd" preload />
-          <h1 className="mt-10 max-w-[320px] text-navy-900 type-display">
-            Transfer plans, <br className="hidden min-[360px]:inline" />
-            made simple.
-          </h1>
-          <p className="mt-3 max-w-[320px] text-navy-900 type-body-lg">
-            Clear steps, real support, and everything you need to go further.
-          </p>
-          <div className={`${styles.zone} mt-4 flex min-h-0 w-full flex-1 items-end justify-center`}>
-            <Art id="husky-welcome" width={300} height={380} preload reveal
-              className={styles.husky}
-              style={{ width: "auto", height: "min(380px, 100cqh)" }}
-            />
+          <div className="flex flex-col items-center px-6 text-center">
+            <Art id="wordmark" width={252} height={70} label="Stackd" preload />
+            <h1 className="mt-10 max-w-[320px] text-navy-900 type-display">
+              Transfer plans, <br className="hidden min-[360px]:inline" />
+              made simple.
+            </h1>
+            <p className="mt-3 max-w-[320px] text-navy-900 type-body-lg">
+              Clear steps, real support, and everything you need to go further.
+            </p>
           </div>
-        </div>
 
-        <div aria-hidden className={`${styles.scrim} absolute inset-x-0 bottom-0`} />
+          <div className={`${styles.zone} relative mt-4 min-h-0 flex-1`}>
+            <RevealGroup className="absolute inset-0">
+              <Art
+                id="husky-welcome"
+                width={276}
+                height={350}
+                preload
+                className={styles.husky}
+                style={{ width: "auto", height: HUSKY_HEIGHT }}
+              />
+              <Art
+                id="welcome-books"
+                width={126}
+                height={108}
+                preload
+                className={styles.books}
+                style={{ width: "auto", height: `calc(${HUSKY_HEIGHT} * 0.38)` }}
+              />
+            </RevealGroup>
+          </div>
 
-        <div className="absolute inset-x-4" style={{ bottom: "calc(var(--safe-bottom) + 12px)" }}>
-          <GetStarted />
-          <UnofficialFooter className="mt-2" />
+          {/* Husky line to CTA top: 24 to the ground line, then 24 to the button */}
+          <div aria-hidden className="h-12 shrink-0" />
+
+          <div className="px-4">
+            <GetStarted />
+            <UnofficialFooter className="mt-2" />
+          </div>
         </div>
       </main>
     </PageTransition>

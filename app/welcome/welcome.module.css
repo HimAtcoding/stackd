@@ -1,32 +1,32 @@
-.screen {
-  background: linear-gradient(180deg, var(--sky-200) 0%, var(--sky-100) 45%, var(--sky-50) 100%);
-}
-
-.scene {
-  height: 560px;
-}
-@media (max-height: 759px) {
-  .scene {
-    height: max(360px, calc(100dvh - 300px));
-  }
-}
-
-/* The husky shrinks to fit between the body text and the bottom stack */
+/* The husky zone runs from 16 below the body text down to the husky line */
 .zone {
   container-type: size;
-  padding-bottom: calc(176px + var(--safe-bottom));
 }
+
+/* Husky: bottom on the husky line, centered at 54% of the width */
 .husky {
-  aspect-ratio: 300 / 380;
-  translate: -5% 0;
+  position: absolute;
+  bottom: 0;
+  left: 54%;
+  translate: -50% 0;
 }
+
+/* Books: in front of the husky, flush left, bottom on the ground line (24 below the husky line) */
+.books {
+  position: absolute;
+  bottom: -24px;
+  left: 0;
+}
+
 @container (max-height: 159px) {
-  .husky {
+  .husky,
+  .books {
     display: none;
   }
 }
 
+/* Only under the footer line, so the disclaimer stays readable over the art */
 .scrim {
-  height: calc(152px + var(--safe-bottom));
-  background: linear-gradient(180deg, rgba(234, 246, 254, 0) 0%, rgba(234, 246, 254, 0.92) 48px);
+  height: calc(64px + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(234, 246, 254, 0) 0%, rgba(234, 246, 254, 0.92) 24px);
 }
