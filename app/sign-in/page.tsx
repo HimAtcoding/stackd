@@ -14,7 +14,7 @@ export default function SignInPage() {
         <div className="relative px-6 pb-5" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 12px)" }}>
           <Art id="wordmark" width={100} height={28} label="Stackd" preload />
           <h1 className="relative z-[1] mt-6 max-w-[190px] text-navy-900 type-display">Welcome back!</h1>
-          <p className="relative z-[1] mt-2 max-w-[180px] text-navy-900 type-body-md">Your transfer journey is waiting.</p>
+          <p className="relative z-[1] mt-2 max-w-[160px] text-navy-900 type-body-md">Your transfer journey is waiting.</p>
 
           {/* Behind the text, with its cut edge 4 under the sheet's top */}
           <div className={`${styles.husky} absolute right-4 -bottom-1`}>

@@ -1,5 +1,5 @@
 import { PlaceholderScreen } from "@/components/placeholder-screen";
 
 export default function ExplorePage() {
-  return <PlaceholderScreen tab="explore" />;
+  return <PlaceholderScreen version="signed-in" tab="explore" />;
 }

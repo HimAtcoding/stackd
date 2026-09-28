@@ -1,4 +1,4 @@
-import { readStorage, writeStorage } from "./storage";
+import { readStorage, removeStorage, writeStorage } from "./storage";
 
 const SESSION_KEY = "stackd.session";
 const SEEN_WELCOME_KEY = "stackd.seenWelcome";
@@ -9,6 +9,11 @@ export function hasSession() {
 
 export function startDemoSession() {
   writeStorage(SESSION_KEY, "demo");
+}
+
+// Signing out keeps stackd.seenWelcome, so the student lands on Sign in, not Welcome.
+export function endSession() {
+  removeStorage(SESSION_KEY);
 }
 
 export function hasSeenWelcome() {

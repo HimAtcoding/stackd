@@ -12,7 +12,7 @@ const TABS = [
 ] as const;
 
 // Fixed to the bottom. `still` renders it in the page flow for /dev/components.
-export function TabBar({ active, still }: { active: TabId; still?: boolean }) {
+export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
   return (
     <nav
       aria-label="Main"
