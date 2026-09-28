@@ -55,7 +55,8 @@ export function AuthTop({ headline, subtitle }: AuthTopProps) {
 // Provider logos, rendered on the server so the art check can read /public.
 export function providerLogos() {
   return {
-    appleLogo: <Art id="logo-apple" width={17} height={20} />,
-    googleLogo: <Art id="logo-google" width={22} height={22} />,
+    // Apple's file carries its own padding, so it fills the button's inner height (48 minus the border).
+    appleLogo: <Art id="logo-apple" height={46} style={{ height: 46, width: "auto" }} />,
+    googleLogo: <Art id="logo-google" width={20} height={20} />,
   };
 }

@@ -11,6 +11,7 @@ import {
   UsersThreeIcon,
 } from "@phosphor-icons/react/ssr";
 import { Art } from "@/components/art";
+import { providerLogos } from "@/components/auth/auth-screen";
 import { Card } from "@/components/ui/card";
 import { CircleButton } from "@/components/ui/circle-button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -60,8 +61,7 @@ function State({ name, children }: { name: string; children: ReactNode }) {
   );
 }
 
-const appleLogo = <Art id="logo-apple" width={17} height={20} />;
-const googleLogo = <Art id="logo-google" width={22} height={22} />;
+const { appleLogo, googleLogo } = providerLogos();
 
 export default function ComponentsPage() {
   return (
@@ -244,8 +244,6 @@ export default function ComponentsPage() {
         <State name="Small (under 48): no label, ID in data-asset">
           <div className="flex gap-3">
             <Art id="burst-dashes" width={28} height={28} />
-            <Art id="logo-apple" width={17} height={20} />
-            <Art id="logo-google" width={22} height={22} />
           </div>
         </State>
       </Section>
