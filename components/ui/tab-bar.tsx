@@ -17,7 +17,8 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
     <nav
       aria-label="Main"
       className={cn(
-        "grid grid-cols-4 border-t border-border bg-surface shadow-[0_-8px_24px_rgba(5,16,66,.04)]",
+        // The top line is a shadow, so it takes no space inside the 56.
+        "grid grid-cols-4 bg-surface shadow-[0_-1px_0_var(--border),0_-8px_24px_rgba(5,16,66,.04)]",
         !still && "fixed inset-x-0 bottom-0 z-30 mx-auto max-w-[480px]",
       )}
       style={{ height: "calc(56px + var(--safe-bottom))", paddingBottom: "var(--safe-bottom)" }}
@@ -29,7 +30,7 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
             key={id}
             href={href}
             aria-current={isActive ? "page" : undefined}
-            className="flex flex-col items-center gap-0.5 pt-2 focus-ring:-outline-offset-2"
+            className="flex flex-col items-center gap-0.5 pt-1.5 focus-ring:-outline-offset-2"
           >
             <Icon size={28} weight={isActive ? "fill" : "regular"} aria-hidden className={isActive ? "text-blue-600" : "text-slate-400"} />
             <span className={cn("type-tab", isActive ? "text-blue-600" : "text-slate-600")}>{label}</span>
