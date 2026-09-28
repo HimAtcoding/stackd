@@ -64,7 +64,7 @@ Alignment: top block left-aligned at x 24. Sheet content left-aligned at x 32, e
 | Headline | "Welcome back!" `display` (38/42, 900), `--navy-900`, `h1`, x 24, 24 below the wordmark, max-width 190 so it breaks after "Welcome" as drawn |
 | Subtitle | "Your transfer journey is waiting." `body-md` (16/22, 400), `--navy-900`, 8 below the headline, max-width 160 so it breaks after "journey" as drawn |
 | Husky | `husky-wave`, width 176, height auto (~186). `position: absolute; right: 16px;` bottom edge 4 below the sheet's top edge, so the sheet covers the cut (sheet z-index 1, husky 0). `alt=""` |
-| Burst dashes | `burst-dashes.svg`, 28 × 28, `--yellow-400`, 8 left of the husky's raised paw: left = husky left + 12, top = husky top + 8, rotated -20° |
+| Burst dashes | Painted into `husky-wave.png`. Don't draw a separate `burst-dashes` here |
 
 At viewports under 360 wide, the husky shrinks to width 144 and the headline's max-width stays 190.
 
@@ -114,10 +114,10 @@ Social button component (00), 48 tall, gap 12, the first one 12 below the divide
 
 | Button | Logo | Label | Action |
 |---|---|---|---|
-| Apple | Apple logo, black `#000000`, 20 tall | "Continue with Apple" | `auth.signInWithOAuth("apple")` |
-| Google | Google "G", official 4-color, 22 × 22 | "Continue with Google" | `auth.signInWithOAuth("google")` |
+| Apple | Apple's official left-aligned logo file (black logo, for white buttons), shown at the button's full height, 48. The file includes Apple's own padding, so the visible apple is about 17 × 21 | "Continue with Apple" | `auth.signInWithOAuth("apple")` |
+| Google | Google's official standard-color "G", taken from the icon in Google's download bundle, 20 × 20 | "Continue with Google" | `auth.signInWithOAuth("google")` |
 
-The logos come from Apple's and Google's official brand kits, never redrawn (see `art-assets.md`). Before public launch, check both buttons against Apple's Sign in with Apple guidelines and Google's sign-in branding guidelines. A native iOS app that offers Google sign-in must also offer Sign in with Apple, which the mockup already does.
+The logos come from Apple's and Google's official brand kits, never redrawn (see `art-assets.md → Provider logos` for exactly how to take them out of the kits). Both brands require their logo on a white button, which is why the social button is `--white`, not `--surface`. Before public launch, check both buttons against Apple's Sign in with Apple guidelines and Google's sign-in branding guidelines. A native iOS app that offers Google sign-in must also offer Sign in with Apple, which the mockup already does.
 
 ## Bottom line
 

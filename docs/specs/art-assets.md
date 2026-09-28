@@ -26,7 +26,7 @@ Priority key:
 
 | ID | What | Used in | Display size | Deliver | Status | Priority |
 |---|---|---|---|---|---|---|
-| `wordmark` | "stackd" lettering + blue swoosh under it. Navy `#051042`, swoosh `#0364FA` | Welcome (252 wide), Home header (100), Celebration (70) | Aspect ~3.6:1 | One SVG. It must read cleanly at 70 wide. If the swoosh disappears at that size, add a `wordmark-small.svg` with a thicker swoosh | Have (flat) | Demo |
+| `wordmark` | "stackd" lettering + blue swoosh under it. Navy `#051042`, swoosh `#0364FA` | Welcome (252 wide), Sign in and Create account (100), Home header (100), Celebration (70) | Aspect ~3.6:1 once trimmed | One SVG, or a PNG with every fully transparent row and column trimmed off the edges (the art itself untouched). It must read cleanly at 70 wide | Have: `wordmark.png`, 2.8:1 with extra transparent edge, needs trimming | Demo |
 | `app-icon` | Square icon for the installable PWA. Probably the husky head or an "s" mark | Home screen, PWA install | 1024 × 1024 master | PNG master + a `maskable` version with all content inside the center 80% circle | Need | Later (before the first real user installs it) |
 | `favicon` | Simplified mark | Browser tab | 32 | SVG | Need | Later |
 
@@ -37,9 +37,10 @@ The run frames show the character drifts off-model when each pose is generated s
 | ID | What | Used in | Display size | Deliver | Status | Priority |
 |---|---|---|---|---|---|---|
 | `husky-model-sheet` | Reference, not shipped. Front, ¾, side, back. Face markings, ear shapes, hoodie with "S", backpack, tail. Color swatches (fur greys, hoodie `#0364FA` family, outline weight) | All husky art | n/a | PNG or PDF | Need | Demo (before new poses) |
-| `husky-welcome` | Sitting, big open smile, backpack. As drawn on the welcome screen, **without** the book stack, sign, or campus (those are scene layers) | 01 Welcome | 300 × ~380 | PNG 900 × 1140 | Have (flat) | Demo |
+| `husky-welcome` | Sitting, big open smile, backpack, yellow burst marks by its head. **Without** the book stack, sign, or campus | 01 Welcome | up to 276 × 350 | PNG 900 × 1140, transparent | Have | Demo |
+| `husky-forgot` | Upper body like `husky-wave`, head tilted, holding a small key or scratching its head. Bottom edge cut straight across the chest. Same canvas as `husky-wave` so it drops into the same spot | 08 Forgot password | 144 × ~152 | PNG 528 × 558, transparent | Need (uses `husky-wave` until then) | Demo |
 | `husky-home` | Bust, winking, fist raised, hoodie. The **bottom edge cut straight** across the chest (the journey card covers it). No yellow sparkle marks (those are `burst-dashes`) | 02 Home | 160 × ~140 | PNG 480 × 420 | Have (flat) | Demo |
-| `husky-wave` | Upper body, waving paw raised, big smile, hoodie with "S", backpack straps. **Bottom edge cut straight** across the chest (the sheet covers it). No yellow sparkle marks (those are `burst-dashes`) | 06 Sign in, 07 Create account | 176 × ~186 | PNG 528 × 558 | Have (flat) | Demo |
+| `husky-wave` | Upper body, waving paw raised, big smile, hoodie with "S", backpack straps, yellow burst marks painted in. **Bottom edge cut straight** across the chest (the sheet covers it) | 06 Sign in, 07 Create account, 08 until `husky-forgot` exists | 176 × ~186 | PNG 528 × 558, transparent | Have | Demo |
 | `husky-celebrate` | Mid-hop, thumbs up, winking, backpack, blue motion lines around it. **No ground shadow** (drawn in code) | 05 Celebration | 196 × 286 | PNG 588 × 858 | Have (flat) | Demo |
 | `husky-celebrate-rig` | The same pose, split so parts can move. See the layer list below. Either a Rive `.riv` file (preferred) or a layered PSD/Figma file with each layer exported as its own PNG on a shared canvas | 05 Celebration | 196 × 286 canvas | `.riv`, or PNGs at 588 × 858 **each on the full canvas**, so they stack without positioning | Need | Rig |
 | `husky-run` | 6-frame run loop, on-model. Details below | Loading (00) | 72 × 72 | 6 PNGs at 216 × 216, or one strip 1296 × 216, or a `run` state in the Rive file | Have: 8 AI frames that don't cycle (see 05). Fallback exported | Demo (fallback OK), final Later |
@@ -88,7 +89,8 @@ Priority: Later. Listed so they're made from the same sheet when the time comes.
 
 | ID | What | Used in | Display size | Deliver | Status | Priority |
 |---|---|---|---|---|---|---|
-| `welcome-scene` | Full-bleed backdrop: soft clouds, a **generic** campus tower building (not a real campus), trees and hedges, the "Higher together" banner on a lamppost, the book stack reading PLAN / PREPARE / TRANSFER / BELONG, ground. **No husky** (separate layer) and **no sky gradient** (code) | 01 Welcome | 393 × 560 | PNG 1179 × 1680, transparent above the clouds so the CSS gradient shows through. The banner and book-stack text are the only baked text allowed | Have (flat) | Demo |
+| `welcome-scene` | The **whole screen** behind Welcome: sky painted all the way to the top, soft clouds, a **generic** campus tower building (not a real campus), trees and hedges, the "Higher together" banner on a lamppost, ground. **No husky and no book stack** (both are separate layers). The top 45% must be calm, light sky with no detail, because the headline sits there. Keep the banner and the building inside the middle 80% of the width, since narrow phones crop the sides | 01 Welcome | full screen, 393 × 852 | PNG 1179 × 2556, opaque. The banner text is the only baked text allowed | Have: 1179 × 1680 with the books painted in. Needs re-export | Demo |
+| `welcome-books` | Only the book stack: PLAN / PREPARE / TRANSFER / BELONG, as drawn. Its left end may run off the left edge, as in the reference | 01 Welcome, in front of the husky | about 126 × 108 | PNG 480 × 410, transparent | Need | Demo |
 | `welcome-scene` layered | The same, split: `clouds`, `building`, `trees`, `banner`, `books`, `ground`, each on the full canvas | 01 (later subtle parallax) | same | PNGs on a shared canvas | Need | Later |
 | `home-clouds` | Very pale cloud band, no hard edges | 02 Home and 06 Sign in, top | 393 × 300 | PNG 1179 × 900, transparent | Have (flat) | Demo (can ship without; the screen works with the gradient alone) |
 | `celebrate-clouds-top` | Cloud band for the top of the celebration | 05 | 393 × 220 | PNG 1179 × 660 | Have (flat) | Demo |
@@ -127,10 +129,14 @@ Add one row per university as coverage grows. No screen shows a **community coll
 
 | ID | What | Used in | Display size | Get it from | Status | Priority |
 |---|---|---|---|---|---|---|
-| `logo-apple` | Apple logo, black | 06 Continue with Apple | 20 tall | Apple's Sign in with Apple resources (developer.apple.com) | Need | Demo |
-| `logo-google` | Google "G", 4-color | 06 Continue with Google | 22 × 22 | Google Identity branding guidelines (developers.google.com/identity) | Need | Demo |
+| `logo-apple` | Apple's **left-aligned** logo file, black logo, for white buttons | 06, 07 Continue with Apple | full button height, 48 | Apple Design Resources → Sign in with Apple (developer.apple.com/design/resources) | Downloaded, not placed | Demo |
+| `logo-google` | Google's standard-color "G" | 06, 07 Continue with Google | 20 × 20 | Google's Sign in with Google branding page → download bundle (developers.google.com/identity/branding-guidelines) | Downloaded, not placed | Demo |
 
-SVG, unmodified: no recoloring, cropping, or outlines added. Save to `public/art/brand/`.
+Save to `public/art/brand/`. How to take each one out of its kit:
+
+- **Apple**: use the left-aligned logo SVG exactly as supplied. It already contains the padding Apple requires, which is why it looks like a box with a small apple inside. Scale it to the button's height (48) and don't crop it.
+- **Google**: the bundle only has whole buttons and icon buttons. Google's guidelines say a custom-size logo should start from one of the logo sizes in the bundle, so take the icon-only SVG and keep only the four colored G paths, exactly as they are. Remove the button's background rectangle and border. Don't change the paths, colors, or proportions.
+- Both logos must sit on a pure white button (`--white`).
 
 ## 7 · Not art (built in code or from the icon set)
 
@@ -144,8 +150,9 @@ In the order they unblock screens:
 2. `husky-home`: Home
 3. `campus-uc-davis` without lettering, plus `campus-generic`: University
 4. `mentor-avatar-01`: Essays
-5. `husky-welcome` + `welcome-scene`: Welcome
+5. `husky-welcome`, `welcome-scene` (full-screen re-export), `welcome-books`: Welcome
 6. `husky-wave`, `logo-apple`, `logo-google`: Sign in and Create account
+6b. `husky-forgot`: Forgot password
 7. `husky-celebrate`, `balloon-*` ×3, `celebrate-clouds-*` ×2, `confetti-static`, `burst-dashes`: Celebration
 8. `husky-model-sheet`: before any new pose is drawn
 

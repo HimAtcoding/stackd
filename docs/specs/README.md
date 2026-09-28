@@ -26,6 +26,7 @@ The source drawings live in `docs/mockup/`, one level up. The specs expect these
 | `mockup-4-screens.png` | Welcome, Home, UC Davis requirements, Essays |
 | `mockup-task-complete.png` | "Great job!" celebration |
 | `mockup-sign-in.png` | Sign in |
+| `welcome-reference.png` | Full-screen Welcome target (rev 2): scene fills the screen, books in front of the husky |
 | `husky-run-sheet.png` | The 8-frame run attempt |
 
 Create account and forgot password have no mockups. Their specs are built from the sign-in drawing and say exactly what differs.

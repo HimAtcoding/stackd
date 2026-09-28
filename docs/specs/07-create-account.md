@@ -15,7 +15,7 @@ Route: `/sign-up`. No tab bar. No mockup: this screen is the sign-in screen (`06
 | Part | 06 Sign in | 07 Create account |
 |---|---|---|
 | Headline | Welcome back! | Let's get started! (breaks after "get" at max-width 190) |
-| Subtitle | Your transfer journey is waiting. | Save your plan and pick up where you left off. |
+| Subtitle | Your transfer journey is waiting. (max-width 160) | Save your plan and pick up where you left off. (max-width 180, so it's two lines) |
 | Fields | Email, Password | First name, Email, Password |
 | Password `autocomplete` | `current-password` | `new-password` |
 | Under the password field | "Forgot password?" link | Hint line "At least 8 characters." |

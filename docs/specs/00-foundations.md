@@ -203,7 +203,7 @@ Row height 44, bottom 1 px `--border` spanning full width. Label `segment`, acti
 
 ### Tab bar
 
-Fixed to the bottom. Height 56 + `env(safe-area-inset-bottom)`. `--surface`, top edge per Elevation. Four equal columns. Each column: 8 top padding, icon 28, 2 gap, label `tab`. Active: icon fill `--blue-600`, label `--blue-600`. Inactive: icon regular `--slate-400`, label `--slate-600`. No animation on switch. Each tab keeps its own scroll position. Hidden on pushed screens (the university screen) and on the celebration.
+Fixed to the bottom. Height 56 + `env(safe-area-inset-bottom)`. `--surface`. The top edge line is drawn with `box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(5,16,66,.04)`, so it takes no space inside the 56. Four equal columns. Each column: 6 top padding, icon 28, 2 gap, label `tab` (16 line), which leaves 4 below the label when there's no home indicator. Active: icon fill `--blue-600`, label `--blue-600`. Inactive: icon regular `--slate-400`, label `--slate-600`. No animation on switch. Each tab keeps its own scroll position. Hidden on pushed screens (the university screen) and on the celebration.
 
 ### Text field
 
@@ -220,7 +220,7 @@ Label above, field below, optional message line under the field.
 
 ### Social button
 
-Height 48, `--r-sm`, background `--surface`, 1 px `--border-strong`. Content is one centered group: logo, 16 gap, label `button` (16/20 700) `--navy-900`. Pressed: background `--surface-pressed`, `scale(0.98)`, 120 ms. Disabled: opacity 0.4. Logos come from the providers' official kits and keep their own colors.
+Height 48, `--r-sm`, background `--white` (Apple and Google both require their logo on white), 1 px `--border-strong`. Content is one centered group: logo, 12 gap, label `button` (16/20 700) `--navy-900`. Pressed: `scale(0.98)` and a `--surface-pressed` overlay at 60% opacity, so the logo's white background rule still holds, 120 ms. Disabled: opacity 0.4. Logos come from the providers' official kits and keep their own colors and proportions.
 
 ### Labelled divider
 
@@ -255,7 +255,7 @@ This is also used for every screen the mockup didn't draw. Centered column, max-
 The empty state above, used for every destination that isn't built yet. It must never trap the student: every version has a way out.
 
 - **Back button**: circle button (00) with `ArrowLeft`, top = demo strip bottom + 8, left 16, `aria-label="Back"`. It uses history back, and when there's no history it goes to the fallback in the table below.
-- The column sits 120 below the back button.
+- The empty-state icon's top edge sits 120 below the back button's bottom edge.
 - The version depends on where the student is:
 
 | Where | Tab bar | Title | Body | Button → goes to |
