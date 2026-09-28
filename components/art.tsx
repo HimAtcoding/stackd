@@ -24,16 +24,35 @@ type ArtProps = {
 
 const PLACEHOLDER_LABEL_MIN = 48;
 
-function exists(src: string) {
-  return fs.existsSync(path.join(process.cwd(), "public", src));
+const EXTENSIONS = [".svg", ".png"];
+
+function findFile(base: string) {
+  const ext = EXTENSIONS.find((e) => fs.existsSync(path.join(process.cwd(), "public", base + e)));
+  return ext ? base + ext : null;
+}
+
+// Intrinsic size from the PNG header or the SVG's width/height or viewBox.
+function intrinsicSize(src: string): { w: number; h: number } | null {
+  const file = path.join(process.cwd(), "public", src);
+  if (src.endsWith(".png")) {
+    const head = Buffer.alloc(24);
+    const fd = fs.openSync(file, "r");
+    fs.readSync(fd, head, 0, 24, 0);
+    fs.closeSync(fd);
+    return { w: head.readUInt32BE(16), h: head.readUInt32BE(20) };
+  }
+  const svg = fs.readFileSync(file, "utf8").slice(0, 2000);
+  const box = svg.match(/viewBox="[\d.-]+[\s,]+[\d.-]+[\s,]+([\d.]+)[\s,]+([\d.]+)"/);
+  return box ? { w: Number(box[1]), h: Number(box[2]) } : null;
 }
 
 // Renders the real file when it's in /public, otherwise the labelled placeholder from art-assets.md.
+// With a real file, height follows the file's proportions from the given width.
 export function Art({ id, width, height, fill, className, style, label, preload, reveal, optional }: ArtProps) {
-  const { src } = ART[id];
+  const src = findFile(ART[id]);
   const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": true };
 
-  if (!exists(src)) {
+  if (!src) {
     if (optional) return null;
     const small =
       (width !== undefined && width < PLACEHOLDER_LABEL_MIN) ||
@@ -56,12 +75,15 @@ export function Art({ id, width, height, fill, className, style, label, preload,
     );
   }
 
+  const size = intrinsicSize(src);
+  const shownHeight = width !== undefined && size ? Math.round((width * size.h) / size.w) : height;
+
   return (
     <ArtImage
       src={src}
       alt={label ?? ""}
       width={fill ? undefined : width}
-      height={fill ? undefined : height}
+      height={fill ? undefined : shownHeight}
       fill={fill}
       preload={preload}
       reveal={reveal}

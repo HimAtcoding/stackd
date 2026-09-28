@@ -26,7 +26,8 @@ export default function SignInPage() {
               reveal
               style={{ width: "var(--husky-w)", height: "auto", aspectRatio: "176 / 186" }}
             />
-            <Art id="burst-dashes" width={28} height={28} className="absolute left-3 top-2 -rotate-20" />
+            {/* husky-wave.png has the dashes drawn in, so no placeholder box over them */}
+            <Art id="burst-dashes" width={28} height={28} optional className="absolute left-3 top-2 -rotate-20" />
           </div>
         </div>
 

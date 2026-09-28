@@ -1,16 +1,14 @@
 // Every illustration the baseline uses, from docs/specs/art-assets.md.
-// A file missing from /public renders the labelled placeholder at the same size.
+// Paths have no extension: an .svg is used first, then a .png. A missing file renders the placeholder.
 export const ART = {
-  wordmark: { src: "/art/brand/wordmark.svg" },
-  "welcome-scene": { src: "/art/scenes/welcome-scene.png" },
-  "husky-welcome": { src: "/art/husky/husky-welcome.png", width: 300, height: 380 },
-  "home-clouds": { src: "/art/scenes/home-clouds.png" },
-  "husky-wave": { src: "/art/husky/husky-wave.png", width: 176, height: 186 },
-  "burst-dashes": { src: "/art/decor/burst-dashes.svg", width: 28, height: 28 },
-  "logo-apple": { src: "/art/brand/logo-apple.svg", width: 17, height: 20 },
-  "logo-google": { src: "/art/brand/logo-google.svg", width: 22, height: 22 },
-  "husky-run-contact": { src: "/art/husky/husky-run-contact.png", width: 72, height: 72 },
-  "husky-run-flight": { src: "/art/husky/husky-run-flight.png", width: 72, height: 72 },
+  wordmark: "/art/brand/wordmark",
+  "welcome-scene": "/art/scenes/welcome-scene",
+  "husky-welcome": "/art/husky/husky-welcome",
+  "home-clouds": "/art/scenes/home-clouds",
+  "husky-wave": "/art/husky/husky-wave",
+  "burst-dashes": "/art/decor/burst-dashes",
+  "logo-apple": "/art/brand/logo-apple",
+  "logo-google": "/art/brand/logo-google",
 } as const;
 
 export type ArtId = keyof typeof ART;
