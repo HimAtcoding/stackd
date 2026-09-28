@@ -47,7 +47,7 @@ function intrinsicSize(src: string): { w: number; h: number } | null {
 }
 
 // Renders the real file when it's in /public, otherwise the labelled placeholder from art-assets.md.
-// With a real file, height follows the file's proportions from the given width.
+// With a real file, the missing side of the size follows the file's proportions.
 export function Art({ id, width, height, fill, className, style, label, preload, reveal, optional }: ArtProps) {
   const src = findFile(ART[id]);
   const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": true };
@@ -76,13 +76,15 @@ export function Art({ id, width, height, fill, className, style, label, preload,
   }
 
   const size = intrinsicSize(src);
-  const shownHeight = width !== undefined && size ? Math.round((width * size.h) / size.w) : height;
+  const byWidth = width !== undefined;
+  const shownWidth = !byWidth && height !== undefined && size ? Math.round((height * size.w) / size.h) : width;
+  const shownHeight = byWidth && size ? Math.round((width * size.h) / size.w) : height;
 
   return (
     <ArtImage
       src={src}
       alt={label ?? ""}
-      width={fill ? undefined : width}
+      width={fill ? undefined : shownWidth}
       height={fill ? undefined : shownHeight}
       fill={fill}
       preload={preload}

@@ -33,6 +33,10 @@ export function ArtImage({ src, alt, width, height, fill, preload, reveal, class
       placeholder="empty"
       unoptimized={src.endsWith(".svg")}
       data-loaded={loaded ? "" : undefined}
+      // Also counts an image that finished loading before React attached onLoad.
+      ref={(img) => {
+        if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+      }}
       onLoad={() => setLoaded(true)}
       onError={() => setFailed(true)}
       className={cn(reveal && "art-reveal", className)}
