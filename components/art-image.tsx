@@ -40,7 +40,8 @@ export function ArtImage({ src, alt, width, height, fill, preload, reveal, class
       onLoad={() => setLoaded(true)}
       onError={() => setFailed(true)}
       className={cn(reveal && "art-reveal", className)}
-      style={style}
+      // Keeps the file's proportions when only one side is set in CSS.
+      style={fill ? style : { height: "auto", ...style }}
     />
   );
 }
