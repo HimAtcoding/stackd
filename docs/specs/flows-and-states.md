@@ -14,7 +14,7 @@ How the baseline screens connect, and the shared behavior every screen follows. 
 | University, requirements tab | `/universities/[slug]?tab=requirements` | `03-university-requirements.md` | No (pushed) |
 | Essays | `/essays` | `04-essays.md` | Yes (Essays) |
 | Task complete | Modal over any screen | `05-task-complete.md` | No |
-| Placeholder | Any destination that isn't drawn yet | Empty state in `00-foundations.md` | Inherits |
+| Placeholder | Any destination that isn't drawn yet | `00-foundations.md → Placeholder screen` (three versions: signed out, signed in, and `/`) | Depends on version |
 
 Destinations that use the placeholder for now: the Terms and Privacy pages, Explore tab, Mentors tab, Events, notifications, requirement detail, "Track application", upcoming items, new essay, essay editor, feedback, the university Overview and Student life tabs, and the essays Resources tab. Every tap goes somewhere; nothing is a dead button.
 

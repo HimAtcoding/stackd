@@ -62,7 +62,7 @@ Alignment: top block left-aligned at x 24. Sheet content left-aligned at x 32, e
 |---|---|
 | Wordmark | `wordmark.svg`, width 100, x 24, 12 below the demo strip. `role="img"`, `aria-label="Stackd"`. Not a link |
 | Headline | "Welcome back!" `display` (38/42, 900), `--navy-900`, `h1`, x 24, 24 below the wordmark, max-width 190 so it breaks after "Welcome" as drawn |
-| Subtitle | "Your transfer journey is waiting." `body-md` (16/22, 400), `--navy-900`, 8 below the headline, max-width 180 (two lines as drawn) |
+| Subtitle | "Your transfer journey is waiting." `body-md` (16/22, 400), `--navy-900`, 8 below the headline, max-width 160 so it breaks after "journey" as drawn |
 | Husky | `husky-wave`, width 176, height auto (~186). `position: absolute; right: 16px;` bottom edge 4 below the sheet's top edge, so the sheet covers the cut (sheet z-index 1, husky 0). `alt=""` |
 | Burst dashes | `burst-dashes.svg`, 28 × 28, `--yellow-400`, 8 left of the husky's raised paw: left = husky left + 12, top = husky top + 8, rotated -20° |
 

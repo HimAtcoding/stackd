@@ -250,7 +250,21 @@ This is also used for every screen the mockup didn't draw. Centered column, max-
 - 8 gap, body `body` `--slate-600`
 - 20 gap, tinted button naming the next action
 
-Placeholder copy for undrawn screens: title "This part isn't built yet", body "It's on the list. Your plan is still on the home screen.", button "Back to home".
+### Placeholder screen
+
+The empty state above, used for every destination that isn't built yet. It must never trap the student: every version has a way out.
+
+- **Back button**: circle button (00) with `ArrowLeft`, top = demo strip bottom + 8, left 16, `aria-label="Back"`. It uses history back, and when there's no history it goes to the fallback in the table below.
+- The column sits 120 below the back button.
+- The version depends on where the student is:
+
+| Where | Tab bar | Title | Body | Button → goes to |
+|---|---|---|---|---|
+| Signed out (auth links, Terms, Privacy) | No | This part isn't built yet | It's on the list. You can still sign in. | Back to sign in → `/sign-in` |
+| Signed in, any route except `/` | Yes, with the matching tab active | This part isn't built yet | It's on the list. Your plan is still on the home screen. | Back to home → `/` |
+| `/` while Home isn't built | Yes, Home active | Home isn't built yet | You're signed in. Sign out to test the sign-in flow again. | Sign out → clears `stackd.session` (keeps `stackd.seenWelcome`), then `/sign-in` |
+
+The back button's fallback is the same as the button's destination. On `/`, where there's nothing to go back to, the back button is hidden.
 
 ### Inline error
 
