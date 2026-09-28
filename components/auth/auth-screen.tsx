@@ -25,15 +25,22 @@ export function AuthScreen({ children, clouds }: AuthScreenProps) {
   );
 }
 
-type AuthTopProps = { headline: string; subtitle: string };
+type AuthTopProps = {
+  headline: string;
+  subtitle: string;
+  // 160 on Sign in so it breaks after "journey"; 180 on Create account so it's two lines.
+  subtitleMaxWidth?: number;
+};
 
 // Wordmark, headline, subtitle and the waving husky (06 → Top block).
-export function AuthTop({ headline, subtitle }: AuthTopProps) {
+export function AuthTop({ headline, subtitle, subtitleMaxWidth = 160 }: AuthTopProps) {
   return (
     <div className="relative px-6 pb-5" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 12px)" }}>
       <Art id="wordmark" width={100} height={28} label="Stackd" preload />
       <h1 className="relative z-[1] mt-6 max-w-[190px] text-navy-900 type-display">{headline}</h1>
-      <p className="relative z-[1] mt-2 max-w-[160px] text-navy-900 type-body-md">{subtitle}</p>
+      <p className="relative z-[1] mt-2 text-navy-900 type-body-md" style={{ maxWidth: subtitleMaxWidth }}>
+        {subtitle}
+      </p>
 
       {/* Behind the text, with its cut edge 4 under the sheet's top */}
       <div className={`${styles.husky} absolute right-4 -bottom-1`}>

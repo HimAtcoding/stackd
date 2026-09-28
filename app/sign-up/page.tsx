@@ -4,7 +4,7 @@ import { SignUpForm } from "./sign-up-form";
 export default function SignUpPage() {
   return (
     <AuthScreen clouds>
-      <AuthTop headline="Let's get started!" subtitle="Save your plan and pick up where you left off." />
+      <AuthTop headline="Let's get started!" subtitle="Save your plan and pick up where you left off." subtitleMaxWidth={180} />
       <SignUpForm {...providerLogos()} />
     </AuthScreen>
   );
