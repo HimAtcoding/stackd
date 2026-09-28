@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ViewTransition, startTransition, useEffect, useRef, useState, type FormEvent } from "react";
+import { ViewTransition, startTransition, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { EnvelopeIcon, EnvelopeSimpleOpenIcon } from "@phosphor-icons/react/ssr";
 import { AuthSheet } from "@/components/auth/auth-sheet";
@@ -21,7 +21,10 @@ type Stage = "request" | "sent";
 
 const RESEND_SECONDS = 30;
 
-export function ForgotPasswordFlow() {
+type ToastMessage = { key: number; text: string };
+
+// The husky is rendered on the server (the art check reads /public) and passed in.
+export function ForgotPasswordFlow({ husky }: { husky: ReactNode }) {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -35,7 +38,7 @@ export function ForgotPasswordFlow() {
   const [networkError, setNetworkError] = useState(false);
   const [sending, setSending] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
-  const [toastKey, setToastKey] = useState(0);
+  const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // Headline and sheet contents crossfade over 200 ms; under reduced motion the swap is instant.
   function show(next: Stage) {
@@ -91,12 +94,14 @@ export function ForgotPasswordFlow() {
     setSending(true);
     const result = await auth.sendPasswordReset(sentTo);
     setSending(false);
+    // A failed resend leaves the screen as it is and lets the student try again right away.
     if (!result.ok) {
-      setNetworkError(true);
+      setSecondsLeft(0);
+      setToast({ key: Date.now(), text: "Couldn't send the link. Check your connection, then try again." });
       return;
     }
     setSecondsLeft(RESEND_SECONDS);
-    setToastKey((k) => k + 1);
+    setToast({ key: Date.now(), text: "Reset link sent" });
   }
 
   const networkAlert = (
@@ -109,24 +114,25 @@ export function ForgotPasswordFlow() {
 
   return (
     <>
-      <div className="px-4 pb-6" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
+      <div className="relative px-4 pb-6" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
         <BackButton fallback="/sign-in" onBack={stage === "sent" ? () => show("request") : undefined} />
         <ViewTransition key={stage}>
-          <div className="px-2">
-            <h1 ref={headingRef} tabIndex={-1} className="mt-6 max-w-[240px] text-navy-900 outline-none type-display">
-              {stage === "request" ? "Forgot your password?" : "Check your email"}
+          <div className="relative z-[1] px-2">
+            <h1 ref={headingRef} tabIndex={-1} className="mt-6 max-w-[200px] text-navy-900 outline-none type-display">
+              {stage === "request" ? "Reset your password" : "Check your email"}
             </h1>
-            <p className="mt-2 max-w-[330px] text-navy-900 type-body-md">
+            <p className="mt-2 max-w-[190px] text-navy-900 type-body-md">
               {stage === "request" ? (
-                "Enter the email you signed up with and we'll send a link to reset your password."
+                "We'll email you a link to reset it."
               ) : (
                 <>
-                  We sent a reset link to <span className="font-semibold break-all">{sentTo}</span>.
+                  We sent a link to <span className="font-semibold break-all">{sentTo}</span>.
                 </>
               )}
             </p>
           </div>
         </ViewTransition>
+        {husky}
       </div>
 
       <AuthSheet onSubmit={onSubmit}>
@@ -173,34 +179,33 @@ export function ForgotPasswordFlow() {
                 If there&apos;s an account for this email, the link will arrive in a few minutes. Check your spam folder too.
               </p>
               <div className="mt-6 w-full">
-                {networkAlert}
                 <PrimaryButton onClick={() => router.replace("/sign-in")}>Back to sign in</PrimaryButton>
               </div>
               <div className="mt-3">
-              <button
-                type="button"
-                aria-live="off"
-                aria-disabled={secondsLeft > 0 || sending || undefined}
-                onClick={resend}
-                className={cn(
-                  "-my-3 py-3 type-link",
-                  secondsLeft > 0 || sending ? "cursor-default text-slate-600" : "text-blue-600 pressed:underline focus-ring:underline",
-                )}
-              >
-                {secondsLeft > 0 ? `Send again in ${secondsLeft}s` : "Send again"}
-              </button>
+                <button
+                  type="button"
+                  aria-live="off"
+                  aria-disabled={secondsLeft > 0 || sending || undefined}
+                  onClick={resend}
+                  className={cn(
+                    "-my-3 py-3 type-link",
+                    secondsLeft > 0 || sending ? "cursor-default text-slate-600" : "text-blue-600 pressed:underline focus-ring:underline",
+                  )}
+                >
+                  {secondsLeft > 0 ? `Send again in ${secondsLeft}s` : "Send again"}
+                </button>
               </div>
             </div>
           )}
         </ViewTransition>
       </AuthSheet>
 
-      {toastKey > 0 && (
+      {toast && (
         <Toast
-          key={toastKey}
-          message="Reset link sent"
+          key={toast.key}
+          message={toast.text}
           bottom="calc(var(--safe-bottom) + 12px)"
-          onDone={() => setToastKey(0)}
+          onDone={() => setToast(null)}
         />
       )}
     </>
