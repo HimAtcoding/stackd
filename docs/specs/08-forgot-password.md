@@ -14,8 +14,7 @@ Route: `/forgot-password`. No tab bar. No mockup: built from the sign-in screen'
 
 ```
 ┌───────────────────────────────┐  same background as 06
-│ Demo data                     │
-│ (←)                           │  circle button 44, 8 below strip
+│ (←)                           │  circle button 44, safe-area top + 8
 │                     ╭husky─╮  │  24
 │ Reset your          │ 144  │  │  display 38/42, x 24, max 200
 │ password            │ wide │  │
@@ -36,7 +35,7 @@ Alignment: left, as on 06. The page never needs to scroll at 393 × 852.
 | Element | Spec |
 |---|---|
 | Background | Same as 06 |
-| Back | Circle button (00), `ArrowLeft` bold 22, `aria-label="Back"`, top = strip bottom + 8, left 16. History back; with no history, `/sign-in` |
+| Back | Circle button (00), `ArrowLeft` bold 22, `aria-label="Back"`, top = safe-area top + 8, left 16. No demo strip on this screen. History back; with no history, `/sign-in` |
 | Headline | "Reset your password" `display`, `--navy-900`, `h1`, x 24, 24 below the back button, max-width 200 so it breaks after "your". ("Forgot your" is too wide to clear the husky.) The link that opens this screen still says "Forgot password?" |
 | Subtitle | "We'll email you a link to reset it." `body-md` `--navy-900`, 8 below, max-width 190 |
 | Husky | `husky-forgot`, width 144, height auto (~152). `position: absolute; right: 16px;` with its bottom edge 4 below the sheet's top edge, so the sheet covers the cut, exactly as on 06. `alt=""`. Until `husky-forgot.png` exists, use `husky-wave.png` at the same size. Hidden below 372 wide (between 360 and 371 the headline would run under it) |

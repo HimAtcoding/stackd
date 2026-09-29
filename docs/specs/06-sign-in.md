@@ -20,8 +20,7 @@ What the references confirm: fields 44–52 tall, social buttons 44–48, 16 sid
 
 ```
 ┌───────────────────────────────┐  --sky-100 → --sky-50
-│ Demo data                     │  24
-│ stackd                        │  wordmark 100 wide, 12 below strip
+│ stackd                        │  wordmark 100 wide, safe-area top + 12
 │                     ⸝⸝ ╭husky╮│  24
 │ Welcome                 │wave ││  display 38/42, max-width 190
 │ back!                   │     ││
@@ -47,10 +46,10 @@ Alignment: top block left-aligned at x 24. Sheet content left-aligned at x 32, e
 
 ### Vertical budget at 393 × 852
 
-- Top block: 59 safe + 24 strip + 12 + 28 wordmark + 24 + 84 headline + 8 + 44 subtitle + 20 = sheet top at 303.
+- Top block: 59 safe + 12 + 32 wordmark + 24 + 84 headline + 8 + 44 subtitle + 20 = sheet top at 283 (no demo strip on this screen).
 - Sheet: 20 + 22 + 8 + 48 + 16 + 22 + 8 + 48 + 8 + 20 + 16 + 56 + 12 + 24 + 12 + 48 + 12 + 48 + 20 (min flex) + 20 + 16 + 34 safe = 538.
 - Total 841. The 11 spare goes into the flexible gap above the bottom line.
-- Shorter phones scroll: the whole page is one scroll container (`min-height: 100dvh`). Nothing is fixed except the demo strip.
+- Shorter phones scroll: the whole page is one scroll container (`min-height: 100dvh`). Nothing is fixed.
 
 ## Background
 
@@ -60,7 +59,7 @@ Alignment: top block left-aligned at x 24. Sheet content left-aligned at x 32, e
 
 | Element | Spec |
 |---|---|
-| Wordmark | `wordmark.svg`, width 100, x 24, 12 below the demo strip. `role="img"`, `aria-label="Stackd"`. Not a link |
+| Wordmark | `wordmark.png` (trimmed), width 100, x 24, safe-area top + 12. No demo strip on this screen. `role="img"`, `aria-label="Stackd"`. Not a link |
 | Headline | "Welcome back!" `display` (38/42, 900), `--navy-900`, `h1`, x 24, 24 below the wordmark, max-width 190 so it breaks after "Welcome" as drawn |
 | Subtitle | "Your transfer journey is waiting." `body-md` (16/22, 400), `--navy-900`, 8 below the headline, max-width 160 so it breaks after "journey" as drawn |
 | Husky | `husky-wave`, width 176, height auto (~186). `position: absolute; right: 16px;` bottom edge 4 below the sheet's top edge, so the sheet covers the cut (sheet z-index 1, husky 0). `alt=""` |

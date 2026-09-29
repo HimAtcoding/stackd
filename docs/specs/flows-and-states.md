@@ -113,7 +113,7 @@ Shown in place of the part that failed. The rest of the screen stays usable. No 
 ## Trust elements
 
 Required by `06-trust-and-provenance.md`, on every build until real data replaces demo data:
-- **Demo strip** ("Demo data") on every screen showing a demo record.
+- **Demo strip** ("Demo data") only on screens showing a demo record: Home, University, Essays, and the celebration. Not on Welcome, the auth screens, or placeholders.
 - **Unofficial footer line** on Welcome and on any screen that names a university.
 
 ## Quality floor

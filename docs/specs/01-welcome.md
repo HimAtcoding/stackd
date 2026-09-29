@@ -15,78 +15,87 @@ Mockup: panel 1 of `../mockup/mockup-4-screens.png`.
 
 ## Layout
 
-Rev 2 (September 2026): the team's full-screen reference (`../mockup/welcome-reference.png`) replaces panel 1 as the target. The campus scene fills the whole screen, and the book stack sits in front of the husky's left side, fully above the button.
+Rev 3 (September 2026). Target: `../mockup/welcome-reference.png`. The campus scene fills the whole screen, the husky and books stand on the plaza, the banner stays visible above the books, and everything adapts to any phone height.
 
 ```
-┌───────────────────────────────┐  scene art fills the whole screen,
-│ Demo data                     │  sky painted in, from the very top
-│                               │  24
-│           stackd              │  wordmark 252 wide, centered
-│           ‿‿‿‿                │  40
+┌───────────────────────────────┐  scene fills the screen
+│                               │  safe-area top + 24 (16 on short screens)
+│           stackd              │  wordmark 252 wide (150 on short screens)
+│           ‿‿‿‿                │  40 (16)
 │     Transfer plans,           │  display 38/42, centered
-│      made simple.             │  12
+│      made simple.             │  12 (8)
 │   Clear steps, real support,  │  body-lg 18/24, centered
 │  and everything you need…     │
-│                               │  ≥ 16
-│  ▐banner    ╭─husky──╮  🏛    │  husky: bottom on the husky line,
-│  ▐          │        │        │  centered at 54% of the width
-│ ┌books┐     │        │        │  books: in front of the husky,
-│ │PLAN  │────┤        │        │  flush left, bottom on the ground line
-│ │PREPARE│   ╰────────╯        │
-│ │TRANSFER│                    │  books bottom = ground line
-│ │BELONG │                     │  24
-│ (       Get started      >)   │  56, margins 16
-│ Unofficial planning tool. Not │  12/16, 8 below CTA
-│ affiliated with UC, CSU, …    │
+│  ▐banner      ╭─husky─╮  🏛    │  ≥ 8
+│  ▐            │       │       │  banner: part of the scene, never covered
+│ ┌books─┐      │       │       │
+│ │PLAN   │─────┤       │       │  books in front of the husky's left side
+│ │PREPARE│     ╰───────╯       │  husky feet on the plaza
+│ │BELONG │═════════════════════│  plaza line (from the scene art)
+│ └───────┘  plaza  plaza       │  books bottom = ground line
+│ (       Get started      >)   │  16 below the ground line, 56 tall
+│ Unofficial planning tool…     │  8 below the button
 └───────────────────────────────┘  safe-area bottom + 12
 ```
 
-Alignment: everything is centered on the vertical axis. This is the only centered screen in the baseline.
+Alignment: centered. No demo strip on this screen (it shows no demo records; see 00 → Demo strip).
 
-### Two lines everything sits on
+### Why this layout works on every screen height
 
-- **Ground line** = CTA top − 16. The bottom edge of the book stack sits on it.
-- **Husky line** = ground line − 12. The husky's bottom edge sits on it, so its paws sit just behind the front edge of the books, as in the reference.
+Your phone (393 wide, iPhone 14 Pro / 15 / 16 class) shows only about 647 of height in Safari, because Safari's bars take the rest of the 852. Installed to the home screen, it shows the full 852. Android phones in Chrome land around 700–800. The layout is built from three anchors, so the same picture holds at every height:
 
-At 393 × 852 (installed app): CTA top 710, ground line 694, husky line 682.
+1. **The button** is fixed to the bottom.
+2. **The husky and books** stand on lines measured up from the button.
+3. **The scene** slides up or down so its plaza is always under the husky and books. That keeps them on the ground and keeps the banner above the books. On short screens it's the scene's sky that gets trimmed, and the sky scrim keeps the text readable over the tree tops.
+
+### Lines everything sits on
+
+- **Ground line** `G` = CTA top − 16. The book stack's bottom edge sits on it.
+- **Husky line** = `G` − 24. The husky's bottom edge sits on it, so its paws sit behind and slightly above the front of the books, as in the reference.
+- **Plaza line target** = `G` − 48. The scene is positioned so its plaza line lands here (see Layers, item 2). That puts the husky's paws 24 into the pavement and the whole bottom of the book stack on it, while trimming as little sky as possible.
+
+At 393 × 647 (your phone in Safari): CTA top 539, `G` 523, husky line 499, plaza line 475.
+At 393 × 852 installed: CTA top 710, `G` 694, husky line 670.
 
 ### Short screens (viewport under 760 tall)
 
-In Safari, the browser bars leave only about 650–700 of height, and the reference was drawn for a full 852. Below 760 tall, the text block tightens so the husky keeps its size:
-
 | | Normal | Under 760 tall |
 |---|---|---|
-| Strip to wordmark | 24 | 16 |
-| Wordmark width | 252 | 180 |
-| Wordmark to headline | 40 | 20 |
+| Safe-area top to wordmark | 24 | 16 |
+| Wordmark width | 252 | 150 |
+| Wordmark to headline | 40 | 16 |
 | Headline to body | 12 | 8 |
 
-Font sizes don't change.
+Font sizes don't change. At 393 × 647 the text block ends at about 219.
 
 ## Layers, back to front
 
 1. **Page background**: `--sky-100`, full screen. It only shows while the scene art is loading or if it fails.
-2. **Scene art** (`welcome-scene`): fills the whole screen, including under the status bar. `position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top;`. The sky is painted into the art, so there is no CSS gradient over it and no seam. **Anchor to the top, not the bottom.** On screens shorter than the art's proportions (Safari with its bars showing), anchoring to the top trims the empty plaza at the bottom. Anchoring to the bottom would trim the sky instead and push the trees up behind the text. The husky and books are separate layers placed from the button, so they stay put either way.
-3. **Sky scrim**: keeps the text readable where the tops of the trees reach the body text (they do slightly at full height with the status bar and demo strip). `position: fixed; top: 0; left: 0; right: 0;` height = bottom of the body text + 32. Background: `linear-gradient(180deg, rgba(SKY,.85) 0%, rgba(SKY,.7) 70%, rgba(SKY,0) 100%)`, where SKY is the RGB of the scene's own sky, sampled from the top-center of `welcome-scene.png`. Over plain sky it's invisible; over trees it softens them behind the text.
-4. **Husky** (`husky-welcome`): a separate image so it can animate later.
-   - **Zone**: from 8 below the body text down to the husky line. Build it as a `flex: 1; min-height: 0` item in the page's column.
-   - **Size**: `height: min(350px, 100%)`, `width: auto`. At 393 × 852 installed, the zone is about 313 tall, so the husky is about 313 × 247. In Safari at about 393 × 650, it's about 250 × 197.
+2. **Scene art** (`welcome-scene`): `position: fixed; left: 0; width: 100%; height: auto;` (its own proportions, so its height `S` = screen width × the image's height ÷ width). It's positioned vertically by its **plaza line**: the row where the low wall meets the pavement, at **73% of the image height** in the current art (verify against the file and use the measured value).
+   - `top = (plaza line target) − 0.73 × S`
+   - Clamp so the scene always covers the screen: `top` can't be above 0 (no gap at the top) or below `viewport height − S` (no gap at the bottom).
+   - At 393 × 647: `S` ≈ 851, so `top` ≈ −146. The top 146 of sky is trimmed; the plaza, banner, and books all show, and the tree tops reach up behind the body text, where the sky scrim softens them.
+   - At 393 × 852: `top` clamps to 0 and the whole scene shows.
+   - Build it with a small layout hook that measures the CTA's top and the viewport height (ResizeObserver plus a resize listener) and sets `top`. Recalculate on rotation and when Safari's bars show or hide.
+3. **Sky scrim**: keeps the text readable where the tree tops reach it (on short screens they do). `position: fixed; top: 0; left: 0; right: 0;` height = bottom of the body text + 32. Background: `linear-gradient(180deg, rgba(SKY,.85) 0%, rgba(SKY,.7) 70%, rgba(SKY,0) 100%)`, where SKY is the sky color near the top of `welcome-scene.png`, below its outer arc (#8AD1FD in the current art).
+4. **Husky** (`husky-welcome`):
+   - **Height** = the smallest of: 350; 40% of the viewport height; and the space from 8 below the body text down to the husky line. At 393 × 647 that's 259, the size it is now.
+   - **Width** follows the image's proportions.
    - **Position**: bottom edge on the husky line, horizontal center at 54% of the screen width.
-   - If the zone is under 160 tall (small phones like 320 × 568), hide the husky and the books. The scene still shows. Use a container query (`container-type: size` on the zone, `@container (max-height: 159px)`).
-5. **Books** (`welcome-books`): in front of the husky. Their size and position come from the husky, so the overlap looks like the reference at every screen size:
-   - **Width** = the husky's rendered width × 0.58. Height follows the image's own proportions.
-   - **Right edge** = the husky's left edge + 28% of the husky's width. So the stack covers roughly the left quarter of the husky: its backpack and back leg.
-   - **Bottom edge** on the ground line.
-   - The left edge can go past the screen edge (negative `left`). On bigger screens the stack runs off the left side, as drawn.
-   - At 393 × 852 installed: husky 247 wide with its left edge at 89, so the books are about 143 wide, right edge at 158, left edge at 15.
-6. **Bottom scrim**: `position: fixed; bottom: 0; height: calc(64px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(234,246,254,0) 0%, rgba(234,246,254,.92) 24px);`. It sits under the footer line only, so the disclaimer stays readable over the art. It must not reach the books.
+   - If the height would be under 160 (tiny phones like 320 × 568), hide the husky and the books.
+5. **Books** (`welcome-books`): in front of the husky. Unchanged from rev 2, because the current relationship is right:
+   - Width = husky width × 0.58; height follows the image's proportions.
+   - Right edge = husky's left edge + 28% of the husky's width. Left edge may go past the screen edge.
+   - Bottom edge on the ground line.
+   - **Banner check**: the books' top edge must be at least 4 below the banner's bottom edge (the banner is at about 50–61% of the scene's height; measure it in the file). If a very short screen can't satisfy this, shrink the husky (and with it the books) until it does, down to the 160 floor.
+6. **Bottom scrim**: `position: fixed; bottom: 0; height: calc(64px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(234,246,254,0) 0%, rgba(234,246,254,.92) 24px);`. It sits under the footer line only. It must not reach the books.
 7. **Content column**: the text at the top and the CTA stack at the bottom.
 
 ## Content
 
 | Element | Spec |
 |---|---|
-| Wordmark | `wordmark.svg`, width 252, height auto (~70), top = safe-area top + 24 + 24 (after the demo strip). `role="img"`, `aria-label="Stackd"` |
+| Wordmark | `wordmark.png` (trimmed), width 252 (150 on short screens), height auto, top = safe-area top + 24 (16 on short screens). `role="img"`, `aria-label="Stackd"` |
 | Headline | "Transfer plans, made simple." `display`, `--navy-900`, max-width 320, 40 below the wordmark. Break after "plans," (`<br>` at ≥ 360 wide, natural wrap below that) |
 | Body | "Clear steps, real support, and everything you need to go further." `body-lg`, `--navy-900`, max-width 320, 12 below the headline |
 | CTA | Primary button "Get started" with trailing chevron. Bottom = safe-area bottom + 12 + footer line height (32 when it wraps to two lines) + 8. Navigates to `/sign-up` (`07-create-account.md`) with a 200 ms crossfade |
@@ -109,12 +118,15 @@ Reading order: wordmark, headline (`h1`), body, CTA, footer line. The scene, hus
 
 ## Test
 
-- At 393 × 852 the scene covers the whole screen, top to bottom, with no band of plain gradient anywhere.
-- At 393 × 852 the whole book stack is visible above the button, with 16 between the stack and the button.
-- In iPhone Safari (about 393 × 650 visible), the husky is at least 240 tall and the headline stays readable over the scene.
-- The book stack is in front of the husky and covers part of its left side.
-- The husky's top edge is at least 16 below the body text.
-- At 320 × 568, headline, body, CTA, and footer line don't overlap, and the husky and books are hidden.
-- At 430 × 932, the scene still covers the whole screen.
+Check each of these at 393 × 647 (your phone in Safari), 393 × 852 (installed), 430 × 740 (Pro Max in Safari), 412 × 780 (typical Android in Chrome), and 375 × 548 (iPhone SE in Safari):
+
+- The scene covers the whole screen, with no plain gap at the top or bottom.
+- The husky's paws and the bottom of the books are on the plaza pavement, not in front of the wall or the trees.
+- The banner is fully visible, and the books don't cover it.
+- The whole book stack is visible, with 16 between it and the button.
+- The books cover the husky's left side (backpack and back leg).
+- The husky's top edge is at least 8 below the body text.
+- The headline and body stay readable (the sky scrim softens any tree tops behind them).
+- At 320 × 568 the husky and books are hidden and nothing overlaps.
 - The CTA's bottom edge sits at least 12 above the home indicator.
 - Deleting `welcome-scene` leaves a working screen on `--sky-100`.

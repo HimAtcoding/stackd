@@ -238,6 +238,8 @@ Bottom-anchored, 12 above the tab bar, or 12 above the primary button if there's
 
 Required by project rule 6 until real data replaces demo data. Height 24, full width, `--navy-900`, text white `demo` centered: "Demo data". Sits directly under the safe-area top and pushes content down 24. On the university screen it overlays the hero. Controlled by `NEXT_PUBLIC_DEMO_STRIP` (default on).
 
+**Only on screens that show demo records**: Home (02), University (03), Essays (04), and the celebration (05). Not on Welcome, the three auth screens, or placeholder screens, since they show no student data. On those screens, measurements that say "below the strip" start from the safe-area top instead.
+
 ### Unofficial footer line
 
 `demo` style at weight 400, `--slate-600`, centered, max-width 320: "Unofficial planning tool. Not affiliated with UC, CSU, ASSIST, or any college." Appears on the welcome screen and the university screen. Required by `06-trust-and-provenance.md`.
@@ -254,7 +256,7 @@ This is also used for every screen the mockup didn't draw. Centered column, max-
 
 The empty state above, used for every destination that isn't built yet. It must never trap the student: every version has a way out.
 
-- **Back button**: circle button (00) with `ArrowLeft`, top = demo strip bottom + 8, left 16, `aria-label="Back"`. It uses history back, and when there's no history it goes to the fallback in the table below.
+- **Back button**: circle button (00) with `ArrowLeft`, top = safe-area top + 8, left 16, `aria-label="Back"`. It uses history back, and when there's no history it goes to the fallback in the table below.
 - The empty-state icon's top edge sits 120 below the back button's bottom edge.
 - The version depends on where the student is:
 

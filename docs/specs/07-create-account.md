@@ -28,7 +28,6 @@ Route: `/sign-up`. No tab bar. No mockup: this screen is the sign-in screen (`06
 
 ```
 ┌───────────────────────────────┐
-│ Demo data                     │
 │ stackd                        │  same top block as 06
 │                     ⸝⸝ ╭husky╮│
 │ Let's get               │wave ││
