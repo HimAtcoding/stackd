@@ -39,7 +39,7 @@ Alignment: left, as on 06. The page never needs to scroll at 393 × 852.
 | Back | Circle button (00), `ArrowLeft` bold 22, `aria-label="Back"`, top = strip bottom + 8, left 16. History back; with no history, `/sign-in` |
 | Headline | "Reset your password" `display`, `--navy-900`, `h1`, x 24, 24 below the back button, max-width 200 so it breaks after "your". ("Forgot your" is too wide to clear the husky.) The link that opens this screen still says "Forgot password?" |
 | Subtitle | "We'll email you a link to reset it." `body-md` `--navy-900`, 8 below, max-width 190 |
-| Husky | `husky-forgot`, width 144, height auto (~152). `position: absolute; right: 16px;` with its bottom edge 4 below the sheet's top edge, so the sheet covers the cut, exactly as on 06. `alt=""`. Until `husky-forgot.png` exists, use `husky-wave.png` at the same size. Hidden below 360 wide |
+| Husky | `husky-forgot`, width 144, height auto (~152). `position: absolute; right: 16px;` with its bottom edge 4 below the sheet's top edge, so the sheet covers the cut, exactly as on 06. `alt=""`. Until `husky-forgot.png` exists, use `husky-wave.png` at the same size. Hidden below 372 wide (between 360 and 371 the headline would run under it) |
 | Sheet | Same as 06 (inset 16, radius 20 top, runs to the bottom, 20 top padding, content at x 32), 24 below the subtitle |
 | Email field | Identical to the email field on 06. `enterkeyhint="send"`. If the student typed an email on Sign in, it arrives prefilled (passed in memory, never in the URL) |
 | Button | Primary "Send reset link", 16 below the field |
@@ -101,4 +101,4 @@ The husky fades in as on 06 (the one non-triggered moment). Field, error, and st
 - "Send again" is disabled for 30 s, then sends and restarts the count.
 - Email `offline@example.com`: the connection error, and no state change.
 - Any email that isn't registered gets exactly the same confirmation as one that is.
-- The headline and subtitle never run under the husky at 360 wide and up.
+- The headline and subtitle never run under the husky at any width; below 372 wide the husky is hidden.

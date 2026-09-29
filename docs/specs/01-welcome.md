@@ -45,28 +45,42 @@ Alignment: everything is centered on the vertical axis. This is the only centere
 
 ### Two lines everything sits on
 
-- **Ground line** = CTA top − 24. The bottom edge of the book stack sits on it.
-- **Husky line** = ground line − 24. The husky's bottom edge sits on it. (In the reference, the husky's paws sit a little behind and above the front edge of the books.)
+- **Ground line** = CTA top − 16. The bottom edge of the book stack sits on it.
+- **Husky line** = ground line − 12. The husky's bottom edge sits on it, so its paws sit just behind the front edge of the books, as in the reference.
 
-At 393 × 852: CTA top 710, ground line 686, husky line 662.
+At 393 × 852 (installed app): CTA top 710, ground line 694, husky line 682.
+
+### Short screens (viewport under 760 tall)
+
+In Safari, the browser bars leave only about 650–700 of height, and the reference was drawn for a full 852. Below 760 tall, the text block tightens so the husky keeps its size:
+
+| | Normal | Under 760 tall |
+|---|---|---|
+| Strip to wordmark | 24 | 16 |
+| Wordmark width | 252 | 180 |
+| Wordmark to headline | 40 | 20 |
+| Headline to body | 12 | 8 |
+
+Font sizes don't change.
 
 ## Layers, back to front
 
 1. **Page background**: `--sky-100`, full screen. It only shows while the scene art is loading or if it fails.
-2. **Scene art** (`welcome-scene`): fills the whole screen, including under the status bar. `position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom;`. The sky is painted into the art, so there is no CSS gradient over it and no seam.
-3. **Husky** (`husky-welcome`): a separate image so it can animate later.
-   - **Zone**: from 16 below the body text down to the husky line. Build it as a `flex: 1; min-height: 0` item in the page's column.
-   - **Size**: `height: min(350px, 100%)`, `width: auto`. At 393 × 852 the zone is about 285 tall, so the husky renders about 285 × 225.
+2. **Scene art** (`welcome-scene`): fills the whole screen, including under the status bar. `position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top;`. The sky is painted into the art, so there is no CSS gradient over it and no seam. **Anchor to the top, not the bottom.** On screens shorter than the art's proportions (Safari with its bars showing), anchoring to the top trims the empty plaza at the bottom. Anchoring to the bottom would trim the sky instead and push the trees up behind the text. The husky and books are separate layers placed from the button, so they stay put either way.
+3. **Sky scrim**: keeps the text readable where the tops of the trees reach the body text (they do slightly at full height with the status bar and demo strip). `position: fixed; top: 0; left: 0; right: 0;` height = bottom of the body text + 32. Background: `linear-gradient(180deg, rgba(SKY,.85) 0%, rgba(SKY,.7) 70%, rgba(SKY,0) 100%)`, where SKY is the RGB of the scene's own sky, sampled from the top-center of `welcome-scene.png`. Over plain sky it's invisible; over trees it softens them behind the text.
+4. **Husky** (`husky-welcome`): a separate image so it can animate later.
+   - **Zone**: from 8 below the body text down to the husky line. Build it as a `flex: 1; min-height: 0` item in the page's column.
+   - **Size**: `height: min(350px, 100%)`, `width: auto`. At 393 × 852 installed, the zone is about 313 tall, so the husky is about 313 × 247. In Safari at about 393 × 650, it's about 250 × 197.
    - **Position**: bottom edge on the husky line, horizontal center at 54% of the screen width.
    - If the zone is under 160 tall (small phones like 320 × 568), hide the husky and the books. The scene still shows. Use a container query (`container-type: size` on the zone, `@container (max-height: 159px)`).
-4. **Books** (`welcome-books`): in front of the husky, so the stack covers the husky's left side as drawn.
-   - **Size**: height = the husky's rendered height × 0.38, `width: auto`. At 393 × 852 that's about 108 tall × 126 wide.
-   - **Position**: `left: 0` (the stack runs off the left edge, as drawn), bottom edge on the ground line.
-   - At 393 × 852 the stack's right edge lands about 26 over the husky's left edge. Don't force that number; it comes from the sizes above.
-5. **Bottom scrim**: `position: fixed; bottom: 0; height: calc(64px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(234,246,254,0) 0%, rgba(234,246,254,.92) 24px);`. It sits under the footer line only, so the disclaimer stays readable over the art. It must not reach the books.
-6. **Content column**: the text at the top and the CTA stack at the bottom.
-
-**Until the rev 2 art exists:** if `welcome-books.png` is missing, the books are whatever is painted into the current scene, and they can't sit in front of the husky. That's expected until the art is re-exported (see `art-assets.md`).
+5. **Books** (`welcome-books`): in front of the husky. Their size and position come from the husky, so the overlap looks like the reference at every screen size:
+   - **Width** = the husky's rendered width × 0.58. Height follows the image's own proportions.
+   - **Right edge** = the husky's left edge + 28% of the husky's width. So the stack covers roughly the left quarter of the husky: its backpack and back leg.
+   - **Bottom edge** on the ground line.
+   - The left edge can go past the screen edge (negative `left`). On bigger screens the stack runs off the left side, as drawn.
+   - At 393 × 852 installed: husky 247 wide with its left edge at 89, so the books are about 143 wide, right edge at 158, left edge at 15.
+6. **Bottom scrim**: `position: fixed; bottom: 0; height: calc(64px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(234,246,254,0) 0%, rgba(234,246,254,.92) 24px);`. It sits under the footer line only, so the disclaimer stays readable over the art. It must not reach the books.
+7. **Content column**: the text at the top and the CTA stack at the bottom.
 
 ## Content
 
@@ -96,7 +110,8 @@ Reading order: wordmark, headline (`h1`), body, CTA, footer line. The scene, hus
 ## Test
 
 - At 393 × 852 the scene covers the whole screen, top to bottom, with no band of plain gradient anywhere.
-- At 393 × 852 the whole book stack is visible above the button, with about 24 between the stack and the button.
+- At 393 × 852 the whole book stack is visible above the button, with 16 between the stack and the button.
+- In iPhone Safari (about 393 × 650 visible), the husky is at least 240 tall and the headline stays readable over the scene.
 - The book stack is in front of the husky and covers part of its left side.
 - The husky's top edge is at least 16 below the body text.
 - At 320 × 568, headline, body, CTA, and footer line don't overlap, and the husky and books are hidden.

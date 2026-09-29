@@ -26,7 +26,7 @@ Priority key:
 
 | ID | What | Used in | Display size | Deliver | Status | Priority |
 |---|---|---|---|---|---|---|
-| `wordmark` | "stackd" lettering + blue swoosh under it. Navy `#051042`, swoosh `#0364FA` | Welcome (252 wide), Sign in and Create account (100), Home header (100), Celebration (70) | Aspect ~3.6:1 once trimmed | One SVG, or a PNG with every fully transparent row and column trimmed off the edges (the art itself untouched). It must read cleanly at 70 wide | Have: `wordmark.png`, 2.8:1 with extra transparent edge, needs trimming | Demo |
+| `wordmark` | "stackd" lettering + blue swoosh under it. Navy `#051042`, swoosh `#0364FA` | Welcome (252 wide), Sign in and Create account (100), Home header (100), Celebration (70) | Aspect ~3.2:1 once trimmed (renders 252 × 80 on Welcome, 100 × 32 on Sign in) | One SVG, or a PNG with every fully transparent row and column trimmed off the edges (the art itself untouched). It must read cleanly at 70 wide | Have: `wordmark.png`, trimmed | Demo |
 | `app-icon` | Square icon for the installable PWA. Probably the husky head or an "s" mark | Home screen, PWA install | 1024 × 1024 master | PNG master + a `maskable` version with all content inside the center 80% circle | Need | Later (before the first real user installs it) |
 | `favicon` | Simplified mark | Browser tab | 32 | SVG | Need | Later |
 
@@ -89,8 +89,8 @@ Priority: Later. Listed so they're made from the same sheet when the time comes.
 
 | ID | What | Used in | Display size | Deliver | Status | Priority |
 |---|---|---|---|---|---|---|
-| `welcome-scene` | The **whole screen** behind Welcome: sky painted all the way to the top, soft clouds, a **generic** campus tower building (not a real campus), trees and hedges, the "Higher together" banner on a lamppost, ground. **No husky and no book stack** (both are separate layers). The top 45% must be calm, light sky with no detail, because the headline sits there. Keep the banner and the building inside the middle 80% of the width, since narrow phones crop the sides | 01 Welcome | full screen, 393 × 852 | PNG 1179 × 2556, opaque. The banner text is the only baked text allowed | Have: 1179 × 1680 with the books painted in. Needs re-export | Demo |
-| `welcome-books` | Only the book stack: PLAN / PREPARE / TRANSFER / BELONG, as drawn. Its left end may run off the left edge, as in the reference | 01 Welcome, in front of the husky | about 126 × 108 | PNG 480 × 410, transparent | Need | Demo |
+| `welcome-scene` | The **whole screen** behind Welcome: sky painted all the way to the top, soft clouds, a **generic** campus tower building (not a real campus), trees and hedges, the "Higher together" banner on a lamppost, ground. **No husky and no book stack** (both are separate layers). Match the reference's proportions: roughly the top 38% is sky and soft clouds, tree tops start around 38%, and the tower around 46%. The app anchors the scene to the top, so on short screens the bottom plaza gets trimmed, not the sky. Keep the banner and the building inside the middle 80% of the width, since narrow phones crop the sides | 01 Welcome | full screen, 393 × 852 | PNG 1179 × 2556, opaque. The banner text is the only baked text allowed | Have (matches the reference). It's 852 × 1846, about 2.2× instead of 3×, so it looks slightly soft on a phone. Re-export at 1179 × 2556 with the same composition when convenient; not urgent | Demo |
+| `welcome-books` | Only the book stack: PLAN / PREPARE / TRANSFER / BELONG, as drawn. Its left end may run off the left edge, as in the reference | 01 Welcome, in front of the husky | about 126 × 108 | PNG 480 × 410, transparent, trimmed tight to the stack (no empty rows or stray pixels around it) | Have, but not trimmed: empty space and a faint red smudge below the stack make it float above the ground line. Crop to the stack itself | Demo |
 | `welcome-scene` layered | The same, split: `clouds`, `building`, `trees`, `banner`, `books`, `ground`, each on the full canvas | 01 (later subtle parallax) | same | PNGs on a shared canvas | Need | Later |
 | `home-clouds` | Very pale cloud band, no hard edges | 02 Home and 06 Sign in, top | 393 × 300 | PNG 1179 × 900, transparent | Have (flat) | Demo (can ship without; the screen works with the gradient alone) |
 | `celebrate-clouds-top` | Cloud band for the top of the celebration | 05 | 393 × 220 | PNG 1179 × 660 | Have (flat) | Demo |
@@ -135,7 +135,7 @@ Add one row per university as coverage grows. No screen shows a **community coll
 Save to `public/art/brand/`. How to take each one out of its kit:
 
 - **Apple**: use the left-aligned logo SVG exactly as supplied. It already contains the padding Apple requires, which is why it looks like a box with a small apple inside. Scale it to the button's height (48) and don't crop it.
-- **Google**: the bundle only has whole buttons and icon buttons. Google's guidelines say a custom-size logo should start from one of the logo sizes in the bundle, so take the icon-only SVG and keep only the four colored G paths, exactly as they are. Remove the button's background rectangle and border. Don't change the paths, colors, or proportions.
+- **Google**: the bundle only has whole buttons and icon buttons. Google's guidelines say a custom-size logo should start from one of the logo sizes in the bundle, so take the icon-only SVG and keep only the G itself, exactly as it is. In the current kit the G is one G-shaped mask filled with Google's own gradient, not separate paths; keep that as-is. Remove only the button's white fill and grey border, and frame the file to the G's own box. Don't change its shapes, colors, or proportions.
 - Both logos must sit on a pure white button (`--white`).
 
 ## 7 · Not art (built in code or from the icon set)
