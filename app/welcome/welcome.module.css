@@ -1,26 +1,81 @@
-/* The husky zone runs from 16 below the body text down to the husky line */
-.zone {
-  container-type: size;
+/* Text block: starts at the page top so the sky scrim behind it can too */
+.top {
+  position: relative;
+  isolation: isolate;
+  padding-top: calc(var(--safe-top) + var(--strip-h) + 24px);
 }
 
-/* Husky: bottom on the husky line, centered at 54% of the width */
+.wordmark {
+  width: 252px;
+}
+
+.headline {
+  margin-top: 40px;
+}
+
+.body {
+  margin-top: 12px;
+}
+
+/* Short screens (Safari with its bars): tighter text so the husky keeps its size */
+@media (max-height: 759px) {
+  .top {
+    padding-top: calc(var(--safe-top) + var(--strip-h) + 16px);
+  }
+  .wordmark {
+    width: 180px;
+  }
+  .headline {
+    margin-top: 20px;
+  }
+  .body {
+    margin-top: 8px;
+  }
+}
+
+/* Sky scrim: page top to 32 below the body text, in the scene's own sky color (#8AD1FD) */
+.skyScrim {
+  position: absolute;
+  inset: 0 0 -32px;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(138, 209, 253, 0.85) 0%,
+    rgba(138, 209, 253, 0.7) 70%,
+    rgba(138, 209, 253, 0) 100%
+  );
+}
+
+/* The husky zone runs from 8 below the body text down to the husky line. Books may run off the left edge */
+.zone {
+  container-type: size;
+  overflow-x: clip;
+}
+
+/* Husky: bottom on the husky line, centered at 54% of the width. Sized by its image */
 .husky {
   position: absolute;
   bottom: 0;
   left: 54%;
+  width: max-content;
   translate: -50% 0;
 }
 
-/* Books: in front of the husky, flush left, bottom on the ground line (24 below the husky line) */
+.huskyImg {
+  max-width: none;
+}
+
+/* Books, sized from the husky: 58% of its width, right edge 28% into it, bottom on the ground line (12 below) */
 .books {
   position: absolute;
-  bottom: -24px;
-  left: 0;
+  right: 72%;
+  bottom: -12px;
+  width: 58%;
+  max-width: none;
 }
 
 @container (max-height: 159px) {
-  .husky,
-  .books {
+  .husky {
     display: none;
   }
 }
