@@ -6,8 +6,8 @@ Last updated 2026-09-28. Build order steps 1–5 from `docs/specs/README.md` are
 
 | Step | What | Where |
 |---|---|---|
-| 1 | Tokens as CSS variables (`app/globals.css`), with Tailwind's default colors, radii and shadows switched off so only spec tokens exist. Figtree, Phosphor, every shared component in 00 with all its states, demo strip, placeholder screen | `components/ui/`, `/dev/components` |
-| 2 | Welcome, rev 2 (full-screen scene anchored to the top, sky scrim, husky on the husky line, books sized from the husky and in front, tighter text under 760 tall) | `app/welcome/` |
+| 1 | Tokens as CSS variables (`app/globals.css`), with Tailwind's default colors, radii and shadows switched off so only spec tokens exist. Figtree, Phosphor, every shared component in 00 with all its states, demo strip (component only, see below), placeholder screen | `components/ui/`, `/dev/components` |
+| 2 | Welcome, rev 3 (scene placed by its plaza line, sky scrim, husky sized to fit the screen, books sized from the husky and in front, banner check, tighter text under 760 tall) | `app/welcome/` |
 | 3 | Sign in, the auth interface, demo auth, and the signed-out redirect | `app/sign-in/`, `lib/auth/`, `app/(app)/session-gate.tsx` |
 | 4 | Create account | `app/sign-up/` |
 | 5 | Forgot password, rev 2 (husky, hidden below 372 wide, both states, resend) | `app/forgot-password/` |
@@ -16,11 +16,14 @@ Also in place:
 - **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/`, `/explore`, `/essays` and `/mentors` use it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
 - **Shared auth parts** in `components/auth/`: the screen background and top block, the sheet, the social buttons, the password toggle, and the switch line.
 - **Art loading.** `components/art.tsx` renders the real file when it exists in `public/art/` (`.svg` first, then `.png`). It reads the file's own proportions from the file. When a file is missing it renders the labelled placeholder from `art-assets.md`.
+- **Demo strip only where demo records show.** The root layout doesn't render it. A screen that shows demo records (Home, University, Essays, the celebration) renders `<DemoStrip />`; `--strip-h` is 0 unless one is on the page (`:root:has([data-demo-strip])`). None of those screens is built yet, so the strip shows nowhere today.
+- **Installable PWA.** `app/manifest.ts` (standalone, name, colors, icons) and `appleWebApp` in `app/layout.tsx`. Chromium reports no manifest or installability errors.
+- **Welcome layout hook.** `app/welcome/welcome-frame.tsx` measures the CTA, the text and the viewport, and `welcome-layout.ts` does the math (01 → Lines). CSS computes the same scene position for the first paint, so nothing jumps when the hook runs.
 - **Session.** Every route in the `app/(app)` group needs `stackd.session`. Without it, the student goes to `/welcome` if Welcome hasn't been seen, otherwise to `/sign-in`.
 
-Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `logo-apple.svg` and `logo-google.svg`. The two husky run-loop frames are used by the loading component.
+Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `logo-apple.svg` and `logo-google.svg`. Temporary app icons (`public/icons/`, `app/apple-icon.png`) are cut from `husky-welcome`'s head on `--sky-200`. The two husky run-loop frames are used by the loading component.
 
-Still placeholders or missing: `home-clouds` (background decoration, so it draws nothing when missing) and `burst-dashes` (not used on any built screen).
+Still placeholders or missing: `app-icon` (temporary icons above until it exists), `home-clouds` (background decoration, so it draws nothing when missing) and `burst-dashes` (not used on any built screen).
 
 ## Left in the build order
 
@@ -35,18 +38,18 @@ Not built yet, though 00 describes them: each tab keeping its own scroll positio
 
 ## Open items
 
-1. **Welcome's husky top vs 01's test.** 01 starts the husky zone 8 below the body text, but its test asks for the husky's top edge to be at least 16 below. When the zone is under 350 tall, the image box starts 8 below. The art has 30 transparent rows at the top, so the ears start about 14–15 below at 393 × 852 installed and at 393 × 660. The spec needs one of the two numbers changed.
-2. **The book stack is flatter than the reference.** The cropped art is 1.46 : 1. The stack in `welcome-reference.png` is about 1.1 : 1, with thicker books. Sized at 58% of the husky's width, the stack is about 110 tall at 393 × 852 (device mode), against about 140 in the reference, so it covers less of the husky's lower body. Matching it needs new art, not a code change.
-3. **Books cover the "Higher together" banner on short screens.** With the scene anchored to the top, the banner stays at the same height on every 393-wide screen, while the husky and books move up with the button. At 393 × 660 the stack sits in front of the banner; at 852 the banner is clear, above the books.
+1. **Welcome at 375 × 548: the body text runs over the banner.** To put the plaza under the husky, the scene slides up 224, which lifts the banner's top to 184. The body text ends at 219, so "everything you need to go further." sits over the top of "Higher together". The books and the husky clear the banner, but 01's "banner is fully visible" test fails here, and the navy text over the blue banner loses contrast. At 548 tall the plaza and a clear banner can't both fit: keeping the banner below the text would put the husky's paws about 20 above the plaza line, in front of the wall. The spec needs to say which one gives way on screens this short.
+2. **Welcome at 320 × 568: the husky shows.** 01's test says it's hidden there, but its sizing rule gives 169 tall, over the 160 floor. The 150-wide wordmark and 16 / 16 / 8 gaps leave more room than the spec expected. Nothing overlaps and the banner is clear. The spec needs either the test changed or a higher floor (the husky is 173 tall at 375 × 548, so a floor of 170 would hide it at 320 × 568 only).
+3. **The book stack is flatter than the reference.** The cropped art is 1.46 : 1. The stack in `welcome-reference.png` is about 1.1 : 1, with thicker books. Sized at 58% of the husky's width, the stack is about 107 tall at 393 × 852 (device mode), against about 140 in the reference, so it covers less of the husky's lower body. Matching it needs new art, not a code change.
 4. **`welcome-scene.png` is 852 × 1846, not 1179 × 2556.** The proportions are right, but it's about 2.2× resolution on a 3× phone, so it looks slightly soft. The building's right edge also sits just outside the middle 80% of the width.
 5. **Dev-server image stalls.** A dev server that had been running for days stopped finishing Next's image-optimizer request for `husky-wave` and `husky-forgot` at 256 wide as WebP. Only a 1× desktop window asks for that size. The husky stayed invisible because it only fades in once its image loads.
    - Restarting the server fixed it, and a fresh server answers the same request in about 0.2 s.
    - The app now also counts an image that finished loading before hydration (commit `d224620`).
    - If art goes missing in a browser during development, restart `npm run dev`. Don't delete `.next/dev/cache/images` while the server is running.
    - After replacing an art file, clear that cache or restart. Otherwise the optimizer keeps serving the old image under the same URL.
-6. **"Demo data" strip reported missing in a ~460-wide desktop window. Not reproduced.** It's in the page's HTML on every route and rendered in every window size, pixel density and navigation path tested. If it happens again, capture a screenshot and the browser console.
-7. **Apple logo terms.** Apple's design-resources license says the files are for mock-ups of apps on Apple platforms. It's approved for this demo; re-check before any public launch (06 says the same).
-8. **Untested outside a real iPhone:** iOS password autofill (06), the iOS strong-password suggestion (07), and the page keeping a focused field above the on-screen keyboard. Also the real safe-area insets; tests simulated them with 59 top and 34 bottom.
+6. **Apple logo terms.** Apple's design-resources license says the files are for mock-ups of apps on Apple platforms. It's approved for this demo; re-check before any public launch (06 says the same).
+7. **Untested outside a real iPhone:** iOS password autofill (06), the iOS strong-password suggestion (07), the page keeping a focused field above the on-screen keyboard, and Add to Home Screen opening full screen. Also the real safe-area insets; tests simulated them with 59 top and 34 bottom.
+8. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 9. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 
 ## Built differently from the specs, and why
@@ -58,13 +61,14 @@ Not built yet, though 00 describes them: each tab keeping its own scroll positio
 - **Wordmark is 3.17 : 1 once trimmed, not ~3.6 : 1** as art-assets expects. It renders 252 × 80 on Welcome and 100 × 32 on Sign in and Create account.
 
 ### Layout
-- **Welcome sky scrim color is #8AD1FD, not the top row.** 01 says to sample the top-center of `welcome-scene.png`. The top row there is #7BCAFD, but it lies outside the lighter arc the text sits on (#8AD1FD, averaged over the plain sky behind the text). A scrim in the top-row color darkened the sky into a visible band. With #8AD1FD it's invisible over plain sky.
 - **Welcome sky scrim is positioned inside the text block, not `position: fixed`.** Its height has to follow the text (bottom of the body + 32), which changes with wrapping and the short-screen spacing. It's absolute in the text block and reaches the page top. Above 480 wide it covers only the 480 column; there the scrim sits over plain sky, so its edges don't show.
 - **Welcome husky zone clips sideways.** The zone has `overflow-x: clip`, so on screens wider than 480 the books run off the column's edge, not into the page margin.
-- **Welcome at 393 × 852 installed** (59 top, 34 bottom): CTA top 710, ground line 694, husky line 682, as in 01. The husky is 304 × 240, not about 313 × 247, because the wordmark renders 80 tall rather than ~70. So the books are 139 wide with their left edge at 21, not 143 and 15.
+- **Welcome's scene lines are measured, not 01's estimates.** The plaza line is row 1362 of 1846 (73.8%, where the left low wall meets the pavement; the right planters end at 73.2%), not 73%. The banner's bottom edge with its outline is row 1105 (59.9%). So at 393 × 647 the scene's top is −153, not about −146. CTA top 539, ground line 523, husky line 499 and plaza line 475 match 01, and the husky is 259 tall.
+- **Welcome's scene grows to the viewport height** when the phone is taller than the art's proportions (393 × 852 is 0.4 taller than 393 wide × 2.167), so there's never a sliver of gap. It's still `object-fit: cover`, so the extra is a sub-pixel crop at the sides.
+- **Welcome at 393 × 852 installed** (59 top, 34 bottom): CTA top 710, ground line 694, husky line 670, as in 01. The husky is 316 tall (the zone limits it before 40% of the viewport does), and the books are 144 wide with their left edge at 13.
 - **Sign in and Create account at 320 wide.** The headline's 190 max-width runs into the 144-wide husky, so the headline and subtitle are layered in front of it.
-- **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query, and the husky and books never show.
-- **Sign in in installed-app mode.** After the wordmark became real art, Sign in scrolled by about 8 px at 393 × 852 with the bottom line still visible. This hasn't been re-measured since the trim (now 32 tall).
+- **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
+- **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
 
 ### Component details
 - **Text link hit area.** Small (`label`) links use 13 px vertical padding, not 12, to reach 00's 44 px minimum.
