@@ -62,7 +62,7 @@ export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
       <main
         className="mx-auto min-h-dvh max-w-[480px] px-4"
         style={{
-          paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)",
+          paddingTop: "calc(var(--safe-top) + 8px)",
           paddingBottom: showTabBar ? "calc(56px + var(--safe-bottom))" : "var(--safe-bottom)",
         }}
       >

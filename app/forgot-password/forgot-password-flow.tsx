@@ -114,7 +114,7 @@ export function ForgotPasswordFlow({ husky }: { husky: ReactNode }) {
 
   return (
     <>
-      <div className="relative px-4 pb-6" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
+      <div className="relative px-4 pb-6" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
         <BackButton fallback="/sign-in" onBack={stage === "sent" ? () => show("request") : undefined} />
         <ViewTransition key={stage}>
           <div className="relative z-[1] px-2">

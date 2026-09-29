@@ -64,6 +64,11 @@
   /* Safe areas as variables so screenshots can simulate an installed iPhone app */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --strip-h: 0px;
+}
+
+/* The demo strip pushes content down only on screens that render it */
+:root:has([data-demo-strip]) {
   --strip-h: 24px;
 }
 

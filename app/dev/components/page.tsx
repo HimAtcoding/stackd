@@ -67,7 +67,7 @@ export default function ComponentsPage() {
   return (
     <main
       className="mx-auto max-w-[480px] px-4 pb-24"
-      style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)" }}
+      style={{ paddingTop: "calc(var(--safe-top) + 24px)" }}
     >
       <h1 className="text-navy-900 type-title-1">Components</h1>
       <p className="mt-2 text-slate-600 type-body">Every shared component from 00-foundations, in every state.</p>

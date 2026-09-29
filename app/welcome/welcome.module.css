@@ -2,7 +2,7 @@
 .top {
   position: relative;
   isolation: isolate;
-  padding-top: calc(var(--safe-top) + var(--strip-h) + 24px);
+  padding-top: calc(var(--safe-top) + 24px);
 }
 
 .wordmark {
@@ -20,7 +20,7 @@
 /* Short screens (Safari with its bars): tighter text so the husky keeps its size */
 @media (max-height: 759px) {
   .top {
-    padding-top: calc(var(--safe-top) + var(--strip-h) + 16px);
+    padding-top: calc(var(--safe-top) + 16px);
   }
   .wordmark {
     width: 180px;
