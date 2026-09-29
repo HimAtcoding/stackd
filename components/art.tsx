@@ -46,6 +46,12 @@ function intrinsicSize(src: string): { w: number; h: number } | null {
   return box ? { w: Number(box[1]), h: Number(box[2]) } : null;
 }
 
+// The file's own size, for layouts that position by the art's proportions. Null while the file is missing.
+export function artSize(id: ArtId) {
+  const src = findFile(ART[id]);
+  return src ? intrinsicSize(src) : null;
+}
+
 // Renders the real file when it's in /public, otherwise the labelled placeholder from art-assets.md.
 // With a real file, the missing side of the size follows the file's proportions.
 export function Art({ id, width, height, fill, className, style, label, preload, reveal, optional }: ArtProps) {

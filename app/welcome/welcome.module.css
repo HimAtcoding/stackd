@@ -1,3 +1,17 @@
+/* Scene: full width, its own proportions, slid so its plaza line sits 48 above the ground line.
+   The layout hook sets --scene-h and --scene-top; the fallbacks cover the first paint */
+.scene {
+  --h: var(--scene-h, max(calc(100vw * var(--scene-ratio)), 100dvh));
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: var(--h);
+  top: var(
+    --scene-top,
+    clamp(calc(100dvh - var(--h)), calc(100dvh - var(--safe-bottom) - 172px - var(--plaza) * var(--h)), 0px)
+  );
+}
+
 /* Text block: starts at the page top so the sky scrim behind it can too */
 .top {
   position: relative;
@@ -23,10 +37,10 @@
     padding-top: calc(var(--safe-top) + 16px);
   }
   .wordmark {
-    width: 180px;
+    width: 150px;
   }
   .headline {
-    margin-top: 20px;
+    margin-top: 16px;
   }
   .body {
     margin-top: 8px;
@@ -65,13 +79,18 @@
   max-width: none;
 }
 
-/* Books, sized from the husky: 58% of its width, right edge 28% into it, bottom on the ground line (12 below) */
+/* Books, sized from the husky: 58% of its width, right edge 28% into it, bottom on the ground line (24 below) */
 .books {
   position: absolute;
   right: 72%;
-  bottom: -12px;
+  bottom: -24px;
   width: 58%;
   max-width: none;
+}
+
+/* Under 160 tall the husky and books are hidden; the scene still shows */
+[data-husky-hidden] .husky {
+  display: none;
 }
 
 @container (max-height: 159px) {
