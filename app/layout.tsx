@@ -12,6 +12,8 @@ const figtree = Figtree({
 export const metadata: Metadata = {
   title: "Stackd",
   description: "Transfer planning for California community college students",
+  // Installed on iPhone: full screen, with the art running under the status bar (the specs' safe-area top)
+  appleWebApp: { capable: true, title: "Stackd", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {
