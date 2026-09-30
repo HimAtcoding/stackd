@@ -1,5 +1,22 @@
 # Roadmap and non-goals
 
+## Build-to-launch order (September 2026)
+
+The working plan from where the build stands today through launch and after. Each phase depends on the one before it. Step-by-step progress inside a phase is tracked in `docs/build-status.md`; this section is the map.
+
+| # | Phase | What it covers | Done when |
+|---|---|---|---|
+| 1 | Finish the drawn screens | University requirements, Essays, "Great job!" celebration (build steps 7–9 in `docs/specs/README.md`) | All mockup screens are built and pass their specs' tests |
+| 2 | Design the missing core screens | Onboarding (college, major, target and reach schools); requirement detail (courses at nearby colleges that satisfy a requirement, with source and year). Mockup → spec → build | A student can pick their path and see which courses count, on demo data |
+| 3 | Real data foundation | Supabase project and the tables in `05-data-model.md`; first verified dataset hand-curated from ASSIST (one university and major, 5–10 colleges) with provenance on every record; validate and import scripts (`12-data-pipeline.md`). Curation owned by the business co-founder, in parallel with phase 2 | The database answers "which courses at these colleges satisfy requirement X?" for the MVP slice |
+| 4 | Real accounts | Supabase Auth: email and password with real reset emails; Google (OAuth client in Google Cloud); Apple (needs the paid Apple Developer Program, even for web). Progress moves from local storage to the database with row-level security | Real students can sign up, sign in, and keep their progress across devices |
+| 5 | Launch readiness | Vercel deploy on a real domain; terms of use and privacy page; unofficial-tool disclaimer; error tracking; the metrics in `14-metrics.md`; testing on real iPhones and Androids, including old phones on slow connections | Safe to hand to a stranger |
+| 6 | Soft launch at Las Positas | Validation stages 4–6 below: 10 students, fix, then 50. Time it to a registration window (October–November or April–May) | Students return and save plans without help |
+| 7 | Expand coverage | Statewide ADT/TMC templates and Cal-GETC first (cover every CSU at once), then ASSIST agreements pair by pair, then UC TAG. Public requirement pages for search traffic (`13-distribution-and-app-store.md`) | Coverage grows without any unverified record shown as verified |
+| 8 | Iterate after launch | Rive husky animations, more interactive layouts, personalized events, programs, and activities, the design rev 2 backlog, Mobbin comparisons. Native app only when deadline and registration notifications justify it | Ongoing |
+
+**On coverage speed:** the number of universities supported is limited by how fast data can be verified, not by code. A few schools covered correctly beats many covered loosely; statewide templates in phase 7 are how coverage grows fast without breaking the no-guessing rule in `06-trust-and-provenance.md`.
+
 ## Validation stages
 
 1. **Data prototype** — small verified dataset; confirm the database answers the core query
