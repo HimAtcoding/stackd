@@ -1,4 +1,4 @@
-import { CalendarDotsIcon, CaretRightIcon, UsersThreeIcon } from "@phosphor-icons/react/ssr";
+import { CalendarDotsIcon, UsersThreeIcon } from "@phosphor-icons/react/ssr";
 import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
@@ -10,7 +10,7 @@ export function UpcomingCard({ item }: { item: UpcomingItem }) {
   const deadline = item.type === "deadline";
 
   return (
-    <Card href={`/upcoming/${item.id}`} className="relative">
+    <Card href={`/upcoming/${item.id}`}>
       <div className="flex items-start gap-4">
         <span
           className={cn(
@@ -25,11 +25,9 @@ export function UpcomingCard({ item }: { item: UpcomingItem }) {
             <span className="text-navy-900 type-headline">{item.title}</span>
             {due && <Pill variant="due">{due}</Pill>}
           </span>
-          {/* Only the body clears the chevron; the title row sits above it */}
-          <span className="mt-1 line-clamp-2 pr-7 text-slate-600 type-body">{item.body}</span>
+          <span className="mt-1 line-clamp-2 text-slate-600 type-body">{item.body}</span>
         </span>
       </div>
-      <CaretRightIcon weight="bold" size={20} aria-hidden className="absolute right-4 top-1/2 -translate-y-1/2 text-navy-900" />
     </Card>
   );
 }

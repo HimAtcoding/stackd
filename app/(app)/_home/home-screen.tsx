@@ -98,26 +98,23 @@ export function HomeScreen({ home, university, wordmark, husky, burst, clouds }:
           </span>
         </header>
 
-        {/* Text stays clear of the husky: 200 wide, or up to 8 before the 128-wide husky under 360 */}
-        <section className="mt-6 px-6">
+        <section className="relative mt-6 px-6">
+          {/* Text stays clear of the husky: 200 wide, or up to 8 before the 128-wide husky under 360 */}
           <div className="max-w-[200px] max-[359px]:max-w-[calc(100%-124px)]">
             <h1 className="text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
             {home?.greeting?.subtitle && <p className="mt-1 text-navy-900 type-body">{home.greeting.subtitle}</p>}
           </div>
           <span aria-hidden className="mt-3 block h-1 w-7 rounded-full bg-blue-600" />
-        </section>
-
-        {/* The husky stands behind the journey card, its bottom 4 below the card's top edge */}
-        <div className="relative mt-8 px-4">
-          <div className="absolute bottom-[calc(100%-4px)] right-3 w-40 max-[359px]:w-32">
+          {/* 32 down to the journey card plus 4, so the card covers the husky's cut edge */}
+          <div className="absolute -bottom-9 right-3 z-0 w-40 max-[359px]:w-32">
             {husky}
             <span className="absolute left-4.5 top-3 -rotate-20">{burst}</span>
           </div>
-          {steps.length > 0 ? (
-            <JourneyCard statuses={steps.map((s) => stepStatus(s, statuses))} />
-          ) : (
-            <div className="h-px" />
-          )}
+        </section>
+
+        {/* Without journey data the gap stays, so the husky still ends above the tiles */}
+        <div className="relative z-10 mt-8 px-4">
+          {steps.length > 0 && <JourneyCard statuses={steps.map((s) => stepStatus(s, statuses))} />}
         </div>
 
         <nav aria-label="Shortcuts" className="mt-3 grid grid-cols-2 gap-3 px-4">

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { CaretRightIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
 
 type ShortcutTileProps = {
@@ -34,12 +33,12 @@ export function ShortcutTile({ href, icon, iconTint, title, subtitle, unread, ..
       >
         {icon}
       </span>
-      <span className="flex min-w-0 flex-1 flex-col gap-0.5 pr-5">
-        <span className="truncate text-navy-900 type-label">{title}</span>
+      {/* No chevron (00 rev 2): the text fills the tile. Only the title line is level with the unread dot */}
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className={cn("truncate text-navy-900 type-label", unread && "pr-3")}>{title}</span>
         <span className="truncate text-slate-600 tabular-nums type-caption">{subtitle}</span>
       </span>
       {unread && <span aria-hidden className="absolute right-3 top-4 size-2 rounded-full bg-coral-500" />}
-      <CaretRightIcon weight="bold" size={16} aria-hidden className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-900" />
     </Link>
   );
 }
