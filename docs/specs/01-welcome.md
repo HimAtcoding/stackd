@@ -129,7 +129,7 @@ Check each of these at 393 × 647 (your phone in Safari), 393 × 852 (installed)
 - The books cover the husky's left side (backpack and back leg).
 - The husky's top edge is at least 8 below the body text.
 - The headline and body stay readable (the sky scrim softens any tree tops behind them).
-- At 320 × 568 nothing overlaps. The husky and books show if they fit at 160 tall or more (they do, at about 169), and hide otherwise.
+- At 320 × 568 nothing overlaps. The husky and books show if they fit at 160 tall or more (they do, at about 227 now that the wordmark hides under 600 tall), and hide otherwise.
 - At 375 × 548 the wordmark is hidden and the body text ends above the banner.
 - The CTA's bottom edge sits at least 12 above the home indicator.
 - Deleting `welcome-scene` leaves a working screen on `--sky-100`.

@@ -2,6 +2,27 @@
 
 Route: `/`. Tab: Home. Mockup: panel 2 of `../mockup/mockup-4-screens.png`.
 
+## Build notes (step 6)
+
+- **Demo data** lives in `data/seed/` (00 → Data rule). This step creates `data/seed/home.json` and `data/seed/universities/uc-davis.json` (the records in 03), because the journey card reads requirement statuses from the university file. Every record has `"demo": true`.
+- **Requirement status** = the seed status, overridden by `localStorage["stackd.requirements"]` if present (03 writes it; nothing writes it yet). Build the read side now as one shared helper so 03 can reuse it.
+- **Demo strip** shows on this screen (00 → Demo strip).
+- **Destinations not built yet** open the signed-in placeholder: the Requirements tile (University is step 7), the Essays tile and tab (Essays is step 8), Mentors, Events, the bell, and the upcoming cards.
+- **Art**: `husky-home.png` in `public/art/husky/`. If it's missing, use the labelled placeholder at 160 × 140. If the burst marks are painted into the art, don't draw `burst-dashes` separately. `home-clouds` is optional decoration: no placeholder.
+- **Scrolling**: the page scrolls under the fixed tab bar. The scroll area's bottom padding = 24 + 56 + safe-area bottom, so the last card never hides behind the tab bar.
+- **Seed file** `data/seed/home.json` (the journey and upcoming records are the ones listed further down; this adds the rest the screen reads):
+
+```json
+{ "demo": true,
+  "greeting": { "demoName": "Alex", "subtitle": "You're closer than you think." },
+  "notifications": { "unread": 1 },
+  "counts": { "drafts": 1, "newMentorMessages": 3, "upcomingEvents": 2 },
+  "journey": { "...": "as below" },
+  "upcoming": [ "as below" ] }
+```
+
+Tile subtitles use these: Essays "1 draft", Mentors "3 new messages", Events "2 upcoming". The Requirements count is computed from the university file, not stored here.
+
 ## Mobbin references
 
 | Screen | What it grounds |
@@ -57,7 +78,7 @@ Alignment: left. Free text at x 24. Cards at 16.
 ## Header row
 
 Height 44, top padding 8 (below the demo strip), horizontal padding 24 left, 16 right. Not sticky.
-- **Wordmark**: `wordmark.svg`, width 100, vertically centered, `aria-label="Stackd"`.
+- **Wordmark**: `wordmark.png` (trimmed), width 100 (about 32 tall), vertically centered, `role="img"`, `aria-label="Stackd"`.
 - **Bell**: circle button (44, `--surface`, `--shadow-float`) with `Bell` regular 24 `--navy-900`. Unread dot: 10 × 10 `--coral-500` with a 2 px `--surface` ring, placed top 4 / right 4 of the circle. `aria-label="Notifications, 1 unread"` (count from data). Tap: placeholder screen.
 
 ## Greeting block
@@ -67,7 +88,7 @@ Container: 24 below the header. Height is its content: 40 + 4 + 20 + 12 + 4 = 80
 - "You're closer than you think.": `body`, `--navy-900`, max-width 200. Copy comes from data (`home.json → greeting.subtitle`) because it makes a claim about the student.
 - Dash: 28 × 4, `--r-full`, `--blue-600`, 12 below the subtitle. Decorative, `aria-hidden`.
 
-**Husky**: `husky-home`, width 160, height auto (~140). `position: absolute; right: 12px;` with its bottom edge 4 below the journey card's top edge, so the card covers the bottom of the husky art (z-index: husky 0, cards 1). `alt=""`. `burst-dashes.svg` at 28 × 28 sits 8 left of the husky's head (left edge of husky + 18, top of husky + 12), rotated -20°, `--yellow-400`.
+**Husky**: `husky-home`, width 160, height auto (~140). `position: absolute; right: 12px;` with its bottom edge 4 below the journey card's top edge, so the card covers the bottom of the husky art (z-index: husky 0, cards 1). `alt=""`. If the art has no burst marks painted in: `burst-dashes.svg` at 28 × 28 sits 8 left of the husky's head (left edge of husky + 18, top of husky + 12), rotated -20°, `--yellow-400`.
 
 The greeting text column is capped at 200 so it never runs under the husky. At viewports under 360 wide, the husky shrinks to width 128.
 
@@ -153,6 +174,6 @@ Heading order: `h1` greeting, `h2` "Your transfer journey", `h2` "Upcoming". Eve
 
 ## Test
 
-- Set GPA to done in `home.json`: the tile reads "0 in progress", the journey reads "4 of 6", and a fourth node plus its connector turn green.
+- Set GPA to done in `data/seed/universities/uc-davis.json` (or in `stackd.requirements`): the tile reads "0 in progress", the journey reads "4 of 6", and a fourth node plus its connector turn green.
 - At 320 wide the tiles stay 2-up, titles truncate with an ellipsis, and the husky shrinks to 128.
 - With `upcoming: []`, the empty line renders.
