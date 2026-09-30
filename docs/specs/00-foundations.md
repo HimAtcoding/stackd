@@ -178,7 +178,7 @@ Height 48. `--r-md`. Background `--blue-50`, 1 px `--blue-50-border`. Content ce
 
 ### Shortcut tile
 
-Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 `--tile-pad`. Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap) + chevron 16 at right 12, vertically centered. Pressed: `scale(0.98)` + `--surface-pressed`.
+Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 `--tile-pad`. Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
 
 ### Pill
 

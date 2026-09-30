@@ -4,20 +4,23 @@ Transfer-planning web app for California community college students. Next.js, Ty
 
 ## Read before any work
 
+- `docs/build-status.md` for what's built, what's next, and open items
+- `docs/specs/README.md` for the build order and how specs work
 - `docs/17-phase1-agent-brief.md` for scope and the non-negotiable data rules
 - `.claude/rules/ui-design.md` for all UI work
 - `docs/04`, `05`, `06`, `07` as reference for anything touching academic data
 
 ## How screens get built
 
-1. Each screen has a spec in `docs/specs/`. Build from the spec, not from guesses.
+1. Each screen has a spec in `docs/specs/`. Build from the spec, not from guesses. Every value comes from `docs/specs/00-foundations.md`.
 2. Start in plan mode. Give the design plan the UI rules ask for before writing code.
-3. Use the Mobbin MCP to pull 2–3 real shipped screens that match the spec's pattern, and say which ones you used.
-4. Match the team's mockup first. Don't redesign it.
+3. For any new screen or major UI change, use the Mobbin MCP to pull the references listed in that screen's spec (or 2–3 real shipped screens that match its pattern), and say which ones you used. Report differences as a list. Don't change the design based on them unless I say so. Skip this for small fixes.
+4. Match the team's mockups in `docs/mockup/` first. Don't redesign them.
+5. When a task is done: commit, update `docs/build-status.md`, and push.
 
 ## Current phase
 
-Demo build of the team's 4-page mockup. Sign-up and log-in screens are UI only: no Supabase Auth yet.
+Demo build of the team's mockups. Welcome, sign in, create account, and forgot password are done, using demo auth (no Supabase Auth yet). Next steps follow the build order in `docs/specs/README.md`.
 
 ## Rules that never bend
 

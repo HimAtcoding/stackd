@@ -47,22 +47,22 @@ What the references confirm: 16 margins, 12 gutters, and section titles at 18–
 │                      ╰─────╯  │  32
 │ ┌───────────────────────────┐ │
 │ │Your transfer journey 3 of 6│ │  journey card, h 100
-│ │ ●━━●━━●  ○   ○   ○        │ │
+│ │ ●━━●━━●━━○━━○━━○          │ │
 │ └───────────────────────────┘ │  12
 │ ┌────────────┐ ┌────────────┐ │
-│ │▣ Requirem… >│ │▣ Essays   >│ │  tiles 72, gap 12
+│ │▣ Requirements│ │▣ Essays    │ │  tiles 72, gap 12
 │ └────────────┘ └────────────┘ │  12
 │ ┌────────────┐ ┌────────────┐ │
-│ │▣ Mentors • >│ │▣ Events   >│ │
+│ │▣ Mentors   •│ │▣ Events    │ │
 │ └────────────┘ └────────────┘ │  20
 │ Upcoming                      │  title-2, x 24
 │ ┌───────────────────────────┐ │  12
 │ │▣ Application dead… (In 2w)│ │  upcoming card
-│ │  Stay on track! Review… > │ │
+│ │  Stay on track! Review…   │ │
 │ └───────────────────────────┘ │  12
 │ ┌───────────────────────────┐ │
 │ │▣ Transfer student panel   │ │
-│ │  Hear from current…     > │ │
+│ │  Hear from current…       │ │
 │ └───────────────────────────┘ │  24
 ├───────────────────────────────┤
 │ Home  Explore  Essays Mentors │  tab bar 56 + safe
@@ -77,7 +77,7 @@ Alignment: left. Free text at x 24. Cards at 16.
 
 ## Header row
 
-Height 44, top padding 8 (below the demo strip), horizontal padding 24 left, 16 right. Not sticky.
+Height 44, top padding 8 (below the demo strip), horizontal padding 24 left, 16 right. Not sticky. The row is exactly the screen width: the wordmark's left edge sits at x 24 and the bell's right edge at 16 from the screen's right edge. Nothing in the header may be cut off by the screen edge.
 - **Wordmark**: `wordmark.png` (trimmed), width 100 (about 32 tall), vertically centered, `role="img"`, `aria-label="Stackd"`.
 - **Bell**: circle button (44, `--surface`, `--shadow-float`) with `Bell` regular 24 `--navy-900`. Unread dot: 10 × 10 `--coral-500` with a 2 px `--surface` ring, placed top 4 / right 4 of the circle. `aria-label="Notifications, 1 unread"` (count from data). Tap: placeholder screen.
 
@@ -86,9 +86,9 @@ Height 44, top padding 8 (below the demo strip), horizontal padding 24 left, 16 
 Container: 24 below the header. Height is its content: 40 + 4 + 20 + 12 + 4 = 80.
 - "Hi, {firstName}!": `title-1`, `--navy-900`. `firstName` comes from `localStorage["stackd.profile"]` (written on create account, 07). If it's missing, as after an Apple or Google sign-in, use the demo name from `home.json`.
 - "You're closer than you think.": `body`, `--navy-900`, max-width 200. Copy comes from data (`home.json → greeting.subtitle`) because it makes a claim about the student.
-- Dash: 28 × 4, `--r-full`, `--blue-600`, 12 below the subtitle. Decorative, `aria-hidden`.
+- Dash: 28 × 4, `--r-full`, `--blue-600`, 12 below the subtitle. Decorative, `aria-hidden`. It's in the mockup and must render.
 
-**Husky**: `husky-home`, width 160, height auto (~140). `position: absolute; right: 12px;` with its bottom edge 4 below the journey card's top edge, so the card covers the bottom of the husky art (z-index: husky 0, cards 1). `alt=""`. If the art has no burst marks painted in: `burst-dashes.svg` at 28 × 28 sits 8 left of the husky's head (left edge of husky + 18, top of husky + 12), rotated -20°, `--yellow-400`.
+**Husky**: `husky-home`, width 160, height auto (~140). It belongs to the greeting, not the tiles. Build it this way: the greeting block is `position: relative`; the husky is `position: absolute` inside it, 12 from the screen's right edge, with `bottom: -36px` (the 32 gap down to the journey card, plus 4 so the card overlaps the husky's cut edge). Journey card `position: relative; z-index: 1`, husky `z-index: 0`. Result at 393 wide: the husky sits to the right of "Hi, Alex!", its ears just below the bell, and its chest disappears behind the top of the journey card, exactly as in the mockup. It must never appear below the journey card. `alt=""`. If the art has no burst marks painted in: `burst-dashes.svg` at 28 × 28 sits 8 left of the husky's head (left edge of husky + 18, top of husky + 12), rotated -20°, `--yellow-400`.
 
 The greeting text column is capped at 200 so it never runs under the husky. At viewports under 360 wide, the husky shrinks to width 128.
 
@@ -97,10 +97,12 @@ The greeting text column is capped at 200 so it never runs under the husky. At v
 Card (00). 32 below the dash, margins 16. Height 100: 16 padding + 26 title row + 12 + 30 nodes + 16 padding.
 
 - **Title row**: "Your transfer journey" `title-2` `--navy-900` on the left. "{done} of {total} complete" `caption` `--navy-900` (tabular-nums) on the right, sharing the title's baseline.
-- **Nodes**: 6 circles of 30, `justify-content: space-between` across the card's inner width (329 at 393 wide, so node pitch ≈ 59.8; mockup measured 57.5).
-  - Done node: `--green-600` fill, white `Check` bold 16.
-  - Remaining node: `--node-empty` fill, no border.
-  - Connector: between two consecutive done nodes, a 6-tall `--green-600` bar from center to center, behind the nodes. No connector touches a remaining node, as drawn.
+- **Nodes**: always **all 6** circles of 30, `justify-content: space-between` across the card's inner width (the first circle's left edge on the card's inner left, the last circle's right edge on the inner right).
+  - Done node: `--green-600` fill, white `Check` bold 16, centered.
+  - Remaining node: `--node-empty` (#E9F3FC) fill, no border. It's pale but visible on the card, as drawn.
+  - **Track** (behind the circles): a 6-tall bar, `--r-full`, running from the first circle's center to the last circle's center, in `--node-empty`.
+  - **Progress fill** (on top of the track, still behind the circles): the same 6-tall bar in `--green-600`, from the first circle's center to the center of the last done circle in the unbroken run from the start. With 3 done, it ends at circle 3's center.
+  - **Vertical alignment:** the track, the fill, and all six circles share one center line. Build the row as a 30-tall box with `position: relative`; the track and fill are `position: absolute; top: 12px` (so their 6 px sit centered on 15), and the circles are in a flex row on top. The bar must never sit above or below the circles' centers.
 - The row is `role="img"`, `aria-label="{done} of {total} steps complete"`. Step names are in `home.json → journey.steps[]` for screen readers and later use, and aren't shown.
 - Not tappable in the baseline.
 
@@ -130,7 +132,7 @@ A step's status is read from its linked requirement when `requirementId` is pres
 | Mentors | `UsersThree` | `--tint-sky` | "{n} new messages" + unread dot | Mentors tab (placeholder) |
 | Events | `CalendarDots` | `--tint-indigo` | "{n} upcoming" | `/events` placeholder |
 
-Unread dot on Mentors: 8 × 8 `--coral-500`, right 12, top 16. The chevron stays vertically centered below it. The dot is decorative, so the tile's `aria-label` includes "3 new messages".
+Unread dot on Mentors: 8 × 8 `--coral-500`, right 12, top 16. The dot is decorative, so the tile's `aria-label` includes "3 new messages".
 
 ## Upcoming
 
@@ -139,10 +141,10 @@ Unread dot on Mentors: 8 × 8 `--coral-500`, right 12, top 16. The chevron stays
 
 **Upcoming card**: card (00), padding 16, `min-height` from content (104 with a pill, 98 without, matching the mockup).
 - Icon tile 44, `--r-sm`, top-aligned. Deadline type: `--coral-25` bg, `CalendarDots` fill `--coral-500`. Event type: `--tint-sky` bg, `UsersThree` fill `--blue-600`.
-- 16 gap to the text column. The column has padding-right 28 to clear the chevron.
+- 16 gap to the text column.
 - Title row: title (`headline`, `--navy-900`) and, if due within 14 days, a `due` pill, `justify-content: space-between`, `align-items: center`, row height 28.
 - Body: `body` `--slate-600`, 4 below, clamped to 2 lines.
-- Chevron: `CaretRight` bold 20 `--navy-900`, absolute right 16, vertically centered, `aria-hidden`.
+- **No chevron** (rev 2). The whole card is the button.
 - Tap: placeholder screen.
 
 Pill text comes from `dueDate`, relative to today: "Today", "Tomorrow", "In {n} days" (2–13), "In 2 weeks" (14). Over 14, no pill.
