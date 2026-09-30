@@ -11,7 +11,7 @@ Last updated 2026-09-30. Build order steps 1–6 from `docs/specs/README.md` are
 | 3 | Sign in, the auth interface, demo auth, and the signed-out redirect | `app/sign-in/`, `lib/auth/`, `app/(app)/session-gate.tsx` |
 | 4 | Create account | `app/sign-up/` |
 | 5 | Forgot password, rev 2 (husky, hidden below 372 wide, both states, resend) | `app/forgot-password/` |
-| 6 | Home: greeting from `stackd.profile` (demo name otherwise), journey card, shortcut tiles, upcoming cards and their empty line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
+| 6 | Home, rev 2 (02 and 00 as of `b1ef3b8`): greeting from `stackd.profile` (demo name otherwise), husky hung from the greeting behind the journey card, journey card with all six circles on a track, shortcut tiles and upcoming cards without chevrons, the empty upcoming line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
 
 Also in place:
 - **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/universities/[slug]` (until step 7) and `/upcoming/[id]` use the signed-in version. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
@@ -40,18 +40,20 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 ## Open items
 
-1. **Home tiles truncate at 393 wide.** With 00's tile layout (12 padding, 44 icon tile, 12 gap, 16 chevron at right 12) the text gets 75 of the 174.5-wide tile. "Requirements" needs 89, "1 in progress" 76 and "3 new messages" 97, so they show as "Requirem…", "1 in progre…" and "3 new mes…". The mockup shows them in full. At 430 wide only "3 new messages" is cut. 02's test only expects truncation at 320. It needs a spec decision (for example smaller tile type, a narrower icon tile, or no tile chevron). The build follows 00 as written for now.
-2. **The book stack is flatter than the reference.** The cropped art is 1.46 : 1. The stack in `welcome-reference.png` is about 1.1 : 1, with thicker books. Sized at 58% of the husky's width, the stack is about 107 tall at 393 × 852 (device mode), against about 140 in the reference, so it covers less of the husky's lower body. Matching it needs new art, not a code change.
-3. **`welcome-scene.png` is 852 × 1846, not 1179 × 2556.** The proportions are right, but it's about 2.2× resolution on a 3× phone, so it looks slightly soft. The building's right edge also sits just outside the middle 80% of the width.
-4. **Dev-server image stalls.** A dev server that had been running for days stopped finishing Next's image-optimizer request for `husky-wave` and `husky-forgot` at 256 wide as WebP. Only a 1× desktop window asks for that size. The husky stayed invisible because it only fades in once its image loads.
+1. **"3 new messages" still truncates at 393 wide.** Without the chevron (00 rev 2) the tile text gets 94.5. "Requirements" (89) and "1 in progress" (76) now fit, but "3 new messages" needs 97, so it shows "3 new messag…". 00 allows the ellipsis when text doesn't fit; the mockup shows it in full. It fits at 430 wide.
+2. **A phone can hold stale dev CSS.** A page opened before a change keeps the stylesheet it first loaded. Navigating inside the app (for example Create account → Home) fetches the new code but not the new CSS unless the dev server's live-reload connection is up. Home then showed the header against the screen edges, no dash, and the husky dropped into the tiles, all from missing utility classes. Fix: pull to refresh, or open `/dev/reset`, which ends in a full page load.
+3. **`/dev/components` ships in production builds.** `/dev/reset` is excluded (see How to run); the components page could use the same `page.dev.tsx` naming.
+4. **The book stack is flatter than the reference.** The cropped art is 1.46 : 1. The stack in `welcome-reference.png` is about 1.1 : 1, with thicker books. Sized at 58% of the husky's width, the stack is about 107 tall at 393 × 852 (device mode), against about 140 in the reference, so it covers less of the husky's lower body. Matching it needs new art, not a code change.
+5. **`welcome-scene.png` is 852 × 1846, not 1179 × 2556.** The proportions are right, but it's about 2.2× resolution on a 3× phone, so it looks slightly soft. The building's right edge also sits just outside the middle 80% of the width.
+6. **Dev-server image stalls.** A dev server that had been running for days stopped finishing Next's image-optimizer request for `husky-wave` and `husky-forgot` at 256 wide as WebP. Only a 1× desktop window asks for that size. The husky stayed invisible because it only fades in once its image loads.
    - Restarting the server fixed it, and a fresh server answers the same request in about 0.2 s.
    - The app now also counts an image that finished loading before hydration (commit `d224620`).
    - If art goes missing in a browser during development, restart `npm run dev`. Don't delete `.next/dev/cache/images` while the server is running.
    - After replacing an art file, clear that cache or restart. Otherwise the optimizer keeps serving the old image under the same URL.
-5. **Apple logo terms.** Apple's design-resources license says the files are for mock-ups of apps on Apple platforms. It's approved for this demo; re-check before any public launch (06 says the same).
-6. **Untested outside a real iPhone:** iOS password autofill (06), the iOS strong-password suggestion (07), the page keeping a focused field above the on-screen keyboard, and Add to Home Screen opening full screen. Also the real safe-area insets; tests simulated them with 59 top and 34 bottom.
-7. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
-8. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
+7. **Apple logo terms.** Apple's design-resources license says the files are for mock-ups of apps on Apple platforms. It's approved for this demo; re-check before any public launch (06 says the same).
+8. **Untested outside a real iPhone:** iOS password autofill (06), the iOS strong-password suggestion (07), the page keeping a focused field above the on-screen keyboard, and Add to Home Screen opening full screen. Also the real safe-area insets; tests simulated them with 59 top and 34 bottom.
+9. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
+10. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 
 ## Built differently from the specs, and why
 
@@ -69,9 +71,10 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Welcome at 393 × 852 installed** (59 top, 34 bottom): CTA top 710, ground line 694, husky line 670, as in 01. The husky is 316 tall (the zone limits it before 40% of the viewport does), and the books are 144 wide with their left edge at 13.
 - **Sign in and Create account at 320 wide.** The headline's 190 max-width runs into the 144-wide husky, so the headline and subtitle are layered in front of it.
 - **Welcome under 600 tall** has no wordmark, and the headline starts at safe-area top + 16. At 375 × 548 the body text ends at 156, above the banner's top at 184, and the husky is 219 tall. 320 × 568 is also under 600, so the wordmark hides there too and the husky is 227 tall, as 01's test now says.
-- **Home upcoming card: only the body clears the chevron.** 02 puts padding-right 28 on the whole text column. At 393 that leaves the title row 241 wide, so "Application deadline" (about 160) plus the pill (91) wraps, and the card is 120 tall. The chevron is vertically centered, level with the body, not the title row. So the 28 is on the body only, and the card is 104 as 02 and the mockup say. At 320 the title still wraps (120 tall).
 - **Home greeting under 360 wide.** 02 caps the text at 200, but at 320 the 128-wide husky starts at x 180, so 200 runs under it. Under 360 the cap is the husky's left edge minus 8 (148 at 320). The subtitle wraps to two lines there, and a long name wraps mid-word (`overflow-wrap: anywhere`) instead of running under the husky.
 - **Home journey card at 320.** The title row grows when "Your transfer journey" wraps, so the card is 126 tall there, not 100. A fixed 26 row put the second line on top of the nodes.
+- **Home husky with no journey data.** 02's `bottom: -36` assumes the journey card follows. Without journey data the 32 gap stays, so the husky ends 8 above the tiles, not over them.
+- **Home seed data in production builds.** `/` is prerendered, so `data/seed/` is read at build time. Editing or deleting a seed file needs a rebuild there; `next dev` reads it on every request.
 - **Home upcoming records have an `id`** (`application-deadline`, `transfer-panel`) so each card links to `/upcoming/[id]`. 02's records don't list one.
 - **Home pill from `dueInDays`.** 02's text says the pill comes from `dueDate`, but its demo record has `dueInDays: 14`, so the build reads `dueInDays`. Cards sort soonest first, and undated ones go last.
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
@@ -99,4 +102,5 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 - `npm run dev -- -H 0.0.0.0` makes the dev server reachable from a phone on the same Wi-Fi at `http://<this machine's IPv4>:3000`. `allowedDevOrigins` in `next.config.ts` already allows `192.168.*.*` and `10.*.*.*`.
 - `/dev/components` shows every shared component in every state.
+- `/dev/reset` (dev only) clears every `stackd.*` key from local and session storage and reloads `/welcome` as a first launch. It's `app/dev/reset/page.dev.tsx`; `next.config.ts` adds the `dev.tsx` page extension only under `next dev`, so production builds don't have the route.
 - To see Welcome again, clear `stackd.seenWelcome` from local storage. To test signing in again, use Sign out on `/`.
