@@ -68,11 +68,13 @@ At 393 × 852 installed: CTA top 710, `G` 694, husky line 670.
 
 Font sizes don't change. At 393 × 647 the text block ends at about 219.
 
+**Very short screens (under 600 tall, like iPhone SE in Safari at 375 × 548):** hide the wordmark too, and start the headline at safe-area top + 16. Without this, the body text runs over the banner. The wordmark still appears on the sign-in screens.
+
 ## Layers, back to front
 
 1. **Page background**: `--sky-100`, full screen. It only shows while the scene art is loading or if it fails.
-2. **Scene art** (`welcome-scene`): `position: fixed; left: 0; width: 100%; height: auto;` (its own proportions, so its height `S` = screen width × the image's height ÷ width). It's positioned vertically by its **plaza line**: the row where the low wall meets the pavement, at **73% of the image height** in the current art (verify against the file and use the measured value).
-   - `top = (plaza line target) − 0.73 × S`
+2. **Scene art** (`welcome-scene`): `position: fixed; left: 0; width: 100%; height: auto;` (its own proportions, so its height `S` = screen width × the image's height ÷ width). It's positioned vertically by its **plaza line**: the row where the low wall meets the pavement, at **73.8% of the image height** in the current art (row 1362 of 1846).
+   - `top = (plaza line target) − 0.738 × S`
    - Clamp so the scene always covers the screen: `top` can't be above 0 (no gap at the top) or below `viewport height − S` (no gap at the bottom).
    - At 393 × 647: `S` ≈ 851, so `top` ≈ −146. The top 146 of sky is trimmed; the plaza, banner, and books all show, and the tree tops reach up behind the body text, where the sky scrim softens them.
    - At 393 × 852: `top` clamps to 0 and the whole scene shows.
@@ -127,6 +129,7 @@ Check each of these at 393 × 647 (your phone in Safari), 393 × 852 (installed)
 - The books cover the husky's left side (backpack and back leg).
 - The husky's top edge is at least 8 below the body text.
 - The headline and body stay readable (the sky scrim softens any tree tops behind them).
-- At 320 × 568 the husky and books are hidden and nothing overlaps.
+- At 320 × 568 nothing overlaps. The husky and books show if they fit at 160 tall or more (they do, at about 169), and hide otherwise.
+- At 375 × 548 the wordmark is hidden and the body text ends above the banner.
 - The CTA's bottom edge sits at least 12 above the home indicator.
 - Deleting `welcome-scene` leaves a working screen on `--sky-100`.
