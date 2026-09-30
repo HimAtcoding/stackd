@@ -47,6 +47,16 @@
   }
 }
 
+/* Very short screens (iPhone SE in Safari): no wordmark, so the body text ends above the banner */
+@media (max-height: 599px) {
+  .wordmark {
+    display: none;
+  }
+  .headline {
+    margin-top: 0;
+  }
+}
+
 /* Sky scrim: page top to 32 below the body text, in the scene's own sky color (#8AD1FD) */
 .skyScrim {
   position: absolute;
