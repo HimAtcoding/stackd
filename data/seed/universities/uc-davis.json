@@ -1,0 +1,19 @@
+{
+  "demo": true,
+  "slug": "uc-davis",
+  "name": "UC Davis",
+  "type": "Public university",
+  "city": "Davis, CA",
+  "requirements": [
+    { "demo": true, "id": "ucd-units", "title": "Transferable units", "status": "done" },
+    { "demo": true, "id": "ucd-gpa", "title": "GPA requirement", "status": "in_progress" },
+    { "demo": true, "id": "ucd-majorprep", "title": "Major preparation", "status": "not_started" },
+    { "demo": true, "id": "ucd-materials", "title": "Application materials", "status": "not_started" }
+  ],
+  "reminder": {
+    "demo": true,
+    "title": "Deadline coming soon",
+    "body": "Your application is due in 2 weeks. Keep going — you're on track!",
+    "dueInDays": 14
+  }
+}

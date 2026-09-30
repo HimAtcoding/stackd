@@ -1,0 +1,34 @@
+{
+  "demo": true,
+  "greeting": { "demoName": "Alex", "subtitle": "You're closer than you think." },
+  "notifications": { "unread": 1 },
+  "counts": { "drafts": 1, "newMentorMessages": 3, "upcomingEvents": 2 },
+  "journey": {
+    "demo": true,
+    "steps": [
+      { "id": "targets", "label": "Pick your target schools", "status": "done" },
+      { "id": "major", "label": "Choose a major", "status": "done" },
+      { "id": "units", "label": "Transferable units", "status": "done", "requirementId": "ucd-units" },
+      { "id": "gpa", "label": "GPA requirement", "status": "in_progress", "requirementId": "ucd-gpa" },
+      { "id": "majorprep", "label": "Major preparation", "status": "not_started", "requirementId": "ucd-majorprep" },
+      { "id": "materials", "label": "Application materials", "status": "not_started", "requirementId": "ucd-materials" }
+    ]
+  },
+  "upcoming": [
+    {
+      "demo": true,
+      "id": "application-deadline",
+      "type": "deadline",
+      "title": "Application deadline",
+      "body": "Stay on track! Review your checklist and make sure everything's ready.",
+      "dueInDays": 14
+    },
+    {
+      "demo": true,
+      "id": "transfer-panel",
+      "type": "event",
+      "title": "Transfer student panel",
+      "body": "Hear from current transfer students and get your questions answered."
+    }
+  ]
+}

@@ -8,7 +8,8 @@ export const ART = {
   "home-clouds": "/art/scenes/home-clouds",
   "husky-wave": "/art/husky/husky-wave",
   "husky-forgot": "/art/husky/husky-forgot",
-  "burst-dashes": "/art/decor/burst-dashes",
+  "husky-home": "/art/husky/husky-home",
+  "burst-dashes": "/art/brand/burst-dashes",
   "logo-apple": "/art/brand/logo-apple",
   "logo-google": "/art/brand/logo-google",
 } as const;
