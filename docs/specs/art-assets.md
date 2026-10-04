@@ -99,24 +99,30 @@ Priority: Later. Listed so they're made from the same sheet when the time comes.
 | `balloon-blue-b` | Smaller blue balloon + string | 05, right | 64 × 150 | PNG 192 × 450 | Have (flat) | Demo |
 | `balloon-yellow` | Yellow balloon + string | 05, right, lower | 60 × 150 | PNG 180 × 450 | Have (flat) | Demo |
 | `confetti-static` | The scattered resting confetti and yellow stars, as drawn. **Keep the center column clear** (where headline, husky, and text sit): pieces only in the outer 70 px on each side, and the top and bottom 120 | 05 | 393 × 852 | SVG | Have (flat) | Demo |
-| `burst-dashes` | The three-stroke "pop" mark (yellow), drawn once, pointing up-right. Mirrored and resized in code | 02 husky, 04 title, 05 headline and chip | 20–44 | SVG, `#FDC940`, single color, round caps | Have (flat) | Demo |
+| `burst-dashes` | The three-stroke "pop" mark (yellow), drawn once, pointing up-right. Mirrored and resized in code | 02 husky, 04 title, 05 headline and chip | 20–44 | SVG, `#FDC940`, single color, round caps, chunky strokes (width 4 at 28 × 28) to match the mockup | Have: drawn in code, strokes too thin | Demo |
 
-## 4 · Campus art (one per destination university)
+## 4 · Campus art (a shared pool)
 
-Spec for every campus:
+Campus images are **generic**: no school is named or recognizable, so any image can sit behind any university. The app picks one from a small pool for each university.
+
+Spec for every image:
 - **Display**: 393 wide × 248 tall, full-bleed at the top of the university screen.
-- **Deliver**: PNG 1179 × 744, opaque. Keep the subject inside the **safe zone**: the lower 60% of the height and the center 80% of the width. The top 100 display px sit under the status bar and a dark scrim, and the bottom 24 are covered by the sheet's rounded corner.
-- **Style**: matches the UC Davis mockup (painterly, soft greens, blue sky), recognizably that campus through its architecture, with **no lettering, signs, seals, or logos**. The mockup's "UC DAVIS" sign has to go.
+- **Deliver**: PNG 1179 × 744, opaque. Keep the main subject inside the **safe zone**: the lower 60% of the height and the center 80% of the width. The top 100 display px sit under the status bar and a dark scrim, and the bottom 24 are covered by the sheet's rounded corner.
+- **Style**: painterly, soft greens, blue sky, matching the rest of the art. **No lettering, signs, seals, logos, or mascots**, and no real campus's landmark buildings.
+- **Folder**: `public/art/campus/`.
 
-| ID | University | Why it's on the list | Status | Priority |
-|---|---|---|---|---|
-| `campus-uc-davis` | UC Davis | The baseline mockup's destination | Have (flat, has lettering) | Demo |
-| `campus-generic` | Generic California campus | Fallback when a university has no art. Never shows an empty box | Need | Demo |
-| `campus-sdsu` | San Diego State | The MVP data slice's destination (`09-mvp-scope.md`) | Need | Later (first real destination) |
-| `campus-sjsu` | San José State | Example target in `03-users.md` | Need | Later |
-| `campus-ucsd` | UC San Diego | Open question 1 in `16-open-questions.md` (alternate first destination) | Need | Later |
+| ID | What | Status | Priority |
+|---|---|---|---|
+| `campus-1` … `campus-4` | Four generic campus scenes | Have (being added) | Demo |
 
-Add one row per university as coverage grows. No screen shows a **community college** image, so no CCC art is needed. If a CCC screen is ever designed, it uses the same spec.
+**How a university gets its image** (no image is tied to a school by name):
+1. If the university's data record has a `heroImage` field (for example `"heroImage": "campus-3"`), use that. Assigning images is a data choice, not code.
+2. Otherwise, pick from the pool by a stable hash of the university's slug, so each school always shows the same image and different schools spread across the pool.
+3. If the chosen file is missing, use the next one in the pool. If none exist, use the labelled placeholder.
+
+Adding a fifth image later means dropping in `campus-5.png` and adding it to the pool list in one place in code. No screen spec changes.
+
+No screen shows a **community college** image, so no CCC art is needed.
 
 ## 5 · People
 
@@ -148,7 +154,7 @@ In the order they unblock screens:
 
 1. `wordmark`: every screen
 2. `husky-home`: Home
-3. `campus-uc-davis` without lettering, plus `campus-generic`: University
+3. `campus-1` … `campus-4`: University
 4. `mentor-avatar-01`: Essays
 5. `husky-welcome`, `welcome-scene` (full-screen re-export), `welcome-books`: Welcome
 6. `husky-wave`, `logo-apple`, `logo-google`: Sign in and Create account

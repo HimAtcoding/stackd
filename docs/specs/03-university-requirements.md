@@ -2,6 +2,16 @@
 
 Route: `/universities/[slug]?tab=requirements`. Demo slug: `uc-davis`. This is a pushed screen: it has no tab bar, and back returns to where the student came from. Mockup: panel 3 of `../mockup/mockup-4-screens.png`.
 
+## Build notes (step 7)
+
+- **Data already exists.** `data/seed/universities/uc-davis.json` and the shared status helper in `lib/requirements.ts` were made in step 6. Reuse them and add the write side here: marking a row writes `localStorage["stackd.requirements"]`, and Home must update right away when you go back.
+- **Demo strip** shows on this screen and sits on top of the hero (00 → Demo strip).
+- **Celebration isn't built until step 9.** Until then, when a row linked to a journey step is marked done, show the toast "Marked complete" with "Undo", the same as an unlinked row. Leave one clearly named function (for example `onJourneyStepCompleted`) where step 9 will open the celebration.
+- **Hero art**: comes from the shared pool `campus-1` … `campus-4` in `public/art/campus/`, chosen as `art-assets.md → Campus art` describes (the university record's `heroImage` field if set, otherwise a stable pick by slug). Put the pool list in one place in code. No campus image is named after a school.
+- **Destinations not built yet** open the signed-in placeholder: requirement detail (the row itself), "Track application", the Overview and Student life tabs (as in-page placeholders, not a new screen).
+- **Push transition**: entering from Home slides in as 00 → Motion describes; Back reverses it. The tab bar is hidden on this screen.
+- **Requirement rows keep their chevrons.** Unlike Home's tiles, a row's chevron signals that it opens a detail screen (coming in a later phase).
+
 ## Mobbin references
 
 | Screen | What it grounds |
@@ -45,9 +55,9 @@ Alignment: left. Text at x 24, containers at 16.
 
 ## Hero
 
-- `campus-{slug}` image. `position: relative; height: 248px;` measured from the physical top of the screen, so it runs under the status bar. `object-fit: cover; object-position: center 60%;`. The mockup's hero is 195 tall with no status bar. 248 keeps about the same visible image once the status bar and demo strip sit on top.
+- Hero image from the campus pool (see Build notes). `position: relative; height: 248px;` measured from the physical top of the screen, so it runs under the status bar. `object-fit: cover; object-position: center 60%;`. The mockup's hero is 195 tall with no status bar. 248 keeps about the same visible image once the status bar and demo strip sit on top.
 - Status-bar scrim (not in the mockup, needed for legibility on busy art): `linear-gradient(180deg, rgba(5,16,66,.28) 0, rgba(5,16,66,0) 96px)` over the top of the hero. Set `<meta name="theme-color">` to match, and use `apple-mobile-web-app-status-bar-style: black-translucent` in the PWA.
-- **Missing art**: fall back to `campus-generic`. Never an empty box.
+- **Missing art**: fall back to the next image in the pool, then the labelled placeholder. Never an empty box.
 - Hero `alt=""`. The university name is the `h1` below.
 
 **Back** and **Save**: circle buttons (00), top = safe-area top + 24 (demo strip) + 8, left 16 and right 16.
