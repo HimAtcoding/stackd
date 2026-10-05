@@ -146,23 +146,33 @@ Shown with the inline error component (00) between the forgot link and the Sign 
 | `network` | Couldn't reach Stackd | Check your connection, then try again. |
 | `oauth_cancelled` | (nothing shown; the student backed out on purpose) | |
 | `oauth_failed` | Couldn't sign in with {Apple / Google} | Try again, or sign in with your email. |
+| `rate_limited` | Too many tries | Wait a few minutes, then try again. |
+| `email_not_confirmed` | Confirm your email first | We'll send a code to {email}. Plus a tinted button "Send code" that calls `resendCode(email, "confirm")` and opens Enter code (`09-enter-code.md`) |
 
 Don't say which of email or password was wrong. That's a security choice, not a copy choice.
 
 ## Auth interface
 
-Sign in, create account (07), and forgot password (08) all use this one interface, so the screens don't care what's behind it:
+Sign in, create account (07), forgot password (08), and enter code (09) all use this one interface, so the screens don't care what's behind it:
 
 ```ts
-type AuthError = "invalid_credentials" | "email_taken" | "network" | "oauth_cancelled" | "oauth_failed";
+type AuthError =
+  | "invalid_credentials" | "email_taken" | "network" | "oauth_cancelled" | "oauth_failed"
+  | "invalid_code" | "rate_limited" | "same_password" | "weak_password" | "email_not_confirmed";
 type AuthResult = { ok: true } | { ok: false; error: AuthError };
+type CodePurpose = "reset" | "confirm";
 interface Auth {
   signInWithPassword(email: string, password: string): Promise<AuthResult>;
-  signUp(firstName: string, email: string, password: string): Promise<AuthResult>;
+  signUp(firstName: string, email: string, password: string): Promise<{ ok: true; needsCode: boolean } | { ok: false; error: AuthError }>;
   signInWithOAuth(provider: "apple" | "google"): Promise<AuthResult>;
-  sendPasswordReset(email: string): Promise<AuthResult>;
+  sendPasswordReset(email: string): Promise<AuthResult>; // emails a 6-digit code
+  verifyCode(email: string, code: string, purpose: CodePurpose): Promise<AuthResult>;
+  resendCode(email: string, purpose: CodePurpose): Promise<AuthResult>;
+  updatePassword(password: string): Promise<AuthResult>;
 }
 ```
+
+The code methods, their Supabase error mapping, and their demo rules are in `09-enter-code.md → Auth interface changes`.
 
 **Demo implementation** (`lib/auth/demo.ts`), active while `NEXT_PUBLIC_DEMO_STRIP` is on:
 - Every call resolves after 600 ms, so loading states are visible.

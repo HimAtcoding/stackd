@@ -141,7 +141,7 @@ Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, reg
 |---|---|---|---|
 | Tab: Home / Explore / Essays / Mentors | `House` / `Compass` / `FileText` / `UsersThree` | fill when active, regular when not | 28 |
 | Bell (home header) | `Bell` | regular | 24 |
-| Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 28 |
+| Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 28 (matches the mockup) |
 | Upcoming: deadline / panel | `CalendarDots` / `UsersThree` | fill | 24 |
 | Chevrons | `CaretRight` | bold | 16 in tiles, 20 in cards and rows |
 | Back / save | `ArrowLeft` / `Heart` (fill when saved) | bold / regular | 22 |
@@ -178,7 +178,7 @@ Height 48. `--r-md`. Background `--blue-50`, 1 px `--blue-50-border`. Content ce
 
 ### Shortcut tile
 
-Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 8 0 `--tile-pad` (12 left, 8 right: there's no chevron to align to). Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. With an unread dot (8 × 8 at right 12, top 16), only the title line leaves room for it; the subtitle uses the full width. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
+Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 `--tile-pad`. Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
 
 ### Pill
 
@@ -217,6 +217,10 @@ Label above, field below, optional message line under the field.
 - **Error**: 2 px `--coral-700` (same inset method). Message line 6 below the field: `WarningCircle` fill 16 `--coral-700`, 6 gap, text 14/18 500 `--coral-700`. It expands from height 0 with opacity over 200 ms. `aria-invalid="true"` and `aria-describedby` pointing at the message.
 - **Read-only** (while submitting): opacity 0.6, no focus ring change.
 - **Disabled**: opacity 0.4.
+
+### Code field
+
+For 6-digit email codes. One real input (`inputmode="numeric"`, `autocomplete="one-time-code"`, `maxlength="6"`, font-size 16) laid invisibly over six boxes, so iOS autofill and paste both work. Label as the text field. Boxes: six equal columns, gap 8, height 56, `--r-sm`, `--surface`, 1 px `--field-border`, digit `title-2` `--navy-900` tabular-nums, centered. The box for the next digit takes the text field's focus style plus a 2 × 24 `--blue-600` caret (blinks at 1 s; steady under reduced motion). Error: 2 px `--coral-700` on all six boxes and the text field's message line under the row. Read-only: opacity 0.6. Full behavior in `09-enter-code.md`.
 
 ### Social button
 

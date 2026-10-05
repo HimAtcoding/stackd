@@ -15,7 +15,8 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `05-task-complete.md` | Milestone celebration, its animation timeline, and the husky run loop |
 | `06-sign-in.md` | Sign in: fields, validation, errors, Apple and Google buttons, and the auth interface all three auth screens use |
 | `07-create-account.md` | Create account: written as a list of differences from 06 (no mockup) |
-| `08-forgot-password.md` | Forgot password: request form and "check your email" state (no mockup) |
+| `08-forgot-password.md` | Forgot password: the request form that sends a reset code (no mockup) |
+| `09-enter-code.md` | Enter code: the 6-digit code for password reset and email confirmation, the new password step, and the auth interface additions (no mockup) |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 | `previews/` | Run-cycle GIFs showing the supplied frames as-is, aligned, and the 2-pose fallback in use |
 
@@ -29,7 +30,7 @@ The source drawings live in `docs/mockup/`, one level up. The specs expect these
 | `welcome-reference.png` | Full-screen Welcome target (rev 2): scene fills the screen, books in front of the husky |
 | `husky-run-sheet.png` | The 8-frame run attempt |
 
-Create account and forgot password have no mockups. Their specs are built from the sign-in drawing and say exactly what differs.
+Create account, forgot password, and enter code have no mockups. Their specs are built from the sign-in drawing and say exactly what differs.
 
 Temporary run-loop frames are in `public/art/husky/`.
 
@@ -56,6 +57,7 @@ Each step depends on the one before it.
 | 7 | University requirements, with mark-done and local storage | `03` | Marking a row done survives reload and updates Home |
 | 8 | Essays | `04` | The test list in `04` passes |
 | 9 | Task complete + run loop | `05` | Marking a journey-linked row done opens the celebration once |
+| 10 | Enter code, new password, revised forgot password, and the new auth errors on 06 and 07 | `09`, `08` | The test lists in `09` and `08` pass in demo mode. The real reset-code test waits for custom SMTP |
 
 ## Prompt template for Claude Code
 
@@ -93,7 +95,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `09-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `10-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 

@@ -98,6 +98,9 @@ Inline error component (00), 12 above the Create account button, `role="alert"`,
 |---|---|---|---|
 | `email_taken` | That email already has an account | Sign in with it, or use a different email. | Tinted button "Sign in", which opens `/sign-in` with the email carried over |
 | `network` | Couldn't reach Stackd | Check your connection, then try again. | none |
+| `rate_limited` | Too many tries | Wait a few minutes, then try again. | none |
+
+`weak_password` isn't an inline error. It shows as the Password field's error: "Pick a password that's harder to guess."
 
 Social button results are handled exactly as on 06.
 
@@ -114,7 +117,9 @@ Social button results are handled exactly as on 06.
 
 ## After creating the account
 
-Same as signing in: write the session, save the first name (see Auth in `06-sign-in.md`), replace the history entry with `/`, 200 ms crossfade.
+When `signUp` returns `needsCode: false` (Confirm email is off in Supabase, as in development): same as signing in. Write the session, save the first name (see Auth in `06-sign-in.md`), replace the history entry with `/`, 200 ms crossfade.
+
+When it returns `needsCode: true` (Confirm email on, before TestFlight): push `/enter-code/?for=confirm` (`09-enter-code.md`). Back from there returns here with every field still filled in. The first name is saved at sign-up, so Home greets the student correctly once the code is accepted.
 
 ## Test
 
