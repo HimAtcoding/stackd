@@ -1,5 +1,5 @@
 {
-  "written_by": "TODO your name",
+  "written_by": "Ryan Saleh",
   "notes": "First slice: Las Positas College to UC San Diego, Computer Science. Names and the official ASSIST agreement link only (docs/16 → Data approach). Fill in every TODO and PASTE, then run: node scripts/import/run.mjs data/raw/planning/las-positas-ucsd-cs.json --dry-run",
   "institutions": [
     {
@@ -12,7 +12,7 @@
       "source_name": "Las Positas College website",
       "source_url": "https://www.laspositascollege.edu",
       "academic_year": "2026-27",
-      "retrieved_at": "TODO the date you checked the site, like 2026-10-05"
+      "retrieved_at": "2026-10-04"
     },
     {
       "slug": "uc-san-diego",
@@ -24,7 +24,7 @@
       "source_name": "UC San Diego website",
       "source_url": "https://ucsd.edu",
       "academic_year": "2026-27",
-      "retrieved_at": "TODO the date you checked the site, like 2026-10-05"
+      "retrieved_at": "2026-10-04"
     }
   ],
   "majors": [
@@ -34,9 +34,9 @@
       "name": "Computer Science",
       "degree_type": "BS",
       "source_name": "ASSIST",
-      "source_url": "PASTE the ASSIST agreement link from your browser",
-      "academic_year": "TODO the agreement's academic year, like 2026-27",
-      "retrieved_at": "TODO the date you opened the agreement, like 2026-10-05"
+      "source_url": "https://assist.org/transfer/results?year=77&institution=18&agreement=7&agreementType=to&viewAgreementsOptions=true&view=agreement&viewBy=major&viewSendingAgreements=false&viewByKey=77%2F18%2Fto%2F7%2FMajor%2Fd4c1e269-d2d0-4521-480c-08def1776a55",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-10-04"
     }
   ],
   "agreement_links": [
@@ -44,10 +44,10 @@
       "sending": "las-positas",
       "receiving": "uc-san-diego",
       "major": "computer-science-bs",
-      "academic_year": "TODO the agreement's academic year, like 2026-27",
+      "academic_year": "2026-27",
       "source_name": "ASSIST",
-      "source_url": "PASTE the ASSIST agreement link from your browser",
-      "retrieved_at": "TODO the date you opened the agreement, like 2026-10-05"
+      "source_url": "https://assist.org/transfer/results?year=77&institution=18&agreement=7&agreementType=to&viewAgreementsOptions=true&view=agreement&viewBy=major&viewSendingAgreements=false&viewByKey=77%2F18%2Fto%2F7%2FMajor%2Fd4c1e269-d2d0-4521-480c-08def1776a55",
+      "retrieved_at": "2026-10-04"
     }
   ]
 }
