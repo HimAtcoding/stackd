@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import { BarricadeIcon } from "@phosphor-icons/react/ssr";
-import { endSession, hasSession, subscribeNoop } from "@/lib/session";
+import { auth } from "@/lib/auth";
+import { hasSession, subscribeSession } from "@/lib/session";
 import { BackButton } from "./back-button";
 import { EmptyState } from "./ui/empty-state";
 import { TabBar, type TabId } from "./ui/tab-bar";
@@ -21,7 +22,7 @@ type PlaceholderScreenProps = {
 // Every destination that isn't built yet. Every version has a way out (00 → Placeholder screen).
 export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
   const router = useRouter();
-  const signedIn = useSyncExternalStore(subscribeNoop, hasSession, () => null);
+  const signedIn = useSyncExternalStore(subscribeSession, hasSession, () => null);
   if (version === "auto" && signedIn === null) return null;
   const resolved = version === "auto" ? (signedIn ? "signed-in" : "signed-out") : version;
 
@@ -43,8 +44,8 @@ export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
       body: "You're signed in. Sign out to test the sign-in flow again.",
       action: (
         <TintedButton
-          onClick={() => {
-            endSession();
+          onClick={async () => {
+            await auth.signOut();
             router.replace("/sign-in");
           }}
         >

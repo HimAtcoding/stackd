@@ -2,12 +2,14 @@ import { useSyncExternalStore } from "react";
 import { readStorage, writeStorage } from "./storage";
 
 // Saved university slugs, as a JSON array.
-const KEY = "stackd.saved";
-const EVENT = "stackd:saved";
+export const SAVED_KEY = "stackd.saved";
+// detail: { slug, saved } for a student's change, absent when the whole list was replaced (a sync pull)
+export const SAVED_EVENT = "stackd:saved";
+export type SavedChange = { slug: string; saved: boolean };
 
-function readSlugs(): string[] {
+export function readSlugs(): string[] {
   try {
-    const parsed: unknown = JSON.parse(readStorage(KEY) ?? "[]");
+    const parsed: unknown = JSON.parse(readStorage(SAVED_KEY) ?? "[]");
     return Array.isArray(parsed) ? parsed.filter((s): s is string => typeof s === "string") : [];
   } catch {
     return [];
@@ -16,10 +18,10 @@ function readSlugs(): string[] {
 
 function subscribe(onChange: () => void) {
   window.addEventListener("storage", onChange);
-  window.addEventListener(EVENT, onChange);
+  window.addEventListener(SAVED_EVENT, onChange);
   return () => {
     window.removeEventListener("storage", onChange);
-    window.removeEventListener(EVENT, onChange);
+    window.removeEventListener(SAVED_EVENT, onChange);
   };
 }
 
@@ -29,6 +31,8 @@ export function useSaved(slug: string): boolean {
 
 export function toggleSaved(slug: string) {
   const slugs = readSlugs();
-  writeStorage(KEY, JSON.stringify(slugs.includes(slug) ? slugs.filter((s) => s !== slug) : [...slugs, slug]));
-  window.dispatchEvent(new Event(EVENT));
+  const saved = !slugs.includes(slug);
+  writeStorage(SAVED_KEY, JSON.stringify(saved ? [...slugs, slug] : slugs.filter((s) => s !== slug)));
+  const detail: SavedChange = { slug, saved };
+  window.dispatchEvent(new CustomEvent(SAVED_EVENT, { detail }));
 }

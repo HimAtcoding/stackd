@@ -50,7 +50,7 @@ export function UniversityScreen({ slug, university, journeySteps, hero }: Unive
 
   return (
     <div className="min-h-dvh bg-surface">
-      <DemoStrip />
+      {university?.demo && <DemoStrip />}
       <main className="mx-auto max-w-[480px]">
         {/* Hero runs under the status bar; the scrim keeps the status bar legible on busy art */}
         <div className="relative h-[248px] overflow-hidden bg-sky-100">

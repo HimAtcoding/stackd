@@ -6,13 +6,15 @@ import { readStorage, writeStorage } from "./storage";
 export const REQUIREMENTS_KEY = "stackd.requirements";
 
 // Fired after a same-tab write, since the storage event only reaches other tabs.
+// detail: { id, status } for a student's change, absent when the whole list was replaced (a sync pull).
 export const REQUIREMENTS_EVENT = "stackd:requirements";
+export type RequirementChange = { id: string; status: RequirementStatus };
 
 const STATUSES: RequirementStatus[] = ["done", "in_progress", "not_started"];
 
 export type StatusMap = Record<string, RequirementStatus>;
 
-function parseOverrides(raw: string | null): StatusMap {
+export function parseOverrides(raw: string | null): StatusMap {
   if (!raw) return {};
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -73,7 +75,8 @@ export function setRequirementStatus(requirement: Requirement, status: Requireme
   const raw = JSON.stringify(overrides);
   const saved = writeStorage(REQUIREMENTS_KEY, raw);
   memoryRaw = saved ? null : raw;
-  window.dispatchEvent(new Event(REQUIREMENTS_EVENT));
+  const detail: RequirementChange = { id: requirement.id, status };
+  window.dispatchEvent(new CustomEvent(REQUIREMENTS_EVENT, { detail }));
   return saved;
 }
 

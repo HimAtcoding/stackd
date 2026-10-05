@@ -1,9 +1,6 @@
-import { DEMO_STRIP } from "@/lib/flags";
-
-// Required until real data replaces demo data (06-trust-and-provenance).
-// Only on screens that show demo records: Home, University, Essays and the celebration.
+// Required wherever demo records show (06-trust-and-provenance). Screens render it when their data
+// carries "demo": true, so it follows the data, not the sign-in mode.
 export function DemoStrip() {
-  if (!DEMO_STRIP) return null;
   return (
     <div
       data-demo-strip

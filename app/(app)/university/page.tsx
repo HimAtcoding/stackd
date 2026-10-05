@@ -11,7 +11,8 @@ export const viewport: Viewport = { themeColor: "#051042" };
 export default function UniversityPage() {
   return (
     <PageTransition>
-      <Suspense>
+      {/* A full-screen sheet while ?slug= is read, so the push always has something to slide in */}
+      <Suspense fallback={<div className="min-h-dvh bg-surface" />}>
         <UniversityRoute />
       </Suspense>
     </PageTransition>

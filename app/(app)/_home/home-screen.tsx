@@ -74,7 +74,7 @@ export function HomeScreen({ wordmark, husky, burst, clouds }: HomeScreenProps) 
 
   return (
     <div className="relative min-h-dvh bg-sky-50 bg-[linear-gradient(180deg,var(--sky-100)_0,var(--sky-50)_360px)]">
-      <DemoStrip />
+      {home?.demo && <DemoStrip />}
       <div aria-hidden className="absolute inset-x-0 top-0 h-[300px]">
         {clouds}
       </div>
