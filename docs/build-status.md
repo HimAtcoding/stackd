@@ -9,9 +9,9 @@ Parts 1–4 built 2026-10-05. Part 5 is on hold until the new specs land. Plan a
 | Part | What | Status |
 |---|---|---|
 | 1 | Capacitor readiness: static export, no Node server at runtime | Done |
-| 2 | Supabase schema with provenance and row-level security | Done in the repo; waiting to be applied to the project (below) |
-| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done in the repo; full sign-up and sync test waits for the dashboard steps below |
-| 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done in the repo; the first slice waits for the ASSIST link and the migrations |
+| 2 | Supabase schema with provenance and row-level security | Done, applied to the project (2026-10-05) |
+| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done and tested against the project, except the 6-digit reset code (see Before TestFlight) |
+| 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done; first slice imported (`3e54ad4`), rows unverified until checked |
 | 5 | Screens read the database | On hold until the new specs land |
 
 **Part 1, what changed so the app runs with no server (Capacitor):**
@@ -81,14 +81,28 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
   - A Supabase-mode build against the project, using calls that create nothing and send no email: the signed-out redirects work, and a failed sign-in comes back as Supabase's `invalid_credentials` and shows "Couldn't sign you in".
   - Not yet tested end to end: a real sign-up, the code calls, and progress sync. They need the steps below.
 
-**Dashboard steps for part 3** (Supabase project `vzsogzgcivpcmxqxepfr`):
-1. Authentication → Sign In / Providers → Email: turn **Confirm email** off. It's still on: the project's public settings report `mailer_autoconfirm: false` (checked 2026-10-05). Turn it back on before TestFlight.
+**Dashboard steps for part 3** (Supabase project `vzsogzgcivpcmxqxepfr`). Done 2026-10-05, except step 3:
+1. Authentication → Sign In / Providers → Email: turn **Confirm email** off. Done; the project reports `mailer_autoconfirm: true`. It goes back on before TestFlight.
 2. Authentication → URL Configuration: Site URL `http://localhost:3000`.
-3. Authentication → Email Templates → **Reset Password**: show the code instead of the link, e.g. "Your Stackd code is {{ .Token }}". Do the same in **Confirm signup** for when confirmation is back on. Email OTP length should be 6 (Providers → Email).
+3. **Skipped:** Supabase only allows editing email templates with custom SMTP, so reset emails still send a link. Moved to Before TestFlight. (The step was: Authentication → Email Templates → **Reset Password**: show the code instead of the link, e.g. "Your Stackd code is {{ .Token }}". Do the same in **Confirm signup** for when confirmation is back on. Email OTP length should be 6 (Providers → Email).)
 4. In `.env.local`, add `NEXT_PUBLIC_DEMO_STRIP=off` to use real sign-in locally. Leave it out for demo mode.
 5. Apply the part 2 migrations, since sign-up's profile trigger and progress sync need the tables.
 
-Then I can run the full test: sign up, sign in, sign out, mark progress, sign in on a second browser, see it there.
+**Full test against the project** (2026-10-05, dev server in Supabase mode, two separate browsers), 19 checks, all passed:
+- **Sign-up:** lands on "Hi, Tester!", stores the session, and creates a `profiles` row with the first name. The demo strip still shows on the demo data.
+- **Progress from before signing up:** schools saved earlier moved into the account (`uc-san-diego`). The demo school (`uc-davis`) stayed on the device, and the sync queue ended empty.
+- **While signed in:** a saved school is pushed. The session survives a reload.
+- **Signing out:** `/dev/reset` signs out, and Home then sends you to Sign in.
+- **A second, fresh browser** (standing in for a reinstall):
+  - A wrong password shows "Couldn't sign you in".
+  - The right one lands on "Hi, Tester!" with the account's saved schools pulled down.
+  - Removing a school is pushed.
+- **Errors and access:** a second sign-up with the same email shows "That email already has an account". The anon key still can't read `saved_schools`.
+- **Not tested:**
+  - The 6-digit reset code (see Before TestFlight).
+  - Requirement-status sync: the code path exists, but the database has no requirements until course matches are permitted.
+- **To clean up:** the test left one account, `stackd-e2e-1791171467373@example.com`, in the project. Delete it in Authentication → Users; its profile and saved schools go with it (`on delete cascade`). The import scripts are the only place the service role key may be used, so I didn't delete it with the key.
+- **The first slice as the app sees it** (anon key): Las Positas College and UC San Diego, Computer Science (BS), and the 2026-27 agreement link, all `unverified`. The review report is in `data/review/2026-10-05T03-35-30-141-las-positas-ucsd-cs.md`.
 
 **Part 4, the import pipeline** (`scripts/import/`, local only, never in the app):
 - **Stages** (docs/12), run by `npm run import -- data/raw/planning/<file>.json [--dry-run]`:
@@ -123,6 +137,13 @@ Then I can run the full test: sign up, sign in, sign out, mark progress, sign in
 2. Fill in every TODO and PASTE in the file. The ASSIST link comes from your browser; nothing calls ASSIST's API or crawls assist.org.
 3. `npm run import -- data/raw/planning/las-positas-ucsd-cs.json --dry-run`, then again without `--dry-run`.
 4. Check each row in the review report against its source, fill in `checked_by` and `checked_at`, and run `npm run import:verify -- <the csv>`.
+
+## Before TestFlight
+
+Decided, and must be done before the TestFlight beta (roadmap phase 7):
+1. **Custom SMTP, then code email templates.** Supabase only allows editing email templates once custom SMTP is set up. Then change **Reset Password** and **Confirm signup** to show the 6-digit code (`{{ .Token }}`) instead of a link, and run the reset-code test (`sendPasswordReset` → `verifyResetCode` → `setNewPassword`), which hasn't run against the project yet. Custom SMTP also lifts Supabase's built-in email limit of a few messages an hour.
+2. **Turn Confirm email back on** (Authentication → Sign In / Providers → Email). That needs the Enter code screen (spec coming) and the code template from item 1.
+3. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
 
 ## Built
 
