@@ -139,10 +139,10 @@ export default function ComponentsPage() {
 
       <Section title="Shortcut tile">
         <div className="grid grid-cols-2 gap-3">
-          <ShortcutTile href="/dev/components" icon={<FileTextIcon weight="fill" size={24} className="text-blue-600" />} iconTint="sky" title="Sample tile" subtitle="Sample subtitle" />
-          <ShortcutTile href="/dev/components" icon={<PencilSimpleIcon weight="fill" size={24} className="text-blue-600" />} iconTint="indigo" title="Pressed" subtitle="Sample subtitle" data-pressed />
-          <ShortcutTile href="/dev/components" icon={<UsersThreeIcon weight="fill" size={24} className="text-blue-600" />} iconTint="sky" title="Unread" subtitle="Sample subtitle" unread />
-          <ShortcutTile href="/dev/components" icon={<CalendarDotsIcon weight="fill" size={24} className="text-blue-600" />} iconTint="indigo" title="Focus" subtitle="Sample subtitle" data-focus />
+          <ShortcutTile href="/dev/components" icon={<FileTextIcon weight="fill" size={28} className="text-blue-600" />} iconTint="sky" title="Sample tile" subtitle="Sample subtitle" />
+          <ShortcutTile href="/dev/components" icon={<PencilSimpleIcon weight="fill" size={28} className="text-blue-600" />} iconTint="indigo" title="Pressed" subtitle="Sample subtitle" data-pressed />
+          <ShortcutTile href="/dev/components" icon={<UsersThreeIcon weight="fill" size={28} className="text-blue-600" />} iconTint="sky" title="Unread" subtitle="Sample subtitle" unread />
+          <ShortcutTile href="/dev/components" icon={<CalendarDotsIcon weight="fill" size={28} className="text-blue-600" />} iconTint="indigo" title="Focus" subtitle="Sample subtitle" data-focus />
         </div>
       </Section>
 

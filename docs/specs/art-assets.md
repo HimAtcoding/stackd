@@ -99,7 +99,7 @@ Priority: Later. Listed so they're made from the same sheet when the time comes.
 | `balloon-blue-b` | Smaller blue balloon + string | 05, right | 64 × 150 | PNG 192 × 450 | Have (flat) | Demo |
 | `balloon-yellow` | Yellow balloon + string | 05, right, lower | 60 × 150 | PNG 180 × 450 | Have (flat) | Demo |
 | `confetti-static` | The scattered resting confetti and yellow stars, as drawn. **Keep the center column clear** (where headline, husky, and text sit): pieces only in the outer 70 px on each side, and the top and bottom 120 | 05 | 393 × 852 | SVG | Have (flat) | Demo |
-| `burst-dashes` | The three-stroke "pop" mark (yellow), drawn once, pointing up-right. Mirrored and resized in code | 02 husky, 04 title, 05 headline and chip | 20–44 | SVG, `#FDC940`, single color, round caps, chunky strokes (width 4 at 28 × 28) to match the mockup | Have: drawn in code, strokes too thin | Demo |
+| `burst-dashes` | The three-stroke "pop" mark (yellow), drawn once, pointing up-right. Mirrored and resized in code | 02 husky, 04 title, 05 headline and chip | 20–44 | SVG, `#FDC940`, single color, round caps, chunky strokes (width 4 at 28 × 28) to match the mockup | Have: drawn in code (`public/art/brand/burst-dashes.svg`) | Demo |
 
 ## 4 · Campus art (a shared pool)
 

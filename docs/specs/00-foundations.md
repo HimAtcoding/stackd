@@ -141,7 +141,7 @@ Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, reg
 |---|---|---|---|
 | Tab: Home / Explore / Essays / Mentors | `House` / `Compass` / `FileText` / `UsersThree` | fill when active, regular when not | 28 |
 | Bell (home header) | `Bell` | regular | 24 |
-| Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 24 |
+| Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 28 |
 | Upcoming: deadline / panel | `CalendarDots` / `UsersThree` | fill | 24 |
 | Chevrons | `CaretRight` | bold | 16 in tiles, 20 in cards and rows |
 | Back / save | `ArrowLeft` / `Heart` (fill when saved) | bold / regular | 22 |
@@ -178,7 +178,7 @@ Height 48. `--r-md`. Background `--blue-50`, 1 px `--blue-50-border`. Content ce
 
 ### Shortcut tile
 
-Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 `--tile-pad`. Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
+Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 8 0 `--tile-pad` (12 left, 8 right: there's no chevron to align to). Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. With an unread dot (8 × 8 at right 12, top 16), only the title line leaves room for it; the subtitle uses the full width. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
 
 ### Pill
 
