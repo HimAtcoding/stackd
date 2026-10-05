@@ -9,8 +9,8 @@ Plan approved 2026-10-05 with the planning-layer data approach (`16-open-questio
 | Part | What | Status |
 |---|---|---|
 | 1 | Capacitor readiness: static export, no Node server at runtime | Done |
-| 2 | Supabase schema with provenance and row-level security | Next |
-| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | |
+| 2 | Supabase schema with provenance and row-level security | Done in the repo; waiting to be applied to the project (below) |
+| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Next |
 | 4 | Import pipeline for institution, major, and link rows from a hand-written file | |
 | 5 | Screens read the database | On hold until the new specs land |
 
@@ -28,6 +28,36 @@ Plan approved 2026-10-05 with the planning-layer data approach (`16-open-questio
 - **`lib/data/`** is where screens get data, in the browser: `getHome()`, `getTargetUniversity()`, `getUniversity(slug)`, `getJourneySteps()`. Today it's the bundled demo seed; the database goes behind the same functions in part 5. Home's target school moved into `home.json` (`target.university`) instead of a slug in the page.
 - **`scripts/fix-export-segments.mjs`** runs after `build`. On Windows, Next 16's static export writes the router's prefetch files as nested folders (it splits paths on `/` only), and the browser then gets 404s and loses the push animation. The script renames them to the dotted names the browser asks for. On a Mac it finds nothing to do.
 - **Checked** on `out/` served by a plain static server: every screen loads with WebP art and no errors or 404s, Home's measurements are unchanged, "Hi, Maya!" works, 03's three tests pass, and the push and back slides run.
+
+**Part 2, the schema** (`supabase/migrations/`):
+- `20261005120000_academic_schema.sql`:
+  - `institutions` (colleges and universities, by `institution_type`), `majors`, and `agreement_links` (one official agreement URL per sending college → receiving university → major → academic year).
+  - The course-match tables, which stay empty until ASSIST grants permission: `courses`, `requirements`, `requirement_groups` (`all_of` / `one_of` / `n_of`), `articulations` (`course_set` or `no_articulation`, plus `conditions`) and `articulation_courses`.
+  - `app_config` (`current_cycle` = `2026-27`) and `import_runs` (an audit log).
+- **Provenance on every academic row:** `source_name`, `source_url`, `academic_year` (checked as `2026-27`), `retrieved_at`, `verified_at`, `verification_status` (`unverified` by default), `is_demo`.
+  - Database checks: verified needs `verified_at`, and conditional needs `conditions`.
+  - Agreement links must be `https://`, and there's one per college, school, major and year.
+- **How 06's four states map:**
+  - An articulation row with kind `no_articulation` is "No agreement on record".
+  - No row at all is "Not checked".
+  - `verification_status` says whether a person has checked a row against its source.
+- **Guard on verified rows.** The `protect_verified` trigger refuses any update or delete of a verified row unless the transaction sets `stackd.allow_verified_change` (only the verify step will).
+- **Who can do what:**
+  - Academic tables: anyone can read; insert, update and delete are revoked from `anon` and `authenticated`, so only the service role (import scripts) writes.
+  - `import_runs` can't be read by the app at all.
+- `20261005120100_user_progress.sql`:
+  - `profiles`, `user_targets`, `user_requirement_status`, `saved_courses`, `saved_schools`, each owner-only (`auth.uid() = user_id`); `anon` has no access.
+  - A trigger creates the profile at sign-up, with the trimmed `first_name` from the user's metadata.
+- **`npm run test:db`** runs both migrations on an in-memory Postgres (PGlite) with stand-ins for Supabase's roles and auth schema, and checks every rule above from the `anon`, `authenticated` and `service_role` side. It touches no real database.
+- `supabase/config.toml` is the CLI's config: Site URL `http://localhost:3000`, email confirmation off. It only affects a local Supabase; the hosted project is set in the dashboard.
+
+**Applying the migrations to the project.** Use the CLI, so the project records which migrations ran:
+1. `npx supabase login`, in your own terminal (it opens a browser).
+2. `npx supabase link --project-ref vzsogzgcivpcmxqxepfr`. It asks for the database password (Dashboard → Project Settings → Database; reset it there if it's unknown).
+3. `npx supabase db push`. It lists the two migrations and asks to confirm.
+4. Then `npx supabase gen types typescript --linked > lib/supabase/types.ts` for typed queries (part 3 uses it).
+
+Pasting the files into the dashboard's SQL Editor also works. But then the CLI doesn't know they ran, so later `db push` runs try to apply them again. Pick one method and stay with it.
 
 ## Built
 
