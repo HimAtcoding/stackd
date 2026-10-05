@@ -20,7 +20,7 @@ Transfer-planning web app for California community college students. Next.js, Ty
 
 ## Current phase
 
-Demo build of the team's mockups. Welcome, sign in, create account, and forgot password are done, using demo auth (no Supabase Auth yet). Next steps follow the build order in `docs/specs/README.md`.
+Phase 3 is in progress (`docs/15-roadmap-and-non-goals.md`): Capacitor readiness, the Supabase database, real email sign-in, and an import pipeline for institution, major, and official agreement-link rows. The mockup screens (Welcome through University requirements) are built on demo data. Switching screens to the database waits for new specs. Progress is in `docs/build-status.md`.
 
 ## Rules that never bend
 
