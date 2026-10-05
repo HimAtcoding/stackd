@@ -1,6 +1,7 @@
 {
   "demo": true,
   "greeting": { "demoName": "Alex", "subtitle": "You're closer than you think." },
+  "target": { "university": "uc-davis" },
   "notifications": { "unread": 1 },
   "counts": { "drafts": 1, "newMentorMessages": 3, "upcomingEvents": 2 },
   "journey": {

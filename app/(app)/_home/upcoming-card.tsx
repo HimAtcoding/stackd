@@ -10,7 +10,7 @@ export function UpcomingCard({ item }: { item: UpcomingItem }) {
   const deadline = item.type === "deadline";
 
   return (
-    <Card href={`/upcoming/${item.id}`}>
+    <Card href={`/upcoming/?id=${item.id}`}>
       <div className="flex items-start gap-4">
         <span
           className={cn(

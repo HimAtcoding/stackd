@@ -7,16 +7,14 @@ import { CircleButton } from "@/components/ui/circle-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
 import { TabBar } from "@/components/ui/tab-bar";
+import { getHome, getTargetUniversity } from "@/lib/data";
 import { readFirstName } from "@/lib/profile";
 import { stepStatus, useRequirementStatuses } from "@/lib/requirements";
-import type { HomeSeed, UniversitySeed } from "@/lib/seed";
 import { subscribeNoop } from "@/lib/session";
 import { JourneyCard } from "./journey-card";
 import { UpcomingCard } from "./upcoming-card";
 
 type HomeScreenProps = {
-  home: HomeSeed | null;
-  university: UniversitySeed | null;
   wordmark: ReactNode;
   husky: ReactNode;
   burst: ReactNode;
@@ -25,7 +23,9 @@ type HomeScreenProps = {
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-export function HomeScreen({ home, university, wordmark, husky, burst, clouds }: HomeScreenProps) {
+export function HomeScreen({ wordmark, husky, burst, clouds }: HomeScreenProps) {
+  const home = getHome();
+  const university = getTargetUniversity();
   const router = useRouter();
   const firstName = useSyncExternalStore(subscribeNoop, readFirstName, () => null);
   const statuses = useRequirementStatuses(university?.requirements ?? []);
@@ -42,7 +42,7 @@ export function HomeScreen({ home, university, wordmark, husky, burst, clouds }:
     {
       title: "Requirements",
       subtitle: `${inProgress} in progress`,
-      href: university ? `/universities/${university.slug}?tab=requirements` : "/universities",
+      href: university ? `/university/?slug=${university.slug}&tab=requirements` : "/university/",
       icon: <FileTextIcon weight="fill" size={28} className="text-blue-600" />,
       tint: "sky" as const,
       // Pushed screen: slides in (00 → Motion)

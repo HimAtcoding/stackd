@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import path from "node:path";
+import bundle from "./generated/seed.json";
 
 // Shapes of the demo files in data/seed. Every record carries "demo": true.
 
@@ -43,6 +42,8 @@ export type UpcomingItem = {
 export type HomeSeed = {
   demo: true;
   greeting?: { demoName?: string; subtitle?: string };
+  // The school the journey and the Requirements tile follow
+  target?: { university: string };
   notifications?: { unread: number };
   counts?: { drafts?: number; newMentorMessages?: number; upcomingEvents?: number };
   journey?: { demo: true; steps: JourneyStep[] };
@@ -51,22 +52,15 @@ export type HomeSeed = {
 
 export type SeedResult<T> = { status: "ok"; data: T } | { status: "missing" } | { status: "broken" };
 
-// Server only. Tells a file that isn't there from one that won't parse.
+// data/seed bundled by scripts/prepare-assets.mjs, so this works with no server. Tells a file that isn't there
+// (missing from the bundle) from one that won't parse ("broken").
 export function readSeedResult<T>(file: string): SeedResult<T> {
-  let text: string;
-  try {
-    text = fs.readFileSync(path.join(process.cwd(), "data/seed", file), "utf8");
-  } catch {
-    return { status: "missing" };
-  }
-  try {
-    return { status: "ok", data: JSON.parse(text) as T };
-  } catch {
-    return { status: "broken" };
-  }
+  const entry = (bundle as Record<string, { status: "ok"; data: unknown } | { status: "broken" }>)[file];
+  if (!entry) return { status: "missing" };
+  return entry.status === "ok" ? { status: "ok", data: entry.data as T } : entry;
 }
 
-// Server only. A missing or broken file gives null, so screens show their empty states.
+// A missing or broken file gives null, so screens show their empty states.
 export function readSeed<T>(file: string): T | null {
   const result = readSeedResult<T>(file);
   return result.status === "ok" ? result.data : null;

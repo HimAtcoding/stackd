@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 
+// Written once at build time, so it ships in the static app
+export const dynamic = "force-static";
+
 // Installable PWA: Add to Home Screen opens full screen, without browser bars.
 // The icons are temporary, cut from husky-welcome until the real app-icon exists (art-assets).
 export default function manifest(): MetadataRoute.Manifest {

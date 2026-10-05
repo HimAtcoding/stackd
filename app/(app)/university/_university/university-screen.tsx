@@ -38,9 +38,11 @@ export function UniversityScreen({ slug, university, journeySteps, hero }: Unive
   const param = useSearchParams().get("tab");
   const tab = TABS.find((t) => t.id === param)?.id ?? "requirements";
 
-  // Switching tabs replaces ?tab= without adding a history entry
+  // Switching tabs replaces ?tab= (keeping ?slug=) without adding a history entry
   function changeTab(id: string) {
-    window.history.replaceState(null, "", `?tab=${id}`);
+    const params = new URLSearchParams(window.location.search);
+    params.set("tab", id);
+    window.history.replaceState(null, "", `?${params}`);
   }
 
   const reminder = university?.reminder;
@@ -98,7 +100,7 @@ export function UniversityScreen({ slug, university, journeySteps, hero }: Unive
                     )}
 
                     <div className="mt-4 px-4">
-                      <PrimaryButton onClick={() => router.push(`/universities/${slug}/application`)}>Track application</PrimaryButton>
+                      <PrimaryButton onClick={() => router.push(`/track-application/?university=${slug}`)}>Track application</PrimaryButton>
                     </div>
 
                     {showReminder && (

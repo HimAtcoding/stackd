@@ -82,7 +82,7 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
                 className="absolute left-3 top-1/2 z-10 -translate-y-1/2"
               />
               <Link
-                href={`/universities/${slug}/requirements/${r.id}`}
+                href={`/requirement/?university=${slug}&id=${r.id}`}
                 aria-label={`${r.title}, ${STATUS_TEXT[status]}`}
                 className="flex h-full items-center pl-17 pr-4 transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120 focus-ring:-outline-offset-2"
               >

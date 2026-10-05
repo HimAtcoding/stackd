@@ -12,3 +12,7 @@ build/
 *.pem
 *.tsbuildinfo
 next-env.d.ts
+
+# Made by scripts/prepare-assets.mjs
+/lib/generated/
+/public/_art/

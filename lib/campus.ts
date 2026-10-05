@@ -15,7 +15,7 @@ function hash(slug: string) {
   return h;
 }
 
-// Server only. The record's heroImage if it's in the pool, otherwise a pick by slug.
+// The record's heroImage if it's in the pool, otherwise a pick by slug.
 // A missing file falls through to the next image; with none at all, the picked id renders the labelled placeholder.
 export function campusImage(slug: string, heroImage?: string): CampusId {
   const start = isCampusId(heroImage) ? CAMPUS_POOL.indexOf(heroImage) : hash(slug) % CAMPUS_POOL.length;
