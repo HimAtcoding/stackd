@@ -10,7 +10,8 @@
     "prepare-assets": "node scripts/prepare-assets.mjs",
     "predev": "npm run prepare-assets",
     "prebuild": "npm run prepare-assets",
-    "postbuild": "node scripts/fix-export-segments.mjs"
+    "postbuild": "node scripts/fix-export-segments.mjs",
+    "test:db": "node scripts/test-migrations.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -20,6 +21,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -27,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "sharp": "^0.35.4",
+    "supabase": "^2.119.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
