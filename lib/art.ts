@@ -10,6 +10,10 @@ export const ART = {
   "husky-forgot": "/art/husky/husky-forgot",
   "husky-home": "/art/husky/husky-home",
   "burst-dashes": "/art/brand/burst-dashes",
+  "campus-1": "/art/campus/campus-1",
+  "campus-2": "/art/campus/campus-2",
+  "campus-3": "/art/campus/campus-3",
+  "campus-4": "/art/campus/campus-4",
   "logo-apple": "/art/brand/logo-apple",
   "logo-google": "/art/brand/logo-google",
 } as const;

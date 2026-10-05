@@ -13,7 +13,7 @@
   "reminder": {
     "demo": true,
     "title": "Deadline coming soon",
-    "body": "Your application is due in 2 weeks. Keep going — you're on track!",
+    "body": "Your application is due {due}. Keep going — you're on track!",
     "dueInDays": 14
   }
 }

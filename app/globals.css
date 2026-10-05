@@ -322,7 +322,62 @@
   animation-timing-function: var(--ease-out);
 }
 
+/* Push (Home → University): the new screen slides in over the old one, which drifts left and dims */
+::view-transition-group(.push-in) {
+  z-index: 2;
+}
+::view-transition-new(.push-in) {
+  animation: push-in var(--dur-slow) var(--ease-out) both;
+}
+::view-transition-old(.push-out) {
+  animation: push-out var(--dur-slow) var(--ease-out) both;
+}
+
+/* Back from a pushed screen (BackButton slideBack): the whole page slides back in 280 ms, the leaving screen on top */
+html[data-nav="back"]::view-transition-old(root),
+html[data-nav="back"]::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+html[data-nav="back"]::view-transition-old(root) {
+  z-index: 1;
+  animation: back-out 280ms var(--ease-out) both;
+}
+html[data-nav="back"]::view-transition-new(root) {
+  animation: back-in 280ms var(--ease-out) both;
+}
+
+@keyframes push-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes push-out {
+  to {
+    transform: translateX(-24%);
+    opacity: 0.9;
+  }
+}
+@keyframes back-out {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes back-in {
+  from {
+    transform: translateX(-24%);
+    opacity: 0.9;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(.push-in),
+  html[data-nav="back"]::view-transition-new(root) {
+    animation: fade-in var(--dur-fast) linear both;
+  }
+  ::view-transition-old(.push-out),
+  html[data-nav="back"]::view-transition-old(root) {
+    animation: fade-out var(--dur-fast) linear both;
+  }
   .spinner {
     animation: none;
   }

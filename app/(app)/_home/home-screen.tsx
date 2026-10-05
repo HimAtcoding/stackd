@@ -45,6 +45,8 @@ export function HomeScreen({ home, university, wordmark, husky, burst, clouds }:
       href: university ? `/universities/${university.slug}?tab=requirements` : "/universities",
       icon: <FileTextIcon weight="fill" size={28} className="text-blue-600" />,
       tint: "sky" as const,
+      // Pushed screen: slides in (00 → Motion)
+      transitionTypes: ["push"],
     },
     {
       title: "Essays",
@@ -127,6 +129,7 @@ export function HomeScreen({ home, university, wordmark, husky, burst, clouds }:
               title={t.title}
               subtitle={t.subtitle}
               unread={t.unread}
+              transitionTypes={t.transitionTypes}
               aria-label={`${t.title}, ${t.subtitle}`}
             />
           ))}

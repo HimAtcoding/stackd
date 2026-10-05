@@ -18,6 +18,8 @@ export type UniversitySeed = {
   name: string;
   type: string;
   city: string;
+  // One of the campus pool ids (art-assets → Campus art). Without it, the image is picked by slug.
+  heroImage?: string;
   requirements: Requirement[];
   reminder?: { demo: true; title: string; body: string; dueInDays: number };
 };
@@ -47,11 +49,25 @@ export type HomeSeed = {
   upcoming?: UpcomingItem[];
 };
 
+export type SeedResult<T> = { status: "ok"; data: T } | { status: "missing" } | { status: "broken" };
+
+// Server only. Tells a file that isn't there from one that won't parse.
+export function readSeedResult<T>(file: string): SeedResult<T> {
+  let text: string;
+  try {
+    text = fs.readFileSync(path.join(process.cwd(), "data/seed", file), "utf8");
+  } catch {
+    return { status: "missing" };
+  }
+  try {
+    return { status: "ok", data: JSON.parse(text) as T };
+  } catch {
+    return { status: "broken" };
+  }
+}
+
 // Server only. A missing or broken file gives null, so screens show their empty states.
 export function readSeed<T>(file: string): T | null {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(process.cwd(), "data/seed", file), "utf8")) as T;
-  } catch {
-    return null;
-  }
+  const result = readSeedResult<T>(file);
+  return result.status === "ok" ? result.data : null;
 }

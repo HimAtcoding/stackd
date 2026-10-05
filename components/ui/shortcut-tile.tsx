@@ -9,15 +9,18 @@ type ShortcutTileProps = {
   title: string;
   subtitle: string;
   unread?: boolean;
+  // e.g. ["push"] for a screen that slides in (00 → Motion)
+  transitionTypes?: string[];
   "aria-label"?: string;
   "data-pressed"?: boolean;
   "data-focus"?: boolean;
 };
 
-export function ShortcutTile({ href, icon, iconTint, title, subtitle, unread, ...rest }: ShortcutTileProps) {
+export function ShortcutTile({ href, icon, iconTint, title, subtitle, unread, transitionTypes, ...rest }: ShortcutTileProps) {
   return (
     <Link
       href={href}
+      transitionTypes={transitionTypes}
       {...rest}
       className={cn(
         "relative flex h-18 items-center gap-3 rounded-md bg-surface pl-3 pr-2 shadow-card",
