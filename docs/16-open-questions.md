@@ -2,6 +2,21 @@
 
 Everything here is mine. Each item is a decision that needs making, with a recommendation. Delete the ones you disagree with — but decide them rather than letting them get decided by default.
 
+## Decided (October 2026)
+
+These were open and are now settled. Everything below this section is the original list, kept for the reasoning.
+
+| Decision | Choice | Why | Affects |
+|---|---|---|---|
+| Distribution | **App Store first, packaged with Capacitor.** No Vercel or public website for now | Keeps every screen already built; Capacitor wraps the existing app as a real iOS app | `11`, `13`, `15` |
+| Native feature for App Review | **Push notifications** for deadlines and registration windows | Apple Guideline 4.2 rejects apps that are only a website in a wrapper | `13`, `15` |
+| Backend | **Supabase** for data and sign-in; the app talks to it directly | An App Store app still needs a server for accounts and data | `11` |
+| Sign-in | Email and password first, then Google, then **Sign in with Apple** (required by Apple when Google is offered) | Cost and setup order | `15` |
+| First real data slice | **Las Positas → UC San Diego, Computer Science** (replaces SDSU Business Administration) | The founder is on this path and can spot wrong data instantly; the LPC CS club is a ready first test group | `09`, `12` |
+| Data strategy | **California first via ASSIST, with permission**: read ASSIST's terms and ask about data access before any automated import. Then states with statewide course numbering, then licensed sources | One official source covers every CCC → UC/CSU pair; bulk scraping risks losing access to it | `12` |
+| Screens after launch | **Essays, Mentors, Student life, the celebration animation** wait until after launch | Not in the MVP workflow | `09`, `15` |
+| Screens before launch | **Onboarding, Explore (search), requirement detail, university Overview tab** | They complete the core workflow | `15` |
+
 ## The ten that matter most
 
 **1. Four products already do the MVP.**

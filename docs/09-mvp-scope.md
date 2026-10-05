@@ -4,6 +4,8 @@ Do not attempt to build the whole product. The first version should prove one wo
 
 ## The slice
 
+> **Decided October 2026:** the first real slice is **Las Positas → UC San Diego, Computer Science**, replacing SDSU Business Administration below. Supported colleges start with Las Positas and grow from there. The MVP ships on the **App Store via Capacitor** with push notifications, which overrides "Native iOS or Android apps" and "Notifications" in the not-in-MVP list. See `16-open-questions.md → Decided`.
+
 - Student: California community college student
 - Home institution: Las Positas College
 - Destination: San Diego State University

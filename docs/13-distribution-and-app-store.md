@@ -1,5 +1,7 @@
 # Distribution, growth, and the App Store question
 
+> **Decided October 2026:** the team chose **App Store first**, packaging the existing app with **Capacitor**, with **push notifications** for deadlines as the native feature Apple's Guideline 4.2 requires. No public website for now. The reasoning below is kept for reference; the SEO section applies only if a web version is added later. See `16-open-questions.md → Decided`.
+
 ## Launch locally
 
 Primary launch community: Las Positas College. Channels: transfer center, counselors, FBLA, student government, CS and business clubs, classmates, professors, business and CS course announcements, student Discords, group chats, QR-code flyers, Instagram, TikTok, transfer workshops.
