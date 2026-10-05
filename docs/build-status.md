@@ -4,14 +4,14 @@ Last updated 2026-10-05. Build order steps 1–7 from `docs/specs/README.md` are
 
 ## Phase 3: database, sign-in, import
 
-Plan approved 2026-10-05 with the planning-layer data approach (`16-open-questions.md → Decided`): for California the database holds institutions, majors, and the official ASSIST agreement link per college → university → major, never course matches or agreement text, until ASSIST grants permission.
+Parts 1–4 built 2026-10-05. Part 5 is on hold until the new specs land. Plan approved 2026-10-05 with the planning-layer data approach (`16-open-questions.md → Decided`): for California the database holds institutions, majors, and the official ASSIST agreement link per college → university → major, never course matches or agreement text, until ASSIST grants permission.
 
 | Part | What | Status |
 |---|---|---|
 | 1 | Capacitor readiness: static export, no Node server at runtime | Done |
 | 2 | Supabase schema with provenance and row-level security | Done in the repo; waiting to be applied to the project (below) |
 | 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done in the repo; full sign-up and sync test waits for the dashboard steps below |
-| 4 | Import pipeline for institution, major, and link rows from a hand-written file | Next |
+| 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done in the repo; the first slice waits for the ASSIST link and the migrations |
 | 5 | Screens read the database | On hold until the new specs land |
 
 **Part 1, what changed so the app runs with no server (Capacitor):**
@@ -89,6 +89,40 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
 5. Apply the part 2 migrations, since sign-up's profile trigger and progress sync need the tables.
 
 Then I can run the full test: sign up, sign in, sign out, mark progress, sign in on a second browser, see it there.
+
+**Part 4, the import pipeline** (`scripts/import/`, local only, never in the app):
+- **Stages** (docs/12), run by `npm run import -- data/raw/planning/<file>.json [--dry-run]`:
+  1. **Raw:** a hand-written planning file in `data/raw/`, kept untouched. Its path and SHA-256 go into `import_runs`.
+  2. **Parse.**
+  3. **Validate** (`planning.mjs`). It's strict, and every problem is listed before the database is touched:
+     - Only `institutions`, `majors` and `agreement_links`, with only their own fields. Any course-match section is refused "until ASSIST's permission is recorded in docs/16".
+     - Agreement links must be `https://` on `assist.org` with `source_name` "ASSIST".
+     - Every row needs full provenance, an academic year like `2026-27` (two years in a row), and a retrieved date that isn't in the future.
+     - No `TODO`, `PASTE` or `TBD` placeholders, no `verification_status` or `verified_at` (imports can't set them), no duplicates, California only.
+  4. **Upsert:** `import_planning_batch` in `supabase/migrations/20261005130000_import_functions.sql`, which only the service role can call. One transaction, all or nothing.
+     - A changed unverified row is updated; an identical row is left alone. A verified row the file would change stops the whole run, and nothing applies.
+     - Rows always start `unverified`.
+     - `--dry-run` does all of it, then rolls back and only logs the run.
+  5. **Review report:** `data/review/<time>-<file>.md` and `.csv`. It lists every record with its source link, year, status and `updated_at`, plus blank `checked_by` and `checked_at` columns.
+- **Verify:** `npm run import:verify -- data/review/<run>.csv` marks verified only the rows whose `checked_by` and `checked_at` are filled in. Each must still have the reviewed `source_url` and `updated_at`, or nothing is verified (`verify_planning_rows`).
+- **Fetch stage** (`fetch.mjs`, off). It runs only for a source listed in `scripts/import/sources.json` with its permission recorded (`granted_by`, `granted_at`, `recorded_in`), with `CONTACT_EMAIL` set, and with robots.txt allowing the path.
+  - It makes one request at a time, 5 s apart, with a `Stackd-Importer` User-Agent naming the contact email.
+  - Responses are cached in `data/raw/fetched/` with URL and time and never fetched again without `--refresh`.
+  - Today `sources.json` is `[]` and `CONTACT_EMAIL` is `"TODO"` (`scripts/import/config.mjs`), so it refuses.
+- **The service role key** is read only by `scripts/import/db.mjs`, from `.env.local`, and never printed.
+- **Tests:**
+  - `npm run test:import` runs the whole pipeline on PGlite with made-up schools: dry run, apply, re-apply, verify, a file that changes a verified row, a stale review, ten kinds of bad file, an app role calling the import, and fetching staying off. 28 checks.
+  - `npm run test:db` still checks the schema and security rules. `scripts/test-db.mjs` is the shared Supabase-shaped test database.
+- **Fixed while testing:** review reports were named to the second, so two runs in the same second overwrote the first report. Names now include milliseconds, plus a counter if one's taken.
+- **First slice:** `data/raw/planning/las-positas-ucsd-cs.json` has Las Positas College, UC San Diego, the Computer Science BS, and the agreement link.
+  - The ASSIST link, the agreement's academic year, the dates each source was checked, and `written_by` are left as TODO or PASTE, so validation refuses the file until they're filled in.
+  - Nothing in it comes from ASSIST except the link, which you paste.
+
+**Running the first slice:**
+1. Apply the migrations (part 2).
+2. Fill in every TODO and PASTE in the file. The ASSIST link comes from your browser; nothing calls ASSIST's API or crawls assist.org.
+3. `npm run import -- data/raw/planning/las-positas-ucsd-cs.json --dry-run`, then again without `--dry-run`.
+4. Check each row in the review report against its source, fill in `checked_by` and `checked_at`, and run `npm run import:verify -- <the csv>`.
 
 ## Built
 
@@ -209,3 +243,5 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - `/dev/reset` (dev only) clears every `stackd.*` key from local and session storage and reloads `/welcome` as a first launch. It's `app/dev/reset/page.dev.tsx`; `next.config.ts` adds the `dev.tsx` page extension only under `next dev`, so production builds don't have the route.
 - To see Welcome again, clear `stackd.seenWelcome` from local storage, or open `/dev/reset`.
 - `npm run build` writes the static app to `out/` (stop the dev server first), and `npm start` serves it at `http://localhost:4000`.
+- `npm run test:db` (schema and security) and `npm run test:import` (import pipeline) run on an in-memory database and touch nothing real.
+- Importing: see Phase 3 → Running the first slice.
