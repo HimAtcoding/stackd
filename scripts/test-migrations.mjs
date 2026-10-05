@@ -1,37 +1,11 @@
 // Runs supabase/migrations against an in-memory Postgres (PGlite) with stand-ins for Supabase's roles and auth schema,
 // then checks the row-level security and verified-record rules. Touches no real database: `node scripts/test-migrations.mjs`
-import fs from "node:fs";
-import path from "node:path";
-import { PGlite } from "@electric-sql/pglite";
+import { asRole, createTestDatabase } from "./test-db.mjs";
 
-const db = new PGlite();
-const dir = path.join(process.cwd(), "supabase/migrations");
-
-// What a Supabase project has before any migration runs
-await db.exec(`
-  create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
-  create schema auth;
-  create table auth.users (id uuid primary key, raw_user_meta_data jsonb not null default '{}');
-  create function auth.uid() returns uuid language sql stable as
-    $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-  grant usage on schema public, auth to anon, authenticated, service_role;
-  grant execute on function auth.uid() to anon, authenticated, service_role;
-  alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
-`);
-for (const file of fs.readdirSync(dir).filter((f) => f.endsWith(".sql")).sort()) {
-  await db.exec(fs.readFileSync(path.join(dir, file), "utf8"));
-  console.log("applied", file);
-}
+const db = await createTestDatabase();
 
 let failed = 0;
-async function as(role, sub, sql, params) {
-  await db.exec(`reset role; select set_config('request.jwt.claim.sub', '${sub ?? ""}', false); set role ${role};`);
-  try {
-    return await db.query(sql, params);
-  } finally {
-    await db.exec("reset role;");
-  }
-}
+const as = (role, sub, sql, params) => asRole(db, role, sub, sql, params);
 async function expectOk(name, fn) {
   try {
     const r = await fn();

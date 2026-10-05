@@ -1,0 +1,53 @@
+{
+  "written_by": "TODO your name",
+  "notes": "First slice: Las Positas College to UC San Diego, Computer Science. Names and the official ASSIST agreement link only (docs/16 → Data approach). Fill in every TODO and PASTE, then run: node scripts/import/run.mjs data/raw/planning/las-positas-ucsd-cs.json --dry-run",
+  "institutions": [
+    {
+      "slug": "las-positas",
+      "name": "Las Positas College",
+      "institution_type": "community_college",
+      "system": "CCC",
+      "city": "Livermore",
+      "website": "https://www.laspositascollege.edu",
+      "source_name": "Las Positas College website",
+      "source_url": "https://www.laspositascollege.edu",
+      "academic_year": "2026-27",
+      "retrieved_at": "TODO the date you checked the site, like 2026-10-05"
+    },
+    {
+      "slug": "uc-san-diego",
+      "name": "UC San Diego",
+      "institution_type": "university",
+      "system": "UC",
+      "city": "La Jolla",
+      "website": "https://ucsd.edu",
+      "source_name": "UC San Diego website",
+      "source_url": "https://ucsd.edu",
+      "academic_year": "2026-27",
+      "retrieved_at": "TODO the date you checked the site, like 2026-10-05"
+    }
+  ],
+  "majors": [
+    {
+      "institution": "uc-san-diego",
+      "slug": "computer-science-bs",
+      "name": "Computer Science",
+      "degree_type": "BS",
+      "source_name": "ASSIST",
+      "source_url": "PASTE the ASSIST agreement link from your browser",
+      "academic_year": "TODO the agreement's academic year, like 2026-27",
+      "retrieved_at": "TODO the date you opened the agreement, like 2026-10-05"
+    }
+  ],
+  "agreement_links": [
+    {
+      "sending": "las-positas",
+      "receiving": "uc-san-diego",
+      "major": "computer-science-bs",
+      "academic_year": "TODO the agreement's academic year, like 2026-27",
+      "source_name": "ASSIST",
+      "source_url": "PASTE the ASSIST agreement link from your browser",
+      "retrieved_at": "TODO the date you opened the agreement, like 2026-10-05"
+    }
+  ]
+}

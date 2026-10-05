@@ -11,7 +11,10 @@
     "predev": "npm run prepare-assets",
     "prebuild": "npm run prepare-assets",
     "postbuild": "node scripts/fix-export-segments.mjs && node scripts/check-service-key.mjs",
-    "test:db": "node scripts/test-migrations.mjs"
+    "test:db": "node scripts/test-migrations.mjs",
+    "import": "node scripts/import/run.mjs",
+    "import:verify": "node scripts/import/verify.mjs",
+    "test:import": "node scripts/import/test.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
