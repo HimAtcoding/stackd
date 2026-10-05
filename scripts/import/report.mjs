@@ -46,7 +46,7 @@ export function writeReport(rows, { name, status, counts, dir = "data/review" })
     "",
     `Run ${new Date().toISOString()}, ${status}. Counts: ${JSON.stringify(counts)}`,
     "",
-    "Open each source link and check the record against it. When a row is right, fill in `checked_by` and `checked_at` (a date) in the CSV, then run `node scripts/import/verify.mjs " + `${base}.csv` + "`.",
+    "Open each source link and check the record against it. When a row is right, fill in `checked_by` and `checked_at` (a date) in the CSV, then run `npm run import:verify -- " + `${base.split(path.sep).join("/")}.csv` + "`.",
     "",
     `| ${REPORT_COLUMNS.slice(0, 9).join(" | ")} |`,
     `| ${REPORT_COLUMNS.slice(0, 9).map(() => "---").join(" | ")} |`,
