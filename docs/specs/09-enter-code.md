@@ -62,7 +62,7 @@ Alignment: top block left at x 24, sheet content left at x 32. The resend line, 
 | Subtitle | "We sent a 6-digit code to {email}." | Same |
 | Husky | `husky-forgot` | `husky-wave` |
 | Bottom line | "Remembered it?" + "Sign in" (as on 08) | None |
-| On success | New password step | Home, toast "Email confirmed" |
+| On success | New password step | Onboarding step 1 (`10-onboarding.md`), toast "Email confirmed" |
 
 ### Top block
 
@@ -70,7 +70,7 @@ Alignment: top block left at x 24, sheet content left at x 32. The resend line, 
 |---|---|
 | Back | Circle button (00), `ArrowLeft` bold 22, `aria-label="Back"`, safe-area top + 8, left 16. History back |
 | Headline | `display`, `--navy-900`, `h1`, x 24, 24 below the back button, max-width 200 so it breaks after "your" in both versions |
-| Subtitle | `body-md` `--navy-900`, 8 below, max-width 190. The email is weight 600 with `word-break: break-all`, so a long address wraps instead of running under the husky |
+| Subtitle | `body-md` `--navy-900`, 8 below, max-width 190. The email is weight 600 with `overflow-wrap: anywhere`, so a short address moves down whole, a long one wraps, and the final period stays with it |
 | Husky | Width 144, placed exactly as on 08 (right 16, bottom edge 4 below the sheet's top edge). `alt=""`. Hidden below 372 wide |
 
 ### Code field (new shared component, add to 00)
@@ -98,7 +98,7 @@ While checking: the button shows its loading state (00), and the code field is r
 | Result | What the student sees |
 |---|---|
 | `ok`, reset | The new password step (below) |
-| `ok`, confirm | Replace history with `/` (Home), 200 ms crossfade, toast "Email confirmed". Home greets them by the first name from Create account |
+| `ok`, confirm | Replace history with `/onboarding/?step=college` (`10-onboarding.md`), 200 ms crossfade, toast "Email confirmed". Home later greets them by the first name from Create account |
 | `invalid_code` | Field error "That code didn't work. Check the email, or send a new code." The boxes clear, the input keeps focus, and the error clears on the next digit |
 | `rate_limited` | Inline error (00), 12 above the button: "Too many tries" / "Wait a few minutes, then try again." Boxes keep their digits |
 | `network` | Inline error: "Couldn't reach Stackd" / "Check your connection, then try again." Boxes keep their digits; the button is the retry |
@@ -144,7 +144,7 @@ After `verifyCode` returns `ok`, Supabase has signed the student in for this one
 |---|---|
 | Back button | Hidden. The code is used up, so going back to it would lead nowhere |
 | Headline | "Set a new password", same style and position as the code step. With no back button, it sits at safe-area top + 32 |
-| Subtitle | "For {email}." Email in weight 600, as in the code step |
+| Subtitle | "For {email}." Email in weight 600 with `overflow-wrap: anywhere`, as in the code step |
 | Husky | `husky-forgot`, unchanged |
 | Hidden username | `<input type="email" autocomplete="username" value="{email}" hidden readonly>` before the password field, so iOS saves the new password to the right account |
 | Field | Shared text field (00): label "New password", `Lock` regular 22, `type="password"` with the show/hide toggle from 06, `autocomplete="new-password"`, `enterkeyhint="done"`. Not focused on arrival: focus goes to the headline so screen readers announce the new step, and one tap opens the keyboard |
@@ -232,7 +232,7 @@ The husky fades in as on 06 (the one non-triggered moment). Box focus and error 
 - Code `999999`: the "Too many tries" inline error, with digits kept.
 - Resend counts down 60 → 1, then "Send a new code" sends, shows "New code sent", clears the boxes, and restarts at 60.
 - New password `abc`: "Use at least 8 characters." Password `samepassword`: "That's your current password…". A valid password lands on Home with "Password saved", and Back doesn't return here.
-- Create account with `confirm@example.com`: lands here as "Confirm your email" with the wave husky. A valid code lands on Home with "Email confirmed" and the right first name.
+- Create account with a real email (Confirm email on): lands here as "Confirm your email" with the wave husky. The emailed code lands on onboarding step 1 with "Email confirmed".
 - Sign in with `unconfirmed@example.com`: the "Confirm your email first" error, and "Send code" opens this screen.
 - At 320 wide: six boxes fit in one row, about 36 wide each, and the husky is hidden.
 - iOS offers the emailed code above the keypad when it can (real device, real email).

@@ -1,6 +1,6 @@
 # 03 · University: requirements tab
 
-Route: `/universities/[slug]?tab=requirements`. Demo slug: `uc-davis`. This is a pushed screen: it has no tab bar, and back returns to where the student came from. Mockup: panel 3 of `../mockup/mockup-4-screens.png`.
+Route: `/university/?slug={slug}&tab=requirements` (query string, for the static iOS build). Demo slug: `uc-davis`. This is a pushed screen: it has no tab bar, and back returns to where the student came from. Mockup: panel 3 of `../mockup/mockup-4-screens.png`.
 
 ## Build notes (step 7)
 
@@ -136,6 +136,43 @@ Unofficial footer (00), 16 below the banner.
 - **All four done**: the rows show done. The banner stays if the reminder exists. The celebration has already fired (see above).
 - **Requirements missing** (`requirements: []`): the list container is replaced by the empty state. Title "No requirements loaded for this school", body "We don't have this school's requirements yet.", button "Back to home".
 - **Load failure**: inline error (00) in place of the list: "Couldn't load requirements" / "Check your connection, then try again." / "Try again".
+
+## Real accounts: official agreement card (rev 3)
+
+ASSIST hasn't given Stackd access to its data (`docs/16`, Oct 5 2026), so a real account's school has no requirement rows. Instead of the "No requirements loaded" empty state, the Requirements tab shows the official agreement from the database's agreement link (imported in phase 3 with its source and year).
+
+Shown when the student's plan has an agreement link for this school (home college → this school → their major). The rest of the sheet is unchanged: title, meta, tabs.
+
+```
+││ Transfer requirements       ││  title-2, 24 below the tab divider
+││ Las Positas College to      ││  body --slate-600, 4 below
+││ Computer Science B.S.       ││
+││┌───────────────────────────┐││  16
+│││▣ Your official agreement  │││  card
+│││  ASSIST lists which Las   │││
+│││  Positas courses count…   │││
+│││ [ ↗ Open on ASSIST      ] │││  tinted button
+│││ 2026-27 agreement. Opens  │││  caption
+│││ assist.org.               │││
+││└───────────────────────────┘││  16
+││ Unofficial planning tool. … ││  footer line
+```
+
+| Element | Spec |
+|---|---|
+| Subtitle | Replaces "Track your progress and see what's next.": "{college} to {major}." `body` `--slate-600` |
+| Card | Card (00), margins 16, padding 16, 16 below the subtitle. Not tappable as a whole |
+| Icon | Icon tile 44 (`--r-sm`, `--tint-sky`), `FileText` fill 24 `--blue-600`, top-left, `aria-hidden` |
+| Title | "Your official agreement", `headline` `--navy-900`, 16 right of the icon, top-aligned |
+| Body | "ASSIST lists which {college short name} courses count for this major. Stackd can't show them here yet." `body` `--slate-600`, 4 below the title |
+| Button | Tinted button (00), full card inner width, 16 below the text: `ArrowSquareOut` bold 20 + "Open on ASSIST". Opens the stored agreement URL in the system browser (Capacitor's in-app browser on iOS; `target="_blank" rel="noopener"` on the web). `aria-label="Open on ASSIST, opens outside Stackd"` |
+| Source line | `caption` `--slate-600`, 8 below the button: "{academic year} agreement. Opens assist.org." This is the source-and-year label `06-trust-and-provenance.md` requires |
+
+With a real account, "Track application" and the reminder banner are hidden (no real data behind them yet), and the heart saves the school to the account.
+
+**No agreement link** for this school (for example, the student's college isn't listed, or the major is "Not listed yet"): the card keeps its icon and title, the body reads "We don't have an official agreement link for your path yet.", and the button becomes "Open ASSIST" linking to `https://assist.org`. The source line is hidden.
+
+Test: with the Las Positas → UC San Diego CS plan, the card shows "2026-27 agreement", and "Open on ASSIST" opens the exact link imported in phase 3, outside the app. No "Demo data" strip on this screen with a real account.
 
 ## Motion
 

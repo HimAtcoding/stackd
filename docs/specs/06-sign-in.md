@@ -147,7 +147,7 @@ Shown with the inline error component (00) between the forgot link and the Sign 
 | `oauth_cancelled` | (nothing shown; the student backed out on purpose) | |
 | `oauth_failed` | Couldn't sign in with {Apple / Google} | Try again, or sign in with your email. |
 | `rate_limited` | Too many tries | Wait a few minutes, then try again. |
-| `email_not_confirmed` | Confirm your email first | We'll send a code to {email}. Plus a tinted button "Send code" that calls `resendCode(email, "confirm")` and opens Enter code (`09-enter-code.md`) |
+| `email_not_confirmed` | Confirm your email first | We'll send a code to {email}. Plus a tinted button "Send code" that calls `resendCode(email, "confirm")` (reading "Sending…" while it waits) and opens Enter code (`09-enter-code.md`) |
 
 Don't say which of email or password was wrong. That's a security choice, not a copy choice.
 

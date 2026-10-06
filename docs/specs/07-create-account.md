@@ -117,9 +117,9 @@ Social button results are handled exactly as on 06.
 
 ## After creating the account
 
-When `signUp` returns `needsCode: false` (Confirm email is off in Supabase, as in development): same as signing in. Write the session, save the first name (see Auth in `06-sign-in.md`), replace the history entry with `/`, 200 ms crossfade.
+When `signUp` returns `needsCode: false` (Confirm email off): save the first name to the profile, then replace the history entry with `/onboarding/?step=college` (`10-onboarding.md`), 200 ms crossfade.
 
-When it returns `needsCode: true` (Confirm email on, before TestFlight): push `/enter-code/?for=confirm` (`09-enter-code.md`). Back from there returns here with every field still filled in. The first name is saved at sign-up, so Home greets the student correctly once the code is accepted.
+When it returns `needsCode: true` (Confirm email on): push `/enter-code/?for=confirm` (`09-enter-code.md`), which leads to onboarding once the code is accepted. Back from there returns here with every field still filled in. The first name is saved at sign-up, so Home greets the student correctly once the code is accepted.
 
 ## Test
 

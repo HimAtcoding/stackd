@@ -11,7 +11,9 @@ How the baseline screens connect, and the shared behavior every screen follows. 
 | Create account | `/sign-up` | `07-create-account.md` | No |
 | Forgot password | `/forgot-password` | `08-forgot-password.md` | No |
 | Enter code | `/enter-code/?for=reset` or `?for=confirm` | `09-enter-code.md` | No |
+| Onboarding | `/onboarding/?step=college` / `schools` / `major` (`&edit=1` from Settings) | `10-onboarding.md` | No |
 | Home | `/` | `02-home.md` | Yes (Home) |
+| Settings | `/settings/` | `11-settings.md` | No (pushed) |
 | University, requirements tab | `/university/?slug={slug}&tab=requirements` (query string, for the static iOS build) | `03-university-requirements.md` | No (pushed) |
 | Essays | `/essays` | `04-essays.md` | Yes (Essays) |
 | Task complete | Modal over any screen | `05-task-complete.md` | No |
@@ -24,12 +26,12 @@ Destinations that use the placeholder for now: the Terms and Privacy pages, Expl
 Getting in:
 
 ```
-first launch:    Welcome ──Get started──▶ Create account ──Create account / Continue with──▶ Home
+first launch:    Welcome ──Get started──▶ Create account ──Create account──▶ (Enter code, if Confirm email is on) ──▶ Onboarding ──Save plan / Skip──▶ Home
 later launches:  session? ──yes──▶ Home
                          └─no───▶ Sign in ──Sign in / Continue with──▶ Home
 between them:    Create account ◀──Sign in / Create an account──▶ Sign in
                  Sign in ──Forgot password?──▶ Forgot password ──Send code──▶ Enter code ──code ok──▶ Set a new password ──Save password──▶ Home
-confirm email:   Create account ──(Confirm email on)──▶ Enter code ──code ok──▶ Home
+confirm email:   Create account ──(Confirm email on)──▶ Enter code ──code ok──▶ Onboarding
                  Sign in ──"Confirm your email first" → Send code──▶ Enter code ──code ok──▶ Home
 ```
 
@@ -45,6 +47,12 @@ Home ──Requirements tile──▶ University (pushed)
  │                              ▼
  │                        Task complete ──Keep going──▶ back to University
  │                              └──View progress──▶ Home
+ ├──Plan card / Requirements tile──▶ University (official agreement card for real accounts)
+ ├──Setup card──▶ Onboarding
+ ├──Gear──▶ Settings ──College / Schools / Major──▶ Onboarding (edit) ──Save plan──▶ Settings
+ │                   ├──Change password──▶ Enter code (reset)
+ │                   ├──Sign out──▶ Sign in
+ │                   └──Delete account──▶ confirm sheet ──▶ Welcome
  ├──Essays tile──▶ Essays tab
  └──Mentors / Events / bell / upcoming cards──▶ placeholder
 
@@ -56,7 +64,7 @@ Tab bar: Home · Explore · Essays · Mentors
 - Switching between Sign in and Create account replaces the history entry, so Back doesn't bounce between them.
 - The email field's contents follow the student across the auth screens (Sign in, Create account, Forgot password, Enter code), in memory only. If Enter code opens without an email, it replaces itself with Forgot password (reset) or Sign in (confirm).
 - Signing in, creating an account, confirming an email, or saving a new password replaces the history entry with Home, so Back never returns to an auth screen.
-- Every screen except Welcome and the four auth screens needs a session. Without one: if `stackd.seenWelcome` isn't set, redirect to `/welcome`; otherwise redirect to `/sign-in`.
+- Every screen except Welcome and the four auth screens needs a session. Onboarding needs one too. Without one: if `stackd.seenWelcome` isn't set, redirect to `/welcome`; otherwise redirect to `/sign-in`.
 - Tab bar destinations that aren't built yet (`/explore`, `/essays`, `/mentors`) render the placeholder screen, never a 404.
 - Tabs switch instantly and keep their own scroll position.
 - The university screen is pushed over Home. Back returns to Home at the same scroll position.
@@ -99,6 +107,8 @@ On submit only, never while typing. After a failed submit, each field re-checks 
 | Undrawn screen | This part isn't built yet | It's on the list. Your plan is still on the home screen. | Back to home |
 | No essays | No essays yet | Start a draft and it'll show up here. | New essay |
 | No requirements for a school | No requirements loaded for this school | We don't have this school's requirements yet. | Back to home |
+| Home, no plan yet | Setup card: Set up your plan | Pick your college, the schools you want, and your major. It takes about a minute. | Set up your plan |
+| University, no agreement link | Your official agreement | We don't have an official agreement link for your path yet. | Open ASSIST |
 | Home, nothing upcoming | Inline line: "Nothing coming up. Deadlines you save will show here." | | |
 
 ## Error states
@@ -113,12 +123,15 @@ Shown in place of the part that failed. The rest of the screen stays usable. No 
 | Email already has an account | That email already has an account | Sign in with it, or use a different email. | Sign in |
 | Too many attempts (any auth screen) | Too many tries | Wait a few minutes, then try again. | (none) |
 | Signing in before confirming the email | Confirm your email first | We'll send a code to {email}. | Send code |
+| Plan didn't save | Couldn't save your plan | Check your connection, then try again. | (none; Save plan is the retry) |
+| Account deletion failed | Couldn't delete your account | Check your connection, then try again. | (none) |
 | Local storage blocked (private browsing) | Changes won't be saved on this device | Private browsing blocks saving. Your checkmarks will reset when you close this tab. | Dismiss |
 
 ## Trust elements
 
 Required by `06-trust-and-provenance.md`, on every build until real data replaces demo data:
-- **Demo strip** ("Demo data") only on screens showing a demo record: Home, University, Essays, and the celebration. Not on Welcome, the auth screens, or placeholders.
+- **Demo strip** ("Demo data") only on screens showing a demo record. With a real account (`NEXT_PUBLIC_DEMO_STRIP=off`) no screen shows a demo record, so the strip never appears.
+- **Source and year** on every official link (03 → official agreement card).
 - **Unofficial footer line** on Welcome and on any screen that names a university.
 
 ## Quality floor

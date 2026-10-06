@@ -178,7 +178,7 @@ Height 48. `--r-md`. Background `--blue-50`, 1 px `--blue-50-border`. Content ce
 
 ### Shortcut tile
 
-Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 8 0 `--tile-pad` (12 left, 8 right: there's no chevron to align to). Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. With an unread dot (8 × 8 at right 12, top 16), only the title line leaves room for it; the subtitle uses the full width. **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
+Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 8 0 12 (12 left, 8 right). Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. When a tile has an unread dot, only the title line leaves room for it; the subtitle uses the full width (see `02-home.md`). **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
 
 ### Pill
 
@@ -221,6 +221,22 @@ Label above, field below, optional message line under the field.
 ### Code field
 
 For 6-digit email codes. One real input (`inputmode="numeric"`, `autocomplete="one-time-code"`, `maxlength="6"`, font-size 16) laid invisibly over six boxes, so iOS autofill and paste both work. Label as the text field. Boxes: six equal columns, gap 8, height 56, `--r-sm`, `--surface`, 1 px `--field-border`, digit `title-2` `--navy-900` tabular-nums, centered. The box for the next digit takes the text field's focus style plus a 2 × 24 `--blue-600` caret (blinks at 1 s; steady under reduced motion). Error: 2 px `--coral-700` on all six boxes and the text field's message line under the row. Read-only: opacity 0.6. Full behavior in `09-enter-code.md`.
+
+### Choice circle
+
+24 circle at the start of a choice row (`10-onboarding.md`). Not chosen: 2 px `--slate-400` ring. Chosen: `--blue-600` fill, white `Check` bold 14. Swap over 120 ms. Decorative (`aria-hidden`); the row carries `role="radio"` or `role="checkbox"`. Blue on purpose: green means done.
+
+### Settings row
+
+Height 56, padding 0 16, 1 px `--border` between rows, inside a list container. Label `row-title` `--navy-900` left; value `body` `--slate-600` right, single line, max 60%; `CaretRight` bold 20 only when the row opens a screen. Pressed `--surface-pressed`. See `11-settings.md`.
+
+### Bottom sheet
+
+Over a `rgba(5,16,66,.4)` scrim. `--surface`, `--r-sheet` top corners, padding 24 24 `calc(24px + env(safe-area-inset-bottom))`. In: translateY 100% → 0, 280 ms `--ease-out`; out 200 ms; fade only under reduced motion. `role="dialog"`, `aria-modal="true"`, focus trapped, Escape and scrim tap close it.
+
+### Destructive button
+
+Primary button shape (56, `--r-full`, `button-lg` white, centered) with `--coral-700` fill, no chevron, no shadow. Only for deleting the account (`11-settings.md`).
 
 ### Social button
 
