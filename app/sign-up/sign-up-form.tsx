@@ -15,8 +15,8 @@ import { TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
-import { getCarriedEmail, setCarriedEmail } from "@/lib/auth/email-store";
-import { NETWORK_ERROR, emailError, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
+import { getCarriedEmail, getCarriedSignUp, setCarriedEmail, setCarriedSignUp } from "@/lib/auth/email-store";
+import { WEAK_PASSWORD, emailError, inlineErrorCopy, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
 
 type FieldErrors = { firstName?: string; email?: string; password?: string };
 type AccountError = ErrorCopy & { signIn?: boolean };
@@ -54,9 +54,10 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const [firstName, setFirstName] = useState("");
+  // Kept in memory while the student is on Enter code, so Back shows every field still filled in (07)
+  const [firstName, setFirstName] = useState(() => getCarriedSignUp().firstName);
   const [email, setEmail] = useState(getCarriedEmail);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(() => getCarriedSignUp().password);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   // After a failed submit, each field re-checks as it changes.
@@ -93,9 +94,24 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
     setAccountError(null);
     setPending("form");
     const result = await auth.signUp(firstName.trim(), email, password);
-    if (result.ok) return goHome();
+    if (result.ok && !result.needsCode) {
+      setCarriedSignUp({ firstName: "", password: "" });
+      return goHome();
+    }
+    if (result.ok) {
+      // Confirm email is on: the account waits for the emailed code (09)
+      setPending(null);
+      setCarriedEmail(email.trim());
+      setCarriedSignUp({ firstName, password });
+      return router.push("/enter-code/?for=confirm");
+    }
     setPending(null);
-    setAccountError(result.error === "email_taken" ? EMAIL_TAKEN : NETWORK_ERROR);
+    if (result.error === "weak_password") {
+      setErrors((prev) => ({ ...prev, password: WEAK_PASSWORD }));
+      passwordRef.current?.focus();
+    } else {
+      setAccountError(result.error === "email_taken" ? EMAIL_TAKEN : inlineErrorCopy(result.error));
+    }
   }
 
   async function onOAuth(provider: OAuthProvider) {

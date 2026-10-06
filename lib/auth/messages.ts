@@ -20,3 +20,17 @@ export function oauthErrorCopy(error: AuthError, provider: OAuthProvider): Error
   if (error === "network") return NETWORK_ERROR;
   return { title: `Couldn't sign in with ${PROVIDER_NAME[provider]}`, body: "Try again, or sign in with your email." };
 }
+
+export const RATE_LIMITED: ErrorCopy = { title: "Too many tries", body: "Wait a few minutes, then try again." };
+
+// Sign in before the email is confirmed (06); the screen adds a "Send code" button
+export const emailNotConfirmed = (email: string): ErrorCopy => ({ title: "Confirm your email first", body: `We'll send a code to ${email.trim()}.` });
+
+// Field errors for the code and new password steps (09)
+export const CODE_INCOMPLETE = "Enter all 6 digits.";
+export const CODE_INVALID = "That code didn't work. Check the email, or send a new code.";
+export const SAME_PASSWORD = "That's your current password. Pick a new one.";
+export const WEAK_PASSWORD = "Pick a password that's harder to guess.";
+
+// The inline error for an auth result that isn't a field error: too many tries, or anything else as a connection problem
+export const inlineErrorCopy = (error: AuthError): ErrorCopy => (error === "rate_limited" ? RATE_LIMITED : NETWORK_ERROR);

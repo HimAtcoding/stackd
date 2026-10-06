@@ -1,16 +1,19 @@
 import { isAuthApiError, isAuthRetryableFetchError, isAuthWeakPasswordError, type AuthError as SupabaseAuthError } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase/client";
 import { removeStorage, writeStorage } from "@/lib/storage";
-import type { Auth, AuthError, AuthResult } from "./types";
+import type { Auth, AuthError, AuthResult, SignUpResult } from "./types";
 
 const ok: AuthResult = { ok: true };
-const fail = (error: AuthError): AuthResult => ({ ok: false, error });
+type Failure = { ok: false; error: AuthError };
+const fail = (error: AuthError): Failure => ({ ok: false, error });
 
 // Progress and the greeting cached on this device belong to whoever is signed in
 const PER_ACCOUNT_KEYS = ["stackd.profile", "stackd.requirements", "stackd.saved", "stackd.progressOwner", "stackd.progressQueue"];
 
+// 09 → Supabase mapping. No response, or anything unexpected, is "network"; in development the real code is logged.
 function toAuthError(error: SupabaseAuthError | Error): AuthError {
   if (isAuthRetryableFetchError(error) || !isAuthApiError(error)) return "network";
+  if (error.code === "same_password") return "same_password";
   if (isAuthWeakPasswordError(error)) return "weak_password";
   switch (error.code) {
     case "invalid_credentials":
@@ -20,13 +23,14 @@ function toAuthError(error: SupabaseAuthError | Error): AuthError {
       return "email_taken";
     case "otp_expired":
       return "invalid_code";
-    case "same_password":
-      return "weak_password";
+    case "email_not_confirmed":
+      return "email_not_confirmed";
     case "over_request_rate_limit":
     case "over_email_send_rate_limit":
       return "rate_limited";
     default:
-      return "unknown";
+      if (process.env.NODE_ENV === "development") console.error("Unexpected Supabase auth error", error.code, error.message);
+      return "network";
   }
 }
 
@@ -41,7 +45,7 @@ function client() {
   return supabase;
 }
 
-async function run(fn: () => Promise<AuthResult>): Promise<AuthResult> {
+async function run<T extends AuthResult | SignUpResult>(fn: () => Promise<T>): Promise<T | Failure> {
   try {
     return await fn();
   } catch (e) {
@@ -70,7 +74,7 @@ export const supabaseAuth: Auth = {
       // With Confirm email on, an existing address comes back as a user with no identities, not an error
       if (data.user && data.user.identities?.length === 0) return fail("email_taken");
       cacheFirstName(firstName);
-      return data.session ? ok : { ok: true, needsCode: true };
+      return { ok: true, needsCode: !data.session };
     }),
 
   // Google and Sign in with Apple come with the iOS app (roadmap phase 6)

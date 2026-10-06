@@ -1,13 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { BellIcon, CalendarDotsIcon, FileTextIcon, PencilSimpleIcon, UsersThreeIcon } from "@phosphor-icons/react/ssr";
 import { CircleButton } from "@/components/ui/circle-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
 import { TabBar } from "@/components/ui/tab-bar";
+import { Toast } from "@/components/ui/toast";
 import { getHome, getTargetUniversity } from "@/lib/data";
+import { clearFlash, peekFlash } from "@/lib/flash";
 import { readFirstName } from "@/lib/profile";
 import { stepStatus, useRequirementStatuses } from "@/lib/requirements";
 import { subscribeNoop } from "@/lib/session";
@@ -26,6 +28,9 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 export function HomeScreen({ wordmark, husky, burst, clouds }: HomeScreenProps) {
   const home = getHome();
   const university = getTargetUniversity();
+  // A message from the screen before, e.g. "Password saved" after Enter code (09)
+  const [flash, setFlashToast] = useState(peekFlash);
+  useEffect(() => clearFlash(), []);
   const router = useRouter();
   const firstName = useSyncExternalStore(subscribeNoop, readFirstName, () => null);
   const statuses = useRequirementStatuses(university?.requirements ?? []);
@@ -150,6 +155,7 @@ export function HomeScreen({ wordmark, husky, burst, clouds }: HomeScreenProps) 
       </main>
 
       <TabBar active="home" />
+      {flash && <Toast message={flash} bottom="calc(56px + var(--safe-bottom) + 12px)" onDone={() => setFlashToast(null)} />}
     </div>
   );
 }

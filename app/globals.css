@@ -322,6 +322,16 @@
   animation-timing-function: var(--ease-out);
 }
 
+/* Code field caret (00 → Code field): blinks at 1 s, steady under reduced motion */
+.code-caret {
+  animation: code-caret 1s steps(1) infinite;
+}
+@keyframes code-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* Push (Home → University): the new screen slides in over the old one, which drifts left and dims */
 ::view-transition-group(.push-in) {
   z-index: 2;
@@ -370,6 +380,9 @@ html[data-nav="back"]::view-transition-new(root) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .code-caret {
+    animation: none;
+  }
   ::view-transition-new(.push-in),
   html[data-nav="back"]::view-transition-new(root) {
     animation: fade-in var(--dur-fast) linear both;

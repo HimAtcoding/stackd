@@ -13,11 +13,14 @@ import { InlineError } from "@/components/ui/inline-error";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
+import { TintedButton } from "@/components/ui/tinted-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
 import { getCarriedEmail, setCarriedEmail } from "@/lib/auth/email-store";
-import { NETWORK_ERROR, emailError, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
+import { emailError, emailNotConfirmed, inlineErrorCopy, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
 
 type FieldErrors = { email?: string; password?: string };
+// sendCode: the "Confirm your email first" error, with its Send code button
+type SignInError = ErrorCopy & { sendCode?: boolean };
 
 const WRONG_PASSWORD: ErrorCopy = {
   title: "Couldn't sign you in",
@@ -41,8 +44,8 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   // After a failed submit, each field re-checks as it changes.
   const [recheck, setRecheck] = useState(false);
-  const [authError, setAuthError] = useState<ErrorCopy | null>(null);
-  const [pending, setPending] = useState<null | "form" | OAuthProvider>(null);
+  const [authError, setAuthError] = useState<SignInError | null>(null);
+  const [pending, setPending] = useState<null | "form" | "code" | OAuthProvider>(null);
 
   const busy = pending !== null;
 
@@ -70,7 +73,20 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
     const result = await auth.signInWithPassword(email, password);
     if (result.ok) return goHome();
     setPending(null);
-    setAuthError(result.error === "invalid_credentials" ? WRONG_PASSWORD : NETWORK_ERROR);
+    if (result.error === "invalid_credentials") setAuthError(WRONG_PASSWORD);
+    else if (result.error === "email_not_confirmed") setAuthError({ ...emailNotConfirmed(email), sendCode: true });
+    else setAuthError(inlineErrorCopy(result.error));
+  }
+
+  // Sends a confirmation code, then opens Enter code (09). A failed send shows its own error here.
+  async function sendCode() {
+    if (busy) return;
+    setPending("code");
+    const result = await auth.resendSignUpCode(email);
+    setPending(null);
+    if (!result.ok) return setAuthError(inlineErrorCopy(result.error));
+    setCarriedEmail(email.trim());
+    router.push("/enter-code/?for=confirm");
   }
 
   async function onOAuth(provider: OAuthProvider) {
@@ -145,15 +161,29 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
       <div className="mt-4">
         <Expand open={authError !== null}>
           <div className="pb-3">
-            {authError && <InlineError role="alert" title={authError.title} body={authError.body} />}
+            {authError && (
+              <InlineError
+                role="alert"
+                title={authError.title}
+                body={authError.body}
+                action={
+                  authError.sendCode ? (
+                    <TintedButton onClick={sendCode}>
+                      {pending === "code" ? "Sending…" : "Send code"}
+                    </TintedButton>
+                  ) : undefined
+                }
+              />
+            )}
           </div>
         </Expand>
-        <PrimaryButton type="submit" loading={pending === "form"} disabled={pending === "apple" || pending === "google"}>
+        <PrimaryButton type="submit" loading={pending === "form"} disabled={pending === "apple" || pending === "google" || pending === "code"}>
           Sign in
         </PrimaryButton>
       </div>
 
-      <SocialSignIn appleLogo={appleLogo} googleLogo={googleLogo} pending={pending} onOAuth={onOAuth} />
+      {/* Sending a code disables the social buttons the same way a sign-in does */}
+      <SocialSignIn appleLogo={appleLogo} googleLogo={googleLogo} pending={pending === "code" ? "form" : pending} onOAuth={onOAuth} />
 
       <SwitchLine text="New to stackd?" link="Create an account" href="/sign-up" />
     </AuthSheet>
