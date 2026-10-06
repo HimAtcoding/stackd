@@ -147,7 +147,7 @@ After `verifyCode` returns `ok`, Supabase has signed the student in for this one
 | Subtitle | "For {email}." Email in weight 600, as in the code step |
 | Husky | `husky-forgot`, unchanged |
 | Hidden username | `<input type="email" autocomplete="username" value="{email}" hidden readonly>` before the password field, so iOS saves the new password to the right account |
-| Field | Shared text field (00): label "New password", `Lock` regular 22, `type="password"` with the show/hide toggle from 06, `autocomplete="new-password"`, `enterkeyhint="done"`. Focused on arrival |
+| Field | Shared text field (00): label "New password", `Lock` regular 22, `type="password"` with the show/hide toggle from 06, `autocomplete="new-password"`, `enterkeyhint="done"`. Not focused on arrival: focus goes to the headline so screen readers announce the new step, and one tap opens the keyboard |
 | Hint | "At least 8 characters." (text field hint, as on 07) |
 | Button | Primary "Save password", 16 below the hint |
 
