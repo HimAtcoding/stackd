@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-05. Build order steps 1–7 from `docs/specs/README.md` are done, and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06. Build order steps 1–7 and 10 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -68,7 +68,7 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
   - `signUp` returns `needsCode` when Confirm email is on.
   - Google and Apple return `oauth_failed` until phase 6.
   - Supabase's error codes map to `invalid_credentials`, `email_taken`, `invalid_code`, `weak_password`, `rate_limited`, `network` or `unknown`.
-- **Code entry.** `/enter-code/` is the signed-out placeholder until the Enter code spec lands. Nothing links to it yet, and 08's copy is unchanged.
+- **Code entry.** Built in step 10 (09): Forgot password, Create account (when a code is needed) and Sign in ("Confirm your email first") all lead to `/enter-code/`.
 - **Session.** `lib/session.ts`: in Supabase mode, signed in means `stackd.auth` exists. `subscribeSession` also listens to Supabase's sign-in events, so the session gate reacts when a session ends or can't be refreshed.
 - **Progress per user.** `lib/progress/sync.ts` starts from the session gate, in Supabase mode only:
   - Local storage stays the device's copy. Each change to a database record (a UUID requirement id, or a school that exists in `institutions`) is queued in `stackd.progressQueue` and pushed to `user_requirement_status` or `saved_schools`.
@@ -142,7 +142,7 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
 
 Decided, and must be done before the TestFlight beta (roadmap phase 7):
 1. **Custom SMTP, then code email templates.** Supabase only allows editing email templates once custom SMTP is set up. Then change **Reset Password** and **Confirm signup** to show the 6-digit code (`{{ .Token }}`) instead of a link, and run the reset-code test (`sendPasswordReset` → `verifyResetCode` → `setNewPassword`), which hasn't run against the project yet. Custom SMTP also lifts Supabase's built-in email limit of a few messages an hour.
-2. **Turn Confirm email back on** (Authentication → Sign In / Providers → Email). That needs the Enter code screen (spec coming) and the code template from item 1.
+2. **Turn Confirm email back on** (Authentication → Sign In / Providers → Email). The Enter code screen is built (step 10); it needs the code template from item 1.
 3. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
 
 ## Built
@@ -153,9 +153,30 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7):
 | 2 | Welcome, rev 3 (scene placed by its plaza line, sky scrim, husky sized to fit the screen, books sized from the husky and in front, banner check, tighter text under 760 tall, no wordmark under 600 tall) | `app/welcome/` |
 | 3 | Sign in, the auth interface, demo auth, and the signed-out redirect | `app/sign-in/`, `lib/auth/`, `app/(app)/session-gate.tsx` |
 | 4 | Create account | `app/sign-up/` |
-| 5 | Forgot password, rev 2 (husky, hidden below 372 wide, both states, resend) | `app/forgot-password/` |
+| 5 | Forgot password, rev 3 since step 10: the request form only (husky, hidden below 372 wide), handing over to Enter code | `app/forgot-password/` |
 | 6 | Home, rev 2 (02 and 00 as of `b1ef3b8`), with 28 tile icons and 12 / 8 tile padding (`5b78222`): greeting from `stackd.profile` (demo name otherwise), husky hung from the greeting behind the journey card, journey card with all six circles on a track, shortcut tiles and upcoming cards without chevrons, the empty upcoming line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
 | 7 | University requirements: campus hero from the pool, back and save, sheet, underline tabs on `?tab=`, requirement rows that mark done (toast with Undo), Track application, reminder banner, footer, empty and load-error states, push from Home and the reverse slide on Back, demo strip | `app/(app)/universities/[slug]/`, `components/ui/status-control.tsx`, `lib/requirements.ts`, `lib/campus.ts` |
+| 10 | Enter code (09): the shared code field, the reset and confirm code steps, the new password step, and the new auth errors on 06, 07 and 08 | `app/enter-code/`, `components/ui/code-field.tsx`, `lib/auth/` |
+
+**Step 10, Enter code** (2026-10-06):
+- **Code field** (`components/ui/code-field.tsx`, 00 → Code field): one real input (`inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" enterkeyhint="done"`, 16 px) lies invisibly over six `aria-hidden` boxes and takes every tap.
+  - Typing keeps digits only, and Backspace removes the last.
+  - A paste is read whole and reduced to its first six digits, because `maxlength` would otherwise cut "Your code is 471 902" to "Your c" first.
+  - The next box shows the focus ring and a caret blinking at 1 s (`.code-caret`, steady under reduced motion). The error state turns all six coral. Read-only goes to 60% opacity.
+- **Enter code** (`app/enter-code/`): `?for=reset` or `?for=confirm` picks the copy and the husky (`husky-forgot` or `husky-wave` at 144).
+  - Without the email in memory (a reload), the screen replaces itself with Forgot password or Sign in.
+  - The check starts on the sixth digit. A wrong code clears the boxes and shows the field error; too many tries or a connection problem shows the inline error and keeps the digits.
+  - Resend counts 60 → 1, then becomes a link ("Sending…", then the toast and a restart).
+  - For a reset, the code step crossfades to the new password step: no Back, focus on the headline, and a hidden username field for iOS. On save, the screen replaces itself with Home.
+- **Auth** (`lib/auth`): phase 3's method names stay; 09's `verifyCode` / `resendCode` / `updatePassword` map to them by purpose.
+  - `same_password` and `email_not_confirmed` are their own errors now. Anything unexpected from Supabase is `network`, and the real code is logged in development.
+  - `signUp` always reports `needsCode`. Demo auth follows 09's demo rules.
+  - Supabase reports a wrong or expired code as `otp_expired` for both reset and signup (checked against the project), which maps to "That code didn't work".
+- **Errors on 06, 07, 08:** "Too many tries" on all three; on 06, "Confirm your email first" with a Send code button; on 07, the weak-password field error. Create account's fields are kept in memory (`lib/auth/email-store.ts`), so Back from Enter code shows them filled in.
+- **Home** shows "Password saved" or "Email confirmed" from `lib/flash.ts`, a one-time in-memory message, 12 above the tab bar.
+- **Tested:**
+  - In demo mode: every line of 09's and 08's Test sections except the real-iPhone autofill, plus the new errors on 06 and 07. 57 checks in Chromium and 51 in WebKit; WebKit skips the Back-to-Create-account check (open item below) and checks the countdown in real time.
+  - The real reset-code test waits for custom SMTP (Before TestFlight).
 
 Also in place:
 - **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
@@ -191,7 +212,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 ## Open items
 
-1. **Auth error copy for new cases.** The screens map `rate_limited`, `weak_password` and `unknown` to their existing network copy ("Couldn't reach Stackd"), which is wrong for those cases. Forgot password still says "Reset link sent", though the email will carry a code. Both wait for the revised 08 and the Enter code spec.
+1. **WebKit crashes on Back to Create account.** In Playwright's WebKit on Windows, any history Back that lands on `/sign-up/` (from Terms, or from Enter code) crashes the page. Back to Sign in, Welcome or Forgot password is fine. It happens with or without step 10's changes, so it predates them. Check on a real iPhone in Safari; if it happens there too, bisect the Create account screen (its fields, the terms links).
 2. **`out/` is 31 MB, mostly unused PNGs.** `public/art` is copied into the export as is, but the app only loads the WebP copies in `public/_art` (and the SVGs). Before the iOS app ships, move the source PNGs out of `public/` so the app bundle doesn't carry them.
 3. **Building next to a running dev server.** The build's type check also reads `.next/dev/types`, which still lists routes that were renamed or removed until the dev server regenerates it. If the build fails on `.next/dev/types/validator.ts`, stop the dev server and delete `.next/dev/types`. (See also: don't run `next build` while the dev server is running.)
 4. **A phone can hold stale dev CSS.** A page opened before a change keeps the stylesheet it first loaded. Navigating inside the app (for example Create account → Home) fetches the new code but not the new CSS unless the dev server's live-reload connection is up. Home then showed the header against the screen edges, no dash, and the husky dropped into the tiles, all from missing utility classes. Fix: pull to refresh, or open `/dev/reset`, which ends in a full page load.
@@ -230,6 +251,8 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Home journey card at 320.** The title row grows when "Your transfer journey" wraps, so the card is 126 tall there, not 100. A fixed 26 row put the second line on top of the nodes.
 - **Home husky with no journey data.** 02's `bottom: -36` assumes the journey card follows. Without journey data the 32 gap stays, so the husky ends 8 above the tiles, not over them.
 - **Home seed data in production builds.** `/` is prerendered, so `data/seed/` is read at build time. Editing or deleting a seed file needs a rebuild there; `next dev` reads it on every request.
+- **Enter code: how the email wraps.** 09 says `word-break: break-all`, which broke even short addresses at the 190 edge ("For student@example.co / m."). The build uses `overflow-wrap: anywhere`, so an address that fits on a line moves down whole and only a too-long one breaks. The address's last character and the closing period stay together, so the period never sits alone.
+- **Sign in's Send code button reads "Sending…" while the code goes out,** and a failed send replaces the error with its own (too many tries or connection). 06 doesn't say what happens in between.
 - **Home upcoming records have an `id`** (`application-deadline`, `transfer-panel`) so each card links to `/upcoming/[id]`. 02's records don't list one.
 - **Home pill from `dueInDays`.** 02's text says the pill comes from `dueDate`, but its demo record has `dueInDays: 14`, so the build reads `dueInDays`. Cards sort soonest first, and undated ones go last.
 - **University toast position.** 00 puts a toast 12 above the primary button when there's no tab bar, but that rule is for a button fixed to the bottom. "Track application" scrolls with the page, so the toast sits at safe-area bottom + 12.
