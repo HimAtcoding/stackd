@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06. Build order steps 1–7 and 10 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06 (real sign-in tested end to end). Build order steps 1–7 and 10 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -10,7 +10,7 @@ Parts 1–4 built 2026-10-05. Part 5 is on hold until the new specs land. Plan a
 |---|---|---|
 | 1 | Capacitor readiness: static export, no Node server at runtime | Done |
 | 2 | Supabase schema with provenance and row-level security | Done, applied to the project (2026-10-05) |
-| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done and tested against the project, except the 6-digit reset code (see Before TestFlight) |
+| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done; the full real flow, codes included, tested 2026-10-06 (below) |
 | 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done; first slice imported (`3e54ad4`), rows unverified until checked |
 | 5 | Screens read the database | On hold until the new specs land |
 
@@ -81,11 +81,11 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
   - A Supabase-mode build against the project, using calls that create nothing and send no email: the signed-out redirects work, and a failed sign-in comes back as Supabase's `invalid_credentials` and shows "Couldn't sign you in".
   - Not yet tested end to end: a real sign-up, the code calls, and progress sync. They need the steps below.
 
-**Dashboard steps for part 3** (Supabase project `vzsogzgcivpcmxqxepfr`). Done 2026-10-05, except step 3:
-1. Authentication → Sign In / Providers → Email: turn **Confirm email** off. Done; the project reports `mailer_autoconfirm: true`. It goes back on before TestFlight.
+**Dashboard steps for part 3** (Supabase project `vzsogzgcivpcmxqxepfr`). All done by 2026-10-06; the project is now in its before-TestFlight state:
+1. **Confirm email** (Authentication → Sign In / Providers → Email): off for development on 2026-10-05, back **on** since 2026-10-06 (`mailer_autoconfirm: false`). New accounts get a 6-digit code (09).
 2. Authentication → URL Configuration: Site URL `http://localhost:3000`.
-3. **Skipped:** Supabase only allows editing email templates with custom SMTP, so reset emails still send a link. Moved to Before TestFlight. (The step was: Authentication → Email Templates → **Reset Password**: show the code instead of the link, e.g. "Your Stackd code is {{ .Token }}". Do the same in **Confirm signup** for when confirmation is back on. Email OTP length should be 6 (Providers → Email).)
-4. In `.env.local`, add `NEXT_PUBLIC_DEMO_STRIP=off` to use real sign-in locally. Leave it out for demo mode.
+3. **Custom SMTP (Gmail) and code templates, done 2026-10-06.** Reset Password and Confirm signup show `{{ .Token }}`. **Email OTP Length must be 6** (Providers → Email): the project came set to 8, and 09's code field takes 6. It's 6 now.
+4. Real sign-in is the default now (`lib/flags.ts`). `NEXT_PUBLIC_DEMO_STRIP=on` in `.env.local` switches to demo auth for local demos; `.env.local` currently says `off`, which is the same as leaving it out.
 5. Apply the part 2 migrations, since sign-up's profile trigger and progress sync need the tables.
 
 **Full test against the project** (2026-10-05, dev server in Supabase mode, two separate browsers), 19 checks, all passed:
@@ -138,12 +138,25 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
 3. `npm run import -- data/raw/planning/las-positas-ucsd-cs.json --dry-run`, then again without `--dry-run`.
 4. Check each row in the review report against its source, fill in `checked_by` and `checked_at`, and run `npm run import:verify -- <the csv>`.
 
+**Real end-to-end test, 2026-10-06** (dev server in real mode against the project, with Ryan's own inbox for the codes), 17 checks, all passed:
+- **Confirm email:** signing in to an unconfirmed account showed "Confirm your email first". Send code emailed a 6-digit code, and entering it landed on "Hi, Ryan!" with "Email confirmed".
+- **Sign out and in:** `/dev/reset` signed out, and signing back in reached "Hi, Ryan!".
+- **Forgot password:** Send code opened Enter code.
+  - A wrong code → "That code didn't work…", with the boxes cleared.
+  - The resend count ran.
+  - Sending again within a minute hit Supabase's email limit (429) → "Too many tries".
+  - After a minute Send code worked again, and "Send a new code" → "New code sent".
+  - The newest code opened "Set a new password". The current password → "That's your current password…" (Supabase's `same_password`, 422).
+  - A new password → Home with "Password saved". The old password then failed, and the new one signed in.
+- **Fixed during the test:**
+  - Codes arrived as 8 digits, because the project's Email OTP Length was 8. Ryan set it to 6.
+  - After the reset-code sign-in, Home greeted "Hi, Alex!" (the demo name). `/dev/reset` had cleared the saved first name, and a reset-code sign-in doesn't save it. `lib/profile.ts` now falls back to the first name in the Supabase session, so every kind of sign-in greets by name (`31d9256`).
+- **Still untested:** iOS offering the emailed code above the keypad (needs a real iPhone). The test account is Ryan's own; its password was changed during the test and handed over in chat.
+
 ## Before TestFlight
 
-Decided, and must be done before the TestFlight beta (roadmap phase 7):
-1. **Custom SMTP, then code email templates.** Supabase only allows editing email templates once custom SMTP is set up. Then change **Reset Password** and **Confirm signup** to show the 6-digit code (`{{ .Token }}`) instead of a link, and run the reset-code test (`sendPasswordReset` → `verifyResetCode` → `setNewPassword`), which hasn't run against the project yet. Custom SMTP also lifts Supabase's built-in email limit of a few messages an hour.
-2. **Turn Confirm email back on** (Authentication → Sign In / Providers → Email). The Enter code screen is built (step 10); it needs the code template from item 1.
-3. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
+Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
+1. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
 
 ## Built
 
@@ -251,6 +264,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Home journey card at 320.** The title row grows when "Your transfer journey" wraps, so the card is 126 tall there, not 100. A fixed 26 row put the second line on top of the nodes.
 - **Home husky with no journey data.** 02's `bottom: -36` assumes the journey card follows. Without journey data the 32 gap stays, so the husky ends 8 above the tiles, not over them.
 - **Home seed data in production builds.** `/` is prerendered, so `data/seed/` is read at build time. Editing or deleting a seed file needs a rebuild there; `next dev` reads it on every request.
+- **Demo mode is off by default.** 00 says `NEXT_PUBLIC_DEMO_STRIP` defaults to on. Since 2026-10-06 development runs in real mode unless it's set to `on`. The demo strip itself still follows the data, not the flag.
 - **Enter code: how the email wraps.** 09 says `word-break: break-all`, which broke even short addresses at the 190 edge ("For student@example.co / m."). The build uses `overflow-wrap: anywhere`, so an address that fits on a line moves down whole and only a too-long one breaks. The address's last character and the closing period stay together, so the period never sits alone.
 - **Sign in's Send code button reads "Sending…" while the code goes out,** and a failed send replaces the error with its own (too many tries or connection). 06 doesn't say what happens in between.
 - **Home upcoming records have an `id`** (`application-deadline`, `transfer-panel`) so each card links to `/upcoming/[id]`. 02's records don't list one.
