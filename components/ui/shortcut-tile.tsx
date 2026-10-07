@@ -38,7 +38,7 @@ export function ShortcutTile({ href, icon, iconTint, title, subtitle, unread, tr
       </span>
       {/* No chevron (00 rev 2): text runs to 8 from the right edge. Only the title line is level with the unread dot */}
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className={cn("truncate text-navy-900 type-label", unread && "pr-4")}>{title}</span>
+        <span className={cn("truncate text-navy-900 type-label", unread && "pr-5")}>{title}</span>
         <span className="truncate text-slate-600 tabular-nums type-caption">{subtitle}</span>
       </span>
       {unread && <span aria-hidden className="absolute right-3 top-4 size-2 rounded-full bg-coral-500" />}

@@ -8,8 +8,11 @@ type TintedButtonProps = {
   children: ReactNode;
   icon?: ReactNode;
   href?: string;
+  // With href: a link that leaves Stackd, opened outside the app
+  external?: boolean;
   onClick?: () => void;
   className?: string;
+  "aria-label"?: string;
   "data-pressed"?: boolean;
   "data-focus"?: boolean;
 };
@@ -21,22 +24,29 @@ const classes = cn(
 );
 
 // Icon 20 + 8 gap + label, both --blue-700.
-export function TintedButton({ children, icon, href, onClick, className, ...data }: TintedButtonProps) {
+export function TintedButton({ children, icon, href, external, onClick, className, ...rest }: TintedButtonProps) {
   const content = (
     <>
       {icon}
       <span>{children}</span>
     </>
   );
+  if (href && external) {
+    return (
+      <a href={href} target="_blank" rel="noopener" className={cn(classes, className)} {...rest}>
+        {content}
+      </a>
+    );
+  }
   if (href) {
     return (
-      <Link href={href} className={cn(classes, className)} {...data}>
+      <Link href={href} className={cn(classes, className)} {...rest}>
         {content}
       </Link>
     );
   }
   return (
-    <button type="button" onClick={onClick} className={cn(classes, className)} {...data}>
+    <button type="button" onClick={onClick} className={cn(classes, className)} {...rest}>
       {content}
     </button>
   );

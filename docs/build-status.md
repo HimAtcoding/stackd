@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06 (step 11, Onboarding). Build order steps 1–7, 10 and 11 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 12 and 13 follow the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06 (step 12, Home plan states and the agreement card). Build order steps 1–7 and 10–12 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 13 follows the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -12,7 +12,7 @@ Parts 1–4 built 2026-10-05. Part 5 is on hold until the new specs land. Plan a
 | 2 | Supabase schema with provenance and row-level security | Done, applied to the project (2026-10-05) |
 | 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done; the full real flow, codes included, tested 2026-10-06 (below) |
 | 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done; first slice imported (`3e54ad4`), rows unverified until checked |
-| 5 | Screens read the database | On hold until the new specs land |
+| 5 | Screens read the database | Onboarding, Home and University read it for real accounts (steps 11 and 12 below). Demo mode still reads `data/seed` |
 
 **Part 1, what changed so the app runs with no server (Capacitor):**
 - **Static export.** `next build` writes a static app to `out/` (`output: "export"`, production only). `trailingSlash: true`, so every page is `<route>/index.html`, which any static file server and Capacitor can serve. `npm start` serves `out/` on port 4000.
@@ -74,7 +74,7 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
   - Local storage stays the device's copy. Each change to a database record (a UUID requirement id, or a school that exists in `institutions`) is queued in `stackd.progressQueue` and pushed to `user_requirement_status` or `saved_schools`.
   - On sign-in, progress made before signing in moves into the account (unless the device holds another account's copy, which is cleared), then the account's progress is pulled down.
   - Demo records (`ucd-*`, `uc-davis`) stay on the device.
-- **Demo strip follows the data.** Home and University render `<DemoStrip />` when their records carry `"demo": true`, whatever the sign-in mode. Until part 5, both still show demo data in either mode, so the strip stays.
+- **Demo strip follows the data.** Home and University render `<DemoStrip />` when their records carry `"demo": true`. Since step 12 a real account sees no demo records on either screen, so no strip; demo mode shows both.
 - **Keeping the service role key out of the app.** A lint rule fails if `SUPABASE_SERVICE_ROLE_KEY` appears in `app/`, `components/` or `lib/`. `scripts/check-service-key.mjs` runs after every build and fails if the key's value is anywhere in `out/`, without printing it.
 - **Tested:**
   - Demo mode: every screen and the University checks are unchanged.
@@ -170,6 +170,7 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
 | 6 | Home, rev 2 (02 and 00 as of `b1ef3b8`), with 28 tile icons and 12 / 8 tile padding (`5b78222`): greeting from `stackd.profile` (demo name otherwise), husky hung from the greeting behind the journey card, journey card with all six circles on a track, shortcut tiles and upcoming cards without chevrons, the empty upcoming line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
 | 7 | University requirements: campus hero from the pool, back and save, sheet, underline tabs on `?tab=`, requirement rows that mark done (toast with Undo), Track application, reminder banner, footer, empty and load-error states, push from Home and the reverse slide on Back, demo strip | `app/(app)/universities/[slug]/`, `components/ui/status-control.tsx`, `lib/requirements.ts`, `lib/campus.ts` |
 | 10 | Enter code (09): the shared code field, the reset and confirm code steps, the new password step, and the new auth errors on 06, 07 and 08 | `app/enter-code/`, `components/ui/code-field.tsx`, `lib/auth/` |
+| 12 | Home plan states, the gear, and the official agreement card on University (02 → Plan states, 03 → Real accounts) | `app/(app)/_home/`, `app/(app)/university/_university/`, `lib/data/university.ts` |
 | 11 | Onboarding (10): college, schools and major on real database rows, saved to the account; the edit mode Settings will open; the plan migration | `app/(app)/onboarding/`, `lib/data/plan.ts`, `lib/data/catalog.ts`, `components/ui/choice-row.tsx`, `supabase/migrations/20261007120000_plans_and_account.sql` |
 
 **Step 11, Onboarding** (2026-10-06, built and tested in real mode against the project):
@@ -213,6 +214,22 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
 - **Tested:**
   - In demo mode: every line of 09's and 08's Test sections except the real-iPhone autofill, plus the new errors on 06 and 07. 57 checks in Chromium and 51 in WebKit; WebKit skips the Back-to-Create-account check (open item below) and checks the countdown in real time.
   - The real reset-code test waits for custom SMTP (Before TestFlight).
+
+**Step 12, Home plan states and the agreement card** (2026-10-06, built and tested in real mode against the project):
+- **Home** is now two screens on one frame (`app/(app)/_home/`): `account-home.tsx` for a real account and `demo-home.tsx` for demo mode, both drawn by `home-frame.tsx`.
+  - Real account: the greeting from the profile ("Hi there!" with no name) and a subtitle for the state. No plan: the setup card ("Set up your plan" opens onboarding with `from=home`). With a plan: the plan card, up to three schools and "+{n} more", "Edit" opening Settings.
+  - Requirements tile: "Set up your plan" (to onboarding) or the first school's name (to its University screen). Essays, Mentors and Events say "Coming soon" with no unread dot. The bell has no dot, Upcoming shows its empty line, and there is no demo strip.
+  - Nothing on a real account's Home reads `home.json`.
+- **02's other rev 3 changes, in both modes:** the gear 8 left of the bell (hidden in demo mode, which has no account), the husky anchored to the wrapper of the first card (`right: -4px; bottom: calc(100% - 4px)`), square ends on the journey track and fill, and Mentors' title leaving 20 for the unread dot.
+- **University** (`app/(app)/university/_university/`): `university-screen.tsx` is the shared frame; `demo-requirements.tsx` and `account-university.tsx` fill the Requirements tab.
+  - Real account: the name, kind and city from `institutions`, the campus image picked by slug, and the heart saving to the account through the existing sync.
+  - The Requirements tab shows "{college} to {major}." and the official agreement card (`agreement-card.tsx`). `lib/data/university.ts` finds the link for home college → this school → the student's major, latest academic year. "Open on ASSIST" opens it outside the app, with "{year} agreement. Opens assist.org." under it. Without a link: "We don't have an official agreement link for your path yet." and "Open ASSIST".
+  - Track application, the reminder banner and requirement rows don't show. A slug the database doesn't have gets the placeholder.
+- **`/settings/` is the signed-in placeholder** until step 13, so the gear and "Edit" lead somewhere.
+- **Tested:**
+  - Real account (the throwaway from step 11): both of 02's rev 3 tests and 03's (the no-plan Home after Skip; then "Transferring to UC San Diego.", the plan card, "Edit" opening Settings, the card and the tile opening UC San Diego, "2026-27 agreement", and "Open on ASSIST" being the exact imported link, opened in a new tab). No demo strip on either screen. The heart, turned on here, was already on after signing in on a second browser. 22 checks.
+  - With a stand-in session: the measurements at 393 × 852 and 320 × 568, five schools, a school with no major, a student with no college (the "Open ASSIST" card), and a demo-only slug.
+  - Demo mode (`NEXT_PUBLIC_DEMO_STRIP=on`): Home and University as before plus the rev 3 changes, no gear, and marking a row done still updating Home. 21 checks.
 
 Also in place:
 - **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
@@ -298,6 +315,15 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Requirement row layout.** The row link spans the whole row (so its pressed state covers it) with 68 left padding, and the status circle sits on top of it as a separate checkbox. That keeps the two tap targets separate and unnested, as 03's VoiceOver test expects.
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
 - **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
+
+### Home and University with a real account (step 12)
+- **Home while the plan is loading or couldn't load.** 02 doesn't cover it. A device that has shown the plan before draws its saved copy at once. Otherwise the card's place shows nothing for 600 ms, then the loading component, and the tiles and Upcoming wait with it. A failed load shows the inline error "Couldn't load your plan" with Try again.
+- **"Major not listed yet"** is the plan card's line for a school whose major the student marked "Not listed yet". 02 only has "Pick a major", which stays for a school with no major picked.
+- **The plan card is two links,** as on 03's requirement rows: one covering the card, and "Edit" on top of it, so neither is inside the other.
+- **University's subtitle** ("{college} to {major}.") only shows when the student has both a home college and a major for this school. It never ends in two periods after "B.S.".
+- **University while it loads:** the sheet's color for 600 ms, then the loading component; inside the Requirements tab the same while the plan and link load. A failed load shows 03's "Couldn't load requirements".
+- **The city is shown with the state** ("La Jolla, CA"), from the institution's `city` and `state`, matching 03's "Davis, CA".
+- **The agreement card's body uses the college's full name** ("Las Positas College courses"), as the plan decided; there's no short-name column.
 
 ### Onboarding (step 11)
 - **A confirmed email always goes to onboarding,** also when the code was asked for from Sign in's "Confirm your email first". flows-and-states sends that one path to Home; 09 and the plan say onboarding, and an account that was never confirmed has no plan yet.

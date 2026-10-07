@@ -22,12 +22,12 @@ export function JourneyCard({ statuses }: { statuses: RequirementStatus[] }) {
         </p>
       </div>
       <div role="img" aria-label={`${done} of ${total} steps complete`} className="relative mt-3 h-7.5">
-        {/* Track and fill share the circles' center line: 6 tall at top 12 in a 30 row */}
-        <span data-track className="absolute inset-x-[15px] top-3 h-1.5 rounded-full bg-node-empty" />
+        {/* Track and fill share the circles' center line: 6 tall at top 12 in a 30 row. Square ends: each one is under a circle */}
+        <span data-track className="absolute inset-x-[15px] top-3 h-1.5 bg-node-empty" />
         {run > 1 && (
           <span
             data-fill
-            className="absolute left-[15px] top-3 h-1.5 rounded-full bg-green-600"
+            className="absolute left-[15px] top-3 h-1.5 bg-green-600"
             style={{ width: `calc(${run - 1} * ${pitch})` }}
           />
         )}
