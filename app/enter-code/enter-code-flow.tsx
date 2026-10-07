@@ -21,6 +21,7 @@ import type { CodePurpose } from "@/lib/auth/types";
 import { cn } from "@/lib/cn";
 import { setFlash } from "@/lib/flash";
 import { AFTER_SIGN_UP } from "@/lib/onboarding";
+import { hasSession } from "@/lib/session";
 
 type Step = "code" | "password";
 
@@ -28,10 +29,7 @@ type Step = "code" | "password";
 const RESEND_SECONDS = 60;
 const MIN_PASSWORD = 8;
 
-const COPY: Record<CodePurpose, { headline: string; fallback: string }> = {
-  reset: { headline: "Enter your code", fallback: "/forgot-password" },
-  confirm: { headline: "Confirm your email", fallback: "/sign-in" },
-};
+const HEADLINE: Record<CodePurpose, string> = { reset: "Enter your code", confirm: "Confirm your email" };
 
 function newPasswordError(value: string) {
   if (!value) return "Create a password.";
@@ -49,6 +47,9 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
   // The email arrives in memory only, so a reload (or iOS closing the app) leaves this empty
   const [email] = useState(() => getCarriedEmail().trim());
   const missing = !purpose || !email;
+  // Already signed in when the screen opened: they came from Settings → Change password (11), not Forgot password
+  const [fromSettings] = useState(() => purpose === "reset" && hasSession());
+  const start = fromSettings ? "/settings/" : purpose === "reset" ? "/forgot-password" : "/sign-in";
 
   const codeRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -70,10 +71,10 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
   const [recheck, setRecheck] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // Nothing is shown without an email: the student types it again where they started
+  // Nothing is shown without an email: the student starts again where they came from
   useEffect(() => {
-    if (missing) router.replace(purpose === "reset" ? "/forgot-password" : "/sign-in");
-  }, [missing, purpose, router]);
+    if (missing) router.replace(start);
+  }, [missing, start, router]);
 
   // Opens the keypad on arrival. iOS may still want a tap, which the boxes take.
   useEffect(() => {
@@ -202,11 +203,11 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
     <>
       <div className="relative px-4 pb-6" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
         {/* The code is used up after the new password step opens, so that step has no Back */}
-        {step === "code" && <BackButton fallback={COPY[purpose].fallback} />}
+        {step === "code" && <BackButton fallback={start} />}
         <ViewTransition key={step}>
           <div className="relative z-[1] px-2">
             <h1 ref={headingRef} tabIndex={-1} className="mt-6 max-w-[200px] text-navy-900 outline-none type-display">
-              {step === "code" ? COPY[purpose].headline : "Set a new password"}
+              {step === "code" ? HEADLINE[purpose] : "Set a new password"}
             </h1>
             <p className="mt-2 max-w-[190px] text-navy-900 type-body-md">
               {step === "code" ? <>We sent a 6-digit code to {emailText}</> : <>For {emailText}</>}
@@ -257,7 +258,8 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
                 )}
               </div>
               <p className="mx-auto mt-1 max-w-[260px] text-center text-slate-600 type-caption">Not in your inbox? Check your spam folder.</p>
-              {resetting && <SwitchLine text="Remembered it?" link="Sign in" href="/sign-in" />}
+              {/* A signed-in student has no sign-in to go back to */}
+              {resetting && !fromSettings && <SwitchLine text="Remembered it?" link="Sign in" href="/sign-in" />}
             </div>
           ) : (
             <div className="flex flex-col">

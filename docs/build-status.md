@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06 (step 13, Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -238,6 +238,7 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
   - **Sign out:** this device only (`signOut({ scope: "local" })`), the device's copies of the student's data cleared, then Sign in with "Signed out".
   - **Delete account:** the confirm sheet, then `delete_my_account()`. After it: a local sign-out, every `stackd.*` key cleared ("Welcome seen" too), and Welcome with "Account deleted". A failure shows the inline error inside the sheet.
   - **Footer:** the unofficial line, Terms and Privacy, and "Stackd {version}" from `package.json` (`NEXT_PUBLIC_APP_VERSION`, set in `next.config.ts`).
+- **Enter code opened from Settings** (09, updated 2026-10-06): a student who is already signed in when the screen opens doesn't get the "Remembered it? Sign in" line, and Back returns to Settings. Without the email in memory (a reload), the screen replaces itself with Settings, not Forgot password. Checked with a stand-in session, next to the signed-out path, which is unchanged (9 checks).
 - **Deleting an account is a database function, not an Edge Function.** The first real delete worked on the hosted project, so the plan's fallback wasn't needed.
 - **New shared components** (all on `/dev/components`): settings row and its group, bottom sheet (focus starts on the title and stays inside, Escape or a tap on the scrim closes it, slides up or only fades under reduced motion), and the destructive button.
 - **Auth** (`lib/auth`): `signOut()` is local now, and there's a new `deleteAccount()` (demo auth just ends the demo session).
@@ -286,7 +287,6 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 ## Open items
 
-0. **Enter code opened from Settings still offers "Remembered it? Sign in".** 09 shows that line on every reset code screen, but a student changing their password from Settings is already signed in. It needs a line in 09 or 11 to hide it.
 1. **WebKit crashes on Back to Create account.** In Playwright's WebKit on Windows, any history Back that lands on `/sign-up/` (from Terms, or from Enter code) crashes the page. Back to Sign in, Welcome or Forgot password is fine. It happens with or without step 10's changes, so it predates them. Check on a real iPhone in Safari; if it happens there too, bisect the Create account screen (its fields, the terms links).
 2. **`out/` is 31 MB, mostly unused PNGs.** `public/art` is copied into the export as is, but the app only loads the WebP copies in `public/_art` (and the SVGs). Before the iOS app ships, move the source PNGs out of `public/` so the app bundle doesn't carry them.
 3. **Building next to a running dev server.** The build's type check also reads `.next/dev/types`, which still lists routes that were renamed or removed until the dev server regenerates it. If the build fails on `.next/dev/types/validator.ts`, stop the dev server and delete `.next/dev/types`. (See also: don't run `next build` while the dev server is running.)

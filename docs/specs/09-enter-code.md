@@ -120,6 +120,8 @@ One message covers both wrong and expired codes, because Supabase reports both a
 
 **Bottom line** (reset only): exactly as on 08: "Remembered it?" + "Sign in", `margin-top: auto`, min 20 above. Goes to `/sign-in`, replacing this entry, email carried over.
 
+When the student is already signed in (they came from Settings → Change password, `11-settings.md`), the bottom line is hidden, and Back returns to Settings.
+
 Toasts on this screen sit 12 above the safe-area bottom.
 
 ## New password step (reset only)
