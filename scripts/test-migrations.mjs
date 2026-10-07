@@ -106,5 +106,95 @@ if (changed && changed.rows.length !== 0) {
   console.log("FAIL  the update reached another student's row");
 }
 
+// The plan: save_plan writes the caller's home college and targets, all or nothing
+function check(name, pass, got) {
+  if (pass) console.log("ok   ", name);
+  else {
+    failed++;
+    console.log("FAIL ", name, "- got", JSON.stringify(got));
+  }
+}
+const uniId = uni.rows[0].id;
+const majorId = major.rows[0].id;
+const uni2 = await as("service_role", null, `insert into institutions (slug, name, institution_type, source_name, source_url, academic_year, retrieved_at)
+  values ('second-university', 'Second University', 'university', ${prov}) returning id`);
+const uni2Id = uni2.rows[0].id;
+const major2 = await as("service_role", null, `insert into majors (institution_id, slug, name, source_name, source_url, academic_year, retrieved_at)
+  values ($1, 'other-major', 'Other major', ${prov}) returning id`, [uni2Id]);
+const major2Id = major2.rows[0].id;
+const savePlan = (role, sub, home, updateHome, targets) =>
+  as(role, sub, "select save_plan($1, $2, $3::jsonb)", [home, updateHome, targets === null ? null : JSON.stringify(targets)]);
+const targetsOf = async (sub) => (await db.query("select institution_id, major_id, major_not_listed, position from user_targets where user_id = $1 order by position", [sub])).rows;
+const homeOf = async (sub) => (await db.query("select home_institution_id from profiles where user_id = $1", [sub])).rows[0]?.home_institution_id;
+
+await expectError("anon can't call save_plan", () => savePlan("anon", null, instId, true, []), /permission denied/);
+await expectError("save_plan needs a signed-in student", () => savePlan("authenticated", null, instId, true, []), /not signed in/);
+await expectOk("a student saves a plan", () => savePlan("authenticated", A, instId, true, [{ institution_id: uniId, major_id: majorId }]));
+check("the home college is saved", (await homeOf(A)) === instId, await homeOf(A));
+let targets = await targetsOf(A);
+check("the target is saved with its major", targets.length === 1 && targets[0].institution_id === uniId && targets[0].major_id === majorId, targets);
+check("another student's plan is untouched", (await targetsOf(B)).length === 0 && (await homeOf(B)) === null, await targetsOf(B));
+
+await expectOk("targets are replaced, in the order given", () =>
+  savePlan("authenticated", A, null, false, [{ institution_id: uni2Id, major_id: null }, { institution_id: uniId, major_id: majorId }]));
+targets = await targetsOf(A);
+check("schools keep the order they were chosen in",
+  targets.length === 2 && targets[0].institution_id === uni2Id && targets[0].position === 1 && targets[1].institution_id === uniId && targets[1].position === 2, targets);
+check("a target can have no major", targets[0]?.major_id === null, targets);
+check("a missing major is \"not picked yet\" unless the plan says otherwise", targets.every((t) => t.major_not_listed === false), targets);
+await expectOk("\"Not listed yet\" is saved as its own answer", () =>
+  savePlan("authenticated", A, null, false, [{ institution_id: uni2Id, major_id: null, major_not_listed: true }, { institution_id: uniId, major_id: majorId }]));
+targets = await targetsOf(A);
+check("the flag is on the school it was chosen for, and only that one", targets[0]?.major_not_listed === true && targets[0].major_id === null && targets[1]?.major_not_listed === false, targets);
+await expectError("a school can't have a major and \"Not listed yet\" at once", () =>
+  savePlan("authenticated", A, null, false, [{ institution_id: uniId, major_id: majorId, major_not_listed: true }]), /major_not_listed_check/);
+check("the refused save changed nothing", (await targetsOf(A)).length === 2, await targetsOf(A));
+check("the home college is left alone when p_update_home is false", (await homeOf(A)) === instId, await homeOf(A));
+
+await expectError("a target that isn't on record stops the save", () =>
+  savePlan("authenticated", A, null, true, [{ institution_id: "00000000-0000-0000-0000-0000000000ff", major_id: null }]), /university on record/);
+check("a failed save changes nothing (home)", (await homeOf(A)) === instId, await homeOf(A));
+check("a failed save changes nothing (targets)", (await targetsOf(A)).length === 2, await targetsOf(A));
+await expectError("a major must belong to its school", () =>
+  savePlan("authenticated", A, null, false, [{ institution_id: uni2Id, major_id: majorId }]), /belong to its school/);
+await expectError("the home college must be a community college", () => savePlan("authenticated", A, uniId, true, null), /community college/);
+await expectError("a school can't be in the plan twice", () =>
+  savePlan("authenticated", A, null, false, [{ institution_id: uniId, major_id: null }, { institution_id: uniId, major_id: majorId }]), /only be in the plan once/);
+
+// A removed school takes its saved progress with it; the schools that stay keep theirs
+const requirement = (majorRow, code) => as("service_role", null, `insert into requirements (major_id, code, name, source_name, source_url, academic_year, retrieved_at)
+  values ($1, $2, 'Test requirement', ${prov}) returning id`, [majorRow, code]);
+const req1 = (await requirement(majorId, "req-1")).rows[0].id;
+const req2 = (await requirement(major2Id, "req-2")).rows[0].id;
+await as("authenticated", A, "insert into user_requirement_status (user_id, requirement_id, status) values ($1, $2, 'done'), ($1, $3, 'in_progress')", [A, req1, req2]);
+await expectOk("a student removes a school from the plan", () => savePlan("authenticated", A, null, false, [{ institution_id: uni2Id, major_id: major2Id }]));
+const statuses = (await db.query("select requirement_id from user_requirement_status where user_id = $1", [A])).rows.map((r) => r.requirement_id);
+check("the removed school's progress is deleted, the kept school's stays", statuses.length === 1 && statuses[0] === req2, statuses);
+
+await expectOk("null targets leave the targets alone", () => savePlan("authenticated", A, null, true, null));
+check("\"My college isn't listed\" clears the home college", (await homeOf(A)) === null, await homeOf(A));
+check("the targets are still there", (await targetsOf(A)).length === 1, await targetsOf(A));
+
+// Deleting an account: only the caller's, with every per-student row
+const course = await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
+  values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
+await as("authenticated", A, "insert into saved_courses (user_id, course_id) values ($1, $2)", [A, course.rows[0].id]);
+await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major_id: majorId }]);
+await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
+const PER_STUDENT = ["profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools"];
+const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
+  PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));
+const before = await rowCounts(A);
+check("the student has a row in every per-student table", Object.values(before).every((n) => n > 0), before);
+await expectError("anon can't call delete_my_account", () => as("anon", null, "select delete_my_account()"), /permission denied/);
+await expectError("delete_my_account needs a signed-in student", () => as("authenticated", null, "select delete_my_account()"), /not signed in/);
+await expectOk("a student deletes their account", () => as("authenticated", A, "select delete_my_account()"));
+const users = (await db.query("select id from auth.users order by id")).rows.map((r) => r.id);
+check("only that account is gone", users.length === 1 && users[0] === B, users);
+const after = await rowCounts(A);
+check("every per-student row went with it", Object.values(after).every((n) => n === 0), after);
+const others = await rowCounts(B);
+check("another student's rows are untouched", others.profiles === 1 && others.user_targets === 1 && others.saved_schools === 1, others);
+
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

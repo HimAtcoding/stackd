@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { EnvelopeIcon, EyeIcon, LockIcon } from "@phosphor-icons/react/ssr";
+import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { Loading } from "@/components/ui/loading";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { SearchField } from "@/components/ui/search-field";
 import { TextField } from "@/components/ui/text-field";
 import { Toast } from "@/components/ui/toast";
 import { TintedButton } from "@/components/ui/tinted-button";
@@ -79,6 +81,54 @@ export function TextFieldDemo() {
       <TextField id="tf-readonly" label="Read-only" readOnly defaultValue="alex@example.com" icon={<EnvelopeIcon size={22} />} />
       <TextField id="tf-disabled" label="Disabled" disabled defaultValue="alex@example.com" icon={<EnvelopeIcon size={22} />} />
       <TextField id="tf-plain" label="No icon" placeholder="First name" />
+    </>
+  );
+}
+
+export function SearchFieldDemo() {
+  const [empty, setEmpty] = useState("");
+  const [filled, setFilled] = useState("san d");
+  return (
+    <>
+      <Label>Rest</Label>
+      <SearchField id="sf-rest" placeholder="Search schools" value={empty} onChange={setEmpty} />
+      <Label>With text: the clear button shows</Label>
+      <SearchField id="sf-filled" placeholder="Search schools" value={filled} onChange={setFilled} />
+      <Label>Focus</Label>
+      <SearchField id="sf-focus" data-focus placeholder="Search schools" value="" onChange={() => {}} />
+      <Label>Read-only</Label>
+      <SearchField id="sf-readonly" readOnly placeholder="Search schools" value="san d" onChange={() => {}} />
+    </>
+  );
+}
+
+export function ChoiceDemo() {
+  const [one, setOne] = useState("b");
+  const [many, setMany] = useState(["a"]);
+  const toggle = (id: string) => setMany((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  return (
+    <>
+      <Label>Single choice, with and without a second line</Label>
+      <ChoiceList role="radiogroup" aria-label="Sample single choice">
+        <ChoiceRow role="radio" checked={one === "a"} name="Sample row" detail="Second line" onSelect={() => setOne("a")} />
+        <ChoiceRow role="radio" checked={one === "b"} name="Chosen row" detail="Second line" onSelect={() => setOne("b")} />
+        <ChoiceRow role="radio" checked={one === "c"} name="A long name that wraps to a second line before it is cut off with an ellipsis at the end" onSelect={() => setOne("c")} />
+        <ChoiceRow role="radio" checked={one === "d"} name="No second line" onSelect={() => setOne("d")} />
+      </ChoiceList>
+      <Label>Multiple choice</Label>
+      <ChoiceList role="group" aria-label="Sample multiple choice">
+        <ChoiceRow role="checkbox" checked={many.includes("a")} name="Sample row" detail="Second line" onSelect={() => toggle("a")} />
+        <ChoiceRow role="checkbox" checked={many.includes("b")} name="Sample row" detail="Second line" onSelect={() => toggle("b")} />
+      </ChoiceList>
+      <Label>Pressed, focus, and read-only (while saving)</Label>
+      <ChoiceList role="group" aria-label="Sample states">
+        <ChoiceRow role="checkbox" checked={false} name="Pressed" data-pressed onSelect={() => {}} />
+        <ChoiceRow role="checkbox" checked={false} name="Focus" data-focus onSelect={() => {}} />
+      </ChoiceList>
+      <ChoiceList role="group" aria-label="Sample read-only" readOnly>
+        <ChoiceRow role="checkbox" checked name="Read-only, chosen" readOnly onSelect={() => {}} />
+        <ChoiceRow role="checkbox" checked={false} name="Read-only" readOnly onSelect={() => {}} />
+      </ChoiceList>
     </>
   );
 }

@@ -14,6 +14,7 @@ Onboarding (`10-onboarding.md`), Home plan states and the University agreement c
 | College short name | No new column. The agreement card says "Las Positas College courses" |
 | `save_plan` | `security invoker`, so row-level security applies as the student |
 | Target order | A new `user_targets.position` keeps schools in the order they were chosen |
+| "Not listed yet" (added October 6) | A new `user_targets.major_not_listed`. A school with no major is either "Not listed yet" (true) or not picked yet (false), and Home and Settings word the two differently |
 | Throwaway test account | `oko15075+stackd-a@gmail.com` |
 
 ### Back and Skip on onboarding step 1
@@ -32,9 +33,10 @@ A query parameter survives a reload, unlike an in-memory flag.
 `supabase/migrations/20261007…_plans_and_account.sql`:
 
 - **`user_targets.position`** (`smallint`, not null). Rows saved in one go share a `created_at`, so time can't give the order.
+- **`user_targets.major_not_listed`** (`boolean`, not null, default false), with a check that it's never true alongside a major.
 - **`save_plan(p_home_institution_id uuid, p_update_home boolean, p_targets jsonb)`**: `security invoker`. In one transaction:
   - sets the home college when `p_update_home` is true
-  - when `p_targets` isn't null, replaces the student's targets with that list, in order (`[{ institution_id, major_id }]`, `major_id` may be null)
+  - when `p_targets` isn't null, replaces the student's targets with that list, in order (`[{ institution_id, major_id, major_not_listed }]`, `major_id` may be null)
   - removing a school also deletes that school's saved requirement statuses for the student (10 → Editing from Settings)
 
   Onboarding's Save plan calls it once with everything. Each Settings edit saves only its own part.

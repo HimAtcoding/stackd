@@ -1,4 +1,5 @@
 import { isAuthApiError, isAuthRetryableFetchError, isAuthWeakPasswordError, type AuthError as SupabaseAuthError } from "@supabase/supabase-js";
+import { clearPlan } from "@/lib/data/plan";
 import { getSupabase } from "@/lib/supabase/client";
 import { removeStorage, writeStorage } from "@/lib/storage";
 import type { Auth, AuthError, AuthResult, SignUpResult } from "./types";
@@ -116,5 +117,6 @@ export const supabaseAuth: Auth = {
   async signOut() {
     await getSupabase()?.auth.signOut();
     PER_ACCOUNT_KEYS.forEach(removeStorage);
+    clearPlan();
   },
 };

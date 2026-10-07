@@ -20,6 +20,7 @@ import { CODE_INCOMPLETE, CODE_INVALID, SAME_PASSWORD, WEAK_PASSWORD, inlineErro
 import type { CodePurpose } from "@/lib/auth/types";
 import { cn } from "@/lib/cn";
 import { setFlash } from "@/lib/flash";
+import { AFTER_SIGN_UP } from "@/lib/onboarding";
 
 type Step = "code" | "password";
 
@@ -94,10 +95,11 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
   if (missing || !purpose) return null;
   const resetting = purpose === "reset";
 
-  function goHome(message: string) {
+  // The message shows as a toast on the screen that opens
+  function leave(message: string, to: string) {
     setFlash(message);
     setCarriedSignUp({ firstName: "", password: "" });
-    router.replace("/", { transitionTypes: ["crossfade"] });
+    router.replace(to, { transitionTypes: ["crossfade"] });
   }
 
   // Top block and sheet crossfade over 200 ms; under reduced motion the swap is instant
@@ -113,7 +115,8 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
     setChecking(true);
     const result = resetting ? await auth.verifyResetCode(email, value) : await auth.verifySignUpCode(email, value);
     setChecking(false);
-    if (result.ok) return resetting ? showPasswordStep() : goHome("Email confirmed");
+    // A confirmed account has no plan yet, so it starts with onboarding (10)
+    if (result.ok) return resetting ? showPasswordStep() : leave("Email confirmed", AFTER_SIGN_UP);
     if (result.error === "invalid_code") {
       setCode("");
       setCodeError(CODE_INVALID);
@@ -168,7 +171,7 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
     setInlineError(null);
     setSaving(true);
     const result = await auth.setNewPassword(password);
-    if (result.ok) return goHome("Password saved");
+    if (result.ok) return leave("Password saved", "/");
     setSaving(false);
     if (result.error === "same_password" || result.error === "weak_password") {
       setPasswordError(result.error === "same_password" ? SAME_PASSWORD : WEAK_PASSWORD);

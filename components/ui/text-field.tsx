@@ -7,7 +7,8 @@ import { Expand } from "./expand";
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "id"> & {
   id: string;
-  label: string;
+  // Without a label (the search field), pass aria-label
+  label?: string;
   icon?: ReactNode;
   // A 44 × 44 control at the right edge, e.g. show/hide password.
   trailing?: ReactNode;
@@ -23,10 +24,12 @@ export function TextField({ id, label, icon, trailing, hint, error, className, d
 
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-navy-900 type-headline">
-        {label}
-      </label>
-      <div className={cn("relative mt-2", readOnly && "opacity-60", disabled && "opacity-40")}>
+      {label && (
+        <label htmlFor={id} className="block text-navy-900 type-headline">
+          {label}
+        </label>
+      )}
+      <div className={cn("relative", label && "mt-2", readOnly && "opacity-60", disabled && "opacity-40")}>
         {icon && (
           <span aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 flex -translate-y-1/2 text-slate-600">
             {icon}

@@ -7,7 +7,7 @@ import { CircleButton } from "./ui/circle-button";
 type NavigationWithBack = { canGoBack?: boolean };
 
 // True when Back stays inside the app's history.
-function canGoBack() {
+export function canGoBack() {
   const nav = (window as Window & { navigation?: NavigationWithBack }).navigation;
   if (nav && typeof nav.canGoBack === "boolean") return nav.canGoBack;
   return window.history.length > 1;

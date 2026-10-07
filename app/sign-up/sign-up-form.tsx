@@ -17,6 +17,7 @@ import { TintedButton } from "@/components/ui/tinted-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
 import { getCarriedEmail, getCarriedSignUp, setCarriedEmail, setCarriedSignUp } from "@/lib/auth/email-store";
 import { WEAK_PASSWORD, emailError, inlineErrorCopy, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
+import { AFTER_SIGN_UP } from "@/lib/onboarding";
 
 type FieldErrors = { firstName?: string; email?: string; password?: string };
 type AccountError = ErrorCopy & { signIn?: boolean };
@@ -95,8 +96,9 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
     setPending("form");
     const result = await auth.signUp(firstName.trim(), email, password);
     if (result.ok && !result.needsCode) {
+      // A new account starts with onboarding (10); demo mode goes straight to Home
       setCarriedSignUp({ firstName: "", password: "" });
-      return goHome();
+      return router.replace(AFTER_SIGN_UP, { transitionTypes: ["crossfade"] });
     }
     if (result.ok) {
       // Confirm email is on: the account waits for the emailed code (09)

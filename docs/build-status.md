@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06 (real sign-in tested end to end). Build order steps 1–7 and 10 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06 (step 11, Onboarding). Build order steps 1–7, 10 and 11 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 12 and 13 follow the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -170,6 +170,29 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
 | 6 | Home, rev 2 (02 and 00 as of `b1ef3b8`), with 28 tile icons and 12 / 8 tile padding (`5b78222`): greeting from `stackd.profile` (demo name otherwise), husky hung from the greeting behind the journey card, journey card with all six circles on a track, shortcut tiles and upcoming cards without chevrons, the empty upcoming line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
 | 7 | University requirements: campus hero from the pool, back and save, sheet, underline tabs on `?tab=`, requirement rows that mark done (toast with Undo), Track application, reminder banner, footer, empty and load-error states, push from Home and the reverse slide on Back, demo strip | `app/(app)/universities/[slug]/`, `components/ui/status-control.tsx`, `lib/requirements.ts`, `lib/campus.ts` |
 | 10 | Enter code (09): the shared code field, the reset and confirm code steps, the new password step, and the new auth errors on 06, 07 and 08 | `app/enter-code/`, `components/ui/code-field.tsx`, `lib/auth/` |
+| 11 | Onboarding (10): college, schools and major on real database rows, saved to the account; the edit mode Settings will open; the plan migration | `app/(app)/onboarding/`, `lib/data/plan.ts`, `lib/data/catalog.ts`, `components/ui/choice-row.tsx`, `supabase/migrations/20261007120000_plans_and_account.sql` |
+
+**Step 11, Onboarding** (2026-10-06, built and tested in real mode against the project):
+- **Migration** `20261007120000_plans_and_account.sql`, applied to the project 2026-10-06:
+  - `user_targets.position` keeps schools in the order they were chosen.
+  - `user_targets.major_not_listed` tells "Not listed yet" (true) from "no major picked yet" (false). It can't be true on a row that has a major.
+  - `save_plan(p_home_institution_id, p_update_home, p_targets)` runs as the student (`security invoker`), in one transaction. It sets the home college, or replaces the targets in order, or both. It refuses a home that isn't a community college, a target that isn't a university, a major from another school, and the same school twice. A school that leaves the plan takes the student's saved progress for it along.
+  - `delete_my_account()` deletes only the caller's own `auth.users` row (step 13 uses it).
+  - Both can be called by `authenticated` only. `npm run test:db` now has 59 checks.
+- **Data** (`lib/data/`, real mode, anon key and row-level security):
+  - `catalog.ts`: `getInstitutions(type)` and `getMajors(institutionIds)`, sorted by name, demo rows left out.
+  - `plan.ts`: `fetchPlan()`, `savePlan()`, and `usePlan()`. This device keeps a copy in `stackd.plan`, tagged with the account, so a screen can draw before the network answers; sign-out clears it.
+  - `lib/format.ts` turns stored codes into words: `BS` → "B.S.", `UC` / `CSU` → "Public university".
+- **Screen** (`app/(app)/onboarding/`): one page for all three steps, so the answers stay in memory while `?step=` changes.
+  - Steps change with `history.pushState`, so the browser's Back and the header's Back both return to the step before with its choices kept. A reload on step 2 or 3 has no answers left and starts again at step 1.
+  - `&from=signup`, `home` or `settings` decides Back and Skip on step 1 (the plan's table). `&edit=1` opens one step with the saved answers chosen, no bar, no count, no Skip, and "Save plan" saving only that step.
+  - Each step loads its list when it opens: nothing for 600 ms, then the loading component, or the inline error with Try again.
+  - Checked on tap: the step's message 12 above the button, focus on the first row (step 3: the first school without a choice). Save plan calls `save_plan` once; a failure shows "Couldn't save your plan" and keeps the choices.
+- **New shared components** (all on `/dev/components`): choice row, choice circle and its list container (`choice-row.tsx`), search field (`search-field.tsx`), and the pinned bottom area with its fade (`pinned-bottom.tsx`). The text field's label is optional now, and the progress bar takes a `max`.
+- **Entry:** Create account (when no code is needed) and Enter code (confirm) go to `/onboarding/?step=college&from=signup`, where "Email confirmed" shows 12 above the button. In demo mode both still go to Home, and `/onboarding/` sends you to Home.
+- **Tested:**
+  - Real account (`oko15075+stackd-a@gmail.com`, a throwaway): the emailed code landed on step 1 with "Email confirmed", no Back, the bar at a third. Skip went to Home and saved nothing. Then every line of 10's Test: the messages, the pale blue row, "san d" and "zzz", Back from step 3, Save plan → Home with "Plan saved", still there after a reload and after signing in on a second browser.
+  - With a stand-in session (made-up plan responses, real college, school and major rows): 10's measurements at 393 × 852 and 320 × 568, a 14-row list (long names wrap to two lines, the last row clears the fade), several schools on step 3, the save failure, and the edit mode.
 
 **Step 10, Enter code** (2026-10-06):
 - **Code field** (`components/ui/code-field.tsx`, 00 → Code field): one real input (`inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" enterkeyhint="done"`, 16 px) lies invisibly over six `aria-hidden` boxes and takes every tap.
@@ -275,6 +298,16 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Requirement row layout.** The row link spans the whole row (so its pressed state covers it) with 68 left padding, and the status circle sits on top of it as a separate checkbox. That keeps the two tap targets separate and unnested, as 03's VoiceOver test expects.
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
 - **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
+
+### Onboarding (step 11)
+- **A confirmed email always goes to onboarding,** also when the code was asked for from Sign in's "Confirm your email first". flows-and-states sends that one path to Home; 09 and the plan say onboarding, and an account that was never confirmed has no plan yet.
+- **`user_targets.major_not_listed`** isn't in 10. 10 saves "Not listed yet" as a missing major, the same as a school added later with no major, but 02 and 11 word the two differently.
+- **The progress bar without Back or Skip** runs to the row's 16 padding on that side. 10 says "16 on each side", which could also mean 32 from the edge.
+- **Step 3 with several schools:** each school's name has 24 above it (20 for the first, below the search) and its list 12 below. 10 says the name is "24 above its list", then gives 20 for the first as a distance from the search, so the 24 was read the same way.
+- **An empty list with no search** says "No colleges listed yet." (or schools, majors). 10 only covers a search with no matches.
+- **Skip's hit area** is the 44 tall link with 10 of padding each side, so it's 44 wide too.
+- **The search key on the keyboard** puts the keyboard away. The list already filters as you type.
+- **Choice rows** get 8 of padding above and below, so a name on two lines doesn't touch the row's edges.
 
 ### Component details
 - **Text link hit area.** Small (`label`) links use 13 px vertical padding, not 12, to reach 00's 44 px minimum.

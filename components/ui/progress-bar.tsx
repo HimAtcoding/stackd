@@ -1,13 +1,14 @@
 // Width animates only when the value changes; a CSS transition never runs on first paint.
-export function ProgressBar({ value, label }: { value: number; label: string }) {
-  const pct = Math.max(0, Math.min(100, value));
+// `max` is what a full bar counts to: 100 by default, or a step count (10 uses 3).
+export function ProgressBar({ value, max = 100, label }: { value: number; max?: number; label: string }) {
+  const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
     <div
       role="progressbar"
       aria-label={label}
       aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(pct)}
+      aria-valuemax={max}
+      aria-valuenow={Math.round(value)}
       className="h-2 overflow-hidden rounded-full bg-blue-100"
     >
       <div

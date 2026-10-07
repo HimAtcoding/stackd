@@ -26,7 +26,7 @@ import { TabBar } from "@/components/ui/tab-bar";
 import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
-import { LoadingDemo, ProgressDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
+import { ChoiceDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
 
 export const metadata = { title: "Components · Stackd dev" };
 
@@ -179,6 +179,14 @@ export default function ComponentsPage() {
 
       <Section title="Text field">
         <TextFieldDemo />
+      </Section>
+
+      <Section title="Search field">
+        <SearchFieldDemo />
+      </Section>
+
+      <Section title="Choice row">
+        <ChoiceDemo />
       </Section>
 
       <Section title="Social button">

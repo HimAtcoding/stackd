@@ -7,6 +7,8 @@ type ToastProps = {
   action?: { label: string; onClick: () => void };
   // Distance from the bottom edge: 12 above the tab bar or the primary button.
   bottom: string;
+  // Placed against its positioned parent, not the screen (Welcome, where the button isn't at a fixed height)
+  within?: boolean;
   onDone: () => void;
   // Static specimen for /dev/components: no timer, no fixed positioning.
   still?: boolean;
@@ -15,7 +17,7 @@ type ToastProps = {
 const VISIBLE_MS = 4000;
 const EXIT_MS = 160;
 
-export function Toast({ message, action, bottom, onDone, still }: ToastProps) {
+export function Toast({ message, action, bottom, within, onDone, still }: ToastProps) {
   const [leaving, setLeaving] = useState(false);
   const done = useRef(onDone);
   useEffect(() => {
@@ -38,7 +40,7 @@ export function Toast({ message, action, bottom, onDone, still }: ToastProps) {
       className={
         still
           ? "flex items-center gap-4 rounded-md bg-navy-900 px-4 py-3"
-          : `fixed inset-x-4 z-40 mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 ${leaving ? "toast-out" : "toast-in"}`
+          : `${within ? "absolute inset-x-0" : "fixed inset-x-4"} z-40 mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 text-left ${leaving ? "toast-out" : "toast-in"}`
       }
       style={still ? undefined : { bottom }}
     >
