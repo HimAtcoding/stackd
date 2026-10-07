@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06 (step 12, Home plan states and the agreement card). Build order steps 1–7 and 10–12 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 13 follows the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-06 (step 13, Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -170,6 +170,7 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
 | 6 | Home, rev 2 (02 and 00 as of `b1ef3b8`), with 28 tile icons and 12 / 8 tile padding (`5b78222`): greeting from `stackd.profile` (demo name otherwise), husky hung from the greeting behind the journey card, journey card with all six circles on a track, shortcut tiles and upcoming cards without chevrons, the empty upcoming line, demo strip | `app/(app)/page.tsx`, `app/(app)/_home/`, `data/seed/` |
 | 7 | University requirements: campus hero from the pool, back and save, sheet, underline tabs on `?tab=`, requirement rows that mark done (toast with Undo), Track application, reminder banner, footer, empty and load-error states, push from Home and the reverse slide on Back, demo strip | `app/(app)/universities/[slug]/`, `components/ui/status-control.tsx`, `lib/requirements.ts`, `lib/campus.ts` |
 | 10 | Enter code (09): the shared code field, the reset and confirm code steps, the new password step, and the new auth errors on 06, 07 and 08 | `app/enter-code/`, `components/ui/code-field.tsx`, `lib/auth/` |
+| 13 | Settings (11): plan rows, change password, sign out, delete account with its confirm sheet | `app/(app)/settings/`, `components/ui/settings-row.tsx`, `components/ui/bottom-sheet.tsx`, `components/ui/destructive-button.tsx`, `lib/auth/` |
 | 12 | Home plan states, the gear, and the official agreement card on University (02 → Plan states, 03 → Real accounts) | `app/(app)/_home/`, `app/(app)/university/_university/`, `lib/data/university.ts` |
 | 11 | Onboarding (10): college, schools and major on real database rows, saved to the account; the edit mode Settings will open; the plan migration | `app/(app)/onboarding/`, `lib/data/plan.ts`, `lib/data/catalog.ts`, `components/ui/choice-row.tsx`, `supabase/migrations/20261007120000_plans_and_account.sql` |
 
@@ -225,11 +226,30 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
   - Real account: the name, kind and city from `institutions`, the campus image picked by slug, and the heart saving to the account through the existing sync.
   - The Requirements tab shows "{college} to {major}." and the official agreement card (`agreement-card.tsx`). `lib/data/university.ts` finds the link for home college → this school → the student's major, latest academic year. "Open on ASSIST" opens it outside the app, with "{year} agreement. Opens assist.org." under it. Without a link: "We don't have an official agreement link for your path yet." and "Open ASSIST".
   - Track application, the reminder banner and requirement rows don't show. A slug the database doesn't have gets the placeholder.
-- **`/settings/` is the signed-in placeholder** until step 13, so the gear and "Edit" lead somewhere.
 - **Tested:**
   - Real account (the throwaway from step 11): both of 02's rev 3 tests and 03's (the no-plan Home after Skip; then "Transferring to UC San Diego.", the plan card, "Edit" opening Settings, the card and the tile opening UC San Diego, "2026-27 agreement", and "Open on ASSIST" being the exact imported link, opened in a new tab). No demo strip on either screen. The heart, turned on here, was already on after signing in on a second browser. 22 checks.
   - With a stand-in session: the measurements at 393 × 852 and 320 × 568, five schools, a school with no major, a student with no college (the "Open ASSIST" card), and a demo-only slug.
   - Demo mode (`NEXT_PUBLIC_DEMO_STRIP=on`): Home and University as before plus the rev 3 changes, no gear, and marking a row done still updating Home. 21 checks.
+
+**Step 13, Settings** (2026-10-06, built and tested in real mode against the project):
+- **Screen** (`app/(app)/settings/`), pushed from Home's gear and the plan card's "Edit". In demo mode it sends you to Home.
+  - **Your plan:** College, Schools and Major, each opening its onboarding step with `edit=1`; a student with no plan sees only "Set up your plan" (`from=settings`).
+  - **Account:** Email as plain text, and Change password (hidden for an account with no password). It sends the reset code with a spinner in place of the chevron, then opens Enter code; "Password saved" lands on Home as before. A failed send shows a toast with 08's words.
+  - **Sign out:** this device only (`signOut({ scope: "local" })`), the device's copies of the student's data cleared, then Sign in with "Signed out".
+  - **Delete account:** the confirm sheet, then `delete_my_account()`. After it: a local sign-out, every `stackd.*` key cleared ("Welcome seen" too), and Welcome with "Account deleted". A failure shows the inline error inside the sheet.
+  - **Footer:** the unofficial line, Terms and Privacy, and "Stackd {version}" from `package.json` (`NEXT_PUBLIC_APP_VERSION`, set in `next.config.ts`).
+- **Deleting an account is a database function, not an Edge Function.** The first real delete worked on the hosted project, so the plan's fallback wasn't needed.
+- **New shared components** (all on `/dev/components`): settings row and its group, bottom sheet (focus starts on the title and stays inside, Escape or a tap on the scrim closes it, slides up or only fades under reduced motion), and the destructive button.
+- **Auth** (`lib/auth`): `signOut()` is local now, and there's a new `deleteAccount()` (demo auth just ends the demo session).
+- **The one-time message** (`components/flash-toast.tsx` over `lib/flash.ts`) is read on Home, onboarding, Settings, Sign in and Welcome.
+- **Tested:**
+  - Real account (the throwaway from step 11), 37 checks in four runs:
+    - Settings: the gear, the plan's names, the email, Back to Home. Schools with nothing added → "Plan saved". Major saved as "Not listed yet" (Settings "Not listed yet", Home "Major not listed yet") and back. College saved as not listed and back.
+    - Change password: a real code by email, the current password refused, a new one → Home with "Password saved".
+    - Sign out → Sign in with "Signed out", the device's copies gone, Back not returning to Settings, Home and Settings redirecting to Sign in. The old password refused, the new one accepted with the plan still there.
+    - Delete account: the sheet with focus on its title, "Keep my account" leaving the account alone, then Delete account → Welcome as a first launch with nothing left on the device. Signing in afterwards shows "Couldn't sign you in" with either password.
+  - With a stand-in session: 11's measurements at 393 × 852 and 320 × 568, the sheet (focus, Tab, Escape, scrim, locked while deleting, a forced failure, reduced motion), long values, the skipped-plan row, the edit mode's three steps and what each one saves, and the "Signed out" and "Account deleted" toasts.
+- **Not checked on the real delete:** the "Account deleted" toast and a query with the deleted account's old token. The test script stopped early on a fault of its own (it took the collapsed error message for a shown one). The toast was then checked with a stand-in session; the old-token query still needs a second throwaway account.
 
 Also in place:
 - **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
@@ -265,6 +285,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 ## Open items
 
+0. **Enter code opened from Settings still offers "Remembered it? Sign in".** 09 shows that line on every reset code screen, but a student changing their password from Settings is already signed in. It needs a line in 09 or 11 to hide it.
 1. **WebKit crashes on Back to Create account.** In Playwright's WebKit on Windows, any history Back that lands on `/sign-up/` (from Terms, or from Enter code) crashes the page. Back to Sign in, Welcome or Forgot password is fine. It happens with or without step 10's changes, so it predates them. Check on a real iPhone in Safari; if it happens there too, bisect the Create account screen (its fields, the terms links).
 2. **`out/` is 31 MB, mostly unused PNGs.** `public/art` is copied into the export as is, but the app only loads the WebP copies in `public/_art` (and the SVGs). Before the iOS app ships, move the source PNGs out of `public/` so the app bundle doesn't carry them.
 3. **Building next to a running dev server.** The build's type check also reads `.next/dev/types`, which still lists routes that were renamed or removed until the dev server regenerates it. If the build fails on `.next/dev/types/validator.ts`, stop the dev server and delete `.next/dev/types`. (See also: don't run `next build` while the dev server is running.)
@@ -315,6 +336,13 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Requirement row layout.** The row link spans the whole row (so its pressed state covers it) with 68 left padding, and the status circle sits on top of it as a separate checkbox. That keeps the two tap targets separate and unnested, as 03's VoiceOver test expects.
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
 - **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
+
+### Settings (step 13)
+- **The Major row with several schools:** "Pick a major" if any school has none picked. Otherwise the picked major's name, or "{n} majors" when they differ, counting only real majors; "Not listed yet" only when that's the answer for every school. 11 doesn't say what a mix of the two shows.
+- **Change password's errors** are one toast line made from 08's title and body ("Too many tries. Wait a few minutes, then try again.").
+- **The sheet can't be dismissed while the account is being deleted** (Escape, the scrim and "Keep my account" all wait). 11 only says Keep is disabled.
+- **Toast positions:** "Signed out" sits at safe-area bottom + 12 on Sign in (its button scrolls with the page, as on Enter code), and "Account deleted" sits 12 above Get started on Welcome.
+- **Sign out marks Welcome as seen** first, so a student who never saw Welcome on this device still lands on Sign in.
 
 ### Home and University with a real account (step 12)
 - **Home while the plan is loading or couldn't load.** 02 doesn't cover it. A device that has shown the plan before draws its saved copy at once. Otherwise the card's place shows nothing for 600 ms, then the loading component, and the tiles and Upcoming wait with it. A failed load shows the inline error "Couldn't load your plan" with Try again.

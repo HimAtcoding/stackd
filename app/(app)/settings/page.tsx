@@ -1,6 +1,11 @@
-import { PlaceholderScreen } from "@/components/placeholder-screen";
+import { PageTransition } from "@/components/page-transition";
+import { SettingsScreen } from "./_settings/settings-screen";
 
-// Settings (11) is build step 13. Until then Home's gear and the plan card's "Edit" open the placeholder.
+// /settings/ (11): pushed from Home's gear. No tab bar and no demo strip.
 export default function SettingsPage() {
-  return <PlaceholderScreen version="signed-in" />;
+  return (
+    <PageTransition>
+      <SettingsScreen />
+    </PageTransition>
+  );
 }

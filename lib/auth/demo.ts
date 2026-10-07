@@ -87,4 +87,10 @@ export const demoAuth: Auth = {
   async signOut() {
     endSession();
   },
+
+  async deleteAccount() {
+    await wait();
+    endSession();
+    return ok;
+  },
 };

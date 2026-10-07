@@ -14,6 +14,7 @@ import { Art } from "@/components/art";
 import { providerLogos } from "@/components/auth/auth-screen";
 import { Card } from "@/components/ui/card";
 import { CircleButton } from "@/components/ui/circle-button";
+import { DestructiveButton } from "@/components/ui/destructive-button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
 import { LabelledDivider } from "@/components/ui/labelled-divider";
@@ -26,7 +27,7 @@ import { TabBar } from "@/components/ui/tab-bar";
 import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
-import { ChoiceDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
+import { BottomSheetDemo, ChoiceDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
 
 export const metadata = { title: "Components · Stackd dev" };
 
@@ -187,6 +188,21 @@ export default function ComponentsPage() {
 
       <Section title="Choice row">
         <ChoiceDemo />
+      </Section>
+
+      <Section title="Settings row">
+        <SettingsRowDemo />
+      </Section>
+
+      <Section title="Destructive button">
+        <State name="Rest"><DestructiveButton>Delete account</DestructiveButton></State>
+        <State name="Pressed"><DestructiveButton data-pressed>Delete account</DestructiveButton></State>
+        <State name="Focus"><DestructiveButton data-focus>Delete account</DestructiveButton></State>
+        <State name="Loading"><DestructiveButton loading>Delete account</DestructiveButton></State>
+      </Section>
+
+      <Section title="Bottom sheet">
+        <BottomSheetDemo />
       </Section>
 
       <Section title="Social button">

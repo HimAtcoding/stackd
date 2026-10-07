@@ -5,6 +5,7 @@ import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { EnvelopeIcon, LockIcon } from "@phosphor-icons/react/ssr";
 import { AuthSheet } from "@/components/auth/auth-sheet";
+import { FlashToast } from "@/components/flash-toast";
 import { PasswordToggle } from "@/components/auth/password-toggle";
 import { SocialSignIn } from "@/components/auth/social-sign-in";
 import { SwitchLine } from "@/components/auth/switch-line";
@@ -186,6 +187,8 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
       <SocialSignIn appleLogo={appleLogo} googleLogo={googleLogo} pending={pending === "code" ? "form" : pending} onOAuth={onOAuth} />
 
       <SwitchLine text="New to stackd?" link="Create an account" href="/sign-up" />
+      {/* "Signed out", arriving from Settings (11) */}
+      <FlashToast bottom="calc(var(--safe-bottom) + 12px)" />
     </AuthSheet>
   );
 }

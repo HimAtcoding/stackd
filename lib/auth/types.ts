@@ -35,5 +35,8 @@ export interface Auth {
   // The code from the confirm-your-email message, and sending a new one
   verifySignUpCode(email: string, code: string): Promise<AuthResult>;
   resendSignUpCode(email: string): Promise<AuthResult>;
+  // Signs out on this device only, and clears the device's copies of the student's data
   signOut(): Promise<void>;
+  // Deletes the signed-in account with its plan and progress (11), then forgets everything on this device
+  deleteAccount(): Promise<AuthResult>;
 }

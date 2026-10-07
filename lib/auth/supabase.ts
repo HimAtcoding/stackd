@@ -1,7 +1,7 @@
 import { isAuthApiError, isAuthRetryableFetchError, isAuthWeakPasswordError, type AuthError as SupabaseAuthError } from "@supabase/supabase-js";
 import { clearPlan } from "@/lib/data/plan";
 import { getSupabase } from "@/lib/supabase/client";
-import { removeStorage, writeStorage } from "@/lib/storage";
+import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
 import type { Auth, AuthError, AuthResult, SignUpResult } from "./types";
 
 const ok: AuthResult = { ok: true };
@@ -114,9 +114,25 @@ export const supabaseAuth: Auth = {
       return error ? fail(toAuthError(error)) : ok;
     }),
 
+  // This device only: the student's other devices stay signed in
   async signOut() {
-    await getSupabase()?.auth.signOut();
+    await getSupabase()?.auth.signOut({ scope: "local" });
     PER_ACCOUNT_KEYS.forEach(removeStorage);
     clearPlan();
   },
+
+  deleteAccount: () =>
+    run(async () => {
+      // delete_my_account (supabase/migrations) removes the signed-in user, and everything of theirs goes with it
+      const { error } = await client().rpc("delete_my_account");
+      if (error) {
+        if (process.env.NODE_ENV === "development") console.error("delete_my_account failed", error.code, error.message);
+        return fail("network");
+      }
+      // Every session ended with the account, so only this device's copy is left to drop
+      await client().auth.signOut({ scope: "local" });
+      clearPlan();
+      clearStackdStorage();
+      return ok;
+    }),
 };

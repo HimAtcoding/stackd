@@ -1,6 +1,7 @@
 import { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } from "next/constants";
 import type { NextConfig } from "next";
 import { DEVICE_SIZES, IMAGE_SIZES } from "./lib/image-widths.mjs";
+import pkg from "./package.json";
 
 export default function config(phase: string): NextConfig {
   return {
@@ -10,6 +11,8 @@ export default function config(phase: string): NextConfig {
     trailingSlash: true,
     // No image optimizer at runtime: the loader points at sizes made by scripts/prepare-assets.mjs
     images: { loader: "custom", loaderFile: "./lib/image-loader.ts", imageSizes: IMAGE_SIZES, deviceSizes: DEVICE_SIZES },
+    // Settings shows the app's version (11 → Footer)
+    env: { NEXT_PUBLIC_APP_VERSION: pkg.version },
     // Lets a phone on the same Wi-Fi load the dev server with hot reload.
     allowedDevOrigins: ["192.168.*.*", "10.*.*.*"],
     // `page.dev.tsx` files are routes only under `next dev`, so dev tools like /dev/reset don't exist in production.

@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { EnvelopeIcon, EyeIcon, LockIcon } from "@phosphor-icons/react/ssr";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
+import { DestructiveButton } from "@/components/ui/destructive-button";
 import { Loading } from "@/components/ui/loading";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { SearchField } from "@/components/ui/search-field";
+import { SettingsGroup, SettingsRow } from "@/components/ui/settings-row";
+import { Spinner } from "@/components/ui/spinner";
 import { TextField } from "@/components/ui/text-field";
 import { Toast } from "@/components/ui/toast";
 import { TintedButton } from "@/components/ui/tinted-button";
@@ -129,6 +133,50 @@ export function ChoiceDemo() {
         <ChoiceRow role="checkbox" checked name="Read-only, chosen" readOnly onSelect={() => {}} />
         <ChoiceRow role="checkbox" checked={false} name="Read-only" readOnly onSelect={() => {}} />
       </ChoiceList>
+    </>
+  );
+}
+
+export function SettingsRowDemo() {
+  return (
+    <>
+      <SettingsGroup>
+        <SettingsRow label="Opens a screen" value="Sample value" href="/dev/components" />
+        <SettingsRow label="Long value" value="A sample value that is too long to fit on one line of the row" href="/dev/components" />
+        <SettingsRow label="Needs attention" value="Sample value" valueTone="action" href="/dev/components" />
+        <SettingsRow label="Plain text" value="Sample value" />
+        <SettingsRow label="Pressed" href="/dev/components" data-pressed />
+        <SettingsRow label="Focus" href="/dev/components" data-focus />
+        <SettingsRow label="Working" onClick={() => {}} disabled trailing={<Spinner className="text-navy-900" />} />
+      </SettingsGroup>
+      <SettingsGroup>
+        <SettingsRow label="Action label" labelTone="action" href="/dev/components" />
+      </SettingsGroup>
+      <SettingsGroup>
+        <SettingsRow label="Single action" onClick={() => {}} />
+      </SettingsGroup>
+      <SettingsGroup>
+        <SettingsRow label="Danger label" labelTone="danger" onClick={() => {}} />
+      </SettingsGroup>
+    </>
+  );
+}
+
+export function BottomSheetDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Label>Slides up over a scrim; Escape or a tap on the scrim closes it</Label>
+      <TintedButton onClick={() => setOpen(true)}>Open sheet</TintedButton>
+      <BottomSheet open={open} labelledBy="sheet-demo-title" onClose={() => setOpen(false)}>
+        <h2 id="sheet-demo-title" tabIndex={-1} className="text-navy-900 outline-none type-title-2">
+          Sample sheet
+        </h2>
+        <p className="mt-2 text-slate-700 type-body">Sample body text for the sheet.</p>
+        <div className="mt-6">
+          <DestructiveButton onClick={() => setOpen(false)}>Sample action</DestructiveButton>
+        </div>
+      </BottomSheet>
     </>
   );
 }

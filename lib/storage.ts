@@ -21,3 +21,15 @@ export function removeStorage(key: string) {
     window.localStorage.removeItem(key);
   } catch {}
 }
+
+// Forgets everything Stackd keeps on this device, "Welcome seen" included (after an account is deleted)
+export function clearStackdStorage() {
+  for (const storage of [() => window.localStorage, () => window.sessionStorage]) {
+    try {
+      const store = storage();
+      Object.keys(store)
+        .filter((key) => key.startsWith("stackd."))
+        .forEach((key) => store.removeItem(key));
+    } catch {}
+  }
+}

@@ -11,7 +11,9 @@ function parse(key: string): unknown {
 
 const clean = (value: unknown) => (typeof value === "string" && value.trim() ? value.trim() : null);
 
-type StoredSession = { user?: { id?: unknown; email?: unknown; user_metadata?: { first_name?: unknown } } };
+type StoredSession = {
+  user?: { id?: unknown; email?: unknown; app_metadata?: { providers?: unknown }; user_metadata?: { first_name?: unknown } };
+};
 
 // The signed-in student's first name: the copy saved at sign-in or Create account (07), or else the one in the
 // Supabase session on this device (sign-up metadata), so every way of signing in greets them by name.
@@ -23,8 +25,11 @@ export function readFirstName(): string | null {
 }
 
 // Who is signed in on this device, read from the stored Supabase session. Null when signed out (and in demo mode).
-export function readSessionUser(): { id: string; email: string | null } | null {
+// hasPassword is false only for accounts that signed in through Apple or Google alone.
+export function readSessionUser(): { id: string; email: string | null; hasPassword: boolean } | null {
   const user = (parse(AUTH_STORAGE_KEY) as StoredSession | null)?.user;
   const id = clean(user?.id);
-  return id ? { id, email: clean(user?.email) } : null;
+  if (!id) return null;
+  const providers = user?.app_metadata?.providers;
+  return { id, email: clean(user?.email), hasPassword: !Array.isArray(providers) || providers.includes("email") };
 }

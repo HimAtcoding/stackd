@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { FlashToast } from "@/components/flash-toast";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { hasSeenWelcome, hasSession, markWelcomeSeen } from "@/lib/session";
 
@@ -17,13 +18,17 @@ export function WelcomeRedirect() {
 export function GetStarted() {
   const router = useRouter();
   return (
-    <PrimaryButton
-      onClick={() => {
-        markWelcomeSeen();
-        router.push("/sign-up", { transitionTypes: ["crossfade"] });
-      }}
-    >
-      Get started
-    </PrimaryButton>
+    <div className="relative">
+      {/* "Account deleted", arriving from Settings (11): 12 above the button */}
+      <FlashToast within bottom="calc(100% + 12px)" />
+      <PrimaryButton
+        onClick={() => {
+          markWelcomeSeen();
+          router.push("/sign-up", { transitionTypes: ["crossfade"] });
+        }}
+      >
+        Get started
+      </PrimaryButton>
+    </div>
   );
 }
