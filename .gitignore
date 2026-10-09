@@ -16,3 +16,8 @@ next-env.d.ts
 # Made by scripts/prepare-assets.mjs
 /lib/generated/
 /public/_art/
+
+# Sign in with Apple private keys and the client secrets made from them never go in git
+*.p8
+AuthKey_*
+apple-client-secret*

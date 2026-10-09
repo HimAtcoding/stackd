@@ -6,4 +6,4 @@ import type { Auth } from "./types";
 // Supabase email sign-in by default; demo accounts only for local demos (NEXT_PUBLIC_DEMO_STRIP=on).
 export const auth: Auth = DEMO_MODE ? demoAuth : supabaseAuth;
 
-export type { Auth, AuthError, AuthResult, OAuthProvider } from "./types";
+export type { Auth, AuthError, AuthResult, OAuthProvider, OAuthResult, OAuthReturn } from "./types";
