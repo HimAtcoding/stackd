@@ -15,7 +15,8 @@
     "import": "node scripts/import/run.mjs",
     "import:verify": "node scripts/import/verify.mjs",
     "test:import": "node scripts/import/test.mjs",
-    "test:oauth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-oauth.mjs"
+    "test:oauth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-oauth.mjs",
+    "apple:secret": "node scripts/make-apple-secret.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

@@ -71,11 +71,15 @@ async function rememberOAuthName(user: User) {
   await client().auth.updateUser({ data: { first_name: shared } });
 }
 
+// A connection that hangs instead of failing counts as no connection, so the button never spins forever
+const SETTINGS_TIMEOUT_MS = 10_000;
+
 // Supabase's public settings list the providers that are switched on. Checking first means one that's off shows
 // 06's error on the screen instead of Supabase's raw error page, and no connection shows "Couldn't reach Stackd".
 async function providerEnabled(provider: OAuthProvider) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/settings`, {
     headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" },
+    signal: AbortSignal.timeout(SETTINGS_TIMEOUT_MS),
   });
   if (!res.ok) return false;
   const settings = (await res.json()) as { external?: Partial<Record<OAuthProvider, boolean>> };
