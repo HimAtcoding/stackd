@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-09 (Apple and Google sign-in). Before that 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-10 (Apple and Google sign-in). Before that 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -202,6 +202,7 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
   - Home said "Hi, Shikhar!" with UC San Diego and Las Positas College CS. The name came from Google and was saved to the account.
   - A reload kept the session, and a second tab had it too. Settings showed the email and no Change password.
   - Sign out landed on Sign in with "Signed out", every `stackd.*` key cleared but Welcome seen, and the other tab signed out as well. `/settings/` then redirected to Sign in.
+- **Google, same account returning (2026-10-10):** After signing out, Continue with Google and the account went straight to Home ("Hi, Shikhar!", the saved plan), with no onboarding. Supabase still had one Google user with one identity, and its last sign-in moved.
 - **Google cancel:** Back from Google's account page returned to Sign in with the spinner gone, nothing disabled and no error.
 - **Apple, up to the Apple ID password:** Supabase sends the browser to `appleid.apple.com` with the Services ID, and Apple serves its sign-in page naming Stackd (200). Controls on the same request: a wrong return URL gets 403, a wrong client ID `invalid_client`. The client secret's signature and claims were checked locally.
 - **Callback paths on the production build** (`npm start`, port 4000):
@@ -218,7 +219,6 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 - **Builds and checks:** lint, `tsc`, `test:db`, `test:import`, `test:oauth`, and `npm run build`. Every route, `/auth/callback/` included, answers 200 from `out/`.
 - **Not tested yet:**
   - A real Apple sign-in. It needs a person's Apple ID password and 2FA in Chrome. So Apple's new and returning account, Hide My Email, and the secret's token exchange are unverified.
-  - A returning Google sign-in after signing out. Google's account page needs a person's click.
   - Google with the same address as an email and password account. Supabase links identities with the same verified email to one user; not tried here.
   - Native Sign in with Apple. There's no Capacitor project yet; when there is, use `signInWithIdToken` behind the same `Auth` interface.
   - A real iPhone.
