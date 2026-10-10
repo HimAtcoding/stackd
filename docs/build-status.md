@@ -205,6 +205,11 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 - **Google, same account returning (2026-10-10):** After signing out, Continue with Google and the account went straight to Home ("Hi, Shikhar!", the saved plan), with no onboarding. Supabase still had one Google user with one identity, and its last sign-in moved.
 - **Google cancel:** Back from Google's account page returned to Sign in with the spinner gone, nothing disabled and no error.
 - **Apple, up to the Apple ID password:** Supabase sends the browser to `appleid.apple.com` with the Services ID, and Apple serves its sign-in page naming Stackd (200). Controls on the same request: a wrong return URL gets 403, a wrong client ID `invalid_client`. The client secret's signature and claims were checked locally.
+- **Apple, real Apple ID (2026-10-10):**
+  - The person signed in on Apple's page with their own Apple ID. Supabase's token exchange with Apple, which uses the client secret, worked.
+  - The callback exchanged the code and went to Home with the saved plan.
+  - The Apple ID's email is the same verified Gmail address as the Google test account. Supabase linked the Apple identity to that user (one user, two identities: `google` and `apple`) rather than creating a second account.
+  - Apple sent `email` and `email_verified` but no name, as expected for the web, so the existing first name stayed.
 - **Callback paths on the production build** (`npm start`, port 4000):
   - A provider error → "Couldn't sign in with Google".
   - Apple's cancel from Create account → Create account with nothing shown.
@@ -218,7 +223,7 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
   - `delete_my_account`. The account is deleted.
 - **Builds and checks:** lint, `tsc`, `test:db`, `test:import`, `test:oauth`, and `npm run build`. Every route, `/auth/callback/` included, answers 200 from `out/`.
 - **Not tested yet:**
-  - A real Apple sign-in. It needs a person's Apple ID password and 2FA in Chrome. So Apple's new and returning account, Hide My Email, and the secret's token exchange are unverified.
+  - Apple creating a brand-new account, and Hide My Email. The only Apple ID tried shared its real address, which matched an existing account, so it was linked instead. A brand-new account takes the same callback path as Google's new user (onboarding).
   - Google with the same address as an email and password account. Supabase links identities with the same verified email to one user; not tried here.
   - Native Sign in with Apple. There's no Capacitor project yet; when there is, use `signInWithIdToken` behind the same `Auth` interface.
   - A real iPhone.
@@ -393,6 +398,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 13. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
+16. **A slow Apple or Google sign-in ends on Sign in with no message.** Supabase accepts the return from Apple or Google only within a few minutes of the button press. After that it can't tell which page started the sign-in, so it sends `?error=invalid_request&error_code=bad_oauth_state` ("OAuth state has expired") to the Site URL, `/`, not to `/auth/callback/`. Home ignores the error and redirects a signed-out student to Sign in. Pressing the button again works. Seen 2026-10-10 with an Apple page left open about six minutes. Showing "Couldn't sign in with Apple" there would mean Home reading the error; not done.
 
 ## Built differently from the specs, and why
 
@@ -480,4 +486,5 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - `npm run test:db` (schema and security) and `npm run test:import` (import pipeline) run on an in-memory database and touch nothing real.
 - `npm run test:oauth` checks the Apple and Google callback handling. It calls no provider.
 - Apple and Google sign-in work on `http://localhost:3000` (dev) and `http://localhost:4000` (`npm start`), the two addresses in Supabase's Redirect URLs. Another host or port falls back to the Site URL and the sign-in doesn't finish.
+- If `next dev` answers 404 for `/auth/callback/` while other pages load, its cache is stale. Stop the dev server, delete `.next/dev`, and start it again. Seen once on 2026-10-10; the production build wasn't affected.
 - Importing: see Phase 3 → Running the first slice.
