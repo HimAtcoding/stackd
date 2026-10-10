@@ -62,7 +62,12 @@ export const demoAuth: Auth = {
   async signInWithOAuth() {
     await wait();
     startDemoSession();
-    return ok;
+    return { ok: true, redirecting: false };
+  },
+
+  // Demo sign-ins never leave the app, so a visit to /auth/callback/ just goes back to Sign in
+  async finishOAuth() {
+    return { ok: false, error: "oauth_cancelled", provider: null, origin: "sign-in" };
   },
 
   async sendPasswordReset(email) {
