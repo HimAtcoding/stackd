@@ -13,8 +13,16 @@ export function getSupabase(): SupabaseClient | null {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (typeof window === "undefined" || !url || !anonKey) return null;
   client = createClient(url, anonKey, {
-    // No email links: codes are typed into the app, so nothing arrives through the URL
-    auth: { storageKey: AUTH_STORAGE_KEY, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+    auth: {
+      storageKey: AUTH_STORAGE_KEY,
+      persistSession: true,
+      autoRefreshToken: true,
+      // Apple and Google come back with a one-time code that only this browser can exchange. Typed email codes
+      // work the same as before under PKCE (Supabase returns the session directly).
+      flowType: "pkce",
+      // Only /auth/callback/ reads a code from the URL, on purpose; email codes are typed, never links
+      detectSessionInUrl: false,
+    },
   });
   return client;
 }

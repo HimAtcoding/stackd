@@ -17,6 +17,13 @@ export type AuthResult = { ok: true } | { ok: false; error: AuthError };
 // needsCode: the account exists, but its email must be confirmed with a code first (Confirm email on)
 export type SignUpResult = { ok: true; needsCode: boolean } | { ok: false; error: AuthError };
 export type OAuthProvider = "apple" | "google";
+// redirecting: the browser is on its way to Apple or Google, and /auth/callback/ finishes the sign-in.
+// Otherwise the student is signed in already (demo auth today, a native sign-in in the iOS app later).
+export type OAuthResult = { ok: true; redirecting: boolean } | { ok: false; error: AuthError };
+// How a sign-in that left for Apple or Google ended, and which screen it started from
+export type OAuthReturn =
+  | { ok: true }
+  | { ok: false; error: AuthError; provider: OAuthProvider | null; origin: "sign-in" | "sign-up" };
 // Enter code (09) serves two purposes: a password reset, or confirming a new account's email
 export type CodePurpose = "reset" | "confirm";
 
@@ -26,7 +33,9 @@ export type CodePurpose = "reset" | "confirm";
 export interface Auth {
   signInWithPassword(email: string, password: string): Promise<AuthResult>;
   signUp(firstName: string, email: string, password: string): Promise<SignUpResult>;
-  signInWithOAuth(provider: OAuthProvider): Promise<AuthResult>;
+  signInWithOAuth(provider: OAuthProvider): Promise<OAuthResult>;
+  // Runs on /auth/callback/ with the URL the provider sent the student back to
+  finishOAuth(href: string): Promise<OAuthReturn>;
   // Emails a 6-digit reset code. Also the reset code's "Send a new code"
   sendPasswordReset(email: string): Promise<AuthResult>;
   // The code from the reset email. On success the student is signed in and can set a new password.

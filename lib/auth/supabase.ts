@@ -1,8 +1,15 @@
-import { isAuthApiError, isAuthRetryableFetchError, isAuthWeakPasswordError, type AuthError as SupabaseAuthError } from "@supabase/supabase-js";
+import {
+  isAuthApiError,
+  isAuthRetryableFetchError,
+  isAuthWeakPasswordError,
+  type AuthError as SupabaseAuthError,
+  type User,
+} from "@supabase/supabase-js";
 import { clearPlan } from "@/lib/data/plan";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
-import type { Auth, AuthError, AuthResult, SignUpResult } from "./types";
+import { OAUTH_CALLBACK_PATH, readCallbackParams, rememberOAuth, takePendingOAuth } from "./oauth";
+import type { Auth, AuthError, AuthResult, OAuthProvider, OAuthResult, OAuthReturn, SignUpResult } from "./types";
 
 const ok: AuthResult = { ok: true };
 type Failure = { ok: false; error: AuthError };
@@ -40,13 +47,52 @@ function cacheFirstName(firstName: unknown) {
   if (typeof firstName === "string" && firstName.trim()) writeStorage("stackd.profile", JSON.stringify({ firstName: firstName.trim() }));
 }
 
+const clean = (value: unknown) => (typeof value === "string" && value.trim() ? value.trim() : null);
+
+// The first name Apple or Google shared, if any. Apple shares the name only on the very first sign-in, and the
+// student can share none, so this is often null. Never made up from the email.
+function providerFirstName(meta: Record<string, unknown>): string | null {
+  const given = clean(meta.given_name);
+  if (given) return given;
+  const full = clean(meta.full_name) ?? clean(meta.name);
+  return full ? full.split(/\s+/)[0] : null;
+}
+
+// Greets an Apple or Google student by name when there is one. A name already on the account always wins;
+// a shared one is saved to the account so other devices have it too. With none, Home says "Hi there!" (02).
+async function rememberOAuthName(user: User) {
+  const meta = user.user_metadata ?? {};
+  const saved = clean(meta.first_name);
+  if (saved) return cacheFirstName(saved);
+  const shared = providerFirstName(meta);
+  // Never keep a name cached from someone else's session on this device
+  if (!shared) return removeStorage("stackd.profile");
+  cacheFirstName(shared);
+  await client().auth.updateUser({ data: { first_name: shared } });
+}
+
+// A connection that hangs instead of failing counts as no connection, so the button never spins forever
+const SETTINGS_TIMEOUT_MS = 10_000;
+
+// Supabase's public settings list the providers that are switched on. Checking first means one that's off shows
+// 06's error on the screen instead of Supabase's raw error page, and no connection shows "Couldn't reach Stackd".
+async function providerEnabled(provider: OAuthProvider) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/settings`, {
+    headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" },
+    signal: AbortSignal.timeout(SETTINGS_TIMEOUT_MS),
+  });
+  if (!res.ok) return false;
+  const settings = (await res.json()) as { external?: Partial<Record<OAuthProvider, boolean>> };
+  return settings.external?.[provider] === true;
+}
+
 function client() {
   const supabase = getSupabase();
   if (!supabase) throw new Error("Supabase isn't configured: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY");
   return supabase;
 }
 
-async function run<T extends AuthResult | SignUpResult>(fn: () => Promise<T>): Promise<T | Failure> {
+async function run<T extends AuthResult | SignUpResult | OAuthResult>(fn: () => Promise<T>): Promise<T | Failure> {
   try {
     return await fn();
   } catch (e) {
@@ -78,8 +124,39 @@ export const supabaseAuth: Auth = {
       return { ok: true, needsCode: !data.session };
     }),
 
-  // Google and Sign in with Apple come with the iOS app (roadmap phase 6)
-  signInWithOAuth: async () => fail("oauth_failed"),
+  // PKCE (lib/supabase/client.ts): Supabase sends the student to Apple or Google, then back to /auth/callback/
+  // with a one-time code that only this browser can exchange
+  signInWithOAuth: (provider) =>
+    run(async (): Promise<OAuthResult | Failure> => {
+      if (!(await providerEnabled(provider))) return fail("oauth_failed");
+      rememberOAuth(provider, window.location.pathname.startsWith("/sign-up") ? "sign-up" : "sign-in");
+      const { data, error } = await client().auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: new URL(OAUTH_CALLBACK_PATH, window.location.origin).href, skipBrowserRedirect: true },
+      });
+      if (error || !data.url) return fail("oauth_failed");
+      window.location.assign(data.url);
+      return { ok: true, redirecting: true };
+    }),
+
+  async finishOAuth(href) {
+    const { provider, origin } = takePendingOAuth();
+    const failed = (error: AuthError): OAuthReturn => ({ ok: false, error, provider, origin });
+    const params = readCallbackParams(href);
+    if (params.kind === "error") return failed(params.cancelled ? "oauth_cancelled" : "oauth_failed");
+    if (params.kind === "none") return failed("oauth_failed");
+    try {
+      const { data, error } = await client().auth.exchangeCodeForSession(params.code);
+      if (error) {
+        if (process.env.NODE_ENV === "development") console.error("OAuth code exchange failed", error.code ?? error.name);
+        return failed(isAuthRetryableFetchError(error) ? "network" : "oauth_failed");
+      }
+      await rememberOAuthName(data.user).catch(() => {});
+      return { ok: true };
+    } catch (e) {
+      return failed(isAuthApiError(e) ? "oauth_failed" : "network");
+    }
+  },
 
   sendPasswordReset: (email) =>
     run(async () => {

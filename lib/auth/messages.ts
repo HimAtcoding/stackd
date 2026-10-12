@@ -1,3 +1,4 @@
+import { peekReturnedOAuthError } from "./oauth";
 import type { AuthError, OAuthProvider } from "./types";
 
 // Field checks and error copy shared by the three auth screens (flows-and-states → Field validation).
@@ -19,6 +20,12 @@ export function oauthErrorCopy(error: AuthError, provider: OAuthProvider): Error
   if (error === "oauth_cancelled") return null;
   if (error === "network") return NETWORK_ERROR;
   return { title: `Couldn't sign in with ${PROVIDER_NAME[provider]}`, body: "Try again, or sign in with your email." };
+}
+
+// An Apple or Google sign-in that failed after leaving the app, shown once on the screen it returned to
+export function returnedOAuthCopy(): ErrorCopy | null {
+  const returned = peekReturnedOAuthError();
+  return returned ? oauthErrorCopy(returned.error, returned.provider) : null;
 }
 
 export const RATE_LIMITED: ErrorCopy = { title: "Too many tries", body: "Wait a few minutes, then try again." };

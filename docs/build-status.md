@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-10 (Apple and Google sign-in). Before that 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -10,7 +10,7 @@ Parts 1–4 built 2026-10-05. Part 5 is on hold until the new specs land. Plan a
 |---|---|---|
 | 1 | Capacitor readiness: static export, no Node server at runtime | Done |
 | 2 | Supabase schema with provenance and row-level security | Done, applied to the project (2026-10-05) |
-| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done; the full real flow, codes included, tested 2026-10-06 (below) |
+| 3 | Supabase email sign-in behind `lib/auth`, 6-digit codes, progress per user | Done; the full real flow, codes included, tested 2026-10-06 (below). Apple and Google sign-in added 2026-10-09 (Apple and Google sign-in, below) |
 | 4 | Import pipeline for institution, major, and link rows from a hand-written file | Done; first slice imported (`3e54ad4`), rows unverified until checked |
 | 5 | Screens read the database | Onboarding, Home and University read it for real accounts (steps 11 and 12 below). Demo mode still reads `data/seed` |
 
@@ -61,12 +61,12 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
 
 **Part 3, real sign-in:**
 - **Choosing the mode.** `lib/auth/index.ts` picks demo auth when `NEXT_PUBLIC_DEMO_STRIP` is on (the default) and Supabase email sign-in when it's off (`lib/flags.ts → DEMO_MODE`). The auth screens didn't change.
-- **The client.** `lib/supabase/client.ts` uses only the public URL and anon key, and keeps the session in local storage under `stackd.auth`, so `/dev/reset` clears it too. It has `detectSessionInUrl: false`, since nothing arrives by email link.
+- **The client.** `lib/supabase/client.ts` uses only the public URL and anon key, and keeps the session in local storage under `stackd.auth`, so `/dev/reset` clears it too. It has `detectSessionInUrl: false`, since nothing arrives by email link; only `/auth/callback/` reads a code from the URL, on purpose. Since 2026-10-09 it uses `flowType: "pkce"` for Apple and Google; typed 6-digit codes work as before.
 - **`lib/auth/supabase.ts`:**
   - Covers sign-in, sign-up (the first name goes into user metadata, and the database copies it into `profiles`), and sign-out (which also clears this device's per-account keys).
   - 6-digit code calls: `sendPasswordReset` → `verifyResetCode` → `setNewPassword`, plus `verifySignUpCode` and `resendSignUpCode`. Demo auth has the same calls: any 6 digits pass, `000000` fails.
   - `signUp` returns `needsCode` when Confirm email is on.
-  - Google and Apple return `oauth_failed` until phase 6.
+  - Apple and Google sign in through Supabase's PKCE flow since 2026-10-09 (Apple and Google sign-in, below).
   - Supabase's error codes map to `invalid_credentials`, `email_taken`, `invalid_code`, `weak_password`, `rate_limited`, `network` or `unknown`.
 - **Code entry.** Built in step 10 (09): Forgot password, Create account (when a code is needed) and Sign in ("Confirm your email first") all lead to `/enter-code/`.
 - **Session.** `lib/session.ts`: in Supabase mode, signed in means `stackd.auth` exists. `subscribeSession` also listens to Supabase's sign-in events, so the session gate reacts when a session ends or can't be refreshed.
@@ -153,10 +153,102 @@ Pasting the files into the dashboard's SQL Editor also works. But then the CLI d
   - After the reset-code sign-in, Home greeted "Hi, Alex!" (the demo name). `/dev/reset` had cleared the saved first name, and a reset-code sign-in doesn't save it. `lib/profile.ts` now falls back to the first name in the Supabase session, so every kind of sign-in greets by name (`31d9256`).
 - **Still untested:** iOS offering the emailed code above the keypad (needs a real iPhone). The test account is Ryan's own; its password was changed during the test and handed over in chat.
 
+## Apple and Google sign-in (2026-10-09)
+
+The Continue with Apple and Continue with Google buttons on Sign in (06) and Create account (07) now sign in for real. The screens look and behave as 06 says; nothing visual changed.
+
+**How it works** (web, static export, no server):
+- **Starting:** `auth.signInWithOAuth(provider)` (`lib/auth/supabase.ts`):
+  - Checks Supabase's public `/auth/v1/settings` first (10 s timeout). A provider that's switched off shows 06's "Couldn't sign in with {Apple / Google}" on the screen instead of Supabase's raw error page, and no connection shows "Couldn't reach Stackd".
+  - Remembers the provider and the starting screen in `sessionStorage["stackd.oauthPending"]`.
+  - Leaves through supabase-js's PKCE flow with `redirectTo` = `<origin>/auth/callback/`.
+  - The tapped button keeps spinning until the page changes. Back from Apple's or Google's page restores the screen with the spinner gone (`pageshow`).
+- **Coming back:** `/auth/callback/` (`app/auth/callback/`), a static page:
+  - Drops the code from the address bar and history first (`history.replaceState`), so Back never replays it.
+  - Exchanges the code with `exchangeCodeForSession`. Only the browser that started the sign-in holds the matching verifier, so a copied or forged code fails.
+  - Routes by the account, not the provider (`routeAfterOAuth()` in `lib/onboarding.ts`). No target schools yet (Home's setup-card state) goes to `/onboarding/?step=college&from=signup` with Skip. A saved plan goes Home. A plan that can't be read goes Home, which shows its own "Couldn't load your plan".
+- **Cancel and failure:**
+  - Cancelling (Google's `access_denied`, Apple's `user_cancelled_authorize`) returns to the screen it started from with nothing shown.
+  - Any other failure shows 06's "Couldn't sign in with {Apple / Google}" there; no connection shows "Couldn't reach Stackd". Provider error text is never shown.
+  - The return target can only be Sign in or Create account. Nothing in the URL (no `next=`) can choose it.
+- **Names:**
+  - A first name the provider shares (Google's given name, or the first word of the full name) is saved to the account's `first_name`, only when the account has none.
+  - Apple's web flow never sends a name (Supabase's Apple guide), so an Apple account greets "Hi there!" (02). No name is made up.
+  - `profiles.first_name` stays empty for these accounts, because the profile trigger runs before the name is known. Home falls back to the session's `first_name`. No migration.
+- **Same tables as email accounts:** `profiles`, `user_targets`, `saved_schools`, owner-only by `auth.uid()`. There's nothing provider-specific.
+- **Settings:** Change password is hidden for an account that only has Apple or Google (11, `readSessionUser().hasPassword`). An Apple Hide My Email address is stored and shown like any email; nothing validates its domain.
+- **Demo mode** is unchanged: the buttons sign in at once and go Home.
+- **`npm run test:oauth`:** 13 checks on reading the callback, cancel against failure, the return targets, and tampered storage.
+
+**Provider setup.** No secrets are in the repo; `.gitignore` covers `*.p8`, `AuthKey_*` and `apple-client-secret*`.
+- **Supabase** (project `vzsogzgcivpcmxqxepfr`):
+  - Apple and Google switched on 2026-10-09.
+  - Redirect URLs: exactly `http://localhost:3000/auth/callback/` and `http://localhost:4000/auth/callback/` (no wildcards). Site URL unchanged.
+  - Changing providers needs the Owner or Administrator role in the Stackd org; Developer can't.
+- **Apple** (developer team `4JNCSTKTHQ`):
+  - App ID `app.stackd.transfer` ("Stackd", Sign in with Apple as primary). `app.stackd.ios` was already taken by another developer.
+  - Services ID `app.stackd.transfer.signin` ("Stackd", the name Apple shows on its sign-in page), with domain `vzsogzgcivpcmxqxepfr.supabase.co` and return URL `https://vzsogzgcivpcmxqxepfr.supabase.co/auth/v1/callback`, copied from Supabase's Apple panel.
+  - Key `B5ZPA5GGWL` ("Stackd Sign in with Apple").
+  - Supabase's Apple Client IDs: `app.stackd.transfer.signin,app.stackd.transfer`. The Services ID is first, for the web; the App ID is there for the iOS app's native sign-in later.
+  - The secret is an ES256 JWT made from the `.p8` with `npm run apple:secret`. The `.p8` and the JWT are kept outside the repo. **The current secret expires 2027-04-10** (Before TestFlight).
+- **Google** (Google Cloud project `stackd-508823`):
+  - Consent screen "Stackd", External, in Testing. Test users: shikhar35sisodia35@gmail.com, ryansaleh117@gmail.com. Scopes `email` and `profile` only.
+  - Web client "Stackd web (Supabase vzsogzgcivpcmxqxepfr)", `565100661784-b1crqp5ea2v2i8h64l55ooei91jea7ud.apps.googleusercontent.com`, with origins `http://localhost:3000` and `:4000` and the Supabase callback as its only redirect URI.
+  - The older "Stackd Web" client in the same project points at an earlier test project and isn't used.
+
+**Tested 2026-10-09** (Chrome on Windows, the real project):
+- **Google, real account, new user:**
+  - Supabase created the user (provider `google`, one identity). The callback went to onboarding, and onboarding saved college, school and major.
+  - Home said "Hi, Shikhar!" with UC San Diego and Las Positas College CS. The name came from Google and was saved to the account.
+  - A reload kept the session, and a second tab had it too. Settings showed the email and no Change password.
+  - Sign out landed on Sign in with "Signed out", every `stackd.*` key cleared but Welcome seen, and the other tab signed out as well. `/settings/` then redirected to Sign in.
+- **Google, same account returning (2026-10-10):** After signing out, Continue with Google and the account went straight to Home ("Hi, Shikhar!", the saved plan), with no onboarding. Supabase still had one Google user with one identity, and its last sign-in moved.
+- **Google cancel:** Back from Google's account page returned to Sign in with the spinner gone, nothing disabled and no error.
+- **Apple, up to the Apple ID password:** Supabase sends the browser to `appleid.apple.com` with the Services ID, and Apple serves its sign-in page naming Stackd (200). Controls on the same request: a wrong return URL gets 403, a wrong client ID `invalid_client`. The client secret's signature and claims were checked locally.
+- **Apple, real Apple ID (2026-10-10):**
+  - The person signed in on Apple's page with their own Apple ID. Supabase's token exchange with Apple, which uses the client secret, worked.
+  - The callback exchanged the code and went to Home with the saved plan.
+  - The Apple ID's email is the same verified Gmail address as the Google test account. Supabase linked the Apple identity to that user (one user, two identities: `google` and `apple`) rather than creating a second account.
+  - Apple sent `email` and `email_verified` but no name, as expected for the web, so the existing first name stayed.
+- **Callback paths on the production build** (`npm start`, port 4000):
+  - A provider error → "Couldn't sign in with Google".
+  - Apple's cancel from Create account → Create account with nothing shown.
+  - A forged code → "Couldn't sign in with Apple" and no session.
+  - The settings request failing → "Couldn't reach Stackd".
+  - `?next=https://evil.example` plus a tampered return target → Stackd's own Sign in.
+- **Email sign-in under PKCE**, against the project, with the app's own supabase-js calls in a script, a disposable address, and the codes from its inbox:
+  - The sign-up code, the profile row with the first name, and a wrong password (`invalid_credentials`).
+  - Password sign-in and a wrong code (`otp_expired`).
+  - The reset code, the same password refused (`same_password`), a new password, the old one refused, the new one accepted.
+  - `delete_my_account`. The account is deleted.
+- **Builds and checks:** lint, `tsc`, `test:db`, `test:import`, `test:oauth`, and `npm run build`. Every route, `/auth/callback/` included, answers 200 from `out/`.
+- **Not tested yet:**
+  - Apple creating a brand-new account, and Hide My Email. The only Apple ID tried shared its real address, which matched an existing account, so it was linked instead. A brand-new account takes the same callback path as Google's new user (onboarding).
+  - Google with the same address as an email and password account. Supabase links identities with the same verified email to one user; not tried here.
+  - Native Sign in with Apple. There's no Capacitor project yet; when there is, use `signInWithIdToken` behind the same `Auth` interface.
+  - A real iPhone.
+
+**Built differently from 06:**
+- `signInWithOAuth` returns `{ ok: true, redirecting }` instead of `AuthResult`, and `Auth` has `finishOAuth(href)` for the callback page. Both screens route through `routeAfterOAuth()`.
+- `/auth/callback/` is a new route that flows-and-states doesn't list.
+- A returning Apple or Google student with no target schools sees onboarding (with Skip) at each social sign-in, since routing follows the plan, not the provider.
+
 ## Before TestFlight
 
 Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
 1. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
+2. **Make a new Apple client secret before 2027-04-10.** Run `npm run apple:secret -- <AuthKey_B5ZPA5GGWL.p8> 4JNCSTKTHQ B5ZPA5GGWL app.stackd.transfer.signin <file outside the repo>`. Then paste the result into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. After that date Apple sign-in on the web fails until it's replaced. The `.p8` can't be downloaded from Apple again; if it's lost, revoke the key and make a new one.
+3. **Add the real app's address to Supabase's Redirect URLs** (Authentication → URL Configuration): the hosted web URL or the iOS app's scheme, ending in `/auth/callback/`. Keep `localhost` only for development.
+4. **Native Sign in with Apple in the iOS app** (Capacitor, roadmap phase 6), through `signInWithIdToken` behind the same `Auth` interface. Supabase already allows the App ID `app.stackd.transfer`.
+5. **Publish Google's consent screen** (Google Auth Platform → Audience → Publish app) once a hosted privacy policy and home page exist. Until then only the listed test users (up to 100) can use Continue with Google.
+6. **Register Apple's private relay email sources** (Apple Developer → Services → Sign in with Apple for Email Communication) before Stackd emails anyone who chose Hide My Email.
+
+## Before the App Store listing
+
+Decided 2026-10-09: the listing credits all four of the team, in this order: **Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila**.
+- In App Store Connect, set Copyright to `© 2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`.
+- The listing's seller name comes from the Apple Developer account. An individual account shows its holder's legal name. Showing a team or company name needs an organization enrollment (a registered company and a D-U-N-S number); Apple can convert the current team and keep its Team ID, so Sign in with Apple keeps working.
+- Name provider screens "Stackd", never one person: Apple's Services ID and Google's consent screen already are.
 
 ## Built
 
@@ -305,6 +397,8 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 12. **Untested outside a real iPhone:** iOS password autofill (06), the iOS strong-password suggestion (07), the page keeping a focused field above the on-screen keyboard, and Add to Home Screen opening full screen. Also the real safe-area insets; tests simulated them with 59 top and 34 bottom.
 13. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
+15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
+16. **A slow Apple or Google sign-in ends on Sign in with no message.** Supabase accepts the return from Apple or Google only within a few minutes of the button press. After that it can't tell which page started the sign-in, so it sends `?error=invalid_request&error_code=bad_oauth_state` ("OAuth state has expired") to the Site URL, `/`, not to `/auth/callback/`. Home ignores the error and redirects a signed-out student to Sign in. Pressing the button again works. Seen 2026-10-10 with an Apple page left open about six minutes. Showing "Couldn't sign in with Apple" there would mean Home reading the error; not done.
 
 ## Built differently from the specs, and why
 
@@ -390,4 +484,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - To see Welcome again, clear `stackd.seenWelcome` from local storage, or open `/dev/reset`.
 - `npm run build` writes the static app to `out/` (stop the dev server first), and `npm start` serves it at `http://localhost:4000`.
 - `npm run test:db` (schema and security) and `npm run test:import` (import pipeline) run on an in-memory database and touch nothing real.
+- `npm run test:oauth` checks the Apple and Google callback handling. It calls no provider.
+- Apple and Google sign-in work on `http://localhost:3000` (dev) and `http://localhost:4000` (`npm start`), the two addresses in Supabase's Redirect URLs. Another host or port falls back to the Site URL and the sign-in doesn't finish.
+- If `next dev` answers 404 for `/auth/callback/` while other pages load, its cache is stale. Stop the dev server, delete `.next/dev`, and start it again. Seen once on 2026-10-10; the production build wasn't affected.
 - Importing: see Phase 3 → Running the first slice.
