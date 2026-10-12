@@ -8,13 +8,14 @@ Three questions, in order. This is a genuine sequence, so the step count is show
 |---|---|---|---|
 | 1 `college` | Where do you go now? | One community college, or "My college isn't listed" | `profiles.home_institution_id` (null for not listed) |
 | 2 `schools` | Where do you want to transfer? | One or more universities | `user_targets` rows (one per school) |
-| 3 `major` | What's your major? | One major per chosen school, or "Not listed yet" | `user_targets.major_id` (null for not listed) |
+| 3 `major` | What's your major? | One major per chosen school, or "Not listed yet" | `user_targets.major_id`, or `major_id` null with `major_not_listed = true` for "Not listed yet". A null major with `major_not_listed = false` means no choice made yet |
 
 Use whatever table and column names Claude Code created in phase 3; the names above are from `05-data-model.md`.
 
 ## When it shows
 
 - Right after an account is created: after `signUp` with `needsCode: false`, or after the confirmation code is accepted (09). Instead of going to Home, replace the history entry with `/onboarding/?step=college`. After a confirmation code, the "Email confirmed" toast shows here on step 1 (12 above the pinned button).
+- After the first-ever Apple or Google sign-in of a brand-new account (06 → Web sign-in return). Returning Apple or Google students never see it automatically, even with no plan; they get Home's setup card.
 - From Home's setup card (02 → Plan states) and from Settings (11), for students who skipped it.
 - Never on its own after that. A student who skipped isn't asked again; Home's setup card is the reminder.
 

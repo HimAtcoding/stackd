@@ -11,6 +11,7 @@ How the baseline screens connect, and the shared behavior every screen follows. 
 | Create account | `/sign-up` | `07-create-account.md` | No |
 | Forgot password | `/forgot-password` | `08-forgot-password.md` | No |
 | Enter code | `/enter-code/?for=reset` or `?for=confirm` | `09-enter-code.md` | No |
+| Web sign-in return | `/auth/callback/` (web only; Apple and Google send the student back here) | `06-sign-in.md → Web sign-in return` | No |
 | Onboarding | `/onboarding/?step=college` / `schools` / `major` (`&edit=1` from Settings) | `10-onboarding.md` | No |
 | Home | `/` | `02-home.md` | Yes (Home) |
 | Settings | `/settings/` | `11-settings.md` | No (pushed) |

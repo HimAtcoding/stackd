@@ -109,7 +109,19 @@ The labelled divider component (00): 24 tall, 12 below the button. Two 1 px `--b
 
 Social button component (00), 48 tall, gap 12, the first one 12 below the divider.
 
-**While an Apple or Google sign-in is pending**: the tapped button shows a 20 px `--navy-900` ring spinner (2 px stroke, 800 ms linear) in place of its logo, and its label stays. The other social button and the Sign in button get `disabled`, and both fields become `readOnly`. The Sign in button shows no spinner, because it isn't the thing the student tapped. Everything returns to normal when the call resolves.
+**While an Apple or Google sign-in is pending**: the tapped button shows a 20 px `--navy-900` ring spinner (2 px stroke, 800 ms linear) in place of its logo, and its label stays. The other social button and the Sign in button get `disabled`, and both fields become `readOnly`. The Sign in button shows no spinner, because it isn't the thing the student tapped. On the web the page leaves for Apple or Google, so the spinner stays until it does; in the iOS app (native sign-in, later) everything returns to normal when the call resolves.
+
+**Web sign-in return** (`/auth/callback/`, rev 3): the page Apple and Google send the student back to on the web. It shows only the loading component (00) centered on `--sky-50` with "Signing you in", then replaces itself:
+
+| Result | Goes to |
+|---|---|
+| A brand-new account (first sign-in) | `/onboarding/?step=college&from=signup` (`10-onboarding.md`) |
+| An existing account | `/` (Home) |
+| Cancelled | `/sign-in`, nothing shown |
+| Failed | `/sign-in` with the `oauth_failed` inline error |
+| Took too long (the sign-in expired) | `/sign-in` with the inline error "Sign-in took too long" / "Try again." |
+
+The native iOS sign-in won't use this page; it signs in without leaving the app.
 
 | Button | Logo | Label | Action |
 |---|---|---|---|
