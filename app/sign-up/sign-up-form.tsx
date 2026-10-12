@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import { useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { EnvelopeIcon, LockIcon, UserIcon } from "@phosphor-icons/react/ssr";
 import { AuthSheet } from "@/components/auth/auth-sheet";
@@ -16,8 +16,8 @@ import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
 import { getCarriedEmail, getCarriedSignUp, setCarriedEmail, setCarriedSignUp } from "@/lib/auth/email-store";
-import { WEAK_PASSWORD, emailError, inlineErrorCopy, oauthErrorCopy, returnedOAuthCopy, type ErrorCopy } from "@/lib/auth/messages";
-import { clearReturnedOAuthError, usePendingOAuth } from "@/lib/auth/oauth";
+import { WEAK_PASSWORD, emailError, inlineErrorCopy, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
+import { usePendingOAuth } from "@/lib/auth/oauth";
 import { AFTER_SIGN_UP, routeAfterOAuth } from "@/lib/onboarding";
 
 type FieldErrors = { firstName?: string; email?: string; password?: string };
@@ -64,11 +64,8 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   // After a failed submit, each field re-checks as it changes.
   const [recheck, setRecheck] = useState(false);
-  // An Apple or Google sign-in that failed after leaving the app shows here once (/auth/callback/)
-  const [accountError, setAccountError] = useState<AccountError | null>(returnedOAuthCopy);
+  const [accountError, setAccountError] = useState<AccountError | null>(null);
   const [pending, setPending] = usePendingOAuth<"form" | OAuthProvider>();
-
-  useEffect(() => clearReturnedOAuthError(), []);
 
   const busy = pending !== null;
 
@@ -124,7 +121,7 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
     const result = await auth.signInWithOAuth(provider);
     if (result.ok) {
       // On the way to Apple or Google, the button keeps spinning until the page changes
-      if (!result.redirecting) router.replace(await routeAfterOAuth(), { transitionTypes: ["crossfade"] });
+      if (!result.redirecting) router.replace(routeAfterOAuth(result.newAccount), { transitionTypes: ["crossfade"] });
       return;
     }
     setPending(null);

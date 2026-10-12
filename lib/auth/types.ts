@@ -4,6 +4,8 @@ export type AuthError =
   | "network"
   | "oauth_cancelled"
   | "oauth_failed"
+  // An Apple or Google sign-in that took too long: the student came back after Supabase's state for it ran out
+  | "oauth_expired"
   // A 6-digit code that's wrong or has expired (Supabase reports both the same way)
   | "invalid_code"
   | "rate_limited"
@@ -19,11 +21,13 @@ export type SignUpResult = { ok: true; needsCode: boolean } | { ok: false; error
 export type OAuthProvider = "apple" | "google";
 // redirecting: the browser is on its way to Apple or Google, and /auth/callback/ finishes the sign-in.
 // Otherwise the student is signed in already (demo auth today, a native sign-in in the iOS app later).
-export type OAuthResult = { ok: true; redirecting: boolean } | { ok: false; error: AuthError };
-// How a sign-in that left for Apple or Google ended, and which screen it started from
-export type OAuthReturn =
-  | { ok: true }
-  | { ok: false; error: AuthError; provider: OAuthProvider | null; origin: "sign-in" | "sign-up" };
+// newAccount: this was the first-ever sign-in of a brand-new account, which goes to onboarding (06, 10)
+export type OAuthResult =
+  | { ok: true; redirecting: true }
+  | { ok: true; redirecting: false; newAccount: boolean }
+  | { ok: false; error: AuthError };
+// How a sign-in that left for Apple or Google ended
+export type OAuthReturn = { ok: true; newAccount: boolean } | { ok: false; error: AuthError; provider: OAuthProvider | null };
 // Enter code (09) serves two purposes: a password reset, or confirming a new account's email
 export type CodePurpose = "reset" | "confirm";
 

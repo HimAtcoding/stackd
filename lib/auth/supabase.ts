@@ -8,7 +8,7 @@ import {
 import { clearPlan } from "@/lib/data/plan";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
-import { OAUTH_CALLBACK_PATH, readCallbackParams, rememberOAuth, takePendingOAuth } from "./oauth";
+import { EXPIRED, OAUTH_CALLBACK_PATH, readCallbackParams, rememberOAuth, takePendingOAuth } from "./oauth";
 import type { Auth, AuthError, AuthResult, OAuthProvider, OAuthResult, OAuthReturn, SignUpResult } from "./types";
 
 const ok: AuthResult = { ok: true };
@@ -71,6 +71,16 @@ async function rememberOAuthName(user: User) {
   await client().auth.updateUser({ data: { first_name: shared } });
 }
 
+// The first-ever sign-in of a brand-new account: Supabase made the user moments before this sign-in. A returning
+// student, or an email account signing in with Apple or Google for the first time, was made long before.
+const NEW_ACCOUNT_WINDOW_MS = 60_000;
+
+function isNewAccount(user: User) {
+  const created = Date.parse(user.created_at);
+  const signedIn = Date.parse(user.last_sign_in_at ?? "");
+  return Number.isFinite(created) && Number.isFinite(signedIn) && signedIn - created < NEW_ACCOUNT_WINDOW_MS;
+}
+
 // A connection that hangs instead of failing counts as no connection, so the button never spins forever
 const SETTINGS_TIMEOUT_MS = 10_000;
 
@@ -129,7 +139,7 @@ export const supabaseAuth: Auth = {
   signInWithOAuth: (provider) =>
     run(async (): Promise<OAuthResult | Failure> => {
       if (!(await providerEnabled(provider))) return fail("oauth_failed");
-      rememberOAuth(provider, window.location.pathname.startsWith("/sign-up") ? "sign-up" : "sign-in");
+      rememberOAuth(provider);
       const { data, error } = await client().auth.signInWithOAuth({
         provider,
         options: { redirectTo: new URL(OAUTH_CALLBACK_PATH, window.location.origin).href, skipBrowserRedirect: true },
@@ -140,19 +150,20 @@ export const supabaseAuth: Auth = {
     }),
 
   async finishOAuth(href) {
-    const { provider, origin } = takePendingOAuth();
-    const failed = (error: AuthError): OAuthReturn => ({ ok: false, error, provider, origin });
+    const provider = takePendingOAuth();
+    const failed = (error: AuthError): OAuthReturn => ({ ok: false, error, provider });
     const params = readCallbackParams(href);
-    if (params.kind === "error") return failed(params.cancelled ? "oauth_cancelled" : "oauth_failed");
+    if (params.kind === "error") return failed(params.error === "cancelled" ? "oauth_cancelled" : params.error === "expired" ? "oauth_expired" : "oauth_failed");
     if (params.kind === "none") return failed("oauth_failed");
     try {
       const { data, error } = await client().auth.exchangeCodeForSession(params.code);
       if (error) {
         if (process.env.NODE_ENV === "development") console.error("OAuth code exchange failed", error.code ?? error.name);
-        return failed(isAuthRetryableFetchError(error) ? "network" : "oauth_failed");
+        if (isAuthRetryableFetchError(error)) return failed("network");
+        return failed(EXPIRED.has(error.code ?? "") ? "oauth_expired" : "oauth_failed");
       }
       await rememberOAuthName(data.user).catch(() => {});
-      return { ok: true };
+      return { ok: true, newAccount: isNewAccount(data.user) };
     } catch (e) {
       return failed(isAuthApiError(e) ? "oauth_failed" : "network");
     }

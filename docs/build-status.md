@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-10 (Apple and Google sign-in). Before that 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-12 (web sign-in return, 06 rev 3). Before that 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -160,17 +160,21 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 **How it works** (web, static export, no server):
 - **Starting:** `auth.signInWithOAuth(provider)` (`lib/auth/supabase.ts`):
   - Checks Supabase's public `/auth/v1/settings` first (10 s timeout). A provider that's switched off shows 06's "Couldn't sign in with {Apple / Google}" on the screen instead of Supabase's raw error page, and no connection shows "Couldn't reach Stackd".
-  - Remembers the provider and the starting screen in `sessionStorage["stackd.oauthPending"]`.
+  - Remembers the provider in `sessionStorage["stackd.oauthPending"]`.
   - Leaves through supabase-js's PKCE flow with `redirectTo` = `<origin>/auth/callback/`.
   - The tapped button keeps spinning until the page changes. Back from Apple's or Google's page restores the screen with the spinner gone (`pageshow`).
-- **Coming back:** `/auth/callback/` (`app/auth/callback/`), a static page:
+- **Coming back:** `/auth/callback/` (`app/auth/callback/`), a static page showing only the loading component, centered on `--sky-50`, with "Signing you in" (06 → Web sign-in return, rev 3):
   - Drops the code from the address bar and history first (`history.replaceState`), so Back never replays it.
   - Exchanges the code with `exchangeCodeForSession`. Only the browser that started the sign-in holds the matching verifier, so a copied or forged code fails.
-  - Routes by the account, not the provider (`routeAfterOAuth()` in `lib/onboarding.ts`). No target schools yet (Home's setup-card state) goes to `/onboarding/?step=college&from=signup` with Skip. A saved plan goes Home. A plan that can't be read goes Home, which shows its own "Couldn't load your plan".
-- **Cancel and failure:**
-  - Cancelling (Google's `access_denied`, Apple's `user_cancelled_authorize`) returns to the screen it started from with nothing shown.
-  - Any other failure shows 06's "Couldn't sign in with {Apple / Google}" there; no connection shows "Couldn't reach Stackd". Provider error text is never shown.
-  - The return target can only be Sign in or Create account. Nothing in the URL (no `next=`) can choose it.
+  - **Routing since 2026-10-12** (`routeAfterOAuth(newAccount)` in `lib/onboarding.ts`): only the first-ever sign-in of a brand-new account goes to `/onboarding/?step=college&from=signup`. Every existing account goes Home; with no plan, that's the setup card (10 → When it shows).
+  - "Brand-new" means Supabase created the user less than a minute before this sign-in (`created_at` against `last_sign_in_at`, both Supabase's clock). An email account signing in with Apple or Google for the first time was created long before, so it counts as existing.
+- **Cancel, failure and expiry** all land on Sign in (06's table), whichever screen the sign-in started from:
+  - Cancelling (Google's `access_denied`, Apple's `user_cancelled_authorize`) shows nothing.
+  - Any other failure shows 06's "Couldn't sign in with {Apple / Google}". If the provider isn't known (the sign-in started in another tab), nothing is shown, since that message names it. No connection shows "Couldn't reach Stackd". Provider error text is never shown.
+  - **Took too long** shows "Sign-in took too long" / "Try again." (`oauth_expired`). Supabase reports it two ways:
+    - `bad_oauth_state`, sent to the Site URL (Home), not the callback. The session gate reads it once, cleans the address bar, and sends the student to Sign in, even on a device that hasn't seen Welcome.
+    - `flow_state_expired` from the code exchange on the callback.
+  - Nothing in the URL (no `next=`) can choose where the student lands.
 - **Names:**
   - A first name the provider shares (Google's given name, or the first word of the full name) is saved to the account's `first_name`, only when the account has none.
   - Apple's web flow never sends a name (Supabase's Apple guide), so an Apple account greets "Hi there!" (02). No name is made up.
@@ -178,7 +182,7 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 - **Same tables as email accounts:** `profiles`, `user_targets`, `saved_schools`, owner-only by `auth.uid()`. There's nothing provider-specific.
 - **Settings:** Change password is hidden for an account that only has Apple or Google (11, `readSessionUser().hasPassword`). An Apple Hide My Email address is stored and shown like any email; nothing validates its domain.
 - **Demo mode** is unchanged: the buttons sign in at once and go Home.
-- **`npm run test:oauth`:** 13 checks on reading the callback, cancel against failure, the return targets, and tampered storage.
+- **`npm run test:oauth`:** 18 checks on reading the callback (cancel, failure, expiry), the return target, tampered storage, and the expired return to Home.
 
 **Provider setup.** No secrets are in the repo; `.gitignore` covers `*.p8`, `AuthKey_*` and `apple-client-secret*`.
 - **Supabase** (project `vzsogzgcivpcmxqxepfr`):
@@ -222,16 +226,21 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
   - The reset code, the same password refused (`same_password`), a new password, the old one refused, the new one accepted.
   - `delete_my_account`. The account is deleted.
 - **Builds and checks:** lint, `tsc`, `test:db`, `test:import`, `test:oauth`, and `npm run build`. Every route, `/auth/callback/` included, answers 200 from `out/`.
+- **Tested 2026-10-12, after the web sign-in return changes:**
+  - Ryan's Google account. It belongs to his email account (created 2026-10-07, identities `email` and `google`), so both sign-ins (before and after signing out) went straight to Home with his saved plan, no onboarding.
+  - Email for real, with a throwaway (`oko15075+stackd-c@gmail.com`): the emailed code → onboarding with "Email confirmed", Skip → Home's setup card, sign out, password sign-in → Home's setup card (no onboarding). The account was then deleted through Settings and can't sign in. 8 checks.
+  - With Supabase's answers made up locally (no real sign-in): a brand-new account → onboarding, a returning one with no plan → Home's setup card, cancel and failure from Create account → Sign in, both kinds of expiry → "Sign-in took too long" (12 above the Sign in button, even on a first launch), the callback's loading screen, and a plain first launch still going to Welcome. 14 checks.
+  - `npm run build`, lint, `tsc`, `test:db`, `test:import`, `test:oauth`.
 - **Not tested yet:**
+  - A real brand-new Google or Apple account (Ryan's Google address already had an account), and a real expired sign-in (it takes leaving Apple's or Google's page open for several minutes).
   - Apple creating a brand-new account, and Hide My Email. The only Apple ID tried shared its real address, which matched an existing account, so it was linked instead. A brand-new account takes the same callback path as Google's new user (onboarding).
   - Google with the same address as an email and password account. Supabase links identities with the same verified email to one user; not tried here.
   - Native Sign in with Apple. There's no Capacitor project yet; when there is, use `signInWithIdToken` behind the same `Auth` interface.
   - A real iPhone.
 
 **Built differently from 06:**
-- `signInWithOAuth` returns `{ ok: true, redirecting }` instead of `AuthResult`, and `Auth` has `finishOAuth(href)` for the callback page. Both screens route through `routeAfterOAuth()`.
-- `/auth/callback/` is a new route that flows-and-states doesn't list.
-- A returning Apple or Google student with no target schools sees onboarding (with Skip) at each social sign-in, since routing follows the plan, not the provider.
+- `signInWithOAuth` returns `{ ok: true, redirecting }` (plus `newAccount` when it doesn't redirect) instead of `AuthResult`, and `Auth` has `finishOAuth(href)` for the callback page. Both screens route through `routeAfterOAuth(newAccount)`.
+- "Brand-new account" is decided by the account's age at this sign-in (under a minute). 06 doesn't say how to tell.
 
 ## Before TestFlight
 
@@ -398,7 +407,6 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 13. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
-16. **A slow Apple or Google sign-in ends on Sign in with no message.** Supabase accepts the return from Apple or Google only within a few minutes of the button press. After that it can't tell which page started the sign-in, so it sends `?error=invalid_request&error_code=bad_oauth_state` ("OAuth state has expired") to the Site URL, `/`, not to `/auth/callback/`. Home ignores the error and redirects a signed-out student to Sign in. Pressing the button again works. Seen 2026-10-10 with an Apple page left open about six minutes. Showing "Couldn't sign in with Apple" there would mean Home reading the error; not done.
 
 ## Built differently from the specs, and why
 

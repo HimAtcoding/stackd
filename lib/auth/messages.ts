@@ -15,14 +15,18 @@ const PROVIDER_NAME: Record<OAuthProvider, string> = { apple: "Apple", google: "
 
 export const NETWORK_ERROR: ErrorCopy = { title: "Couldn't reach Stackd", body: "Check your connection, then try again." };
 
-// Copy for a failed Apple or Google sign-in. Cancelling on purpose shows nothing.
-export function oauthErrorCopy(error: AuthError, provider: OAuthProvider): ErrorCopy | null {
+export const OAUTH_EXPIRED: ErrorCopy = { title: "Sign-in took too long", body: "Try again." };
+
+// Copy for a failed Apple or Google sign-in. Cancelling on purpose shows nothing, and so does a failure whose provider
+// isn't known (the sign-in started in another tab), since 06's message names it.
+export function oauthErrorCopy(error: AuthError, provider: OAuthProvider | null): ErrorCopy | null {
   if (error === "oauth_cancelled") return null;
   if (error === "network") return NETWORK_ERROR;
-  return { title: `Couldn't sign in with ${PROVIDER_NAME[provider]}`, body: "Try again, or sign in with your email." };
+  if (error === "oauth_expired") return OAUTH_EXPIRED;
+  return provider ? { title: `Couldn't sign in with ${PROVIDER_NAME[provider]}`, body: "Try again, or sign in with your email." } : null;
 }
 
-// An Apple or Google sign-in that failed after leaving the app, shown once on the screen it returned to
+// An Apple or Google sign-in that failed after leaving the app, shown once on Sign in
 export function returnedOAuthCopy(): ErrorCopy | null {
   const returned = peekReturnedOAuthError();
   return returned ? oauthErrorCopy(returned.error, returned.provider) : null;

@@ -47,7 +47,7 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   // After a failed submit, each field re-checks as it changes.
   const [recheck, setRecheck] = useState(false);
-  // An Apple or Google sign-in that failed after leaving the app shows here once (/auth/callback/)
+  // An Apple or Google sign-in that failed, was cancelled or took too long lands here and shows once (06)
   const [authError, setAuthError] = useState<SignInError | null>(returnedOAuthCopy);
   const [pending, setPending] = usePendingOAuth<"form" | "code" | OAuthProvider>();
 
@@ -102,7 +102,7 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
     const result = await auth.signInWithOAuth(provider);
     if (result.ok) {
       // On the way to Apple or Google, the button keeps spinning until the page changes
-      if (!result.redirecting) router.replace(await routeAfterOAuth(), { transitionTypes: ["crossfade"] });
+      if (!result.redirecting) router.replace(routeAfterOAuth(result.newAccount), { transitionTypes: ["crossfade"] });
       return;
     }
     setPending(null);
