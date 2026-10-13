@@ -1,5 +1,7 @@
 // Checks how /auth/callback/ reads what Apple, Google and Supabase send back, and that a sign-in that doesn't finish
 // can only ever land on Sign in. Calls no provider and touches no database: `npm run test:oauth`
+import { createHash } from "node:crypto";
+import { createNonce, isNativeCallback, NATIVE_CALLBACK_URL } from "../lib/auth/native.ts";
 import {
   OAUTH_CALLBACK_PATH,
   OAUTH_RETURN_PATH,
@@ -62,6 +64,24 @@ expect("its message waits for Sign in, with the provider", peekReturnedOAuthErro
 expect("and the URL is cleaned", replaced.at(-1), "/");
 window.location.href = "http://localhost:3000/#error=invalid_request&error_code=bad_oauth_state";
 expect("the same in the fragment", takeExpiredOAuthReturn(), true);
+
+// The iOS app: Google's in-app browser returns to the app's own scheme, and Apple's sheet needs a nonce
+const native = (rest) => `${NATIVE_CALLBACK_URL}${rest}`;
+expect("the app's callback URL", NATIVE_CALLBACK_URL, "app.stackd.transfer://auth/callback/");
+expect("the app's callback is recognised", isNativeCallback(native("?code=abc")), true);
+expect("also without the trailing slash", isNativeCallback("app.stackd.transfer://auth/callback?code=abc"), true);
+expect("another path in the app is ignored", isNativeCallback("app.stackd.transfer://settings/?code=abc"), false);
+expect("a lookalike scheme is ignored", isNativeCallback("app.stackd.transfer.evil://auth/callback/?code=abc"), false);
+expect("the web callback isn't the app's", isNativeCallback(at("?code=abc")), false);
+expect("garbage is ignored", isNativeCallback("not a url"), false);
+expect("PKCE code from the app's callback", readCallbackParams(native("?code=abc-123")), { kind: "code", code: "abc-123" });
+expect("Google cancel through the app's callback", readCallbackParams(native("?error=access_denied")), { kind: "error", error: "cancelled" });
+expect("expiry through the app's callback", readCallbackParams(native("?error=invalid_request&error_code=flow_state_expired")), { kind: "error", error: "expired" });
+
+const nonce = await createNonce();
+expect("the nonce is 64 hex characters", /^[0-9a-f]{64}$/.test(nonce.raw), true);
+expect("Apple gets its SHA-256", nonce.hashed, createHash("sha256").update(nonce.raw).digest("hex"));
+expect("every nonce is new", (await createNonce()).raw === nonce.raw, false);
 
 console.log(failed ? `\n${failed} failed` : "\nAll OAuth callback checks passed");
 process.exit(failed ? 1 : 0);

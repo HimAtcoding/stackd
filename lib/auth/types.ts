@@ -20,7 +20,7 @@ export type AuthResult = { ok: true } | { ok: false; error: AuthError };
 export type SignUpResult = { ok: true; needsCode: boolean } | { ok: false; error: AuthError };
 export type OAuthProvider = "apple" | "google";
 // redirecting: the browser is on its way to Apple or Google, and /auth/callback/ finishes the sign-in.
-// Otherwise the student is signed in already (demo auth today, a native sign-in in the iOS app later).
+// Otherwise the student is signed in already (demo auth, or the iOS app, where sign-in finishes without leaving the app).
 // newAccount: this was the first-ever sign-in of a brand-new account, which goes to onboarding (06, 10)
 export type OAuthResult =
   | { ok: true; redirecting: true }
