@@ -77,7 +77,7 @@ Sign-in:
 - [ ] Forgot password → code → new password → Home with "Password saved"
 - [ ] Onboarding: college, schools, major → Home with the plan
 - [ ] UC San Diego → Open on ASSIST opens Safari
-- [ ] Settings shows "Stackd 1.0.0" and "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila."; Terms, Privacy and Support open and Back returns
+- [ ] Settings shows "Stackd 1.0.0" and "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila."; Terms, Privacy and Support open and Back returns
 - [ ] Force-quit and reopen: still signed in, same plan
 - [ ] Background the app for a minute, reopen: same screen
 - [ ] Sign out → Sign in with "Signed out"

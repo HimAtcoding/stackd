@@ -4,7 +4,7 @@ A transfer-planning tool for California community college students: what you sti
 
 Unofficial planning tool. Not affiliated with ASSIST, the UC, the CSU, or any college.
 
-Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila.
+Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 
 Project docs are in `docs/`. Start with `docs/README.md`.
 

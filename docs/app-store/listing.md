@@ -4,9 +4,9 @@ Everything App Store Connect asks for, ready to paste. Written 2026-10-13 from t
 
 ## Credits
 
-- **Public developer credit, exact words:** "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila." (decided 2026-10-12). It's at the end of the description, in Settings' footer, and on every public page (`lib/about.ts`).
-- **Copyright (legal ownership), as the founders answered on 2026-10-12:** `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`. App Store Connect adds the © itself. The copyright line names four people; the public credit names three. Both are on purpose.
-- **Seller / developer name:** set by the Apple Developer account, not editable here. Team `4JNCSTKTHQ` is an **Individual** membership (Shikhar's), so the store shows the account holder's legal name. Apple doesn't allow three people's names as the seller on an individual membership. A shared seller name needs an Organization membership for a registered legal entity (with a D-U-N-S number). Apple can convert the existing team and keep the Team ID, so Sign in with Apple keeps working.
+- **Public developer credit, exact words:** "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila." (all four of the team, decided 2026-10-13). It's at the end of the description, in Settings' footer, and on every public page (`lib/about.ts`).
+- **Copyright (legal ownership), as the founders answered on 2026-10-12:** `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`. App Store Connect adds the © itself. The credit and the copyright both name all four.
+- **Seller / developer name:** set by the Apple Developer account, not editable here. Team `4JNCSTKTHQ` is an **Individual** membership (Shikhar's), so the store shows the account holder's legal name. Apple doesn't allow the team's four names as the seller on an individual membership. A shared seller name needs an Organization membership for a registered legal entity (with a D-U-N-S number). Apple can convert the existing team and keep the Team ID, so Sign in with Apple keeps working.
 
 ## App record
 
@@ -61,7 +61,7 @@ Stackd starts with a small set of colleges, universities, and majors and adds mo
 
 Stackd is an unofficial planning tool. It isn't affiliated with ASSIST, the University of California, the California State University, or any college, and it doesn't guarantee admission or that any course will transfer. Confirm your plan with a counselor.
 
-Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila.
+Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 ```
 
 Kept truthful on purpose: no course matches, no statewide coverage, no admission chances. Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).

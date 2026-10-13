@@ -255,9 +255,9 @@ Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom S
 ## Before the App Store listing
 
 See `docs/app-store/listing.md` for every field, ready to paste.
-- **Public developer credit** (decided 2026-10-12, replacing the four-name listing credit of 2026-10-09): "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila." It's in the App Store description, Settings' footer, and the footer of Privacy, Terms and Support (`lib/about.ts`).
+- **Public developer credit** (all four of the team, decided 2026-10-13; a three-name line was used briefly on 2026-10-12): "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila." It's in the App Store description, Settings' footer, and the footer of Privacy, Terms and Support (`lib/about.ts`).
 - **Copyright** (legal ownership, as the founders answered on 2026-10-12): `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`. App Store Connect adds the ©.
-- The listing's seller name comes from the Apple Developer account. Team `4JNCSTKTHQ` is an individual membership, so it shows its holder's legal name, and Apple doesn't allow three people's names there. A shared seller name needs an organization enrollment (a registered company and a D-U-N-S number); Apple can convert the current team and keep its Team ID, so Sign in with Apple keeps working.
+- The listing's seller name comes from the Apple Developer account. Team `4JNCSTKTHQ` is an individual membership, so it shows its holder's legal name, and Apple doesn't allow the team's four names there. A shared seller name needs an organization enrollment (a registered company and a D-U-N-S number); Apple can convert the current team and keep its Team ID, so Sign in with Apple keeps working.
 - Name provider screens "Stackd", never one person: Apple's Services ID and Google's consent screen already are.
 - Public support email: `joinstackd@gmail.com` (approved 2026-10-12; it's also the address the code emails come from).
 

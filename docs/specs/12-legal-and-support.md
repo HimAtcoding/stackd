@@ -44,4 +44,4 @@ Alignment: left, text at x 24 in the 480 column. The footer is centered. No card
 2. Settings' Terms, Privacy and Support links open them; Back returns to Settings.
 3. Create account's Terms and Privacy Policy links open them; Back returns to Create account.
 4. At 320 wide nothing runs off the screen, including the email address.
-5. The footer shows "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila." on every page.
+5. The footer shows "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila." on every page.

@@ -125,7 +125,7 @@ Deleting the account must also delete the student's profile, targets, and saved 
 - Unofficial footer line (00), centered.
 - 8 below: "Terms", "Privacy" and "Support" as small text links (`label` `--blue-600`), centered, 24 apart, 44 hit areas. They open the pages in 12.
 - 8 below: "Stackd {version}", `caption` `--slate-600`, centered, from the app's version number (1.0.0 for the first App Store release).
-- 4 below: "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila.", `caption` `--slate-600`, centered. The exact public credit (`lib/about.ts`, decided 2026-10-12); it wraps to two lines at 320.
+- 4 below: "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.", `caption` `--slate-600`, centered. The exact public credit (`lib/about.ts`, all four of the team, decided 2026-10-13); it wraps to two lines at 393 and 320.
 
 ## Motion
 
