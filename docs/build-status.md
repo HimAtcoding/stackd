@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-12 (web sign-in return, 06 rev 3). Before that 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-13 (iOS app and App Store prep, below). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -247,17 +247,62 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
 1. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
 2. **Make a new Apple client secret before 2027-04-10.** Run `npm run apple:secret -- <AuthKey_B5ZPA5GGWL.p8> 4JNCSTKTHQ B5ZPA5GGWL app.stackd.transfer.signin <file outside the repo>`. Then paste the result into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. After that date Apple sign-in on the web fails until it's replaced. The `.p8` can't be downloaded from Apple again; if it's lost, revoke the key and make a new one.
-3. **Add the real app's address to Supabase's Redirect URLs** (Authentication → URL Configuration): the hosted web URL or the iOS app's scheme, ending in `/auth/callback/`. Keep `localhost` only for development.
-4. **Native Sign in with Apple in the iOS app** (Capacitor, roadmap phase 6), through `signInWithIdToken` behind the same `Auth` interface. Supabase already allows the App ID `app.stackd.transfer`.
-5. **Publish Google's consent screen** (Google Auth Platform → Audience → Publish app) once a hosted privacy policy and home page exist. Until then only the listed test users (up to 100) can use Continue with Google.
-6. **Register Apple's private relay email sources** (Apple Developer → Services → Sign in with Apple for Email Communication) before Stackd emails anyone who chose Hide My Email.
+3. **Add the real app's address to Supabase's Redirect URLs** (Authentication → URL Configuration), next to the `localhost` ones: `app.stackd.transfer://auth/callback/` (the iOS app's Google return) and `https://joinstackd-chi.vercel.app/auth/callback/` (the hosted website). Not done yet: it needs the dashboard (`docs/ios-app-store-handoff.md` step 0).
+4. ~~Native Sign in with Apple in the iOS app.~~ Written 2026-10-13 (iOS app, below); not compiled or tested until the Mac.
+5. **Publish Google's consent screen** (Google Auth Platform → Audience → Publish app). The hosted home, privacy and terms pages exist since 2026-10-13, so only the dashboard step is left. Until then only the listed test users (up to 100) can use Continue with Google.
+6. **Register Apple's private relay email source** (Apple Developer → Certificates, IDs & Profiles → Services → Sign in with Apple for Email Communication): `joinstackd@gmail.com`, the address the code emails come from. Until then a student who chose Hide My Email doesn't get the confirm or reset code.
 
 ## Before the App Store listing
 
-Decided 2026-10-09: the listing credits all four of the team, in this order: **Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila**.
-- In App Store Connect, set Copyright to `© 2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`.
-- The listing's seller name comes from the Apple Developer account. An individual account shows its holder's legal name. Showing a team or company name needs an organization enrollment (a registered company and a D-U-N-S number); Apple can convert the current team and keep its Team ID, so Sign in with Apple keeps working.
+See `docs/app-store/listing.md` for every field, ready to paste.
+- **Public developer credit** (decided 2026-10-12, replacing the four-name listing credit of 2026-10-09): "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila." It's in the App Store description, Settings' footer, and the footer of Privacy, Terms and Support (`lib/about.ts`).
+- **Copyright** (legal ownership, as the founders answered on 2026-10-12): `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`. App Store Connect adds the ©.
+- The listing's seller name comes from the Apple Developer account. Team `4JNCSTKTHQ` is an individual membership, so it shows its holder's legal name, and Apple doesn't allow three people's names there. A shared seller name needs an organization enrollment (a registered company and a D-U-N-S number); Apple can convert the current team and keep its Team ID, so Sign in with Apple keeps working.
 - Name provider screens "Stackd", never one person: Apple's Services ID and Google's consent screen already are.
+- Public support email: `joinstackd@gmail.com` (approved 2026-10-12; it's also the address the code emails come from).
+
+## iOS app and App Store prep (2026-10-13)
+
+Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compiled by Xcode or run on an iPhone; that, the archive, the upload and the submission are the Mac steps in `docs/ios-app-store-handoff.md`.
+
+**Capacitor 8 (Swift Package Manager, no CocoaPods):**
+- `@capacitor/core`, `cli` and `ios` 8.5.2, `@capacitor/app` 8.1.1, `@capacitor/browser` 8.0.4, pinned exactly so the Mac builds what was tested here. 8.5.3 was 5 days old, so the month-old 8.5.2 was used.
+- `capacitor.config.ts`: `appId` `app.stackd.transfer`, `appName` Stackd, `webDir` `out`. The app ships the static export; it never loads a dev server or a Node server.
+- `npx cap add ios` generated `ios/` on Windows (it needs no Mac with SPM). `ios/App/App/public` and the copied `capacitor.config.json` are git-ignored and made by `cap sync`.
+- Scripts: `npm run ios:prepare` (checks `.env.local` with `scripts/check-ios-env.mjs`, builds, `cap sync ios`), `ios:sync`, `ios:open` (Mac only), `ios:assets`.
+- Lint ignores `ios/**` (the copied build).
+
+**The Xcode project** (`ios/App/App.xcodeproj`, edited by hand and checked with `plistlib`):
+- Bundle ID `app.stackd.transfer`, team `4JNCSTKTHQ`, version 1.0.0 build 1, iPhone only, portrait only, `arm64`.
+- `App.entitlements`: Sign in with Apple.
+- `Info.plist`: URL scheme `app.stackd.transfer`; `ITSAppUsesNonExemptEncryption` false (HTTPS only, nothing custom); dark status bar text (open item 13 for the native app).
+- `StackdBridgeViewController.swift`: registers the Apple plugin and serves the static export by path. Capacitor's own router answers every path without a file extension with the root `index.html` (checked in `node_modules/@capacitor/ios/.../Router.swift`), so a reload on `/settings/` would have drawn Home's HTML; this one serves `settings/index.html`. `SceneDelegate` and `Main.storyboard` use it.
+- `AppleSignInPlugin.swift`: a small local plugin around AuthenticationServices. `@capacitor-community/apple-sign-in` 7.1.0 was tried and dropped: its `Package.swift` needs Capacitor's SPM package below 8.0, so it can't resolve in a Capacitor 8 project. `@capgo/capacitor-social-login` was dropped because it links the Facebook SDK into every app.
+
+**Native sign-in** (`lib/auth/supabase.ts`, `lib/capacitor.ts`, `lib/auth/native.ts`), behind the same `Auth` interface; no screen changed:
+- In the iOS app, `signInWithOAuth` doesn't leave the app, so it returns `redirecting: false` with `newAccount`, the path the screens already had for this.
+- **Apple:** Apple's own sheet with a SHA-256-hashed nonce, then Supabase's `signInWithIdToken` with the raw nonce. Supabase verifies the token; the App ID is already in its Apple Client IDs. Apple shares the first name only on the first sign-in; it's saved the same way as Google's.
+- **Google:** the same PKCE sign-in as the web, in the in-app browser (SFSafariViewController, which Google allows; it forbids embedded web views), returning to `app.stackd.transfer://auth/callback/`. Google's client secret stays in Supabase. Closing the browser is a cancel.
+- Routing is unchanged: a brand-new account goes to onboarding, everyone else Home; cancels show nothing; failures show 06's message on the same screen.
+- `npm run test:oauth` has 13 more checks (31 in all): the app's callback URL, lookalike schemes and paths refused, cancel and expiry through it, and the nonce and its hash.
+
+**Icon and launch screen** (`npm run ios:assets`, `scripts/ios-assets.mjs`):
+- App icon 1024 × 1024, no alpha: the husky head from `husky-welcome.png` on `--sky-200`, framed like the temporary web icons and cut from the source art (so it's a 1.2× resize, not the 512 icon doubled), stopping before the yellow burst marks. Still the temporary icon until `app-icon` art exists (art-assets).
+- Launch image: the wordmark on `--sky-50`.
+
+**Public pages and credits:**
+- `/privacy/`, `/terms/` and `/support/` (12, new spec) replace the placeholders. Privacy was written from the actual tables and code: email, first name, account and provider IDs, the plan, service logs; no analytics, ads or tracking.
+- Settings' footer has a Support link, "Stackd 1.0.0" (`package.json` is 1.0.0 now) and the developer credit (11 updated).
+- **Hosted** at https://joinstackd-chi.vercel.app (a new free Vercel Hobby project, `joinstackd`, on Shikhar's account; `joinstackd.vercel.app` was taken). It's `out/` as built, without the unused source PNGs. `/`, `/welcome/`, `/privacy/`, `/terms/`, `/support/`, `/sign-in/` and `/auth/callback/` answer 200 with no session. This reverses the "no public website for now" decision only as far as App Store review and Google's consent screen need. The old `stackd` Vercel project (stackd-orcin) belongs to the earlier private repo and wasn't touched.
+- Redeploying: `npm run build`, copy `out/` without `art/` (keep `art/brand/*.svg` and `wordmark.png`), then `vercel deploy --prod` in that folder, linked to project `joinstackd`.
+
+**App Store review account:** a disposable account made 2026-10-13 with the app's own calls (anon key): email confirmed with the real code, first name "Taylor", plan Las Positas College → UC San Diego, Computer Science (B.S.), signs in. Its email and random password are in `~/.stackd-secrets/app-review-account.txt` on Shikhar's laptop, never in Git. Don't use it for tests that change or delete the plan.
+
+**Checked on Windows:** lint, `tsc`, `test:db`, `test:import`, `test:oauth` (31), `npm run build`, `cap sync ios`, the plists and storyboard parse, the icon is 1024 × 1024 with no alpha.
+
+**Not done here:**
+- Compiling, running on an iPhone, archiving, uploading, TestFlight, submitting (Mac).
+- Browser steps (the Claude in Chrome extension wasn't connected): Supabase Redirect URLs, publishing Google's consent screen, Apple's relay email source, checking the identifiers in Apple Developer, and the App Store Connect record. See Open items 16–17.
 
 ## Built
 
@@ -355,7 +400,7 @@ Decided 2026-10-09: the listing credits all four of the team, in this order: **R
   - Both throwaway accounts are deleted.
 
 Also in place:
-- **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` pick the signed-in or signed-out version from the session.
+- **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` were placeholders until 2026-10-13; they're real pages now (12).
 - **Shared auth parts** in `components/auth/`: the screen background and top block, the sheet, the social buttons, the password toggle, and the switch line.
 - **Art loading.** `components/art.tsx` renders the real file when it exists in `public/art/` (`.svg` first, then `.png`), looked up in the generated art manifest with its proportions. When a file is missing it renders the labelled placeholder from `art-assets.md`.
 - **Demo strip only where demo records show.** The root layout doesn't render it. A screen renders `<DemoStrip />` when its records carry `"demo": true` (Home and University today), whatever the sign-in mode; `--strip-h` is 0 unless one is on the page (`:root:has([data-demo-strip])`). Home and University are built so far.
@@ -407,6 +452,8 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 13. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
+16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided); they aren't built. Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. If it comes, build the notifications and resubmit.
+17. **Dashboard steps still open (2026-10-13):** Supabase Redirect URLs (Before TestFlight 3), publishing Google's consent screen (5), Apple's relay email source (6), and the App Store Connect record with the fields in `docs/app-store/listing.md`. They need a signed-in browser.
 
 ## Built differently from the specs, and why
 
