@@ -38,8 +38,9 @@ Opened from the gear button on Home's header (02).
 │ │ Delete account             │ │  --coral-700 label
 │ └───────────────────────────┘ │  24
 │ Unofficial planning tool. …   │  footer line
-│      Terms   Privacy          │
-│        Stackd 0.1.0           │  safe-area bottom + 24
+│   Terms   Privacy   Support   │
+│        Stackd 1.0.0           │
+│ Developed by Ryan Saleh, …    │  safe-area bottom + 24
 └───────────────────────────────┘
 ```
 
@@ -122,8 +123,9 @@ Deleting the account must also delete the student's profile, targets, and saved 
 24 below the Delete account container:
 
 - Unofficial footer line (00), centered.
-- 8 below: "Terms" and "Privacy" as small text links (`label` `--blue-600`), centered, 24 apart, 44 hit areas. Placeholder screens until those pages exist. Both are required before App Store review.
-- 8 below: "Stackd {version}", `caption` `--slate-600`, centered, from the app's version number.
+- 8 below: "Terms", "Privacy" and "Support" as small text links (`label` `--blue-600`), centered, 24 apart, 44 hit areas. They open the pages in 12.
+- 8 below: "Stackd {version}", `caption` `--slate-600`, centered, from the app's version number (1.0.0 for the first App Store release).
+- 4 below: "Developed by Ryan Saleh, Shikhar Sisodia, and Antonio Avila.", `caption` `--slate-600`, centered. The exact public credit (`lib/about.ts`, decided 2026-10-12); it wraps to two lines at 320.
 
 ## Motion
 

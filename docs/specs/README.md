@@ -19,6 +19,7 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `09-enter-code.md` | Enter code: the 6-digit code for password reset and email confirmation, the new password step, and the auth interface additions (no mockup) |
 | `10-onboarding.md` | Onboarding: college, transfer schools, and major, saved to the account; also the edit screens Settings opens |
 | `11-settings.md` | Settings: plan answers, change password, sign out, delete account (required by Apple) |
+| `12-legal-and-support.md` | Privacy, Terms and Support: public pages for App Store review, readable signed in or out |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
