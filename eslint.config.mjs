@@ -25,6 +25,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The iOS project: Capacitor copies the built app into ios/App/App/public
+    "ios/**",
   ]),
 ]);
 
