@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-13 (iOS app and App Store prep, below). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-14 (version 1.0 submitted to App Review, below). Before that 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -310,7 +310,12 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - `npm run ios:prepare` with the real `.env.local`: the build has the Supabase URL and no service role key.
 - **Archived and uploaded 2026-10-14: 1.0.0 (1)**, Apple Distribution certificate on team `4JNCSTKTHQ`, App Store profile "Stackd App Store 2026-10" (made with the App Store Connect API; no device was registered, so Xcode's automatic signing couldn't make its development profile). Entitlements in the signed app: Sign in with Apple, `get-task-allow` false. App Store Connect processed it (VALID, non-exempt encryption: no).
 - **TestFlight:** internal group "Internal team" (all builds) with the account holder; build 1 is In Beta Testing.
-- Still to do: the iPhone tests (from TestFlight), screenshots, submit.
+- **Screenshots, 2026-10-14:** five at 1320 × 2868 (no alpha) from the Debug build on the iPhone 17 Pro Max simulator, status bar 9:41 and full battery, signed in as the new account `joinstackd+screens@gmail.com` (first name Taylor; Las Positas College → UC San Diego, Computer Science): 1 Welcome, 2 Home with the plan, 3 onboarding choosing schools, 4 UC San Diego with the official agreement card, 5 Settings (version and four-name credit visible). Uploaded to version 1.0, iPhone 6.9" Display; all five COMPLETE. No founder or personal email on screen.
+- **Simulator checks, 2026-10-14** (same web code as the TestFlight build): wrong password shows "Couldn't sign you in"; onboarding saves the plan; Open on ASSIST opens Safari at assist.org; Settings shows "Stackd 1.0.0" and the four-name credit; Terms, Privacy and Support open and Back returns; force-quit and relaunch keeps the session and plan; Sign out shows "Signed out". The email code was confirmed for the screens account. The review account still signs in and has its profile.
+- **Not tested on an iPhone:** native Sign in with Apple, Google in the in-app browser, forgot password, delete account, keyboard and safe areas on a device. Those need a phone (TestFlight build 1).
+- **Marketing URL** set to https://www.usestackd.app/. Privacy policy and support URLs stay on joinstackd-chi.vercel.app because usestackd.app has no /privacy or /support pages yet.
+- **Submitted for review 2026-10-14 21:43 UTC:** version 1.0 with build 1.0.0 (1). App Store status **Waiting for Review**. Release: automatically after approval. Available in the United States only.
+- App Store seller name: the membership is Individual, so the store shows the account holder as the seller. All four names are in the description, the copyright and the in-app credit. Showing all four as the seller needs an Organization membership (a legal entity and a D-U-N-S number).
 
 **Dashboards, done 2026-10-13 in Chrome:**
 - Apple Developer: membership **Individual**, team `4JNCSTKTHQ`, renews 2027-06-17 (no new payment). App ID `app.stackd.transfer` has Sign In with Apple. `joinstackd@gmail.com` registered as a relay email source (SPF passes).

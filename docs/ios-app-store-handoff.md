@@ -1,5 +1,7 @@
 # iOS App Store handoff (the Mac steps)
 
+**Status 2026-10-14: done through step 8.** Version 1.0, build 1.0.0 (1), was submitted and is **Waiting for Review**. The Mac steps, screenshots and simulator checks are recorded in `docs/build-status.md` (iOS app and App Store prep). The iPhone lines in step 5 for Apple and Google sign-in, forgot password and delete account still need a real device from TestFlight. If App Review rejects for Guideline 4.2, build the deadline notifications next (Known risks below).
+
 Everything that could be done on Windows is done (branch `feat/ios-app-store-prep`). What's left needs macOS with Xcode, a real iPhone, and the Apple account holder. Build from the exact commit named in the pull request, not a later one, unless you mean to.
 
 Time: about 1–2 hours at the Mac, then Apple's processing (minutes to an hour) and review (usually 1–2 days).
