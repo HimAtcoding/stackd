@@ -307,7 +307,10 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 **On the Mac (in progress, 2026-10-13):** Xcode 26.5 (17F42), Node 24.21.0, from `3d6585d`.
 - Lint, `tsc`, `test:db`, `test:import`, `test:oauth` (31) pass. On a fresh clone `tsc` needs `npm run prepare-assets` and `npx next typegen` first (the generated art manifest, seed JSON and `LayoutProps` don't exist until then).
 - Simulator build (iPhone 17 Pro Max, iOS 26.5): **succeeded with no Swift changes and no warnings** in `StackdBridgeViewController.swift`, `AppleSignInPlugin.swift` or the hand-edited `project.pbxproj`. Swift Package Manager resolved `capacitor-swift-pm` 8.5.2; its `Package.resolved` is committed so every build uses that revision.
-- Still to do: run it with the real build (needs `.env.local`), the iPhone tests, archive, upload, TestFlight, screenshots, submit.
+- `npm run ios:prepare` with the real `.env.local`: the build has the Supabase URL and no service role key.
+- **Archived and uploaded 2026-10-14: 1.0.0 (1)**, Apple Distribution certificate on team `4JNCSTKTHQ`, App Store profile "Stackd App Store 2026-10" (made with the App Store Connect API; no device was registered, so Xcode's automatic signing couldn't make its development profile). Entitlements in the signed app: Sign in with Apple, `get-task-allow` false. App Store Connect processed it (VALID, non-exempt encryption: no).
+- **TestFlight:** internal group "Internal team" (all builds) with the account holder; build 1 is In Beta Testing.
+- Still to do: the iPhone tests (from TestFlight), screenshots, submit.
 
 **Dashboards, done 2026-10-13 in Chrome:**
 - Apple Developer: membership **Individual**, team `4JNCSTKTHQ`, renews 2027-06-17 (no new payment). App ID `app.stackd.transfer` has Sign In with Apple. `joinstackd@gmail.com` registered as a relay email source (SPF passes).
