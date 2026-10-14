@@ -10,7 +10,7 @@
     "prepare-assets": "node scripts/prepare-assets.mjs",
     "predev": "npm run prepare-assets",
     "prebuild": "npm run prepare-assets",
-    "postbuild": "node scripts/fix-export-segments.mjs && node scripts/check-service-key.mjs",
+    "postbuild": "node scripts/fix-export-segments.mjs && node scripts/prune-export-art.mjs && node scripts/check-service-key.mjs",
     "test:db": "node scripts/test-migrations.mjs",
     "import": "node scripts/import/run.mjs",
     "import:verify": "node scripts/import/verify.mjs",

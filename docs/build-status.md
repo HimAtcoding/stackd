@@ -245,11 +245,11 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 ## Before TestFlight
 
 Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
-1. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
+1. ~~Move the source PNGs out of the app bundle.~~ Done 2026-10-13 another way: `scripts/prune-export-art.mjs` runs after every build and deletes the raster files in `out/art` that the code never names directly (the app shows art from the WebP copies in `/_art`). `public/art` stays the source. 11 files, 24.7 MB removed; `out/` and the iOS bundle went from 32 MB to 7.9 MB. Welcome and Sign in checked on the served build: every art request answered 200.
 2. **Make a new Apple client secret before 2027-04-10.** Run `npm run apple:secret -- <AuthKey_B5ZPA5GGWL.p8> 4JNCSTKTHQ B5ZPA5GGWL app.stackd.transfer.signin <file outside the repo>`. Then paste the result into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. After that date Apple sign-in on the web fails until it's replaced. The `.p8` can't be downloaded from Apple again; if it's lost, revoke the key and make a new one.
 3. ~~Add the real app's address to Supabase's Redirect URLs.~~ Done 2026-10-13: `app.stackd.transfer://auth/callback/` and `https://joinstackd-chi.vercel.app/auth/callback/` added next to the two `localhost` ones (4 in all). Site URL unchanged.
 4. ~~Native Sign in with Apple in the iOS app.~~ Written 2026-10-13 (iOS app, below); not compiled or tested until the Mac.
-5. **Publish Google's consent screen.** Branding done 2026-10-13: home page `https://joinstackd-chi.vercel.app/support/`, privacy and terms links, and `joinstackd-chi.vercel.app` added to the authorized domains (no logo, so no verification). Still in Testing: the last click (Google Auth Platform → Audience → Publish app) is for a founder to make. Until then only the listed test users can use Continue with Google. The authorized domains still list `stackd-orcin.vercel.app` and `bizdktmpigidfnvaggjk.supabase.co` from the old private project; they do nothing and can be deleted.
+5. ~~Publish Google's consent screen.~~ Done 2026-10-13: branding (home page `https://joinstackd-chi.vercel.app/support/`, privacy, terms, authorized domain `joinstackd-chi.vercel.app`, no logo so no verification), and the consent screen is **In production**, so any Google account can use Continue with Google. The authorized domains still list `stackd-orcin.vercel.app` and `bizdktmpigidfnvaggjk.supabase.co` from the old private project; they do nothing and can be deleted.
 6. ~~Register Apple's private relay email source.~~ Done 2026-10-13: `joinstackd@gmail.com` is registered (Sign in with Apple for Email Communication) and passed Apple's SPF check.
 
 ## Before the App Store listing
@@ -294,7 +294,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - `/privacy/`, `/terms/` and `/support/` (12, new spec) replace the placeholders. Privacy was written from the actual tables and code: email, first name, account and provider IDs, the plan, service logs; no analytics, ads or tracking.
 - Settings' footer has a Support link, "Stackd 1.0.0" (`package.json` is 1.0.0 now) and the developer credit (11 updated).
 - **Hosted** at https://joinstackd-chi.vercel.app (a new free Vercel Hobby project, `joinstackd`, on Shikhar's account; `joinstackd.vercel.app` was taken). It's `out/` as built, without the unused source PNGs. `/`, `/welcome/`, `/privacy/`, `/terms/`, `/support/`, `/sign-in/` and `/auth/callback/` answer 200 with no session. This reverses the "no public website for now" decision only as far as App Store review and Google's consent screen need. The old `stackd` Vercel project (stackd-orcin) belongs to the earlier private repo and wasn't touched.
-- Redeploying: `npm run build`, copy `out/` without `art/` (keep `art/brand/*.svg` and `wordmark.png`), then `vercel deploy --prod` in that folder, linked to project `joinstackd`.
+- Redeploying: `npm run build` (it already drops the unused PNGs), copy `out/` into a folder linked to Vercel project `joinstackd`, then `vercel deploy --prod` there.
 
 **App Store review account:** a disposable account made 2026-10-13 with the app's own calls (anon key): email confirmed with the real code, first name "Taylor", plan Las Positas College → UC San Diego, Computer Science (B.S.), signs in. Its email and random password are in `~/.stackd-secrets/app-review-account.txt` on Shikhar's laptop, never in Git. Don't use it for tests that change or delete the plan.
 
@@ -302,7 +302,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 
 **Not done here:**
 - Compiling, running on an iPhone, archiving, uploading, TestFlight, submitting (Mac).
-- Google's last Publish click (Before TestFlight 5) and accepting Apple's updated Developer Program License Agreement (the account holder only). See Open items 16–17.
+- Nothing on the dashboards: Google's consent screen is published and Apple's updated Developer Program License Agreement was accepted (2026-10-13, at the founder's request). See Open items 16–17.
 
 **Dashboards, done 2026-10-13 in Chrome:**
 - Apple Developer: membership **Individual**, team `4JNCSTKTHQ`, renews 2027-06-17 (no new payment). App ID `app.stackd.transfer` has Sign In with Apple. `joinstackd@gmail.com` registered as a relay email source (SPF passes).
@@ -440,7 +440,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 ## Open items
 
 1. **WebKit crashes on Back to Create account.** In Playwright's WebKit on Windows, any history Back that lands on `/sign-up/` (from Terms, or from Enter code) crashes the page. Back to Sign in, Welcome or Forgot password is fine. It happens with or without step 10's changes, so it predates them. Check on a real iPhone in Safari; if it happens there too, bisect the Create account screen (its fields, the terms links).
-2. **`out/` is 31 MB, mostly unused PNGs.** `public/art` is copied into the export as is, but the app only loads the WebP copies in `public/_art` (and the SVGs). Before the iOS app ships, move the source PNGs out of `public/` so the app bundle doesn't carry them.
+2. ~~`out/` is 31 MB, mostly unused PNGs.~~ Fixed 2026-10-13 (Before TestFlight 1): 7.9 MB.
 3. **Building next to a running dev server.** The build's type check also reads `.next/dev/types`, which still lists routes that were renamed or removed until the dev server regenerates it. If the build fails on `.next/dev/types/validator.ts`, stop the dev server and delete `.next/dev/types`. (See also: don't run `next build` while the dev server is running.)
 4. **A phone can hold stale dev CSS.** A page opened before a change keeps the stylesheet it first loaded. Navigating inside the app (for example Create account → Home) fetches the new code but not the new CSS unless the dev server's live-reload connection is up. Home then showed the header against the screen edges, no dash, and the husky dropped into the tiles, all from missing utility classes. Fix: pull to refresh, or open `/dev/reset`, which ends in a full page load.
 5. **Don't run `next build` while the dev server is running.** On 2026-10-04 a production build next to a running `next dev` left the dev server answering every new route with "Jest worker encountered 2 child process exceptions". Restarting the dev server fixed it. Stop the dev server first, or build from a separate checkout.
@@ -459,7 +459,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
 16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided); they aren't built. Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. If it comes, build the notifications and resubmit.
-17. **Two clicks only a founder can make (2026-10-13):** Google Auth Platform → Audience → **Publish app** (Before TestFlight 5), and accepting Apple's **updated Developer Program License Agreement** (developer.apple.com/account, account holder only; App Store Connect won't take a new submission until it's accepted). Everything else on the dashboards is done (iOS app and App Store prep → Dashboards).
+17. ~~Two clicks only a founder can make.~~ Both done 2026-10-13: Google's consent screen published, and Apple's updated Developer Program License Agreement accepted (it was blocking new submissions on the whole account).
 
 ## Built differently from the specs, and why
 

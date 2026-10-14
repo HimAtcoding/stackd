@@ -18,7 +18,7 @@ Time: about 1–2 hours at the Mac, then Apple's processing (minutes to an hour)
   ```
   Never put the service role key in this file.
 - The App Store Connect record already exists and is filled in: **"Stackd: Transfer Planner"**, Apple ID `6822523006` ("Stackd" alone was taken). Only the build and screenshots are missing.
-- Before submitting, the account holder must accept Apple's updated Developer Program License Agreement (developer.apple.com/account).
+- Apple's updated Developer Program License Agreement was accepted on 2026-10-13, and Google sign-in is published for everyone.
 
 ## 0. Check once (Supabase dashboard; set 2026-10-13)
 
