@@ -37,6 +37,8 @@ git checkout <SHA from the pull request>
 npm ci
 ```
 
+Before `npx tsc --noEmit` on a fresh clone, run `npm run prepare-assets` and `npx next typegen` once; `tsc` needs the files they generate.
+
 Create `.env.local` with the two lines above.
 
 ## 2. Build the app and copy it into the iOS project

@@ -304,6 +304,11 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - Compiling, running on an iPhone, archiving, uploading, TestFlight, submitting (Mac).
 - Nothing on the dashboards: Google's consent screen is published and Apple's updated Developer Program License Agreement was accepted (2026-10-13, at the founder's request). See Open items 16–17.
 
+**On the Mac (in progress, 2026-10-13):** Xcode 26.5 (17F42), Node 24.21.0, from `3d6585d`.
+- Lint, `tsc`, `test:db`, `test:import`, `test:oauth` (31) pass. On a fresh clone `tsc` needs `npm run prepare-assets` and `npx next typegen` first (the generated art manifest, seed JSON and `LayoutProps` don't exist until then).
+- Simulator build (iPhone 17 Pro Max, iOS 26.5): **succeeded with no Swift changes and no warnings** in `StackdBridgeViewController.swift`, `AppleSignInPlugin.swift` or the hand-edited `project.pbxproj`. Swift Package Manager resolved `capacitor-swift-pm` 8.5.2; its `Package.resolved` is committed so every build uses that revision.
+- Still to do: run it with the real build (needs `.env.local`), the iPhone tests, archive, upload, TestFlight, screenshots, submit.
+
 **Dashboards, done 2026-10-13 in Chrome:**
 - Apple Developer: membership **Individual**, team `4JNCSTKTHQ`, renews 2027-06-17 (no new payment). App ID `app.stackd.transfer` has Sign In with Apple. `joinstackd@gmail.com` registered as a relay email source (SPF passes).
 - Supabase: the two redirect URLs (Before TestFlight 3).
