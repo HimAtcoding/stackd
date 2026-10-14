@@ -17,9 +17,10 @@ Time: about 1–2 hours at the Mac, then Apple's processing (minutes to an hour)
   NEXT_PUBLIC_SUPABASE_ANON_KEY=<the anon key from Supabase → Project Settings → API>
   ```
   Never put the service role key in this file.
-- Before testing Google sign-in, Supabase must allow the app's return address (step 0).
+- The App Store Connect record already exists and is filled in: **"Stackd: Transfer Planner"**, Apple ID `6822523006` ("Stackd" alone was taken). Only the build and screenshots are missing.
+- Before submitting, the account holder must accept Apple's updated Developer Program License Agreement (developer.apple.com/account).
 
-## 0. Check once (Supabase dashboard)
+## 0. Check once (Supabase dashboard; set 2026-10-13)
 
 Supabase → Authentication → URL Configuration → Redirect URLs must include:
 - `app.stackd.transfer://auth/callback/` (the iOS app's Google sign-in return)

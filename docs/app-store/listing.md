@@ -1,6 +1,6 @@
 # App Store listing (version 1.0)
 
-Everything App Store Connect asks for, ready to paste. Written 2026-10-13 from the code on `feat/ios-app-store-prep`. Re-check the privacy answers whenever what the app collects changes (`docs/specs/12-legal-and-support.md`).
+Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat/ios-app-store-prep`, and **entered in App Store Connect the same day** (app record "Stackd: Transfer Planner", Apple ID `6822523006`, version 1.0 Prepare for Submission). Only the build and the screenshots are missing; they come from the Mac. Re-check the privacy answers whenever what the app collects changes (`docs/specs/12-legal-and-support.md`).
 
 ## Credits
 
@@ -13,22 +13,25 @@ Everything App Store Connect asks for, ready to paste. Written 2026-10-13 from t
 | Field | Value |
 |---|---|
 | Platform | iOS (iPhone only; `TARGETED_DEVICE_FAMILY = 1`) |
-| Name | Stackd |
+| Name | **Stackd: Transfer Planner**. Plain "Stackd" is already taken on the App Store by another developer. The home-screen name under the icon is still "Stackd" (`CFBundleDisplayName`). The store name can be changed until the version is submitted |
+| Apple ID | `6822523006` |
 | Bundle ID | `app.stackd.transfer` |
 | SKU | `stackd-ios-1` |
 | Primary language | English (U.S.) |
 | Version | 1.0 (the binary is 1.0.0, build 1) |
 | Primary category | Education |
 | Secondary category | None |
-| Price | Free, all countries and regions the founders pick (start with the United States) |
+| Price | Free ($0.00 in all regions) |
+| Availability | United States only (Stackd is for California students); widen it in Pricing and Availability |
+| User access | Full Access |
 | In-app purchases / subscriptions | None |
 
 ## Product page
 
-**Subtitle** (27 of 30 characters):
+**Subtitle** (29 of 30 characters). Changed from "California transfer planner" because the store name already says "Transfer Planner":
 
 ```
-California transfer planner
+Plan your California transfer
 ```
 
 **Promotional text** (optional, 170 max):

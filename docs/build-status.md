@@ -247,10 +247,10 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
 1. **Move the source PNGs out of `public/`**, so the app bundle doesn't carry about 25 MB of art it never loads (Open items).
 2. **Make a new Apple client secret before 2027-04-10.** Run `npm run apple:secret -- <AuthKey_B5ZPA5GGWL.p8> 4JNCSTKTHQ B5ZPA5GGWL app.stackd.transfer.signin <file outside the repo>`. Then paste the result into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. After that date Apple sign-in on the web fails until it's replaced. The `.p8` can't be downloaded from Apple again; if it's lost, revoke the key and make a new one.
-3. **Add the real app's address to Supabase's Redirect URLs** (Authentication → URL Configuration), next to the `localhost` ones: `app.stackd.transfer://auth/callback/` (the iOS app's Google return) and `https://joinstackd-chi.vercel.app/auth/callback/` (the hosted website). Not done yet: it needs the dashboard (`docs/ios-app-store-handoff.md` step 0).
+3. ~~Add the real app's address to Supabase's Redirect URLs.~~ Done 2026-10-13: `app.stackd.transfer://auth/callback/` and `https://joinstackd-chi.vercel.app/auth/callback/` added next to the two `localhost` ones (4 in all). Site URL unchanged.
 4. ~~Native Sign in with Apple in the iOS app.~~ Written 2026-10-13 (iOS app, below); not compiled or tested until the Mac.
-5. **Publish Google's consent screen** (Google Auth Platform → Audience → Publish app). The hosted home, privacy and terms pages exist since 2026-10-13, so only the dashboard step is left. Until then only the listed test users (up to 100) can use Continue with Google.
-6. **Register Apple's private relay email source** (Apple Developer → Certificates, IDs & Profiles → Services → Sign in with Apple for Email Communication): `joinstackd@gmail.com`, the address the code emails come from. Until then a student who chose Hide My Email doesn't get the confirm or reset code.
+5. **Publish Google's consent screen.** Branding done 2026-10-13: home page `https://joinstackd-chi.vercel.app/support/`, privacy and terms links, and `joinstackd-chi.vercel.app` added to the authorized domains (no logo, so no verification). Still in Testing: the last click (Google Auth Platform → Audience → Publish app) is for a founder to make. Until then only the listed test users can use Continue with Google. The authorized domains still list `stackd-orcin.vercel.app` and `bizdktmpigidfnvaggjk.supabase.co` from the old private project; they do nothing and can be deleted.
+6. ~~Register Apple's private relay email source.~~ Done 2026-10-13: `joinstackd@gmail.com` is registered (Sign in with Apple for Email Communication) and passed Apple's SPF check.
 
 ## Before the App Store listing
 
@@ -302,7 +302,13 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 
 **Not done here:**
 - Compiling, running on an iPhone, archiving, uploading, TestFlight, submitting (Mac).
-- Browser steps (the Claude in Chrome extension wasn't connected): Supabase Redirect URLs, publishing Google's consent screen, Apple's relay email source, checking the identifiers in Apple Developer, and the App Store Connect record. See Open items 16–17.
+- Google's last Publish click (Before TestFlight 5) and accepting Apple's updated Developer Program License Agreement (the account holder only). See Open items 16–17.
+
+**Dashboards, done 2026-10-13 in Chrome:**
+- Apple Developer: membership **Individual**, team `4JNCSTKTHQ`, renews 2027-06-17 (no new payment). App ID `app.stackd.transfer` has Sign In with Apple. `joinstackd@gmail.com` registered as a relay email source (SPF passes).
+- Supabase: the two redirect URLs (Before TestFlight 3).
+- Google: branding links and authorized domain (Before TestFlight 5; Publish still open).
+- **App Store Connect:** record **"Stackd: Transfer Planner"** (Apple ID `6822523006`; "Stackd" alone is taken by another developer), bundle `app.stackd.transfer`, SKU `stackd-ios-1`, English (U.S.), Education, Free, United States. Version 1.0 has the description (ending in the four-name credit), promotional text, keywords, support URL, copyright with all four names, sign-in required with the review account, contact `joinstackd@gmail.com`, and the review notes; all re-read after a reload. Subtitle "Plan your California transfer". Content rights answered. Age rating 4+. App Privacy published: name, email, user ID and other user content, App Functionality only, linked, no tracking. Privacy policy URL set. Missing: the build and screenshots (Mac).
 
 ## Built
 
@@ -453,7 +459,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
 16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided); they aren't built. Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. If it comes, build the notifications and resubmit.
-17. **Dashboard steps still open (2026-10-13):** Supabase Redirect URLs (Before TestFlight 3), publishing Google's consent screen (5), Apple's relay email source (6), and the App Store Connect record with the fields in `docs/app-store/listing.md`. They need a signed-in browser.
+17. **Two clicks only a founder can make (2026-10-13):** Google Auth Platform → Audience → **Publish app** (Before TestFlight 5), and accepting Apple's **updated Developer Program License Agreement** (developer.apple.com/account, account holder only; App Store Connect won't take a new submission until it's accepted). Everything else on the dashboards is done (iOS app and App Store prep → Dashboards).
 
 ## Built differently from the specs, and why
 
