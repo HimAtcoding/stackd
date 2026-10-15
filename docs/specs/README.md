@@ -19,7 +19,8 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `09-enter-code.md` | Enter code: the 6-digit code for password reset and email confirmation, the new password step, and the auth interface additions (no mockup) |
 | `10-onboarding.md` | Onboarding: college, transfer schools, and major, saved to the account; also the edit screens Settings opens |
 | `11-settings.md` | Settings: plan answers, change password, sign out, delete account (required by Apple) |
-| `12-legal-and-support.md` | Privacy, Terms and Support: public pages for App Store review, readable signed in or out |
+| `12-legal-and-support.md` | Privacy, Terms and Support: public pages for App Store review, readable signed in or out (from PR #2) |
+| `13-v1-launch.md` | What the first App Store version shows and hides, the review account, and release-build checks |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
@@ -63,6 +64,8 @@ Each step depends on the one before it.
 | 11 | Onboarding, saved to the account | `10`, `07`, `09` | The test list in `10` passes with a real account |
 | 12 | Home plan states, the gear button, and the official agreement card on University | `02 → Plan states`, `03 → Real accounts` | Both rev 3 test lists pass with a real account, and no demo strip shows |
 | 13 | Settings: plan rows, change password, sign out, delete account | `11` | The test list in `11` passes with a real account |
+| 14 | v1 launch build: feature flags, no dead ends, production cleanup | `13` | The test list in `13` passes on a release build |
+| 15 | iOS app with Capacitor: project, icon, launch screen, signing, TestFlight (done in PR #2; build 2 adds step 14) | `13`, `docs/13-distribution-and-app-store.md` | The app runs on a real iPhone from Xcode and a build is in TestFlight |
 
 ## Prompt template for Claude Code
 
@@ -100,7 +103,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `12-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `14-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 
