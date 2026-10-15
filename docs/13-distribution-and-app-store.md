@@ -1,6 +1,6 @@
 # Distribution, growth, and the App Store question
 
-> **Decided October 2026:** the team chose **App Store first**, packaging the existing app with **Capacitor**, with **push notifications** for deadlines as the native feature Apple's Guideline 4.2 requires. No public website for now. The reasoning below is kept for reference; the SEO section applies only if a web version is added later. See `16-open-questions.md → Decided`.
+> **Decided October 2026:** the team chose **App Store first**, packaging the existing app with **Capacitor**, with **push notifications** for deadlines as the native feature Apple's Guideline 4.2 requires. No public website for now; since 2026-10-13 the static app is hosted at https://joinstackd-chi.vercel.app only because App Store review and Google's consent screen need public Privacy, Terms and Support pages. The reasoning below is kept for reference; the SEO section applies only if a web version is added later. See `16-open-questions.md → Decided`.
 
 ## Launch locally
 

@@ -15,6 +15,7 @@ import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
+import { DEVELOPER_CREDIT } from "@/lib/about";
 import { auth } from "@/lib/auth";
 import { setCarriedEmail } from "@/lib/auth/email-store";
 import { inlineErrorCopy } from "@/lib/auth/messages";
@@ -172,8 +173,12 @@ export function SettingsScreen() {
           <TextLink href="/privacy" size="label" className="-mx-2.5 px-2.5">
             Privacy
           </TextLink>
+          <TextLink href="/support/" size="label" className="-mx-2.5 px-2.5">
+            Support
+          </TextLink>
         </p>
         <p className="mt-2 text-slate-600 tabular-nums type-caption">Stackd {process.env.NEXT_PUBLIC_APP_VERSION}</p>
+        <p className="mt-1 text-slate-600 type-caption">{DEVELOPER_CREDIT}</p>
       </footer>
 
       <BottomSheet

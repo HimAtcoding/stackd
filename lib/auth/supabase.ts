@@ -5,9 +5,11 @@ import {
   type AuthError as SupabaseAuthError,
   type User,
 } from "@supabase/supabase-js";
+import { authorizeWithApple, isNativeApp, openForCallback } from "@/lib/capacitor";
 import { clearPlan } from "@/lib/data/plan";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
+import { createNonce, isNativeCallback, NATIVE_CALLBACK_URL } from "./native";
 import { EXPIRED, OAUTH_CALLBACK_PATH, readCallbackParams, rememberOAuth, takePendingOAuth } from "./oauth";
 import type { Auth, AuthError, AuthResult, OAuthProvider, OAuthResult, OAuthReturn, SignUpResult } from "./types";
 
@@ -60,11 +62,12 @@ function providerFirstName(meta: Record<string, unknown>): string | null {
 
 // Greets an Apple or Google student by name when there is one. A name already on the account always wins;
 // a shared one is saved to the account so other devices have it too. With none, Home says "Hi there!" (02).
-async function rememberOAuthName(user: User) {
+// In the iOS app, Apple's sheet hands the name over itself (appleName); it's never in Apple's identity token.
+async function rememberOAuthName(user: User, appleName: string | null = null) {
   const meta = user.user_metadata ?? {};
   const saved = clean(meta.first_name);
   if (saved) return cacheFirstName(saved);
-  const shared = providerFirstName(meta);
+  const shared = providerFirstName(meta) ?? appleName;
   // Never keep a name cached from someone else's session on this device
   if (!shared) return removeStorage("stackd.profile");
   cacheFirstName(shared);
@@ -110,6 +113,55 @@ async function run<T extends AuthResult | SignUpResult | OAuthResult>(fn: () => 
   }
 }
 
+// Exchanges the one-time code Apple or Google sent back (web: /auth/callback/; iOS app: the in-app browser's return)
+async function exchangeReturn(href: string, provider: OAuthProvider | null): Promise<OAuthReturn> {
+  const failed = (error: AuthError): OAuthReturn => ({ ok: false, error, provider });
+  const params = readCallbackParams(href);
+  if (params.kind === "error") return failed(params.error === "cancelled" ? "oauth_cancelled" : params.error === "expired" ? "oauth_expired" : "oauth_failed");
+  if (params.kind === "none") return failed("oauth_failed");
+  try {
+    const { data, error } = await client().auth.exchangeCodeForSession(params.code);
+    if (error) {
+      if (process.env.NODE_ENV === "development") console.error("OAuth code exchange failed", error.code ?? error.name);
+      if (isAuthRetryableFetchError(error)) return failed("network");
+      return failed(EXPIRED.has(error.code ?? "") ? "oauth_expired" : "oauth_failed");
+    }
+    await rememberOAuthName(data.user).catch(() => {});
+    return { ok: true, newAccount: isNewAccount(data.user) };
+  } catch (e) {
+    return failed(isAuthApiError(e) ? "oauth_failed" : "network");
+  }
+}
+
+// iOS app, Apple: Apple's own sheet, then Supabase checks Apple's identity token (signInWithIdToken). The App ID
+// app.stackd.transfer is in Supabase's Apple Client IDs. Nothing leaves the app, so the screen routes as soon as it's done.
+async function signInWithAppleNative(): Promise<OAuthResult | Failure> {
+  const nonce = await createNonce();
+  const apple = await authorizeWithApple(nonce.hashed);
+  if (!apple.ok) return fail(apple.cancelled ? "oauth_cancelled" : "oauth_failed");
+  const { data, error } = await client().auth.signInWithIdToken({ provider: "apple", token: apple.identityToken, nonce: nonce.raw });
+  if (error || !data.user) {
+    if (process.env.NODE_ENV === "development" && error) console.error("Apple ID token sign-in failed", error.code ?? error.name);
+    return fail(error && isAuthRetryableFetchError(error) ? "network" : "oauth_failed");
+  }
+  await rememberOAuthName(data.user, apple.givenName).catch(() => {});
+  return { ok: true, redirecting: false, newAccount: isNewAccount(data.user) };
+}
+
+// iOS app, Google: the same PKCE sign-in as the web, in the in-app browser, returning to the app's own scheme.
+// Google's client secret stays in Supabase. Closing the browser is a cancel.
+async function signInInAppBrowser(provider: OAuthProvider): Promise<OAuthResult | Failure> {
+  const { data, error } = await client().auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: NATIVE_CALLBACK_URL, skipBrowserRedirect: true },
+  });
+  if (error || !data.url) return fail("oauth_failed");
+  const back = await openForCallback(data.url, isNativeCallback);
+  if (back.kind === "closed") return fail("oauth_cancelled");
+  const result = await exchangeReturn(back.url, provider);
+  return result.ok ? { ok: true, redirecting: false, newAccount: result.newAccount } : fail(result.error);
+}
+
 export const supabaseAuth: Auth = {
   signInWithPassword: (email, password) =>
     run(async () => {
@@ -139,6 +191,7 @@ export const supabaseAuth: Auth = {
   signInWithOAuth: (provider) =>
     run(async (): Promise<OAuthResult | Failure> => {
       if (!(await providerEnabled(provider))) return fail("oauth_failed");
+      if (isNativeApp()) return provider === "apple" ? signInWithAppleNative() : signInInAppBrowser(provider);
       rememberOAuth(provider);
       const { data, error } = await client().auth.signInWithOAuth({
         provider,
@@ -149,25 +202,7 @@ export const supabaseAuth: Auth = {
       return { ok: true, redirecting: true };
     }),
 
-  async finishOAuth(href) {
-    const provider = takePendingOAuth();
-    const failed = (error: AuthError): OAuthReturn => ({ ok: false, error, provider });
-    const params = readCallbackParams(href);
-    if (params.kind === "error") return failed(params.error === "cancelled" ? "oauth_cancelled" : params.error === "expired" ? "oauth_expired" : "oauth_failed");
-    if (params.kind === "none") return failed("oauth_failed");
-    try {
-      const { data, error } = await client().auth.exchangeCodeForSession(params.code);
-      if (error) {
-        if (process.env.NODE_ENV === "development") console.error("OAuth code exchange failed", error.code ?? error.name);
-        if (isAuthRetryableFetchError(error)) return failed("network");
-        return failed(EXPIRED.has(error.code ?? "") ? "oauth_expired" : "oauth_failed");
-      }
-      await rememberOAuthName(data.user).catch(() => {});
-      return { ok: true, newAccount: isNewAccount(data.user) };
-    } catch (e) {
-      return failed(isAuthApiError(e) ? "oauth_failed" : "network");
-    }
-  },
+  finishOAuth: (href) => exchangeReturn(href, takePendingOAuth()),
 
   sendPasswordReset: (email) =>
     run(async () => {
