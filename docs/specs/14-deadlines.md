@@ -1,6 +1,6 @@
 # 14 · Deadlines and reminders
 
-Release: v1.1. Flags: `upcoming` (Home's Up next), `deadlines` (the Deadlines screen), `reminders` (notifications), `customDeadlines` (dates a student adds). No mockup yet: this spec is the design brief for one, and every value comes from `00-foundations.md` plus the additions listed at the end.
+Release: v1.1. Flags: `upcoming` (Home's Up next), `getReady` (Home's Get ready card), `deadlines` (the Deadlines screen), `reminders` (notifications), `customDeadlines` (dates a student adds). Mockup: `../mockup/mockup-home-deadlines.png` (Home with Up next and Get ready, October 2026). The Deadlines screen and sheets have no mockup yet; build them from this spec. Every value comes from `00-foundations.md` plus the additions listed at the end.
 
 ## Why this screen exists
 
@@ -89,7 +89,7 @@ Each must be checked on its official page before import; the "Confirm on" column
 
 ## Home: Up next (flag `upcoming`)
 
-Home gains one section under the plan card, so the screen reads top to bottom as *who you are, where you're going, what's next.*
+Home gains two things under the plan card, so the screen reads top to bottom as *who you are, where you're going, what's due, and what's left to do*: the Up next stack, then the Get ready card.
 
 ```
 ┌───────────────────────────────┐
@@ -109,6 +109,8 @@ Home gains one section under the plan card, so the screen reads top to bottom as
 │  └ Nov 30  Cal State Apply ┘  │  layer 2 peek, 24 tall
 │    └ Jan 31  UC update ───┘   │  layer 3 peek, 24 tall
 │                               │  24
+│ ┌ ◔ Get your UC application ┐ │  Get ready card (below)
+│ └───────────────────────────┘ │  24
 │ Unofficial planning tool. …   │
 └───────────────────────────────┘
 ```
@@ -126,7 +128,7 @@ A single button (the whole stack), margins 16, 12 below the header. Its parts:
 
 | Part | Spec |
 |---|---|
-| Countdown block | Left column, width 72. The number in the new `countdown` type (56/52, 900, -0.03em, tabular-nums), `--navy-900`. Under it, 2 gap, "days left" (or "day left" for 1) in `caption` `--slate-600`. When the due date is 14 days away or less, the number turns `--coral-700`. On the due day the number is replaced by "Today" in `title-1` `--coral-700` and the label reads "due tonight" |
+| Countdown block | Left column, width 72. The number in the new `countdown` type (56/52, 900, -0.03em, tabular-nums), `--navy-900`. Under it, 2 gap, "days left" (regular weight, as the mockup's second version drew it) (or "day left" for 1) in `caption` `--slate-600`. When the due date is 14 days away or less, the number turns `--coral-700`. On the due day the number is replaced by "Today" in `title-1` `--coral-700` and the label reads "due tonight" |
 | Text column | 16 gap from the countdown. Title `headline` `--navy-900`, single line. Then 4 below, `body` `--slate-700`: "Due Monday, Nov 30", and on the next line "11:59 p.m. Pacific" (or "Date varies by campus" when `varies_by_campus`). If the student has more than one school in the audience, a third line in `caption` `--slate-600`: "For UC San Diego" or "For your 3 UC schools" |
 | Window bar | Only when the item has `opens_at` and the window is open. 16 below the columns, full inner width, 6 tall, `--r-full`. Track `--blue-100`; fill `--blue-600` from the start to today's position (coral when 14 days or less remain). Today marker: a 2 × 14 `--navy-900` bar, radius 1, centered on today's position. Under the bar, 6 below, two `caption` `--slate-600` labels: "Opened Oct 1" left, "Nov 30" right. Before the window opens: track only, labels "Opens Oct 1" and "Nov 30". `aria-hidden`; the button's label carries the meaning |
 
@@ -152,6 +154,75 @@ Each peek layer has `--r-lg` corners and sits so its top is hidden behind the la
 | Nothing upcoming in the cycle | No stack. One `body` `--slate-600` line at x 24: "No deadlines coming up for fall 2027. We add the next cycle when schools publish their dates." |
 | Loading (over 600 ms) | The stack's outline at its real size in `--stack-2`, no text, no spinner. Home doesn't jump when it loads |
 | Couldn't load | The section hides, so Home is never broken by it. The Deadlines screen shows the error instead |
+
+## Home: Get ready card (flag `getReady`)
+
+The stack says *when*. This card says *what's left*: the steps of the application that's due next, which the student checks off themselves. It sits 24 below the stack, and the footer line moves 24 below it.
+
+```
+│ ┌───────────────────────────┐ │
+│ │ ◔    Get your UC          │ │  ring 56; title-3, wraps to 2 lines
+│ │2of6  application ready    │ │
+│ │      4 steps left before  │ │  body --slate-600
+│ │      Nov 30               │ │
+│ │ ○  Write your personal    │ │  16; next two unchecked steps
+│ │    insight answers        │ │
+│ │ ○  Add activities and     │ │
+│ │    awards                 │ │
+│ │           See all 6 steps │ │  link, right
+│ └───────────────────────────┘ │
+```
+
+| Part | Spec |
+|---|---|
+| Card | Card (00), margins 16, padding 16 |
+| Ring | 56 × 56, top-left. Progress ring: 5 px stroke, track `--blue-100`, arc `--blue-600`, starting at 12 o'clock and running clockwise, round caps. Center: "{done} of {total}" in `label` (14/18 600) `--navy-900`, tabular-nums. All done: the ring becomes a filled `--green-600` circle with a white `Check` bold 24, and the center text is removed. `aria-hidden` (the card's label carries it) |
+| Title | 16 right of the ring, top-aligned: "Get your UC application ready" (or "Get your Cal State Apply ready"), `title-3` (18/24 700) `--navy-900`, up to 2 lines |
+| Subtitle | 4 below: "{n} steps left before Nov 30" in `body` `--slate-600`. One left: "1 step left before Nov 30". Not repeating the next step here, because the list below already shows it (the first mockup drew "Next: …", which said it twice) |
+| Step list | 16 below the ring or the subtitle, whichever is lower. The next two unchecked steps, in order. Each row: min height 44, the status icon (00) "not started" ring 24 at left, 16 gap, the step in `body-md` `--navy-900`, up to 2 lines. Tapping the ring checks the step off (the same status control as 03: `role="checkbox"`, fill animation, toast "Marked complete" with "Undo"). Tapping the text opens the steps sheet at that step |
+| Link | "See all {total} steps", text link (`label` `--blue-600`), right-aligned, 8 below the list, 44 hit area. Opens the steps sheet |
+
+**Which checklist shows**: the one for the application with the nearest upcoming due date among the student's systems. UC-only plan: UC. CSU-only plan: Cal State Apply. Both: the one due first (on a tie, UC, then the other after it's done). No plan: the UC checklist, since most students in the first slice target a UC.
+
+**When every step is done**: the green ring, the title "Your UC application is ready", the subtitle "Submit it by Nov 30, 11:59 p.m. Pacific." and no list. After the due date passes, the card disappears.
+
+### The steps
+
+Stored like the deadlines: a `checklists` record per application per cycle, `checklist_steps` with the step's title, a one-sentence summary in our own words, and the source, and `user_checklist_steps` (`user_id`, `step_id`, `done_at`) with owner-only row-level security. Steps are written in Stackd's own words from the official "how to apply" pages, and confirmed there before import.
+
+| # | UC application (fall 2027) | Summary for the sheet |
+|---|---|---|
+| 1 | Pick your campuses and majors | Choose which UC campuses to apply to and your major at each. The fee is per campus. |
+| 2 | Enter your courses and grades | Type in every college course and grade from your transcripts. UC uses what you enter. |
+| 3 | Write your personal insight answers | Transfer applicants answer a set number of short questions, including one required question. Check the current rules on UC's page. |
+| 4 | Add activities and awards | List work, family responsibilities, clubs, volunteering, and awards. |
+| 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
+| 6 | Submit by Nov 30 | Submit before 11:59 p.m. Pacific on November 30, 2026. |
+
+| # | Cal State Apply (fall 2027) | Summary |
+|---|---|---|
+| 1 | Pick your campuses and majors | Choose which CSU campuses and programs to apply to. |
+| 2 | Enter your courses and grades | Enter your college coursework and grades from your transcripts. |
+| 3 | Add your work and activities | Some campuses and programs use this; check yours. |
+| 4 | Check for extra campus steps | Some majors and campuses ask for a supplemental application or more materials. |
+| 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
+| 6 | Submit by Nov 30 | Submit before November 30, 2026. Some campuses accept later applications. |
+
+### Steps sheet
+
+Bottom sheet (00), opened from the link or a step's text.
+
+- Title: the card's title, `title-2`. Under it, the ring at 40 with "{done} of {total}", and "Due Nov 30" in `body` `--slate-600` beside it.
+- All steps in order, done and not done, as rows (the status icon, the step title in `row-title`, and its summary in `body` `--slate-600` below it). A row opened from Home is scrolled into view and briefly tinted `--blue-50` (600 ms) so the student sees which one they tapped.
+- At the bottom: a tinted button "Open the UC application" (or "Open Cal State Apply") with `ArrowSquareOut`, opening the official application site outside the app; then the source line in `caption`: "Steps from UC Admissions, checked Oct 16, 2026."
+
+### Get ready states
+
+| State | Card |
+|---|---|
+| Loading (over 600 ms) | The card's outline at its real size, empty, like the stack's |
+| Couldn't load | Hidden; Home stays whole |
+| Web or iPhone | Same everywhere; checking steps needs no notifications |
 
 ## Deadlines screen (flag `deadlines`)
 
@@ -410,5 +481,7 @@ And in "Your plan", a new row **Transfer term** ("Fall 2027"), opening the term 
 - Every shown date has a source line and an "Open official page" link, and no unverified date appears anywhere.
 - VoiceOver reads the stack as one button with the next three dates, and each row with its full date and status.
 - At 320 wide: the countdown block keeps 72, titles wrap to 2 lines, and the peek layers' titles truncate with an ellipsis.
+- Get ready: with 2 of 6 steps done, the ring shows a third filled, the subtitle says "4 steps left before Nov 30", and the next two unchecked steps show. Checking one off on Home fills its ring, updates the count, brings up the next step, and "Undo" reverses it. All six done: the green ring and "Your UC application is ready".
+- A CSU-only plan shows the Cal State Apply checklist; a plan with both shows the one due first.
 
 One line on what makes this Stackd's and no one else's: the deadlines arrive as a literal stack, the next one on top, counting down in the same heavy type as "Hi, Ryan!", with the window bar showing how much of the filing period is already gone.
