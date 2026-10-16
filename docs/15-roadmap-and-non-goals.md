@@ -7,16 +7,31 @@ The working plan from today through App Store launch and after. Each phase depen
 | # | Phase | What it covers | Who | Done when |
 |---|---|---|---|---|
 | 1 | Mockup screens | Welcome, sign-in flow, Home, University requirements (built). Essays and the celebration move to phase 9 | Claude Code | Done |
-| 2 | Data access and accounts | Read ASSIST's terms and email them about data access; create the Supabase project; Apple Developer Program | Founders | Supabase keys handed to Claude Code; ASSIST contacted |
-| 3 | Database and real sign-in | Tables from `05-data-model.md` with provenance; an importer that works on agreements saved by hand; Supabase email sign-in replaces demo auth; progress saved per user with row-level security | Claude Code | A real account keeps its progress after reinstalling |
-| 4 | Planning layer on real structure | Colleges, universities, and majors in the database (names and official links only, no copied agreement data). Each plan links to the official ASSIST agreement. One permission email to ASSIST, sent in parallel; when granted, Las Positas → UC San Diego CS course matches get imported with provenance | Claude Code, founders (ASSIST email) | A student picks their path and opens the right official agreement from the app |
-| 5 | Core screens | Specs, then builds: onboarding (college, major, targets), Explore (search), requirement detail, university Overview tab. App reads the database instead of demo files | Design chat (specs), Claude Code | A student goes from sign-up to "these courses count" on real data |
-| 6 | iOS app | Capacitor iOS project (built on the Mac with Xcode); Google sign-in and Sign in with Apple; push notifications for deadlines. **2026-10-13:** the iOS project, native Sign in with Apple, Google in the in-app browser, icon, launch screen, public Privacy / Terms / Support pages and the App Store listing text are done on Windows (`docs/build-status.md → iOS app and App Store prep`); compiling, the iPhone test and the upload are the Mac steps in `docs/ios-app-store-handoff.md`. Push notifications aren't built | Claude Code, founder on the Mac | Runs on a real iPhone from Xcode |
+| 2 | Data access and accounts | Read ASSIST's terms and email them about data access; create the Supabase project; Apple Developer Program | Founders | Done |
+| 3 | Database and real sign-in | Tables from `05-data-model.md` with provenance; an importer that works on agreements saved by hand; Supabase email sign-in replaces demo auth; progress saved per user with row-level security | Claude Code | Done |
+| 4 | Planning layer on real structure | Colleges, universities, and majors in the database (names and official links only, no copied agreement data). Each plan links to the official ASSIST agreement | Claude Code | Done |
+| 5 | Core screens | Onboarding, Home plan states, the official agreement card, Settings (built). Still to come: Explore (search), requirement detail, university Overview tab | Design chat (specs), Claude Code | A student goes from sign-up to "these courses count" on real data |
+| 6 | iOS app | Capacitor iOS project, Sign in with Apple (native) and Google (in-app browser), App Store listing (PR #2). Native Google sign-in and push notifications for deadlines still to come | Claude Code, founders on the Mac | Runs on a real iPhone |
 | 7 | TestFlight beta | Las Positas students, starting with the CS club: 10, fix, then 50. Time it to a registration window | Founders | Students return and save plans without help |
-| 8 | App Store | Privacy policy, terms, unofficial disclaimer, App Store listing and review | Founders | Approved and live |
-| 9 | Expand and polish | In-app course matches for all of California once ASSIST permits it. An ASSIST-like database for out-of-state transfers, starting with states that publish public statewide transfer systems, each source's terms checked first. Essays, Mentors, Student life, the celebration, Rive animations, design rev 2 | Everyone | Ongoing |
+| 8 | App Store | v1 per `docs/specs/13-v1-launch.md`: no dead ends, privacy, terms, support, review account | Founders | Approved and live |
+| 9 | Expand and polish | v1.1 Essays and deadlines with push notifications; v1.2 Explore, more schools and majors, native Google sign-in; v1.3+ Events and Mentors after their product decisions. An ASSIST-like database for out-of-state transfers, each source's terms checked first. Student life, the celebration, Rive animations, design rev 2 | Everyone | Ongoing |
 
 **On coverage speed:** the number of universities supported is limited by how fast data can be legitimately obtained and verified, not by code. Bulk-imported records show as "unverified" until checked (`06-trust-and-provenance.md`). A few schools covered correctly beats many covered loosely.
+
+## Course data track (runs alongside every release)
+
+Showing course requirements inside the app, instead of sending students to ASSIST, is the core goal (`16 → In-app course requirements`). It's the slowest part of the project, so it runs in parallel with the releases above rather than waiting for phase 9.
+
+| Step | What | Who | Done when |
+|---|---|---|---|
+| A | Read the terms of use for UC Transfer Pathways (UC Admissions) and the CSU Transfer Model Curricula (CCC Chancellor's Office). Record what's allowed in `16` | Founders, Claude Code | Terms recorded |
+| B | If allowed: import the UC Computer Science Transfer Pathway as the requirement list for every UC CS target, with source and year. This gives requirement names and course types, not yet which Las Positas courses match | Claude Code | UC San Diego CS shows its requirement list in the app |
+| C | Ask UC San Diego (then the other 8 UC campuses) for permission to show their published major requirements. One email per campus | Founders | Replies recorded in `16` |
+| D | Ask Las Positas's articulation officer or transfer center to review Stackd and, ideally, check its course matches. A college-endorsed source is both more accurate and easier to defend | Founders | A meeting held |
+| E | Course matches (which Las Positas courses meet each requirement) only from a permitted source: ASSIST licensed access, a campus's permission, or a college partner. Every match carries source, year, and verification status | Claude Code, founders | The first verified match shows in the app |
+| F | Check the ASSIST Resource Center Data page each term for outside access | Founders | Ongoing |
+
+Until step E, the official agreement card stays as the way to see course matches, and the requirement list (step B) says plainly that matches are on ASSIST.
 
 ## Validation stages
 
