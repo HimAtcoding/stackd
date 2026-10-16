@@ -1,7 +1,7 @@
 // Settings for the import pipeline. Local scripts only, never the app.
 
 // Named in the User-Agent so a site's operators can reach us. The fetch stage refuses to run while it's "TODO".
-export const CONTACT_EMAIL = "TODO";
+export const CONTACT_EMAIL = "joinstackd@gmail.com";
 
 export const USER_AGENT = `Stackd-Importer/0.1 (transfer planning for California community college students; +mailto:${CONTACT_EMAIL})`;
 

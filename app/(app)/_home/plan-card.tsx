@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TextLink } from "@/components/ui/text-link";
 import type { Plan, PlanTarget } from "@/lib/data/plan";
+import { universityHref } from "@/lib/features";
 import { majorWithDegree } from "@/lib/format";
 
 const SHOWN = 3;
@@ -24,7 +25,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div className="relative rounded-lg bg-surface shadow-card">
       <Link
-        href={`/university/?slug=${first.slug}&tab=requirements`}
+        href={universityHref(first.slug)}
         transitionTypes={["push"]}
         aria-label={`Your plan, ${plan.targets.map((t) => `${t.name}, ${pathLine(t, college)}`).join(", ")}`}
         className="absolute inset-0 rounded-lg transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120"

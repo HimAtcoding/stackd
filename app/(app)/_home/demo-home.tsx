@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { getHome, getTargetUniversity } from "@/lib/data";
+import { universityHref } from "@/lib/features";
 import { readFirstName } from "@/lib/profile";
 import { stepStatus, useRequirementStatuses } from "@/lib/requirements";
 import { subscribeNoop } from "@/lib/session";
@@ -38,7 +39,7 @@ export function DemoHome({ art }: { art: HomeArt }) {
         tiles: homeTiles({
           requirements: {
             subtitle: `${inProgress} in progress`,
-            href: university ? `/university/?slug=${university.slug}&tab=requirements` : "/university/",
+            href: university ? universityHref(university.slug) : "/university/",
             transitionTypes: ["push"],
           },
           essays: { subtitle: plural(counts.drafts ?? 0, "draft", "drafts") },

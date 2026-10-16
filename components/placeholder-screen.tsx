@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 import { hasSession, subscribeSession } from "@/lib/session";
 import { BackButton } from "./back-button";
 import { EmptyState } from "./ui/empty-state";
-import { TabBar, type TabId } from "./ui/tab-bar";
+import { HAS_TAB_BAR, TabBar, type TabId } from "./ui/tab-bar";
 import { TintedButton } from "./ui/tinted-button";
 import { PageTransition } from "./page-transition";
 
@@ -56,7 +56,7 @@ export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
     },
   }[resolved];
 
-  const showTabBar = resolved !== "signed-out";
+  const showTabBar = resolved !== "signed-out" && HAS_TAB_BAR;
 
   return (
     <PageTransition>

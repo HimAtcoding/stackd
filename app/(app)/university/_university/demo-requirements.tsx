@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { fillDue } from "@/lib/due";
+import { unbuiltHref } from "@/lib/features";
 import type { UniversitySeed } from "@/lib/seed";
 import { RequirementList } from "./requirement-list";
 
@@ -22,6 +23,7 @@ export function DemoRequirements({ slug, university, journeySteps }: DemoRequire
   const router = useRouter();
   const reminder = university.reminder;
   const showReminder = reminder && reminder.dueInDays >= 0 && reminder.dueInDays <= 14;
+  const track = unbuiltHref("trackApplication", `?university=${slug}`);
 
   return (
     <>
@@ -38,9 +40,11 @@ export function DemoRequirements({ slug, university, journeySteps }: DemoRequire
         />
       )}
 
-      <div className="mt-4 px-4">
-        <PrimaryButton onClick={() => router.push(`/track-application/?university=${slug}`)}>Track application</PrimaryButton>
-      </div>
+      {track && (
+        <div className="mt-4 px-4">
+          <PrimaryButton onClick={() => router.push(track)}>Track application</PrimaryButton>
+        </div>
+      )}
 
       {showReminder && (
         <div role="note" className="mx-4 mt-4 flex gap-4 rounded-md bg-amber-50 px-5 py-4">

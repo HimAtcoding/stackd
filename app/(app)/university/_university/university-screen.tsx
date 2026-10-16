@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnderlineTabs } from "@/components/ui/underline-tabs";
+import { FEATURES } from "@/lib/features";
 import { SaveButton } from "./save-button";
 
 type TabId = "overview" | "requirements" | "student-life";
@@ -31,11 +32,12 @@ type UniversityScreenProps = {
 };
 
 // The university screen's frame (03): hero, back and save, the sheet with the name and tabs.
-// Demo schools and real accounts fill the Requirements tab differently.
+// Demo schools and real accounts fill the Requirements tab differently. In v1 (13 → University) there's no heart and
+// no tab row: the requirements follow the meta line directly.
 export function UniversityScreen({ slug, university, hero, onRetry, children }: UniversityScreenProps) {
   // The URL is the only source of the tab, so Back from a detail screen shows the tab it left
   const param = useSearchParams().get("tab");
-  const tab = TABS.find((t) => t.id === param)?.id ?? "requirements";
+  const tab = FEATURES.universityTabs ? (TABS.find((t) => t.id === param)?.id ?? "requirements") : "requirements";
 
   // Switching tabs replaces ?tab= (keeping ?slug=) without adding a history entry
   function changeTab(id: string) {
@@ -54,7 +56,7 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
           <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(5,16,66,.28)_0,rgba(5,16,66,0)_96px)]" />
           <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
             <BackButton fallback="/" slideBack />
-            {university && <SaveButton slug={slug} name={university.name} />}
+            {university && FEATURES.savedSchools && <SaveButton slug={slug} name={university.name} />}
           </div>
         </div>
 
@@ -76,11 +78,13 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
                 {university.city && <span>{university.city}</span>}
               </p>
 
-              <div className="mt-4 px-2">
-                <UnderlineTabs tabs={TABS} value={tab} onChange={changeTab} aria-label={`${university.name} sections`} />
-              </div>
+              {FEATURES.universityTabs && (
+                <div className="mt-4 px-2">
+                  <UnderlineTabs tabs={TABS} value={tab} onChange={changeTab} aria-label={`${university.name} sections`} />
+                </div>
+              )}
 
-              <div role="tabpanel" aria-label={TABS.find((t) => t.id === tab)?.label}>
+              <div role={FEATURES.universityTabs ? "tabpanel" : undefined} aria-label={FEATURES.universityTabs ? TABS.find((t) => t.id === tab)?.label : undefined}>
                 {tab === "requirements" ? (
                   <>
                     <h2 className="mt-6 px-6 text-navy-900 type-title-2">Transfer requirements</h2>

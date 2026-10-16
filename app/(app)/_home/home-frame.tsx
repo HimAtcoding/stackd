@@ -7,7 +7,9 @@ import { FlashToast } from "@/components/flash-toast";
 import { CircleButton } from "@/components/ui/circle-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
-import { TabBar } from "@/components/ui/tab-bar";
+import { HAS_TAB_BAR, TabBar } from "@/components/ui/tab-bar";
+import { UnofficialFooter } from "@/components/ui/unofficial-footer";
+import { FEATURES, unbuiltHref } from "@/lib/features";
 import type { UpcomingItem } from "@/lib/seed";
 import { UpcomingCard } from "./upcoming-card";
 
@@ -44,9 +46,14 @@ type HomeFrameProps = {
   body: { tiles: HomeTile[]; upcoming: UpcomingItem[] } | null;
 };
 
-// Home's layout (02), shared by the demo screen and the real-account one
+// Without a tab bar (v1), toasts and the end of the page sit on the safe area instead of above the bar
+const TAB_BAR_SPACE = HAS_TAB_BAR ? "56px + " : "";
+
+// Home's layout (02), shared by the demo screen and the real-account one. lib/features.ts decides what's on it:
+// in v1 that's the header (wordmark and gear), the greeting, the card and the footer line (13 → Home).
 export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, body }: HomeFrameProps) {
   const router = useRouter();
+  const notifications = unbuiltHref("notifications");
 
   return (
     <div className="relative min-h-dvh bg-sky-50 bg-[linear-gradient(180deg,var(--sky-100)_0,var(--sky-50)_360px)]">
@@ -59,7 +66,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
         className="relative mx-auto max-w-[480px]"
         style={{
           paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)",
-          paddingBottom: "calc(24px + 56px + var(--safe-bottom))",
+          paddingBottom: `calc(24px + ${TAB_BAR_SPACE}var(--safe-bottom))`,
         }}
       >
         <header className="flex h-11 items-center justify-between pl-6 pr-4">
@@ -72,16 +79,19 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
                 onClick={() => router.push("/settings/", { transitionTypes: ["push"] })}
               />
             )}
-            <span className="relative">
-              <CircleButton
-                aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
-                icon={<BellIcon size={24} aria-hidden />}
-                onClick={() => router.push("/notifications")}
-              />
-              {unread > 0 && (
-                <span aria-hidden className="pointer-events-none absolute right-1 top-1 size-2.5 rounded-full bg-coral-500 ring-2 ring-surface" />
-              )}
-            </span>
+            {/* Without the bell (v1) the gear takes its place at the right edge */}
+            {notifications && (
+              <span className="relative">
+                <CircleButton
+                  aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
+                  icon={<BellIcon size={24} aria-hidden />}
+                  onClick={() => router.push(notifications)}
+                />
+                {unread > 0 && (
+                  <span aria-hidden className="pointer-events-none absolute right-1 top-1 size-2.5 rounded-full bg-coral-500 ring-2 ring-surface" />
+                )}
+              </span>
+            )}
           </div>
         </header>
 
@@ -108,8 +118,9 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
 
         {body && (
           <>
-            <nav aria-label="Shortcuts" className="mt-3 grid grid-cols-2 gap-3 px-4">
-              {body.tiles.map((t) => (
+            {body.tiles.length > 0 && (
+              <nav aria-label="Shortcuts" className="mt-3 grid grid-cols-2 gap-3 px-4">
+                {body.tiles.map((t) => (
                 <ShortcutTile
                   key={t.title}
                   href={t.href}
@@ -119,30 +130,36 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
                   subtitle={t.subtitle}
                   unread={t.unread}
                   transitionTypes={t.transitionTypes}
-                  aria-label={`${t.title}, ${t.subtitle}`}
-                />
-              ))}
-            </nav>
+                    aria-label={`${t.title}, ${t.subtitle}`}
+                  />
+                ))}
+              </nav>
+            )}
 
-            <section className="mt-5">
-              <h2 className="px-6 text-navy-900 type-title-2">Upcoming</h2>
-              {body.upcoming.length > 0 ? (
-                <div className="mt-3 flex flex-col gap-3 px-4">
-                  {body.upcoming.map((item) => (
-                    <UpcomingCard key={item.id} item={item} />
-                  ))}
-                </div>
-              ) : (
-                <p className="mt-3 px-6 text-slate-600 type-body">Nothing coming up. Deadlines you save will show here.</p>
-              )}
-            </section>
+            {FEATURES.upcoming && (
+              <section className="mt-5">
+                <h2 className="px-6 text-navy-900 type-title-2">Upcoming</h2>
+                {body.upcoming.length > 0 ? (
+                  <div className="mt-3 flex flex-col gap-3 px-4">
+                    {body.upcoming.map((item) => (
+                      <UpcomingCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 px-6 text-slate-600 type-body">Nothing coming up. Deadlines you save will show here.</p>
+                )}
+              </section>
+            )}
+
+            {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
+            <UnofficialFooter className="mt-6 px-4" />
           </>
         )}
       </main>
 
       <TabBar active="home" />
       {/* A message from the screen before, e.g. "Plan saved" after onboarding (10) */}
-      <FlashToast bottom="calc(56px + var(--safe-bottom) + 12px)" />
+      <FlashToast bottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />
     </div>
   );
 }

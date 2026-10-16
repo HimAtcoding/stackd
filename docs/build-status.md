@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-14 (version 1.0 submitted to App Review, below). Before that 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac, below). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -323,6 +323,86 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - Google: branding links and authorized domain (Before TestFlight 5; Publish still open).
 - **App Store Connect:** record **"Stackd: Transfer Planner"** (Apple ID `6822523006`; "Stackd" alone is taken by another developer), bundle `app.stackd.transfer`, SKU `stackd-ios-1`, English (U.S.), Education, Free, United States. Version 1.0 has the description (ending in the four-name credit), promotional text, keywords, support URL, copyright with all four names, sign-in required with the review account, contact `joinstackd@gmail.com`, and the review notes; all re-read after a reload. Subtitle "Plan your California transfer". Content rights answered. Age rating 4+. App Privacy published: name, email, user ID and other user content, App Functionality only, linked, no tracking. Privacy policy URL set. Missing: the build and screenshots (Mac).
 
+## v1 launch build (step 14, 2026-10-15)
+
+Spec 13 (`docs/specs/13-v1-launch.md`) on the web build, tested on Windows. **iOS build 2 isn't made yet:** that's the Mac steps below.
+
+**Feature flags** (`lib/features.ts`), the only place that decides what shows:
+- Spec 13's flags, all off: `essays`, `mentors`, `events`, `explore`, `notifications`, `upcoming`, `trackApplication`, `universityTabs`, `savedSchools`, `devRoutes`. One more, `requirementDetail` (off), covers requirement detail, which demo requirement rows open.
+- Development uses the same values, so `npm run dev` looks like the release. `NEXT_PUBLIC_FEATURES=all` in `.env.local` turns everything on for working on hidden features; production builds ignore it.
+- **Unbuilt screens go through one table** in the same file. `unbuiltHref(screen)` gives the link, or null while the flag is off, so the link isn't drawn. `universityHref(slug)` drops `&tab=` while the tabs are off.
+- **Demo mode is off in every production build,** whatever `NEXT_PUBLIC_DEMO_STRIP` says (`lib/flags.ts`). It still works under `next dev`.
+
+**No dead ends:**
+- **Home:** no bell (the gear takes its place at the right edge), no tiles, no Upcoming, no tab bar, and the unofficial footer line 24 below the plan or setup card. The page ends 24 above the safe area. Toasts sit 12 above the safe area.
+- **Tiles:** the Requirements tile shows only with at least one other tile, since alone it would repeat the card above it.
+- **Tab bar:** shows only with more than one tab (`HAS_TAB_BAR` in `components/ui/tab-bar.tsx`), and only the switched-on tabs.
+- **University:** no heart, no tab row (an old `&tab=overview` link shows the requirements), no Track application. "Transfer requirements" is 24 below the meta line. Demo requirement rows have no link or chevron while requirement detail is off.
+- **Unbuilt routes** (`/explore/`, `/essays/`, `/mentors/`, `/events/`, `/notifications/`, `/upcoming/`, `/requirement/`, `/track-application/`) render `<UnbuiltRoute>` (`components/unbuilt-route.tsx`): 00's placeholder with the flag on, otherwise they replace themselves with Home, so Back doesn't return to them.
+- **A missing or unknown university slug** goes Home, as does **any unknown address** (`app/not-found.tsx`; Next's own 404 had no way out, and the app has no browser Back).
+- **Welcome** stays as drawn. Spec 13's test line now says Privacy and Terms open from Create account, and Privacy, Terms and Support from Settings.
+
+**Release-build checks** (`npm run build` → `postbuild`): `scripts/check-release.mjs` fails the build if:
+- `out/dev/` exists;
+- any file in `app/`, `components/` or `lib/` writes a link to an unbuilt route itself instead of using `unbuiltHref()`;
+- anything but `components/unbuilt-route.tsx` uses `PlaceholderScreen`.
+
+It was checked against a probe file and a fake `out/dev/` page, and caught all three. `check-service-key.mjs` still runs after it.
+
+**Also:** the import pipeline's contact email is `joinstackd@gmail.com` (`scripts/import/config.mjs`; it was "TODO"). Fetching still refuses, because `sources.json` grants no source; `test:import` now reports that reason.
+
+**Tested 2026-10-15** (Windows):
+- Lint, `tsc`, `test:db`, `test:import`, `test:oauth` (31) and `npm run build` with the new checks.
+- The release build (`out/` on port 4000), 39 checks. Signed-in screens used a stand-in session with made-up plan answers and the real school, major and link rows:
+  - Every link on Welcome, Sign in, Create account, Privacy, Terms, Support, Home (plan and setup card), University, Settings and onboarding leads somewhere real. None says "isn't built yet" or "Coming soon", and there's no demo strip.
+  - Home's and University's layouts as spec 13 says.
+  - Every unbuilt route, `/university/` with no slug or `uc-davis`, a made-up address, and `/dev/reset/` and `/dev/components/` end on Home (or Welcome or Sign in when signed out).
+  - Terms, Privacy and Support open from Settings, and Terms and Privacy from Create account, with Back.
+  - A wrong password reaches Supabase and shows "Couldn't sign you in".
+- `NEXT_PUBLIC_FEATURES=all` under `next dev`: the bell, tiles, Upcoming, tab bar, `&tab=`, placeholders, heart and tabs all come back. 4 checks.
+- Not tested: anything on an iPhone (below).
+
+**On the Mac: sync the iOS project, make build 2 and upload it.** Version stays 1.0.0; the build number goes from 1 to 2.
+1. Get the code and build the web app into the iOS project:
+   ```bash
+   cd <your stackd clone>
+   git checkout main && git pull
+   npm ci
+   npm run ios:prepare
+   ```
+   `ios:prepare` stops if `.env.local` lacks the Supabase URL and anon key or turns demo mode on. Then it runs `npm run build` (with the release checks) and `cap sync ios`. It should end with "check-release: no /dev/ pages…", "check-service-key: the service role key is not in the build", and Capacitor's sync output.
+2. Bump the build number to 2:
+   ```bash
+   sed -i '' 's/CURRENT_PROJECT_VERSION = 1;/CURRENT_PROJECT_VERSION = 2;/g' ios/App/App.xcodeproj/project.pbxproj
+   grep -c "CURRENT_PROJECT_VERSION = 2;" ios/App/App.xcodeproj/project.pbxproj
+   ```
+   The `grep` must print `2` (Debug and Release). Or set it in Xcode: App target → General → Identity → Build `2`.
+3. Open Xcode and check:
+   ```bash
+   npm run ios:open
+   ```
+   App target → General: Version `1.0.0`, Build `2`.
+4. Run it once in the simulator. Home shows only the wordmark, gear, greeting, husky, card and footer line, with no tab bar; University has no heart and no tabs.
+5. Archive and upload, signed as build 1 was (Apple Distribution certificate, App Store profile "Stackd App Store 2026-10"):
+   - Run destination **Any iOS Device (arm64)**, then Product → **Archive**.
+   - In the Organizer: **Validate App**, then **Distribute App** → App Store Connect → Upload.
+6. Commit the bump so the repo matches what was uploaded:
+   ```bash
+   git add ios/App/App.xcodeproj/project.pbxproj
+   git commit -m "iOS build 2 (1.0.0) with the v1 launch build"
+   git push
+   ```
+7. App Store Connect → TestFlight: wait for 1.0.0 (2) to process, install it on a real iPhone, and test:
+   - email, Apple and Google sign-in, and cancelling Apple and Google (back on Sign in, nothing shown);
+   - forgot password, and delete account with a throwaway;
+   - the review account still signs in with its plan.
+8. App Store Connect → version 1.0:
+   - If it's still Waiting for Review with build 1: **Remove from Review**.
+   - Under Build, choose **1.0.0 (2)**.
+   - **Retake the five 6.9-inch screenshots from build 2.** The current ones came from build 1, which showed tiles, the bell and the tab bar, and screenshots must match the app.
+   - Check that the App Privacy answers still match `/privacy/`.
+   - **Add for Review**, then **Submit for Review**. Release is set to automatic after approval; switch it to manual first if you want to choose the day.
+
 ## Built
 
 | Step | What | Where |
@@ -336,6 +416,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 | 7 | University requirements: campus hero from the pool, back and save, sheet, underline tabs on `?tab=`, requirement rows that mark done (toast with Undo), Track application, reminder banner, footer, empty and load-error states, push from Home and the reverse slide on Back, demo strip | `app/(app)/universities/[slug]/`, `components/ui/status-control.tsx`, `lib/requirements.ts`, `lib/campus.ts` |
 | 10 | Enter code (09): the shared code field, the reset and confirm code steps, the new password step, and the new auth errors on 06, 07 and 08 | `app/enter-code/`, `components/ui/code-field.tsx`, `lib/auth/` |
 | 13 | Settings (11): plan rows, change password, sign out, delete account with its confirm sheet | `app/(app)/settings/`, `components/ui/settings-row.tsx`, `components/ui/bottom-sheet.tsx`, `components/ui/destructive-button.tsx`, `lib/auth/` |
+| 14 | v1 launch build (13): feature flags, no dead ends, the not-found page, release-build checks | `lib/features.ts`, `components/unbuilt-route.tsx`, `app/not-found.tsx`, `scripts/check-release.mjs` |
 | 12 | Home plan states, the gear, and the official agreement card on University (02 → Plan states, 03 → Real accounts) | `app/(app)/_home/`, `app/(app)/university/_university/`, `lib/data/university.ts` |
 | 11 | Onboarding (10): college, schools and major on real database rows, saved to the account; the edit mode Settings will open; the plan migration | `app/(app)/onboarding/`, `lib/data/plan.ts`, `lib/data/catalog.ts`, `components/ui/choice-row.tsx`, `supabase/migrations/20261007120000_plans_and_account.sql` |
 
@@ -419,7 +500,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
   - Both throwaway accounts are deleted.
 
 Also in place:
-- **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, a university with no seed file (or no `?slug=`), `/requirement/` (requirement detail) and `/track-application/` use the signed-in version. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` were placeholders until 2026-10-13; they're real pages now (12).
+- **Placeholder screen**, all three versions from 00 (signed out, signed in, `/`), each with the back button. Since step 14 it only shows with a flag switched on (`NEXT_PUBLIC_FEATURES=all` in development): `/explore`, `/essays`, `/mentors`, `/events`, `/notifications`, `/upcoming/`, `/requirement/` (requirement detail) and `/track-application/` use the signed-in version through `<UnbuiltRoute>`, and go Home in the release. A university with no seed file (or no `?slug=`) goes Home. The university screen's Overview and Student life tabs show the same empty state in the page. The `/` version (Sign out) is no longer shown anywhere, since Home replaced it. `/terms` and `/privacy` were placeholders until 2026-10-13; they're real pages now (12).
 - **Shared auth parts** in `components/auth/`: the screen background and top block, the sheet, the social buttons, the password toggle, and the switch line.
 - **Art loading.** `components/art.tsx` renders the real file when it exists in `public/art/` (`.svg` first, then `.png`), looked up in the generated art manifest with its proportions. When a file is missing it renders the labelled placeholder from `art-assets.md`.
 - **Demo strip only where demo records show.** The root layout doesn't render it. A screen renders `<DemoStrip />` when its records carry `"demo": true` (Home and University today), whatever the sign-in mode; `--strip-h` is 0 unless one is on the page (`:root:has([data-demo-strip])`). Home and University are built so far.
@@ -506,6 +587,12 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
 - **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
 
+### v1 launch build (step 14)
+- **`requirementDetail`** is a flag spec 13 doesn't list. Requirement rows only show for demo schools, but their link had to go through the table like every other unbuilt screen.
+- **The Requirements tile** hides with the other tiles. Spec 13 says Home has no tiles, but only Essays, Mentors and Events have flags; the Requirements tile alone would repeat the card above it.
+- **Unknown university slugs and unknown addresses go Home** (`app/not-found.tsx`). 03 sends a missing school to the placeholder, which spec 13 rules out.
+- **`/dev/components`' tab bar specimens** show nothing unless `NEXT_PUBLIC_FEATURES=all` is set, since the tab bar now hides with one tab.
+
 ### Settings (step 13)
 - **The Major row with several schools:** "Pick a major" if any school has none picked. Otherwise the picked major's name, or "{n} majors" when they differ, counting only real majors; "Not listed yet" only when that's the answer for every school. 11 doesn't say what a mix of the two shows.
 - **Change password's errors** are one toast line made from 08's title and body ("Too many tries. Wait a few minutes, then try again.").
@@ -554,6 +641,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 
 - `npm run dev -- -H 0.0.0.0` makes the dev server reachable from a phone on the same Wi-Fi at `http://<this machine's IPv4>:3000`. `allowedDevOrigins` in `next.config.ts` already allows `192.168.*.*` and `10.*.*.*`.
 - `/dev/components` (dev only, `page.dev.tsx`) shows every shared component in every state.
+- `NEXT_PUBLIC_FEATURES=all` in `.env.local` shows everything v1 hides, under `next dev` only (`lib/features.ts`). Restart `npm run dev` after changing it.
 - `/dev/reset` (dev only) clears every `stackd.*` key from local and session storage and reloads `/welcome` as a first launch. It's `app/dev/reset/page.dev.tsx`; `next.config.ts` adds the `dev.tsx` page extension only under `next dev`, so production builds don't have the route.
 - To see Welcome again, clear `stackd.seenWelcome` from local storage, or open `/dev/reset`.
 - `npm run build` writes the static app to `out/` (stop the dev server first), and `npm start` serves it at `http://localhost:4000`.

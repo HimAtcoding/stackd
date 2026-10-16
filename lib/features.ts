@@ -1,0 +1,54 @@
+// What the app shows (docs/specs/13-v1-launch.md). The only place that decides it: development and production use the
+// same values, so `npm run dev` looks like the release. To work on something v1 hides, put NEXT_PUBLIC_FEATURES=all in
+// .env.local; production builds ignore it.
+
+const V1 = {
+  essays: false,
+  mentors: false,
+  events: false,
+  explore: false,
+  notifications: false,
+  upcoming: false,
+  trackApplication: false,
+  universityTabs: false,
+  savedSchools: false,
+  // Requirement detail, the screen a requirement row opens (03). Rows only show for demo schools today.
+  requirementDetail: false,
+  // /dev/ pages exist only under `next dev` (next.config.ts → pageExtensions); scripts/check-release.mjs fails a build
+  // that contains one. This flag can't put them in a build.
+  devRoutes: false,
+};
+
+export type Feature = keyof typeof V1;
+
+const allOn = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_FEATURES?.toLowerCase() === "all";
+
+export const FEATURES: Readonly<Record<Feature, boolean>> = allOn
+  ? (Object.fromEntries(Object.keys(V1).map((k) => [k, true])) as Record<Feature, boolean>)
+  : V1;
+
+// Screens that aren't built yet. Every link to one comes from here (scripts/check-release.mjs fails the build
+// otherwise), so a flag that's off takes its links away, and the route itself sends the student Home.
+const UNBUILT = {
+  explore: { path: "/explore/", feature: "explore" },
+  essays: { path: "/essays/", feature: "essays" },
+  mentors: { path: "/mentors/", feature: "mentors" },
+  events: { path: "/events/", feature: "events" },
+  notifications: { path: "/notifications/", feature: "notifications" },
+  upcoming: { path: "/upcoming/", feature: "upcoming" },
+  requirement: { path: "/requirement/", feature: "requirementDetail" },
+  trackApplication: { path: "/track-application/", feature: "trackApplication" },
+} as const satisfies Record<string, { path: string; feature: Feature }>;
+
+export type Unbuilt = keyof typeof UNBUILT;
+
+// The link to an unbuilt screen, or null when its flag is off (then nothing links to it). `query` starts with "?".
+export function unbuiltHref(screen: Unbuilt, query = ""): string | null {
+  const { path, feature } = UNBUILT[screen];
+  return FEATURES[feature] ? path + query : null;
+}
+
+export const unbuiltFeature = (screen: Unbuilt): Feature => UNBUILT[screen].feature;
+
+// The University screen for a school. Without its tabs (v1) the URL has no &tab=.
+export const universityHref = (slug: string) => `/university/?slug=${slug}${FEATURES.universityTabs ? "&tab=requirements" : ""}`;

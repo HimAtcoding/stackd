@@ -68,7 +68,7 @@ With `universityTabs`, `trackApplication` and `savedSchools` off:
 As built in PR #2 and described in `12-legal-and-support.md`: Privacy, Terms and Support pages in the app, with public copies on the Vercel site. Two checks before submitting:
 
 - The privacy text must match what the app really collects, including Apple and Google sign-in and Apple's private relay emails, and the App Store privacy answers must say the same.
-- Every place that linked to the placeholder for Terms or Privacy (Create account, Settings, Welcome) now opens the real page.
+- Every place that linked to the placeholder for Terms or Privacy (Create account, Settings) now opens the real page. Welcome has no such links and stays as drawn (01).
 
 ## Production cleanup
 
@@ -92,5 +92,5 @@ Apple's reviewer needs a working login. PR #2 already made one; keep using it, a
 - Email, Apple and Google sign-in all work on a real iPhone (TestFlight), and cancelling Apple or Google returns to Sign in with nothing shown.
 - Home shows only the header (wordmark + gear), greeting, husky, the plan or setup card, and the footer line. No tab bar.
 - University shows no heart, no tabs, and no Track application.
-- Privacy, Terms and Support open from Create account, Settings, and Welcome, and match the public pages.
+- Privacy and Terms open from Create account, and Privacy, Terms and Support from Settings; all three match the public pages.
 - Every tappable thing in the app leads somewhere real.

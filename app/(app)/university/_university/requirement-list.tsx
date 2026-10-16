@@ -9,6 +9,7 @@ import { StatusControl } from "@/components/ui/status-control";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { Toast } from "@/components/ui/toast";
 import { claimCelebration } from "@/lib/celebration";
+import { unbuiltHref } from "@/lib/features";
 import { previousStatus, setRequirementStatus, toggleRequirement, useRequirementStatuses } from "@/lib/requirements";
 import type { Requirement, RequirementStatus } from "@/lib/seed";
 
@@ -71,6 +72,28 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
       <ul className="mx-4 mt-4 overflow-hidden rounded-md border border-border bg-surface shadow-card">
         {requirements.map((r) => {
           const status = statuses[r.id] ?? r.status;
+          // Requirement detail isn't built: with its flag off the row has no link and no chevron
+          const detail = unbuiltHref("requirement", `?university=${slug}&id=${r.id}`);
+          const content = (
+            <>
+              <span className="min-w-0 flex-1 truncate text-navy-900 type-row-title">{r.title}</span>
+              <span className="relative h-5 w-22 shrink-0">
+                <AnimatePresence initial={false}>
+                  <motion.span
+                    key={status}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute inset-0 whitespace-nowrap text-slate-600 type-body"
+                  >
+                    {STATUS_TEXT[status]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              {detail && <CaretRightIcon weight="bold" size={20} aria-hidden className="ml-3 shrink-0 text-navy-900" />}
+            </>
+          );
           return (
             <li key={r.id} className="relative h-13 border-b border-border last:border-b-0">
               {/* The circle marks the row done; the rest of the row opens the detail. Two targets, side by side */}
@@ -81,28 +104,17 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
                 onToggle={() => toggle(r)}
                 className="absolute left-3 top-1/2 z-10 -translate-y-1/2"
               />
-              <Link
-                href={`/requirement/?university=${slug}&id=${r.id}`}
-                aria-label={`${r.title}, ${STATUS_TEXT[status]}`}
-                className="flex h-full items-center pl-17 pr-4 transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120 focus-ring:-outline-offset-2"
-              >
-                <span className="min-w-0 flex-1 truncate text-navy-900 type-row-title">{r.title}</span>
-                <span className="relative h-5 w-22 shrink-0">
-                  <AnimatePresence initial={false}>
-                    <motion.span
-                      key={status}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute inset-0 whitespace-nowrap text-slate-600 type-body"
-                    >
-                      {STATUS_TEXT[status]}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-                <CaretRightIcon weight="bold" size={20} aria-hidden className="ml-3 shrink-0 text-navy-900" />
-              </Link>
+              {detail ? (
+                <Link
+                  href={detail}
+                  aria-label={`${r.title}, ${STATUS_TEXT[status]}`}
+                  className="flex h-full items-center pl-17 pr-4 transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120 focus-ring:-outline-offset-2"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div className="flex h-full items-center pl-17 pr-4">{content}</div>
+              )}
             </li>
           );
         })}

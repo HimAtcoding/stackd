@@ -1,7 +1,7 @@
 "use client";
 
 import { Art } from "@/components/art";
-import { PlaceholderScreen } from "@/components/placeholder-screen";
+import { GoHome } from "@/components/unbuilt-route";
 import { Loading } from "@/components/ui/loading";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { campusImage } from "@/lib/campus";
@@ -35,8 +35,8 @@ export function AccountUniversity({ slug }: { slug: string }) {
   );
 
   if (record.status === "loading") return <div className="min-h-dvh bg-surface pt-[248px]">{waiting("Loading requirements")}</div>;
-  // A school the database doesn't have
-  if (record.status === "ok" && !university) return <PlaceholderScreen version="signed-in" />;
+  // A school the database doesn't have goes Home (13: no dead ends)
+  if (record.status === "ok" && !university) return <GoHome />;
 
   let content;
   if (planState.status === "error" || (path && link.status === "error")) {

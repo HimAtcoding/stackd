@@ -5,6 +5,7 @@ import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { retryPlan, usePlan } from "@/lib/data/plan";
+import { universityHref } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { readFirstName } from "@/lib/profile";
 import { subscribeNoop } from "@/lib/session";
@@ -62,7 +63,7 @@ export function AccountHome({ art }: { art: HomeArt }) {
           upcoming: [],
           tiles: homeTiles({
             requirements: first
-              ? { subtitle: first.name, href: `/university/?slug=${first.slug}&tab=requirements`, transitionTypes: ["push"] }
+              ? { subtitle: first.name, href: universityHref(first.slug), transitionTypes: ["push"] }
               : { subtitle: "Set up your plan", href: onboardingUrl("college", { from: "home" }) },
             essays: COMING_SOON,
             mentors: COMING_SOON,

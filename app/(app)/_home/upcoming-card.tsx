@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { cn } from "@/lib/cn";
 import { dueLabel } from "@/lib/due";
+import { unbuiltHref } from "@/lib/features";
 import type { UpcomingItem } from "@/lib/seed";
 
 export function UpcomingCard({ item }: { item: UpcomingItem }) {
@@ -10,7 +11,7 @@ export function UpcomingCard({ item }: { item: UpcomingItem }) {
   const deadline = item.type === "deadline";
 
   return (
-    <Card href={`/upcoming/?id=${item.id}`}>
+    <Card href={unbuiltHref("upcoming", `?id=${item.id}`) ?? undefined}>
       <div className="flex items-start gap-4">
         <span
           className={cn(

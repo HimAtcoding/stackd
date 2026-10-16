@@ -1,6 +1,6 @@
-import { PlaceholderScreen } from "@/components/placeholder-screen";
+import { UnbuiltRoute } from "@/components/unbuilt-route";
 
-// Not built yet.
+// Not built yet: the placeholder with its flag on, Home in the v1 release (lib/features.ts)
 export default function RequirementDetailPage() {
-  return <PlaceholderScreen version="signed-in" />;
+  return <UnbuiltRoute screen="requirement" />;
 }
