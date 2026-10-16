@@ -50,7 +50,7 @@ Route: `/sign-up`. No tab bar. No mockup: this screen is the sign-in screen (`06
 ││ Already have an account?    ││  body 15/20, centered
 ││            Sign in          ││
 ││ By creating an account, you ││  12, caption, centered
-││ agree to the Terms and …    ││
+││ agree to the terms of use … ││
 │╰─────────────────────────────╯│  safe-area bottom + 16
 └───────────────────────────────┘
 ```
@@ -109,11 +109,11 @@ Social button results are handled exactly as on 06.
 | Text | Goes to |
 |---|---|
 | "Sign in" (bottom line) | `/sign-in`, replacing this history entry. Whatever is in the email field carries over (in memory, never in the URL) |
-| "Terms" and "Privacy Policy" | Placeholder screen until those pages exist |
+| "terms of use" and "privacy policy" | The Terms and Privacy pages (12) |
 
 **Bottom line**: "Already have an account?" `body` `--slate-600`, 6 gap, "Sign in" `link` `--blue-600`. Same position rules as 06.
 
-**Terms line**: 12 below the bottom line, centered, max-width 300. `caption` (13/16) `--slate-600`: "By creating an account, you agree to the Terms and Privacy Policy." "Terms" and "Privacy Policy" are small text links (`label` weight 600 at 13/16, `--blue-600`) with 44-tall hit areas. `06-trust-and-provenance.md` requires a terms page before the first real user.
+**Terms line**: 12 below the bottom line, centered, max-width 300. `caption` (13/16) `--slate-600`: "By creating an account, you agree to the terms of use and privacy policy." (sentence case, 2026-10-16). "terms of use" and "privacy policy" are small text links (`label` weight 600 at 13/16, `--blue-600`) with 44-tall hit areas. `06-trust-and-provenance.md` requires a terms page before the first real user.
 
 ## After creating the account
 

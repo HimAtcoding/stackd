@@ -43,6 +43,6 @@ Alignment: left, text at x 24 in the 480 column. The footer is centered. No card
 
 1. All three pages answer 200 with no session, from `out/` and on the hosted site.
 2. Settings' Terms, Privacy and Support links open them; Back returns to Settings.
-3. Create account's Terms and Privacy Policy links open them; Back returns to Create account.
+3. Create account's "terms of use" and "privacy policy" links open them; Back returns to Create account.
 4. At 320 wide nothing runs off the screen, including the email address.
 5. The footer shows "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila." on every page.

@@ -230,11 +230,11 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
       <p className="mx-auto mt-3 max-w-[300px] text-center text-slate-600 type-caption">
         By creating an account, you agree to the{" "}
         <TextLink href="/terms" size="caption">
-          Terms
+          terms of use
         </TextLink>{" "}
         and{" "}
         <TextLink href="/privacy" size="caption">
-          Privacy Policy
+          privacy policy
         </TextLink>
         .
       </p>
