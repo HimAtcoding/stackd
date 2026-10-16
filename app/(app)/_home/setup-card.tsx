@@ -10,7 +10,7 @@ export function SetupCard() {
   const router = useRouter();
   return (
     <Card>
-      <h2 className="text-navy-900 type-title-2">Set up your plan</h2>
+      <h2 className="text-navy-900 type-title-2">No plan yet</h2>
       <p className="mt-1 text-slate-600 type-body">Pick your college, the schools you want, and your major. It takes about a minute.</p>
       <PrimaryButton className="mt-4" onClick={() => router.push(onboardingUrl("college", { from: "home" }))}>
         Set up your plan

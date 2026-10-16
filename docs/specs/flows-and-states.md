@@ -108,7 +108,7 @@ On submit only, never while typing. After a failed submit, each field re-checks 
 | Undrawn screen | This part isn't built yet | It's on the list. Your plan is still on the home screen. | Back to home |
 | No essays | No essays yet | Start a draft and it'll show up here. | New essay |
 | No requirements for a school | No requirements loaded for this school | We don't have this school's requirements yet. | Back to home |
-| Home, no plan yet | Setup card: Set up your plan | Pick your college, the schools you want, and your major. It takes about a minute. | Set up your plan |
+| Home, no plan yet | Setup card: No plan yet | Pick your college, the schools you want, and your major. It takes about a minute. | Set up your plan |
 | University, no agreement link | Your official agreement | We don't have an official agreement link for your path yet. | Open ASSIST |
 | Home, nothing upcoming | Inline line: "Nothing coming up. Deadlines you save will show here." | | |
 

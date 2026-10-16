@@ -22,6 +22,7 @@ import { inlineErrorCopy } from "@/lib/auth/messages";
 import { retryPlan, usePlan, type Plan } from "@/lib/data/plan";
 import { DEMO_MODE } from "@/lib/flags";
 import { setFlash } from "@/lib/flash";
+import { majorWithDegree } from "@/lib/format";
 import { onboardingUrl } from "@/lib/onboarding";
 import { readSessionUser } from "@/lib/profile";
 import { markWelcomeSeen } from "@/lib/session";
@@ -38,7 +39,7 @@ function schoolsValue(plan: Plan) {
 // "Not listed yet" when that's the answer for every school.
 function majorValue(plan: Plan): { text: string; missing?: boolean } {
   if (plan.targets.some((t) => !t.majorName && !t.majorNotListed)) return { text: "Pick a major", missing: true };
-  const names = [...new Set(plan.targets.flatMap((t) => (t.majorName ? [t.majorName] : [])))];
+  const names = [...new Set(plan.targets.flatMap((t) => (t.majorName ? [majorWithDegree(t.majorName, t.degreeType)] : [])))];
   if (names.length === 0) return { text: "Not listed yet" };
   return { text: names.length === 1 ? names[0] : `${names.length} majors` };
 }

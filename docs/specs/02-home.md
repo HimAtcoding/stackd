@@ -186,7 +186,7 @@ The greeting name comes from the account's profile (first name from Create accou
 
 Card (00), margins 16, padding 16.
 
-- Title: "Set up your plan", `title-2` `--navy-900`, `h2`.
+- Title: "No plan yet", `title-2` `--navy-900`, `h2`. (Changed 2026-10-16 from "Set up your plan", so the title doesn't repeat the button.)
 - Body: "Pick your college, the schools you want, and your major. It takes about a minute." `body` `--slate-600`, 4 below, full card width (the husky sits above the card, not inside it).
 - Button: primary button (00), "Set up your plan", 16 below, full card inner width. Opens `/onboarding/?step=college` (first-run mode, with Skip).
 

@@ -66,7 +66,7 @@ Alignment: left. Text at x 24, containers at 16.
 
 ## Sheet
 
-`position: relative; margin-top: -24px;` `--surface`, `border-radius: 24px 24px 0 0`, `box-shadow: 0 -8px 24px rgba(5,16,66,.06)`. Padding-bottom = safe-area bottom + 24.
+`position: relative; margin-top: -24px;` `--surface`, `border-radius: 24px 24px 0 0`, `box-shadow: 0 -8px 24px rgba(5,16,66,.06)`. Padding-bottom = safe-area bottom + 24. The sheet fills down to the bottom of the screen when its content is shorter, so nothing shows below it.
 
 | Element | Spec |
 |---|---|
@@ -145,8 +145,8 @@ Shown when the student's plan has an agreement link for this school (home colleg
 
 ```
 ││ Transfer requirements       ││  title-2, 24 below the tab divider
-││ Las Positas College to      ││  body --slate-600, 4 below
-││ Computer Science B.S.       ││
+││ Computer Science B.S. from  ││  body --slate-600, 4 below
+││ Las Positas College.        ││
 ││┌───────────────────────────┐││  16
 │││▣ Your official agreement  │││  card
 │││  ASSIST lists which Las   │││
@@ -160,7 +160,7 @@ Shown when the student's plan has an agreement link for this school (home colleg
 
 | Element | Spec |
 |---|---|
-| Subtitle | Replaces "Track your progress and see what's next.": "{college} to {major}." `body` `--slate-600` |
+| Subtitle | Replaces "Track your progress and see what's next.": "{major} from {college}." (worded like Home's plan card, 2026-10-16), or just "{major}." with no college. No subtitle without a major. `body` `--slate-600` |
 | Card | Card (00), margins 16, padding 16, 16 below the subtitle. Not tappable as a whole |
 | Icon | Icon tile 44 (`--r-sm`, `--tint-sky`), `FileText` fill 24 `--blue-600`, top-left, `aria-hidden` |
 | Title | "Your official agreement", `headline` `--navy-900`, 16 right of the icon, top-aligned |

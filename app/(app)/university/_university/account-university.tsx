@@ -49,15 +49,13 @@ export function AccountUniversity({ slug }: { slug: string }) {
     content = waiting("Loading requirements");
   } else {
     const found = path && link.status === "ok" ? link.data : null;
-    // "B.S." already ends the sentence with its own period
+    // "{major} from {college}.", worded like Home's plan card; with no college, just the major
     const major = target?.majorName ? majorWithDegree(target.majorName, target.degreeType) : null;
+    const line = major && (plan.home ? `${major} from ${plan.home.name}` : major);
     content = (
       <>
-        {plan.home && major && (
-          <p className="mt-1 px-6 text-slate-600 type-body">
-            {plan.home.name} to {major.endsWith(".") ? major : `${major}.`}
-          </p>
-        )}
+        {/* "B.S." already ends the sentence with its own period */}
+        {line && <p className="mt-1 px-6 text-slate-600 type-body">{line.endsWith(".") ? line : `${line}.`}</p>}
         <AgreementCard link={found} college={plan.home?.name ?? null} />
         <UnofficialFooter className="mt-4 px-4" />
       </>

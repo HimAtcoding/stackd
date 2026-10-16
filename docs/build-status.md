@@ -362,6 +362,14 @@ It was checked against a probe file and a fake `out/dev/` page, and caught all t
 - `NEXT_PUBLIC_FEATURES=all` under `next dev`: the bell, tiles, Upcoming, tab bar, `&tab=`, placeholders, heart and tabs all come back. 4 checks.
 - Not tested: anything on an iPhone (below).
 
+**Fixes before build 2** (2026-10-16), with 02, 03, 11, 12 and flows-and-states updated to match:
+- University's subtitle reads "{major} from {college}." ("Computer Science B.S. from Las Positas College."), as on Home's plan card, or just "{major}." with no college.
+- Settings' Major row shows the degree ("Computer Science B.S.").
+- Privacy, Terms and Support are in sentence case: page titles "Privacy policy", "Terms of use", "Support", tab titles "Stackd privacy policy" and so on, and Support's in-sentence links ("the privacy policy and the terms of use"). Every heading on the three pages was checked.
+- Home's setup card is titled "No plan yet". The body and the "Set up your plan" button are unchanged.
+- University's sheet fills to the bottom of the screen, so nothing shows below the footer.
+- Checked on the release build: 12 checks for these, and step 14's 39-check audit again with the new headings. All the suites and the release checks pass.
+
 **On the Mac: sync the iOS project, make build 2 and upload it.** Version stays 1.0.0; the build number goes from 1 to 2.
 1. Get the code and build the web app into the iOS project:
    ```bash

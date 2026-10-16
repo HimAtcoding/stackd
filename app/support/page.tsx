@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DocPage, DocSection, ExternalLink, InlineLink, List, P, SupportEmail } from "@/components/doc-page";
 
-export const metadata: Metadata = { title: "Stackd Support" };
+export const metadata: Metadata = { title: "Stackd support" };
 
 // /support/ (12): the App Store's support URL. How to reach the team, and answers to the questions sign-in raises.
 export default function SupportPage() {
@@ -56,8 +56,8 @@ export default function SupportPage() {
 
       <DocSection title="Privacy and terms">
         <P>
-          Read the <InlineLink href="/privacy/">Privacy Policy</InlineLink> and the{" "}
-          <InlineLink href="/terms/">Terms of Use</InlineLink>.
+          Read the <InlineLink href="/privacy/">privacy policy</InlineLink> and the{" "}
+          <InlineLink href="/terms/">terms of use</InlineLink>.
         </P>
       </DocSection>
     </DocPage>

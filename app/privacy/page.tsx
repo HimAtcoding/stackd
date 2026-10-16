@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { DocPage, DocSection, List, P, SupportEmail } from "@/components/doc-page";
 import { POLICIES_UPDATED } from "@/lib/about";
 
-export const metadata: Metadata = { title: "Stackd Privacy Policy" };
+export const metadata: Metadata = { title: "Stackd privacy policy" };
 
 // /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-13.
 // Change it, and POLICIES_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
-    <DocPage title="Privacy Policy" updated={POLICIES_UPDATED}>
+    <DocPage title="Privacy policy" updated={POLICIES_UPDATED}>
       <P className="mt-6">
         Stackd is a free transfer-planning app for California community college students. This policy says what Stackd
         keeps about you, why, who helps us run it, and how to delete it.

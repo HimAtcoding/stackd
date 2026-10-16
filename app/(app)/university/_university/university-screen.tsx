@@ -49,7 +49,8 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
   return (
     <div className="min-h-dvh bg-surface">
       {university?.demo && <DemoStrip />}
-      <main className="mx-auto max-w-[480px]">
+      {/* A column as tall as the screen, so the sheet below the hero fills to the bottom with no seam */}
+      <main className="mx-auto flex min-h-dvh max-w-[480px] flex-col">
         {/* Hero runs under the status bar; the scrim keeps the status bar legible on busy art */}
         <div className="relative h-[248px] overflow-hidden bg-sky-100">
           {hero}
@@ -61,7 +62,7 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
         </div>
 
         <section
-          className="relative -mt-6 rounded-t-sheet bg-surface shadow-[0_-8px_24px_rgba(5,16,66,.06)]"
+          className="relative -mt-6 flex-1 rounded-t-sheet bg-surface shadow-[0_-8px_24px_rgba(5,16,66,.06)]"
           style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
         >
           {university ? (

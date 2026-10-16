@@ -10,7 +10,7 @@ No mockup. Built from Settings (11) and 00's tokens. Written 2026-10-13, with th
 ┌───────────────────────────────┐  --sky-50
 │ (←)                           │  safe-area top + 8, back button (00)
 │                               │  24
-│ Privacy Policy                │  title-1 --navy-900, x 24
+│ Privacy policy                │  title-1 --navy-900, x 24
 │ Updated October 13, 2026      │  8, caption --slate-600 (Privacy and Terms only)
 │                               │  24
 │ Intro paragraph               │  body --slate-700
@@ -29,7 +29,8 @@ Alignment: left, text at x 24 in the 480 column. The footer is centered. No card
 
 - Back: history back, or Home when there's no history (Home sends a signed-out visitor to Welcome or Sign in).
 - Links inside sentences: `--blue-600`, weight 600, underlined. Outside sites (ASSIST) open in a new tab or Safari; the email address opens Mail.
-- No tab bar and no demo strip. Each page has its own `<title>` ("Stackd Privacy Policy", "Stackd Terms of Use", "Stackd Support").
+- No tab bar and no demo strip. Each page has its own `<title>` ("Stackd privacy policy", "Stackd terms of use", "Stackd support").
+- Titles and headings in sentence case, like the rest of the app: "Privacy policy", "Terms of use", "Support". Links in a sentence too ("the privacy policy and the terms of use").
 
 ## Content rules
 

@@ -76,7 +76,7 @@ A tappable row is one `<a>` or `<button>` whose name includes the value, for exa
 |---|---|---|
 | College | The home college's name, or "Not listed" | `/onboarding/?step=college&edit=1` |
 | Schools | One school: its name. More: "{n} schools" | `/onboarding/?step=schools&edit=1` |
-| Major | One target: the major's name, or "Not listed yet". Several with the same major: that name. Several different: "{n} majors". Any target missing a major: "Pick a major" in `--blue-600` | `/onboarding/?step=major&edit=1` |
+| Major | One target: the major's name with its degree ("Computer Science B.S.", as on Home), or "Not listed yet". Several with the same major: that name. Several different: "{n} majors". Any target missing a major: "Pick a major" in `--blue-600` | `/onboarding/?step=major&edit=1` |
 
 A student who skipped onboarding sees one row instead of the three: "Set up your plan", label in `--blue-600`, with a chevron, opening `/onboarding/?step=college` in first-run mode but without Skip.
 
