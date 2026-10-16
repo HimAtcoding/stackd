@@ -7,6 +7,7 @@ import {
 } from "@supabase/supabase-js";
 import { authorizeWithApple, isNativeApp, openForCallback } from "@/lib/capacitor";
 import { clearPlan } from "@/lib/data/plan";
+import { cancelReminders } from "@/lib/reminders/native";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
 import { createNonce, isNativeCallback, NATIVE_CALLBACK_URL } from "./native";
@@ -24,10 +25,13 @@ const PER_ACCOUNT_KEYS = [
   "stackd.saved",
   "stackd.progressOwner",
   "stackd.progressQueue",
-  // Deadline marks, checklist steps and the transfer term (lib/data/deadlines.ts)
+  // Deadline marks, checklist steps and the transfer term, and changes to them not yet sent (lib/data/deadlines.ts)
   "stackd.deadlines",
   "stackd.steps",
   "stackd.term",
+  "stackd.deadlinesQueue",
+  // Reminder switch, default days and the card's dismissal (lib/reminders)
+  "stackd.reminders",
 ];
 
 // 09 → Supabase mapping. No response, or anything unexpected, is "network"; in development the real code is logged.
@@ -249,6 +253,8 @@ export const supabaseAuth: Auth = {
 
   // This device only: the student's other devices stay signed in
   async signOut() {
+    // No reminder stays scheduled for a student who isn't signed in (14 → What gets scheduled)
+    await cancelReminders();
     await getSupabase()?.auth.signOut({ scope: "local" });
     PER_ACCOUNT_KEYS.forEach(removeStorage);
     clearPlan();
@@ -262,7 +268,8 @@ export const supabaseAuth: Auth = {
         if (process.env.NODE_ENV === "development") console.error("delete_my_account failed", error.code, error.message);
         return fail("network");
       }
-      // Every session ended with the account, so only this device's copy is left to drop
+      // Every session ended with the account, so only this device's copy and its reminders are left to drop
+      await cancelReminders();
       await client().auth.signOut({ scope: "local" });
       clearPlan();
       clearStackdStorage();

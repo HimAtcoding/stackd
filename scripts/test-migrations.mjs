@@ -175,13 +175,104 @@ await expectOk("null targets leave the targets alone", () => savePlan("authentic
 check("\"My college isn't listed\" clears the home college", (await homeOf(A)) === null, await homeOf(A));
 check("the targets are still there", (await targetsOf(A)).length === 1, await targetsOf(A));
 
+// Deadlines (14): only verified dates, checklists and steps reach the app, and only the service role writes them
+const addDeadline = (slug, columns = {}) => {
+  const row = {
+    slug, cycle: "fall-2027", audience: "uc", kind: "application", title: "Test application", summary: "A test date.",
+    opens_at: "2026-10-01T00:00:00-07:00", due_at: "2026-11-30T23:59:00-08:00", due_has_time: true,
+    source_name: "Test source", source_url: "https://example.org/dates", ...columns,
+  };
+  // An undefined column is left out, so the table's default applies
+  const entries = Object.entries(row).filter(([, v]) => v !== undefined);
+  return as("service_role", null, `insert into deadlines (${entries.map(([k]) => k).join(", ")}, retrieved_at)
+    values (${entries.map((_, i) => `$${i + 1}`).join(", ")}, now()) returning id`, entries.map(([, v]) => v));
+};
+const verifyRow = (table, id) => as("service_role", null, `update ${table} set verification_status = 'verified', verified_at = now() where id = $1`, [id]);
+
+await expectError("anon cannot add a deadline", () => as("anon", null, "insert into deadlines (slug) values ('x')"), /permission denied/);
+await expectError("a student cannot add a deadline", () => as("authenticated", A, "insert into deadlines (slug) values ('x')"), /permission denied/);
+const dueId = (await expectOk("service role adds a deadline", () => addDeadline("test-application")))?.rows[0].id;
+await expectRows("an unverified deadline is hidden from anon", () => as("anon", null, "select * from deadlines"), 0);
+await expectRows("an unverified deadline is hidden from students", () => as("authenticated", A, "select * from deadlines"), 0);
+await verifyRow("deadlines", dueId);
+await expectRows("a verified deadline is readable by anon", () => as("anon", null, "select * from deadlines"), 1);
+const dueRow = (await as("authenticated", A, "select due_at, due_has_time from deadlines where id = $1", [dueId])).rows[0];
+check("an 11:59 p.m. Pacific deadline keeps its exact instant", dueRow?.due_at.toISOString() === "2026-12-01T07:59:00.000Z" && dueRow.due_has_time === true, dueRow);
+const dateOnly = await addDeadline("date-only", { opens_at: undefined, due_at: "2027-01-31T23:59:59-08:00", due_has_time: undefined });
+const dateOnlyRow = (await db.query("select due_has_time from deadlines where id = $1", [dateOnly.rows[0].id])).rows[0];
+check("a date with no stated time defaults to due_has_time false", dateOnlyRow?.due_has_time === false, dateOnlyRow);
+await expectError("a verified deadline can't be changed by an import", () =>
+  as("service_role", null, "update deadlines set title = 'Changed' where id = $1", [dueId]), /refusing to update verified/);
+await expectError("a deadline can't open after it's due", () => addDeadline("bad-window", { opens_at: "2026-12-01T00:00:00-08:00" }), /check/);
+await expectError("a deadline's source must be https", () => addDeadline("bad-source", { source_url: "http://example.org" }), /source_url_check/);
+await expectError("a cycle must look like fall-2027", () => addDeadline("bad-cycle", { cycle: "2027" }), /cycle_check/);
+await expectError("a campus-only date needs its school", () => addDeadline("no-campus", { audience: "campus" }), /check/);
+await expectError("a UC-wide date can't name one school", () => addDeadline("uc-with-school", { institution_id: uniId }), /check/);
+await expectOk("a campus-only date names its school", () => addDeadline("campus-date", { audience: "campus", institution_id: uniId }));
+
+const addChecklist = (slug, deadlineId) => as("service_role", null, `insert into checklists (slug, cycle, deadline_id, name, apply_label, apply_url, source_name, source_url, retrieved_at)
+  values ($1, 'fall-2027', $2, 'Test application', 'Open the test application', 'https://example.org/apply', 'Test source', 'https://example.org/how', now()) returning id`, [slug, deadlineId]);
+const addStep = (checklistId, position) => as("service_role", null, `insert into checklist_steps (checklist_id, position, title, summary, source_name, source_url, retrieved_at)
+  values ($1, $2, 'A step', 'What to do.', 'Test source', 'https://example.org/how', now()) returning id`, [checklistId, position]);
+const listId = (await expectOk("service role adds a checklist", () => addChecklist("test-checklist", dueId)))?.rows[0].id;
+await expectError("one checklist per deadline", () => addChecklist("second-checklist", dueId), /duplicate key/);
+const stepId = (await addStep(listId, 1)).rows[0].id;
+await expectError("one step per position", () => addStep(listId, 1), /duplicate key/);
+await expectRows("an unverified checklist is hidden", () => as("anon", null, "select * from checklists"), 0);
+await verifyRow("checklists", listId);
+await expectRows("a verified checklist on a verified deadline is readable", () => as("anon", null, "select * from checklists"), 1);
+await expectRows("an unverified step is hidden", () => as("anon", null, "select * from checklist_steps"), 0);
+await verifyRow("checklist_steps", stepId);
+await expectRows("a verified step on a verified checklist is readable", () => as("authenticated", A, "select * from checklist_steps"), 1);
+const hiddenDue = (await addDeadline("unverified-application")).rows[0].id;
+const hiddenList = (await addChecklist("hidden-checklist", hiddenDue)).rows[0].id;
+await verifyRow("checklists", hiddenList);
+await expectRows("a verified checklist on an unverified deadline stays hidden", () => as("anon", null, "select * from checklists where id = $1", [hiddenList]), 0);
+const hiddenStep = (await addStep(hiddenList, 1)).rows[0].id;
+await verifyRow("checklist_steps", hiddenStep);
+await expectRows("a verified step under a hidden checklist stays hidden", () => as("anon", null, "select * from checklist_steps where id = $1", [hiddenStep]), 0);
+await expectError("a student cannot change a step", () => as("authenticated", A, "update checklist_steps set title = 'x'"), /permission denied/);
+
+// The student's marks: owner only
+await expectError("anon can't read deadline marks", () => as("anon", null, "select * from user_deadlines"), /permission denied/);
+await expectOk("a student marks a deadline done with reminders", () =>
+  as("authenticated", A, "insert into user_deadlines (user_id, deadline_id, done_at, reminders) values ($1, $2, now(), '{7,1}')", [A, dueId]));
+await expectOk("reminders can follow the default (null)", () =>
+  as("authenticated", B, "insert into user_deadlines (user_id, deadline_id) values ($1, $2)", [B, dueId]));
+await expectError("reminders are only 7, 3, 1 or 0 days before", () =>
+  as("authenticated", B, "update user_deadlines set reminders = '{5}' where user_id = $1", [B]), /reminders_check/);
+await expectError("a student can't mark a deadline for someone else", () =>
+  as("authenticated", A, "insert into user_deadlines (user_id, deadline_id) values ($1, $2)", [B, hiddenDue]), /row-level security/);
+await expectRows("a student sees only their own marks", () => as("authenticated", A, "select * from user_deadlines"), 1);
+const undone = await expectOk("a student can't undo another student's mark", () =>
+  as("authenticated", B, "update user_deadlines set done_at = null where user_id = $1 returning user_id", [A]));
+check("the update reached no one else's row", undone?.rows.length === 0, undone?.rows);
+await expectOk("a student undoes their own mark", () => as("authenticated", B, "delete from user_deadlines where user_id = $1", [B]));
+await expectOk("a student checks off a step", () => as("authenticated", A, "insert into user_checklist_steps (user_id, step_id) values ($1, $2)", [A, stepId]));
+await expectRows("another student doesn't see it", () => as("authenticated", B, "select * from user_checklist_steps"), 0);
+await expectError("a student can't check a step off for someone else", () =>
+  as("authenticated", B, "insert into user_checklist_steps (user_id, step_id) values ($1, $2)", [A, hiddenStep]), /row-level security/);
+
+// The transfer term on the profile
+await expectOk("a student saves their transfer term", () =>
+  as("authenticated", A, "update profiles set transfer_term = 'fall-2027', transfer_term_asked = true where user_id = $1", [A]));
+await expectOk("\"Not sure yet\" saves no term, and stops the asking", () =>
+  as("authenticated", B, "update profiles set transfer_term = null, transfer_term_asked = true where user_id = $1", [B]));
+await expectError("a transfer term must look like fall-2027", () =>
+  as("authenticated", A, "update profiles set transfer_term = 'next year' where user_id = $1", [A]), /transfer_term_check/);
+await expectError("a term can't be saved without counting as asked", () =>
+  as("authenticated", A, "update profiles set transfer_term = 'fall-2028', transfer_term_asked = false where user_id = $1", [A]), /transfer_term_asked_check/);
+const termChange = await expectOk("a student can't change another student's term", () =>
+  as("authenticated", B, "update profiles set transfer_term = 'fall-2028' where user_id = $1 returning user_id", [A]));
+check("the term update reached no one else's row", termChange?.rows.length === 0, termChange?.rows);
+
 // Deleting an account: only the caller's, with every per-student row
-const course = await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
+const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
 await as("authenticated", A, "insert into saved_courses (user_id, course_id) values ($1, $2)", [A, course.rows[0].id]);
 await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major_id: majorId }]);
 await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
-const PER_STUDENT = ["profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools"];
+const PER_STUDENT = ["profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps"];
 const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
   PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));
 const before = await rowCounts(A);

@@ -8,7 +8,7 @@ function readEnv(name) {
   return env.match(new RegExp(`^${name}=(.*)$`, "m"))?.[1]?.trim().replace(/^["']|["']$/g, "") || null;
 }
 
-// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql
+// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql and 20261016120100_deadlines_import.sql
 export function supabaseDatabase() {
   const url = readEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = readEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -33,6 +33,16 @@ export function supabaseDatabase() {
       const links = await client.from("agreement_links").select("*").in("receiving_institution_id", ids);
       if (majors.error || links.error) throw new Error((majors.error ?? links.error).message);
       return { institutions: inst.data, majors: majors.data, agreement_links: links.data };
+    },
+    importDeadlines: (payload, sourceFile, dryRun) => call("import_deadlines_batch", { payload, source_file: sourceFile, dry_run: dryRun }),
+    // Deadlines and checklists as stored, for the review report
+    async deadlineRowsFor(payload) {
+      const deadlines = await client.from("deadlines").select("*").in("slug", payload.deadlines.map((d) => d.slug));
+      const lists = await client.from("checklists").select("*").in("slug", [...new Set([...payload.checklists.map((c) => c.slug), ...payload.checklist_steps.map((s) => s.checklist)])]);
+      if (deadlines.error || lists.error) throw new Error((deadlines.error ?? lists.error).message);
+      const steps = await client.from("checklist_steps").select("*").in("checklist_id", lists.data.map((c) => c.id));
+      if (steps.error) throw new Error(steps.error.message);
+      return { deadlines: deadlines.data, checklists: lists.data, checklist_steps: steps.data };
     },
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });

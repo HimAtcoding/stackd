@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useState, ViewTransition } from "react";
-import { BellIcon, CheckIcon } from "@phosphor-icons/react/ssr";
+import { BellIcon, BellRingingIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { CountdownBlock } from "@/components/deadlines/countdown-block";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { rowLabel, type Deadline, type Scope } from "@/lib/deadlines";
@@ -12,13 +12,15 @@ type NextUpCardProps = {
   deadline: Deadline;
   now: Date;
   scope: Scope;
+  // Reminders are on and this date has at least one: the button reads "Reminders on"
+  remindersOn: boolean;
   onRemind: () => void;
   onMarkDone: () => void;
 };
 
 // Home's top layer at the same size, as a plain card, with Remind me and Mark done (14 → Next-up card).
 // After Mark done it hands over to the next date: the content fades in and the number counts to its new value.
-export function NextUpCard({ deadline, now, scope, onRemind, onMarkDone }: NextUpCardProps) {
+export function NextUpCard({ deadline, now, scope, remindersOn, onRemind, onMarkDone }: NextUpCardProps) {
   // The date shown before this one, so the number counts from its value
   const [shown, setShown] = useState<{ id: string; days: number; from?: number }>({ id: deadline.id, days: deadline.daysLeft });
   if (shown.id !== deadline.id) setShown({ id: deadline.id, days: deadline.daysLeft, from: shown.days });
@@ -35,8 +37,12 @@ export function NextUpCard({ deadline, now, scope, onRemind, onMarkDone }: NextU
       </ViewTransition>
       <div className="mt-4 flex gap-3">
         {FEATURES.reminders && (
-          <TintedButton icon={<BellIcon weight="bold" size={20} aria-hidden />} onClick={onRemind} className="flex-1">
-            Remind me
+          <TintedButton
+            icon={remindersOn ? <BellRingingIcon weight="fill" size={20} aria-hidden /> : <BellIcon weight="bold" size={20} aria-hidden />}
+            onClick={onRemind}
+            className="flex-1"
+          >
+            {remindersOn ? "Reminders on" : "Remind me"}
           </TintedButton>
         )}
         <TintedButton

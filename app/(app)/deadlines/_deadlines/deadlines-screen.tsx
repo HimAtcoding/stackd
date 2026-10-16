@@ -4,6 +4,8 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { BackButton } from "@/components/back-button";
+import { RemindersAsk } from "@/components/deadlines/reminders-ask";
+import { RemindersCard } from "@/components/deadlines/reminders-card";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
@@ -12,11 +14,12 @@ import { TintedButton } from "@/components/ui/tinted-button";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
-import { markDeadline, saveTerm, useDeadlines, useScope } from "@/lib/data/deadlines";
+import { markDeadline, remindersFor, retryDeadlines, saveTerm, setReminders, useDeadlines, useScope } from "@/lib/data/deadlines";
 import { retryPlan } from "@/lib/data/plan";
 import { cycleLabel, nextCycle, sourceLine, type Deadline } from "@/lib/deadlines";
 import { FEATURES } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
+import { dismissRemindersCard, turnOnReminders, useReminders } from "@/lib/reminders";
 import { DateSheet } from "./date-sheet";
 import { NextUpCard } from "./next-up-card";
 import { TermQuestion, TermSheet } from "./term-question";
@@ -44,6 +47,51 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const [termSheet, setTermSheet] = useState(false);
   const [toast, setToast] = useState<{ key: number; text: string; undo?: string } | null>(null);
   const [settling, setSettling] = useState<string[]>([]);
+  const reminders = useReminders();
+  // The soft ask is open; `then` runs once the student has answered it (allowed or not)
+  const [asking, setAsking] = useState<{ then?: (allowed: boolean) => void } | null>(null);
+
+  const remindersOnToast = () => setToast({ key: Date.now(), text: "Reminders on" });
+
+  // 14 → Permission flow, step 2: iOS's own prompt. Allowed: reminders on for every tracked date.
+  async function allowReminders() {
+    const then = asking?.then;
+    setAsking(null);
+    const allowed = (await turnOnReminders()) === "granted";
+    if (allowed) remindersOnToast();
+    then?.(allowed);
+  }
+
+  function notNow() {
+    const then = asking?.then;
+    setAsking(null);
+    then?.(false);
+  }
+
+  // The reminders card's "Turn on reminders"
+  async function turnOnFromCard() {
+    if (reminders.permission === "prompt") return setAsking({});
+    if ((await turnOnReminders()) === "granted") remindersOnToast();
+  }
+
+  // "Remind me": the date's sheet at Reminders, after the soft ask while iOS hasn't asked yet
+  function remind(id: string) {
+    const openSheet = () => setSheet({ id, open: true, reminders: true });
+    if (reminders.permission === "prompt") setAsking({ then: (allowed) => allowed && openSheet() });
+    else openSheet();
+  }
+
+  // A reminder choice saves at once. While iOS hasn't asked, the soft ask comes first and the sheet comes back after;
+  // with permission already given, choosing a reminder turns reminders back on if they were off.
+  async function chooseReminders(id: string, days: number[]) {
+    setReminders(id, days);
+    if (reminders.permission === "prompt") {
+      setSheet((s) => (s ? { ...s, open: false } : s));
+      setAsking({ then: () => setSheet({ id, open: true, reminders: true }) });
+    } else if (reminders.permission === "granted" && !reminders.on && days.length > 0) {
+      if ((await turnOnReminders()) === "granted") remindersOnToast();
+    }
+  }
 
   function markDone(id: string, done: boolean, withToast: boolean) {
     markDeadline(id, done);
@@ -72,6 +120,10 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     : [];
   const finished = ok ? ok.view.finished.filter((d) => !settling.includes(d.id)) : [];
   const cycle = ok ? cycleLabel(ok.view.cycle) : "";
+  // Shown once, until reminders have been on or the card is closed. Hidden when iOS permission is denied, since
+  // its button couldn't do anything; Settings explains that case.
+  const showRemindersCard =
+    FEATURES.reminders && reminders.supported && !reminders.everOn && !reminders.dismissed && reminders.permission !== "denied";
 
   return (
     <div className="min-h-dvh bg-sky-50">
@@ -96,7 +148,16 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             <InlineError
               title="Couldn't load deadlines"
               body="Check your connection, then try again."
-              action={<TintedButton onClick={retryPlan}>Try again</TintedButton>}
+              action={
+                <TintedButton
+                  onClick={() => {
+                    retryPlan();
+                    retryDeadlines();
+                  }}
+                >
+                  Try again
+                </TintedButton>
+              }
             />
           </div>
         )}
@@ -139,15 +200,23 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             )}
 
             {next ? (
-              <div className="mx-4 mt-6">
-                <NextUpCard
-                  deadline={next}
-                  now={ok.now}
-                  scope={ok.scope}
-                  onRemind={() => setSheet({ id: next.id, open: true, reminders: true })}
-                  onMarkDone={() => markDone(next.id, true, true)}
-                />
-              </div>
+              <>
+                <div className="mx-4 mt-6">
+                  <NextUpCard
+                    deadline={next}
+                    now={ok.now}
+                    scope={ok.scope}
+                    remindersOn={reminders.active && remindersFor(ok.marks[next.id], reminders.days).length > 0}
+                    onRemind={() => remind(next.id)}
+                    onMarkDone={() => markDone(next.id, true, true)}
+                  />
+                </div>
+                {showRemindersCard && (
+                  <div className="mx-4 mt-6">
+                    <RemindersCard onTurnOn={turnOnFromCard} onDismiss={dismissRemindersCard} />
+                  </div>
+                )}
+              </>
             ) : all.length > 0 ? (
               <EmptyState
                 icon={husky}
@@ -180,10 +249,18 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             mark={sheet ? ok.marks[sheet.id] : undefined}
             scope={ok.scope}
             focusReminders={Boolean(sheet?.reminders)}
+            reminders={{
+              defaults: reminders.days,
+              denied: reminders.permission === "denied",
+              onChoose: (days) => {
+                if (sheet) chooseReminders(sheet.id, days);
+              },
+            }}
             onClose={() => setSheet((s) => (s ? { ...s, open: false } : s))}
             onMarkDone={(done) => sheet && markDone(sheet.id, done, false)}
           />
           <TermSheet open={termSheet} onClose={() => setTermSheet(false)} term={ok.term.term} onChoose={chooseTerm} />
+          {reminders.supported && <RemindersAsk open={asking !== null} onAllow={allowReminders} onClose={notNow} />}
         </>
       )}
 
