@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { getHome, getTargetUniversity } from "@/lib/data";
+import { usePlanScope } from "@/lib/data/deadlines";
 import { universityHref } from "@/lib/features";
 import { readFirstName } from "@/lib/profile";
 import { stepStatus, useRequirementStatuses } from "@/lib/requirements";
@@ -22,8 +23,7 @@ export function DemoHome({ art }: { art: HomeArt }) {
   const steps = home?.journey?.steps ?? [];
   const inProgress = Object.values(statuses).filter((s) => s === "in_progress").length;
   const counts = home?.counts ?? {};
-  // Soonest first; items without a date go last
-  const upcoming = [...(home?.upcoming ?? [])].sort((a, b) => (a.dueInDays ?? Infinity) - (b.dueInDays ?? Infinity));
+  const scope = usePlanScope(null, false);
 
   return (
     <HomeFrame
@@ -34,8 +34,8 @@ export function DemoHome({ art }: { art: HomeArt }) {
       unread={home?.notifications?.unread ?? 0}
       settings={false}
       card={steps.length > 0 && <JourneyCard statuses={steps.map((s) => stepStatus(s, statuses))} />}
+      scope={scope}
       body={{
-        upcoming,
         tiles: homeTiles({
           requirements: {
             subtitle: `${inProgress} in progress`,

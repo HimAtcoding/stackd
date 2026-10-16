@@ -2,6 +2,7 @@
 
 /* Pressed and focus states, also forced with data attributes on /dev/components */
 @custom-variant pressed (&:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]));
+@custom-variant group-pressed (:where(.group):is(:active, [data-pressed]) &);
 @custom-variant focus-ring (&:is(:focus-visible, [data-focus]));
 @custom-variant field-focus (&:is(:focus, [data-focus]):not(:read-only));
 
@@ -38,6 +39,9 @@
   --amber-500: #eaa005;
   --yellow-400: #fdc940;
   --confetti-sky: #4fa8f7;
+  /* The second and third layers of the deadline stack (14) */
+  --stack-2: #f1f7fd;
+  --stack-3: #e6f0fa;
 
   --gutter-card: 16px;
   --gutter-text: 24px;
@@ -111,6 +115,8 @@
   --color-amber-500: var(--amber-500);
   --color-yellow-400: var(--yellow-400);
   --color-confetti-sky: var(--confetti-sky);
+  --color-stack-2: var(--stack-2);
+  --color-stack-3: var(--stack-3);
 
   --radius-*: initial;
   --radius-sm: var(--r-sm);
@@ -140,6 +146,14 @@
   line-height: 68px;
   font-weight: 900;
   letter-spacing: -0.02em;
+}
+/* Day counts only (14) */
+@utility type-countdown {
+  font-size: 56px;
+  line-height: 52px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 @utility type-display {
   font-size: 38px;
@@ -384,7 +398,27 @@ html[data-nav="back"]::view-transition-new(root) {
   }
 }
 
+/* The step tapped on Home, tinted as the steps sheet opens (14 → Steps sheet) */
+.tint-flash {
+  animation: tint-flash 600ms var(--ease-out) both;
+}
+@keyframes tint-flash {
+  0%,
+  60% {
+    background-color: var(--blue-50);
+  }
+}
+
+/* Home's top deadline layer becomes the Deadlines screen's next-up card (14 → Motion) */
+::view-transition-group(.next-deadline) {
+  z-index: 3;
+  animation-duration: var(--dur-slow);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(.next-deadline) {
+    animation: none;
+  }
   .code-caret {
     animation: none;
   }

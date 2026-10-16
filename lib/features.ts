@@ -8,7 +8,11 @@ const V1 = {
   events: false,
   explore: false,
   notifications: false,
+  // Deadlines (14): Home's Up next stack, Home's Get ready card, the Deadlines screen, and reminders in the iPhone app
   upcoming: false,
+  getReady: false,
+  deadlines: false,
+  reminders: false,
   trackApplication: false,
   universityTabs: false,
   savedSchools: false,
@@ -35,7 +39,6 @@ const UNBUILT = {
   mentors: { path: "/mentors/", feature: "mentors" },
   events: { path: "/events/", feature: "events" },
   notifications: { path: "/notifications/", feature: "notifications" },
-  upcoming: { path: "/upcoming/", feature: "upcoming" },
   requirement: { path: "/requirement/", feature: "requirementDetail" },
   trackApplication: { path: "/track-application/", feature: "trackApplication" },
 } as const satisfies Record<string, { path: string; feature: Feature }>;
@@ -49,6 +52,9 @@ export function unbuiltHref(screen: Unbuilt, query = ""): string | null {
 }
 
 export const unbuiltFeature = (screen: Unbuilt): Feature => UNBUILT[screen].feature;
+
+// The Deadlines screen, or null while its flag is off. `query` starts with "?".
+export const deadlinesHref = (query = ""): string | null => (FEATURES.deadlines ? `/deadlines/${query}` : null);
 
 // The University screen for a school. Without its tabs (v1) the URL has no &tab=.
 export const universityHref = (slug: string) => `/university/?slug=${slug}${FEATURES.universityTabs ? "&tab=requirements" : ""}`;

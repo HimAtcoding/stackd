@@ -1,0 +1,48 @@
+{
+  "demo": true,
+  "note": "Stand-in rows shaped like checklists and checklist_steps (14-deadlines.md) until the real import lands. Not checked against the official pages.",
+  "checklists": [
+    {
+      "demo": true,
+      "id": "uc-application-fall-2027",
+      "cycle": "fall-2027",
+      "deadline_id": "uc-application-fall-2027",
+      "name": "UC application",
+      "apply_label": "Open the UC application",
+      "apply_url": "https://apply.universityofcalifornia.edu/",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/",
+      "retrieved_at": null,
+      "verified_at": null,
+      "verification_status": "unchecked"
+    },
+    {
+      "demo": true,
+      "id": "cal-state-apply-fall-2027",
+      "cycle": "fall-2027",
+      "deadline_id": "cal-state-apply-fall-2027",
+      "name": "Cal State Apply",
+      "apply_label": "Open Cal State Apply",
+      "apply_url": "https://www.calstate.edu/apply",
+      "source_name": "Cal State Apply",
+      "source_url": "https://www.calstate.edu/apply",
+      "retrieved_at": null,
+      "verified_at": null,
+      "verification_status": "unchecked"
+    }
+  ],
+  "checklist_steps": [
+    { "demo": true, "id": "uc-1", "checklist_id": "uc-application-fall-2027", "position": 1, "title": "Pick your campuses and majors", "summary": "Choose which UC campuses to apply to and your major at each. The fee is per campus." },
+    { "demo": true, "id": "uc-2", "checklist_id": "uc-application-fall-2027", "position": 2, "title": "Enter your courses and grades", "summary": "Type in every college course and grade from your transcripts. UC uses what you enter." },
+    { "demo": true, "id": "uc-3", "checklist_id": "uc-application-fall-2027", "position": 3, "title": "Write your personal insight answers", "summary": "Transfer applicants answer a set number of short questions, including one required question. Check the current rules on UC's page." },
+    { "demo": true, "id": "uc-4", "checklist_id": "uc-application-fall-2027", "position": 4, "title": "Add activities and awards", "summary": "List work, family responsibilities, clubs, volunteering, and awards." },
+    { "demo": true, "id": "uc-5", "checklist_id": "uc-application-fall-2027", "position": 5, "title": "Pay the fee or ask for a waiver", "summary": "Each campus has an application fee. Fee waivers are available for students who qualify." },
+    { "demo": true, "id": "uc-6", "checklist_id": "uc-application-fall-2027", "position": 6, "title": "Submit by Nov 30", "summary": "Submit before 11:59 p.m. Pacific on November 30, 2026." },
+    { "demo": true, "id": "csu-1", "checklist_id": "cal-state-apply-fall-2027", "position": 1, "title": "Pick your campuses and majors", "summary": "Choose which CSU campuses and programs to apply to." },
+    { "demo": true, "id": "csu-2", "checklist_id": "cal-state-apply-fall-2027", "position": 2, "title": "Enter your courses and grades", "summary": "Enter your college coursework and grades from your transcripts." },
+    { "demo": true, "id": "csu-3", "checklist_id": "cal-state-apply-fall-2027", "position": 3, "title": "Add your work and activities", "summary": "Some campuses and programs use this; check yours." },
+    { "demo": true, "id": "csu-4", "checklist_id": "cal-state-apply-fall-2027", "position": 4, "title": "Check for extra campus steps", "summary": "Some majors and campuses ask for a supplemental application or more materials." },
+    { "demo": true, "id": "csu-5", "checklist_id": "cal-state-apply-fall-2027", "position": 5, "title": "Pay the fee or ask for a waiver", "summary": "Each campus has an application fee. Fee waivers are available for students who qualify." },
+    { "demo": true, "id": "csu-6", "checklist_id": "cal-state-apply-fall-2027", "position": 6, "title": "Submit by Nov 30", "summary": "Submit before November 30, 2026. Some campuses accept later applications." }
+  ]
+}

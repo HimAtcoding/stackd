@@ -1,6 +1,6 @@
-import { UnbuiltRoute } from "@/components/unbuilt-route";
+import { UpcomingRedirect } from "./upcoming-redirect";
 
-// Not built yet: the placeholder with its flag on, Home in the v1 release (lib/features.ts)
+// Replaced by /deadlines/ (14)
 export default function UpcomingPage() {
-  return <UnbuiltRoute screen="upcoming" />;
+  return <UpcomingRedirect />;
 }

@@ -11,6 +11,8 @@ type StatusControlProps = {
   // "Mark {title} complete"
   label: string;
   onToggle: () => void;
+  // 28 by default; 24 on Home's Get ready card (14). The hit area stays 44.
+  size?: 24 | 28;
   className?: string;
 };
 
@@ -19,7 +21,7 @@ const OUT = { duration: 0.12, ease: [0.2, 0.8, 0.2, 1] } as const;
 
 // The status icon as a checkbox, 44 × 44 around the 28 icon (03 → Status control).
 // To done: ring fades out over 120, the fill springs 0.6 → 1, the check draws over 180. Back: all reversed in 120.
-export function StatusControl({ done, restStatus, label, onToggle, className }: StatusControlProps) {
+export function StatusControl({ done, restStatus, label, onToggle, size = 28, className }: StatusControlProps) {
   return (
     <MotionConfig reducedMotion="user">
       <button
@@ -30,7 +32,7 @@ export function StatusControl({ done, restStatus, label, onToggle, className }: 
         onClick={onToggle}
         className={cn("flex size-11 items-center justify-center rounded-full", className)}
       >
-        <span aria-hidden className="relative size-7">
+        <span aria-hidden className={cn("relative size-7", size === 24 && "scale-[0.857]")}>
           <motion.span initial={false} animate={{ opacity: done ? 0 : 1 }} transition={OUT} className="absolute inset-0">
             <StatusIcon status={restStatus} />
           </motion.span>

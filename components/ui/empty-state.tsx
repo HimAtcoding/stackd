@@ -4,7 +4,8 @@ type EmptyStateProps = {
   icon: ReactNode;
   title: string;
   body: string;
-  action: ReactNode;
+  // The next action. Left out only when there's nothing to do (Deadlines: all caught up)
+  action?: ReactNode;
   // h1 when the empty state is the whole screen.
   headingLevel?: 1 | 2;
   // Space above the icon, when the screen sets it (the placeholder uses 120).
@@ -21,7 +22,7 @@ export function EmptyState({ icon, title, body, action, headingLevel = 2, top }:
       </span>
       <Heading className="mt-4 text-navy-900 type-title-3">{title}</Heading>
       <p className="mt-2 text-slate-600 type-body">{body}</p>
-      <div className="mt-5 w-full">{action}</div>
+      {action && <div className="mt-5 w-full">{action}</div>}
     </div>
   );
 }

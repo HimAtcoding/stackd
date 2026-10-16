@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { EnvelopeIcon, EyeIcon, LockIcon } from "@phosphor-icons/react/ssr";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { ChoiceChip, ChoiceChips } from "@/components/ui/choice-chip";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { DestructiveButton } from "@/components/ui/destructive-button";
 import { Loading } from "@/components/ui/loading";
@@ -10,6 +11,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { SearchField } from "@/components/ui/search-field";
 import { SettingsGroup, SettingsRow } from "@/components/ui/settings-row";
 import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
 import { TextField } from "@/components/ui/text-field";
 import { Toast } from "@/components/ui/toast";
 import { TintedButton } from "@/components/ui/tinted-button";
@@ -211,5 +213,42 @@ export function LoadingDemo() {
       {run > 0 ? <Loading key={run} label="Loading requirements" /> : <p className="text-slate-600 type-caption">Not started</p>}
       <TintedButton onClick={() => setRun((n) => n + 1)}>Start a wait</TintedButton>
     </>
+  );
+}
+
+export function ChipDemo() {
+  const [term, setTerm] = useState<string | null>("fall-2027");
+  return (
+    <>
+      <Label>Tap to choose</Label>
+      <ChoiceChips aria-label="Sample term">
+        {[["fall-2027", "Fall 2027"], ["fall-2028", "Fall 2028"], ["none", "Not sure yet"]].map(([value, label]) => (
+          <ChoiceChip key={value} checked={term === value} onSelect={() => setTerm(value)}>
+            {label}
+          </ChoiceChip>
+        ))}
+      </ChoiceChips>
+      <Label>Pressed and focus</Label>
+      <div className="flex gap-2">
+        <ChoiceChip checked={false} onSelect={() => {}} data-pressed>
+          Pressed
+        </ChoiceChip>
+        <ChoiceChip checked={false} onSelect={() => {}} data-focus>
+          Focus
+        </ChoiceChip>
+      </div>
+    </>
+  );
+}
+
+export function SwitchDemo() {
+  const [on, setOn] = useState(true);
+  return (
+    <div className="flex items-center gap-4">
+      <Switch checked={on} onChange={setOn} aria-label="Sample switch" />
+      <Switch checked={false} onChange={() => {}} aria-label="Off" />
+      <Switch checked={false} onChange={() => {}} disabled aria-label="Disabled" />
+      <Switch checked onChange={() => {}} data-focus aria-label="Focus" />
+    </div>
   );
 }

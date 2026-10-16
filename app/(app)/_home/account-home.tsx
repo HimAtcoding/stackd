@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
+import { usePlanScope } from "@/lib/data/deadlines";
 import { retryPlan, usePlan } from "@/lib/data/plan";
 import { universityHref } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
@@ -23,6 +24,7 @@ export function AccountHome({ art }: { art: HomeArt }) {
   const cachedName = useSyncExternalStore(subscribeNoop, readFirstName, () => null);
   const plan = state.status === "ok" ? state.plan : null;
   const [first, ...rest] = plan?.targets ?? [];
+  const scope = usePlanScope(plan, state.status === "error");
 
   let subtitle: string | null = null;
   if (plan) {
@@ -57,10 +59,9 @@ export function AccountHome({ art }: { art: HomeArt }) {
       unread={0}
       settings
       card={card}
+      scope={scope}
       body={
         plan && {
-          // No real deadlines in the database yet, so the empty line shows
-          upcoming: [],
           tiles: homeTiles({
             requirements: first
               ? { subtitle: first.name, href: universityHref(first.slug), transitionTypes: ["push"] }

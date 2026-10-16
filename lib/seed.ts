@@ -17,6 +17,8 @@ export type UniversitySeed = {
   name: string;
   type: string;
   city: string;
+  // UC or CSU, for the deadlines that school's students see (14)
+  system?: string;
   // One of the campus pool ids (art-assets → Campus art). Without it, the image is picked by slug.
   heroImage?: string;
   requirements: Requirement[];
@@ -30,15 +32,6 @@ export type JourneyStep = {
   requirementId?: string;
 };
 
-export type UpcomingItem = {
-  demo: true;
-  id: string;
-  type: "deadline" | "event";
-  title: string;
-  body: string;
-  dueInDays?: number;
-};
-
 export type HomeSeed = {
   demo: true;
   greeting?: { demoName?: string; subtitle?: string };
@@ -47,7 +40,6 @@ export type HomeSeed = {
   notifications?: { unread: number };
   counts?: { drafts?: number; newMentorMessages?: number; upcomingEvents?: number };
   journey?: { demo: true; steps: JourneyStep[] };
-  upcoming?: UpcomingItem[];
 };
 
 export type SeedResult<T> = { status: "ok"; data: T } | { status: "missing" } | { status: "broken" };

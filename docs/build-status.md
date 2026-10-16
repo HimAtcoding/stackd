@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac, below). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-16 (step 16, Ryan's part: deadlines on stand-in data, behind flags, below). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -323,6 +323,32 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - Google: branding links and authorized domain (Before TestFlight 5; Publish still open).
 - **App Store Connect:** record **"Stackd: Transfer Planner"** (Apple ID `6822523006`; "Stackd" alone is taken by another developer), bundle `app.stackd.transfer`, SKU `stackd-ios-1`, English (U.S.), Education, Free, United States. Version 1.0 has the description (ending in the four-name credit), promotional text, keywords, support URL, copyright with all four names, sign-in required with the review account, contact `joinstackd@gmail.com`, and the review notes; all re-read after a reload. Subtitle "Plan your California transfer". Content rights answered. Age rating 4+. App Privacy published: name, email, user ID and other user content, App Functionality only, linked, no tracking. Privacy policy URL set. Missing: the build and screenshots (Mac).
 
+## Deadlines, Ryan's part (step 16, 2026-10-16)
+
+Spec 14 on the web build, tested on Windows. Built: Home's Up next stack and Get ready card, the Deadlines screen (`/deadlines/`), the date sheet, the steps sheet, the term question and its "Change" sheet, and the new 00 components. **All of it is behind flags that are off in the release** (`upcoming`, `getReady`, `deadlines`, plus `reminders` for the Remind me button and the date sheet's Reminders block). `NEXT_PUBLIC_FEATURES=all` turns them on under `next dev`.
+
+**Stand-in data until Abyan's tables land:**
+- `data/seed/deadlines.json` and `checklists.json`: rows shaped like `deadlines`, `checklists` and `checklist_steps`, every one `"demo": true` and `verification_status: "unchecked"`. The dates are spec 14's first-dates table for fall 2027. The Cal State Apply course update and final transcripts are left out because the spec gives them no date, and a date isn't guessed. Summaries are in Stackd's words; source links are the official sites' home pages only.
+- Only `verified` rows reach a student, plus demo rows. A demo row on screen turns on the demo strip (Home and Deadlines), and source lines say "Demo data, not checked against the official sites yet."
+- The student's marks (stand-ins for `user_deadlines`, `user_checklist_steps`, `profiles.transfer_term`) are on the device under `stackd.deadlines`, `stackd.steps` and `stackd.term`, tagged with the account id and cleared at sign-out.
+- `lib/data/deadlines.ts` is the one file that changes when the database takes over. `lib/deadlines.ts` holds the rules (which dates a student sees, Pacific-day counts, which checklist shows) and the copy.
+- `fetchPlan()` now reads `institutions.system`, so the plan knows UC from CSU. No schema change. A copy saved before this counts each school as both until the refresh lands.
+
+**For Abyan, when the tables go in:**
+- The table needs a way to tell a date with a stated time ("11:59 p.m. Pacific") from one without. The stand-in uses a `due_has_time` column; date-only rows are stored at 23:59:59 Pacific.
+- Abyan's part still to come: reminder scheduling and the permission flow (soft ask, iOS prompt, denied state), the "Reminders on" button state, the reminders card, Settings' Reminders group and Transfer term row. On the iPhone the date sheet's four reminder choices already save to the stand-in store (default 1 week and 1 day before).
+
+**Other changes:**
+- Home's old 02 Upcoming list is gone (its card, its `home.json` records and `UpcomingItem`). The `upcoming` flag now means Up next, as spec 14 says. `/upcoming/` goes to `/deadlines/`, or Home while that's off.
+- `/deadlines/` with its flag off goes Home. Links to it come only from `deadlinesHref()` in `lib/features.ts`, and `check-release.mjs` fails the build otherwise (checked with a probe file).
+- `StatusControl` takes `size={24}` for the Get ready rows. `EmptyState`'s action is optional ("You're all caught up" has none).
+- `/dev/components` shows the choice chip, switch, window bar, progress ring, timeline row and spine, and the new `--stack-2`, `--stack-3` and `countdown` type.
+- In development, `localStorage["stackd.dev.deadlines"] = "loading"` or `"error"` shows those states.
+
+**Tested 2026-10-16** (Windows, stand-in session with mocked plan rows, Playwright's clock for the dates): 48 browser checks against spec 14's Test list for this part, at 393 and 320 wide. Las Positas → UC San Diego shows the UC application on top at 45 days, no Cal State Apply, FAFSA in the stack. Adding a CSU target brings Cal State Apply, and a UC tie picks the UC checklist; CSU-only shows Cal State Apply. Coral and "In 14 days", "Tomorrow", "Today"; "Today / due tonight" on the due day. Mark done hands the next-up card to the next date, the count in Done and past goes up, and Undo puts it back. Term question, toast and term line; Fall 2028 shows the "nothing upcoming" line; no plan shows UC, CSU and aid dates with the note and the "See only your dates" card. The web date sheet says reminders work in the iPhone app, and every date has its source line and "Open official page". Get ready: 2 of 6, checking a step and Undo, all six done. `?id=` opens that date's sheet. Error state on Deadlines; Home hides the section. No sideways scroll at 320. Then lint, `tsc`, `test:db`, `test:import`, `test:oauth` and `npm run build` with the release checks; on the release build with flags off, Home looks as before and `/deadlines/`, `/deadlines/?id=…` and `/upcoming/` go Home.
+
+Not tested: anything on an iPhone, the shared-element push from the stack to the next-up card in Safari (it's a View Transition; where it isn't supported the push runs alone), and VoiceOver itself (accessible names were checked in the DOM).
+
 ## v1 launch build (step 14, 2026-10-15)
 
 Spec 13 (`docs/specs/13-v1-launch.md`) on the web build, tested on Windows. **iOS build 2 isn't made yet:** that's the Mac steps below.
@@ -534,6 +560,7 @@ Still placeholders or missing: `app-icon` (temporary icons above until it exists
 
 | Step | Build | Notes |
 |---|---|---|
+| 16 | The rest of deadlines (14): tables, first dates and verify (Abyan), reminders, custom dates, Settings additions | Ryan's screens are built on stand-in data (above). Switch `lib/data/deadlines.ts` to the tables when they land |
 | 8 | Essays (04) | |
 | 9 | Task complete and the run loop (05) | `motion` is installed (step 7 uses it for the springs); `canvas-confetti` isn't yet. Open the celebration from `onJourneyStepCompleted()` (see above) |
 
@@ -586,14 +613,22 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **Demo mode is off by default.** 00 says `NEXT_PUBLIC_DEMO_STRIP` defaults to on. Since 2026-10-06 development runs in real mode unless it's set to `on`. The demo strip itself still follows the data, not the flag.
 - **Enter code: how the email wraps.** 09 says `word-break: break-all`, which broke even short addresses at the 190 edge ("For student@example.co / m."). The build uses `overflow-wrap: anywhere`, so an address that fits on a line moves down whole and only a too-long one breaks. The address's last character and the closing period stay together, so the period never sits alone.
 - **Sign in's Send code button reads "Sending…" while the code goes out,** and a failed send replaces the error with its own (too many tries or connection). 06 doesn't say what happens in between.
-- **Home upcoming records have an `id`** (`application-deadline`, `transfer-panel`) so each card links to `/upcoming/[id]`. 02's records don't list one.
-- **Home pill from `dueInDays`.** 02's text says the pill comes from `dueDate`, but its demo record has `dueInDays: 14`, so the build reads `dueInDays`. Cards sort soonest first, and undated ones go last.
 - **University toast position.** 00 puts a toast 12 above the primary button when there's no tab bar, but that rule is for a button fixed to the bottom. "Track application" scrolls with the page, so the toast sits at safe-area bottom + 12.
 - **University `theme-color` is `--navy-900`.** 03 asks for it to match the status-bar scrim, which is translucent. Navy matches the demo strip directly under the status bar. iOS ignores `theme-color` with `black-translucent`; it only shows in Android Chrome.
 - **University empty and placeholder tabs use the `Barricade` icon** from the placeholder screen. 03 gives the copy but no icon.
 - **Requirement row layout.** The row link spans the whole row (so its pressed state covers it) with 68 left padding, and the status circle sits on top of it as a separate checkbox. That keeps the two tap targets separate and unnested, as 03's VoiceOver test expects.
 - **Welcome needs a definite height.** It uses `h-dvh min-h-fit`. With only `min-height`, Chromium reports the husky zone as 0 tall to the container query (the first-paint fallback for the husky's height), and the husky and books never show.
 - **Sign in in installed-app mode** fits 852 without scrolling now that the strip is gone. Create account scrolls by about 100, which 07 allows.
+
+### Deadlines (step 16)
+- **Timeline rows sit 8 in with 8 padding,** not full width with 16 padding. The content still starts at x 16, and the pressed tint keeps its rounded corners off the screen edge.
+- **The countdown column is at least 72 wide,** not exactly 72. A three-digit count (early in a cycle) widens it rather than running into the title.
+- **Second lines on timeline rows** come from the audience: "All UC campuses", "All CSU campuses", "Financial aid", or the campus's name, plus the time when the date has one. The table has no column for 14's "Most CSU campuses" or "For Cal Grant"; those ideas are in the summaries.
+- **"Done and past" header** is a button inside an `h2`, so the heading stays a heading.
+- **The steps sheet's ring at 40** has no number inside (it doesn't fit); "2 of 6" and "Due Nov 30" sit beside it.
+- **Peek titles use the record's title,** so the third layer reads "UC Transfer Academic Update" where the mockup drew "UC grade update".
+- **No light haptic on Mark done.** `@capacitor/haptics` isn't installed; adding it needs a Mac sync. The web vibrate call (as on University) stands in.
+- **Nothing for 14's offline line** ("Showing dates from your last visit") yet: the stand-in data is always on the device. It comes with the database.
 
 ### v1 launch build (step 14)
 - **`requirementDetail`** is a flag spec 13 doesn't list. Requirement rows only show for demo schools, but their link had to go through the table like every other unbuilt screen.

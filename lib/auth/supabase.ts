@@ -18,7 +18,17 @@ type Failure = { ok: false; error: AuthError };
 const fail = (error: AuthError): Failure => ({ ok: false, error });
 
 // Progress and the greeting cached on this device belong to whoever is signed in
-const PER_ACCOUNT_KEYS = ["stackd.profile", "stackd.requirements", "stackd.saved", "stackd.progressOwner", "stackd.progressQueue"];
+const PER_ACCOUNT_KEYS = [
+  "stackd.profile",
+  "stackd.requirements",
+  "stackd.saved",
+  "stackd.progressOwner",
+  "stackd.progressQueue",
+  // Deadline marks, checklist steps and the transfer term (lib/data/deadlines.ts)
+  "stackd.deadlines",
+  "stackd.steps",
+  "stackd.term",
+];
 
 // 09 → Supabase mapping. No response, or anything unexpected, is "network"; in development the real code is logged.
 function toAuthError(error: SupabaseAuthError | Error): AuthError {

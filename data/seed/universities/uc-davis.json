@@ -3,6 +3,7 @@
   "slug": "uc-davis",
   "name": "UC Davis",
   "type": "Public university",
+  "system": "UC",
   "city": "Davis, CA",
   "requirements": [
     { "demo": true, "id": "ucd-units", "title": "Transferable units", "status": "done" },

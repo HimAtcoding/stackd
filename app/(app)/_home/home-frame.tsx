@@ -9,9 +9,10 @@ import { DemoStrip } from "@/components/ui/demo-strip";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
 import { HAS_TAB_BAR, TabBar } from "@/components/ui/tab-bar";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
+import { useDeadlines, type ScopeState } from "@/lib/data/deadlines";
 import { FEATURES, unbuiltHref } from "@/lib/features";
-import type { UpcomingItem } from "@/lib/seed";
-import { UpcomingCard } from "./upcoming-card";
+import { GetReadyCard } from "./get-ready-card";
+import { UpNext } from "./up-next";
 
 export type HomeArt = {
   wordmark: ReactNode;
@@ -43,7 +44,9 @@ type HomeFrameProps = {
   // The card right under the greeting, which the husky sits on: journey, plan or setup
   card: ReactNode;
   // Everything under the card. Null while the account's plan is still loading or couldn't load.
-  body: { tiles: HomeTile[]; upcoming: UpcomingItem[] } | null;
+  body: { tiles: HomeTile[] } | null;
+  // The schools whose deadlines Up next and Get ready show (14)
+  scope: ScopeState;
 };
 
 // Without a tab bar (v1), toasts and the end of the page sit on the safe area instead of above the bar
@@ -51,13 +54,18 @@ const TAB_BAR_SPACE = HAS_TAB_BAR ? "56px + " : "";
 
 // Home's layout (02), shared by the demo screen and the real-account one. lib/features.ts decides what's on it:
 // in v1 that's the header (wordmark and gear), the greeting, the card and the footer line (13 → Home).
-export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, body }: HomeFrameProps) {
+export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, body, scope }: HomeFrameProps) {
   const router = useRouter();
   const notifications = unbuiltHref("notifications");
+  const deadlines = useDeadlines(scope);
+  // Stand-in deadline rows are demo records, so the strip shows with them (00 → Demo strip)
+  const demoDates =
+    deadlines.status === "ok" &&
+    ((FEATURES.upcoming && deadlines.view.demo) || (FEATURES.getReady && Boolean(deadlines.checklist?.checklist.demo)));
 
   return (
     <div className="relative min-h-dvh bg-sky-50 bg-[linear-gradient(180deg,var(--sky-100)_0,var(--sky-50)_360px)]">
-      {demo && <DemoStrip />}
+      {(demo || demoDates) && <DemoStrip />}
       <div aria-hidden className="absolute inset-x-0 top-0 h-[300px]">
         {art.clouds}
       </div>
@@ -136,20 +144,8 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
               </nav>
             )}
 
-            {FEATURES.upcoming && (
-              <section className="mt-5">
-                <h2 className="px-6 text-navy-900 type-title-2">Upcoming</h2>
-                {body.upcoming.length > 0 ? (
-                  <div className="mt-3 flex flex-col gap-3 px-4">
-                    {body.upcoming.map((item) => (
-                      <UpcomingCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-3 px-6 text-slate-600 type-body">Nothing coming up. Deadlines you save will show here.</p>
-                )}
-              </section>
-            )}
+            {FEATURES.upcoming && <UpNext state={deadlines} />}
+            {FEATURES.getReady && <GetReadyCard state={deadlines} toastBottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />}
 
             {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
             <UnofficialFooter className="mt-6 px-4" />

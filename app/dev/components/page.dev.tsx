@@ -27,7 +27,10 @@ import { TabBar } from "@/components/ui/tab-bar";
 import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
-import { BottomSheetDemo, ChoiceDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
+import { ProgressRing } from "@/components/ui/progress-ring";
+import { TimelineRow } from "@/components/ui/timeline-row";
+import { WindowBar } from "@/components/ui/window-bar";
+import { BottomSheetDemo, ChipDemo, ChoiceDemo, SwitchDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
 
 export const metadata = { title: "Components · Stackd dev" };
 
@@ -36,11 +39,11 @@ const COLORS = [
   "surface", "white", "navy-900", "slate-700", "slate-600", "slate-400", "border", "border-strong",
   "field-border", "surface-pressed", "tint-sky", "tint-indigo", "node-empty", "green-600", "mint-100",
   "mint-800", "coral-500", "coral-700", "coral-50", "coral-25", "amber-50", "amber-500", "yellow-400",
-  "confetti-sky",
+  "confetti-sky", "stack-2", "stack-3",
 ];
 
 const TYPE = [
-  "celebrate", "display", "title-1", "title-2", "title-3", "headline", "row-title", "body-lg", "body",
+  "celebrate", "countdown", "display", "title-1", "title-2", "title-3", "headline", "row-title", "body-lg", "body",
   "body-md", "label", "pill", "caption", "tab", "button-lg", "button", "link", "segment", "demo",
 ];
 
@@ -225,6 +228,38 @@ export default function ComponentsPage() {
           <State name="Pressed"><TextLink href="/dev/components" data-pressed>View feedback</TextLink></State>
           <State name="Focus"><TextLink href="/dev/components" data-focus>View feedback</TextLink></State>
         </div>
+      </Section>
+
+      <Section title="Choice chip (14)">
+        <ChipDemo />
+      </Section>
+
+      <Section title="Switch (14)">
+        <SwitchDemo />
+      </Section>
+
+      <Section title="Window bar (14)">
+        <State name="Open, 25% gone"><WindowBar progress={0.25} soon={false} start="Opened Oct 1" end="Nov 30" /></State>
+        <State name="14 days or less"><WindowBar progress={0.85} soon start="Opened Oct 1" end="Nov 30" /></State>
+        <State name="Not open yet"><WindowBar progress={null} soon={false} start="Opens Dec 15" end="Jan 31" /></State>
+      </Section>
+
+      <Section title="Progress ring (14)">
+        <div className="flex items-center gap-4">
+          <State name="0 of 6"><ProgressRing done={0} total={6} size={56} /></State>
+          <State name="2 of 6"><ProgressRing done={2} total={6} size={56} /></State>
+          <State name="Done"><ProgressRing done={6} total={6} size={56} /></State>
+          <State name="40"><ProgressRing done={2} total={6} size={40} /></State>
+        </div>
+      </Section>
+
+      <Section title="Timeline row and spine (14)">
+        <ul className="-mx-2">
+          <li><TimelineRow month="Nov" day="30" node="soon" title="Sample deadline" detail="All UC campuses, 11:59 p.m. Pacific" status={<Pill variant="due">In 4 days</Pill>} spineUp={false} spineDown onOpen={() => {}} aria-label="Sample, soon" /></li>
+          <li><TimelineRow month="Dec" day="15" node="open" title="Window open" detail="Financial aid" status={<span className="text-blue-700 type-caption font-semibold">Open now</span>} spineUp spineDown onOpen={() => {}} aria-label="Sample, open" /></li>
+          <li><TimelineRow month="Jan" day="31" node="later" title="Not open yet, with a longer title that wraps to two lines" detail="Opens Dec 15" spineUp spineDown onOpen={() => {}} aria-label="Sample, later" data-pressed /></li>
+          <li><TimelineRow month="Sep" day="30" node="done" dimmed title="Done" detail="All UC campuses" status={<span className="text-slate-600 type-caption">Done</span>} spineUp spineDown={false} onOpen={() => {}} aria-label="Sample, done" /></li>
+        </ul>
       </Section>
 
       <Section title="Toast">

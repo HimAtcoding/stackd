@@ -10,6 +10,8 @@ export type PlanTarget = {
   institutionId: string;
   slug: string;
   name: string;
+  // institutions.system (UC, CSU). Undefined in a copy saved before it was read.
+  system?: string | null;
   majorId: string | null;
   majorName: string | null;
   degreeType: string | null;
@@ -34,7 +36,7 @@ const FAILED: PlanState = { status: "error" };
 type ProfileRow = { first_name: string | null; home: { id: string; slug: string; name: string } | null };
 type TargetRow = {
   major_not_listed: boolean | null;
-  institution: { id: string; slug: string; name: string } | null;
+  institution: { id: string; slug: string; name: string; system: string | null } | null;
   major: { id: string; name: string; degree_type: string | null } | null;
 };
 
@@ -46,7 +48,7 @@ export async function fetchPlan(): Promise<Plan> {
     supabase.from("profiles").select("first_name, home:institutions!home_institution_id(id, slug, name)").maybeSingle(),
     supabase
       .from("user_targets")
-      .select("major_not_listed, institution:institutions!institution_id(id, slug, name), major:majors!major_id(id, name, degree_type)")
+      .select("major_not_listed, institution:institutions!institution_id(id, slug, name, system), major:majors!major_id(id, name, degree_type)")
       .order("position"),
   ]);
   if (profile.error) throw profile.error;
@@ -62,6 +64,7 @@ export async function fetchPlan(): Promise<Plan> {
               institutionId: t.institution.id,
               slug: t.institution.slug,
               name: t.institution.name,
+              system: t.institution.system,
               majorId: t.major?.id ?? null,
               majorName: t.major?.name ?? null,
               degreeType: t.major?.degree_type ?? null,
