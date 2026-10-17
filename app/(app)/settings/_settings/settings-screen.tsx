@@ -300,7 +300,7 @@ export function SettingsScreen() {
           <h2 id="remind-me-title" tabIndex={-1} className="text-navy-900 outline-none type-title-2">
             Remind me
           </h2>
-          <p className="mt-1 text-slate-600 type-body">For every date you haven&apos;t set yourself.</p>
+          <p className="mt-1 text-slate-600 type-body">Used for every deadline, unless you change it on that date.</p>
           <ChoiceList role="group" aria-label="Remind me" className="mt-4">
             {REMINDER_DAYS.map((days) => (
               <ChoiceRow

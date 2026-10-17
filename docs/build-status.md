@@ -411,11 +411,12 @@ The data and reminders half of spec 14, on branch `deadlines-data`. Still behind
   - Settings' Reminders group between Your plan and Account (iPhone only): the switch, disabled with the caption when denied, and "Remind me" with its sheet.
   - A Transfer term row at the end of Your plan (flag `deadlines`) opening Ryan's term sheet. `TermSheet`'s `term` prop also takes `undefined`, so a term never answered selects no chip.
   - The Deadlines error state's "Try again" also retries the dates.
-- `npm run test:reminders` (`scripts/test-reminders.mts`, run with `tsx` under Pacific time) has 37 checks:
+- `npm run test:reminders` (`scripts/test-reminders.mts`, run with `tsx` under Pacific time) has 50 checks:
   - 9:00 timing across the November clock change, and passed times skipped.
   - One a day, and the spec's notification copy word for word.
   - The extra copy below, and no exclamation points or urgency words.
   - The 60 cap, defaults vs. a date's own days, and done dates.
+  - Settings' "Remind me" value for every number of choices.
   - Rescheduling, turning off and sign-out, against a fake plugin.
 
 **Notification copy beyond spec 14's table** (for review):
@@ -426,9 +427,11 @@ The data and reminders half of spec 14, on branch `deadlines-data`. Still behind
 - Two or more on one morning, none with a time: "2 deadlines in 3 days" / "A and B, both due Saturday, May 1."
 - Two or more on one morning, due on different days: "2 deadlines coming up" / "UC application is due tomorrow at 11:59 p.m. Pacific. Test scholarship is due in 7 days, Sunday, Dec 6."
 - Three or more: "all" instead of "both".
-- Settings: the "Remind me" sheet's line "For every date you haven't set yourself."; the row's values "1 week and 1 day before", "…, and the morning it's due", "The morning it's due", "None"; and the Transfer term row's "Not sure yet" and "Pick a term" (blue, like "Pick a major").
+- Settings: the "Remind me" sheet's line "Used for every deadline, unless you change it on that date."
+- Settings: the "Remind me" row's value. With one or two choices it names them ("1 week and 1 day before", "1 week before and the morning it's due", "The morning it's due"); with three or more it reads "{n} reminders"; with none, "None".
+- Settings: the Transfer term row's "Not sure yet" and "Pick a term" (blue, like "Pick a major").
 
-**Tested 2026-10-16** (Windows): lint, `tsc`, `test:db` (all checks), `test:import` (59), `test:reminders` (37), and `npm run build` with the release checks. Plus 57 browser checks on the dev server in real mode, at 393 and 320 wide:
+**Tested 2026-10-16** (Windows): lint, `tsc`, `test:db` (all checks), `test:import` (59), `test:reminders` (50), and `npm run build` with the release checks. Plus 58 browser checks on the dev server in real mode, at 393 and 320 wide:
 - **Setup:** every Supabase request was answered by a local mock, so nothing reached the project. A fake iOS bridge stood in for the plugin and recorded what was scheduled.
 - **Data:** Home and Deadlines draw from database-shaped rows with no demo strip. An unverified row never shows, and the term saves to `profiles`.
 - **Fresh install:** the soft ask comes before iOS's prompt, which appears once. "Reminders on", and the card goes. The schedule is a week and a day before at 9:00, never two on a day, nothing for CSU or unverified rows.

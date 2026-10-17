@@ -1,7 +1,17 @@
 // Checks the reminder scheduling logic (lib/reminders/schedule.ts) against 14 → Reminders, with made-up clocks.
 // No phone and no plugin: a fake stands in for Local Notifications. `npm run test:reminders`
 import { describe, type DeadlineRecord } from "../lib/deadlines";
-import { cancelAll, MAX_SCHEDULED, planReminders, reminderCopy, reminderItems, replaceAll, type NotificationsApi, type PlannedReminder } from "../lib/reminders/schedule";
+import {
+  cancelAll,
+  MAX_SCHEDULED,
+  planReminders,
+  reminderCopy,
+  reminderItems,
+  remindersSummary,
+  replaceAll,
+  type NotificationsApi,
+  type PlannedReminder,
+} from "../lib/reminders/schedule";
 
 // The students are in California; the phone's clock is Pacific
 process.env.TZ = "America/Los_Angeles";
@@ -102,6 +112,22 @@ check("a date marked done gets no reminders", !items.some((i) => i.deadline.id =
 check("a date the student hasn't changed follows the default", items.find((i) => i.deadline.id === "uc")?.days.join() === "7,1");
 check("a date with its own choices keeps them", items.find((i) => i.deadline.id === "tau")?.days.join() === "3");
 check("a date with every choice turned off gets none", reminderItems([describe(UC, null, now)], { uc: { reminders: [] } }, [7, 1])[0].days.length === 0);
+
+// Settings' "Remind me" value: one or two choices by name, "{n} reminders" for three or more, "None" for none
+const summary = (days: number[], want: string) => check(`Remind me row with [${days.join(", ")}] reads "${want}"`, remindersSummary(days) === want, remindersSummary(days));
+summary([], "None");
+summary([7], "1 week before");
+summary([3], "3 days before");
+summary([1], "1 day before");
+summary([0], "The morning it's due");
+summary([7, 1], "1 week and 1 day before");
+summary([1, 7], "1 week and 1 day before");
+summary([3, 1], "3 days and 1 day before");
+summary([7, 0], "1 week before and the morning it's due");
+summary([7, 7], "1 week before");
+summary([7, 3, 1], "3 reminders");
+summary([7, 1, 0], "3 reminders");
+summary([7, 3, 1, 0], "4 reminders");
 
 // Putting them on the phone: cancel everything pending, then schedule the new set
 function fakePhone(pendingIds: number[] = []) {

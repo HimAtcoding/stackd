@@ -124,6 +124,17 @@ export function reminderCopy(entries: { deadline: Deadline; days: number }[]): {
   return { title, body: `${body}${varies}` };
 }
 
+// Settings' "Remind me" value: one or two choices by name ("1 week and 1 day before", "The morning it's due"),
+// "{n} reminders" for three or more, "None" for none
+export function remindersSummary(days: number[]): string {
+  const sorted = [...new Set(days)].sort((a, b) => b - a);
+  if (sorted.length === 0) return "None";
+  if (sorted.length >= 3) return `${sorted.length} reminders`;
+  const ahead = sorted.filter((d) => d > 0).map((d) => (d === 7 ? "1 week" : d === 1 ? "1 day" : `${d} days`));
+  if (!sorted.includes(0)) return `${joinNames(ahead)} before`;
+  return ahead.length ? `${ahead[0]} before and the morning it's due` : "The morning it's due";
+}
+
 // Putting a planned set on the phone. The plugin is passed in, so the tests can use a fake.
 export type NotificationsApi = {
   getPending(): Promise<{ notifications: { id: number }[] }>;

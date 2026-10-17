@@ -2,7 +2,6 @@ import { useEffect, useSyncExternalStore } from "react";
 import { accountStore } from "@/lib/account-store";
 import { isNativeApp } from "@/lib/capacitor";
 import { DEFAULT_REMINDERS, REMINDER_DAYS } from "@/lib/data/deadlines";
-import { joinNames } from "@/lib/deadlines";
 import { FEATURES } from "@/lib/features";
 import { subscribeNoop } from "@/lib/session";
 import { checkPermission, requestPermission, type Permission } from "./native";
@@ -25,14 +24,7 @@ export const REMINDER_LABELS: Record<(typeof REMINDER_DAYS)[number], string> = {
   0: "The morning it's due",
 };
 
-// Settings' "Remind me" value: "1 week and 1 day before", "The morning it's due", "None"
-export function remindersSummary(days: number[]): string {
-  const sorted = [...new Set(days)].sort((a, b) => b - a);
-  const ahead = sorted.filter((d) => d > 0).map((d) => (d === 7 ? "1 week" : d === 1 ? "1 day" : `${d} days`));
-  const morning = sorted.includes(0);
-  if (!ahead.length) return morning ? "The morning it's due" : "None";
-  return `${joinNames(ahead)} before${morning ? ", and the morning it's due" : ""}`;
-}
+export { remindersSummary } from "./schedule";
 
 // Choice rows toggle one day; the list stays in REMINDER_DAYS order (a week first)
 export const toggleDay = (days: number[], day: number) =>
