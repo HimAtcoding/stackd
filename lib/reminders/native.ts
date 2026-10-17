@@ -1,6 +1,7 @@
 import type { LocalNotificationsPlugin, PermissionStatus } from "@capacitor/local-notifications";
 import { isNativeApp } from "@/lib/capacitor";
-import { cancelAll } from "./schedule";
+import { FEATURES } from "@/lib/features";
+import { cancelAll, serialized } from "./schedule";
 
 // The Capacitor Local Notifications plugin, loaded only in the iPhone app
 
@@ -15,6 +16,12 @@ export async function withNotifications<T>(task: (api: LocalNotificationsPlugin)
   const { LocalNotifications } = await (pluginModule ??= import("@capacitor/local-notifications"));
   return task(LocalNotifications);
 }
+
+const exclusive = serialized();
+
+// Scheduling and cancelling, one at a time (lib/reminders/sync.ts and sign-out share this)
+export const withNotificationsExclusive = <T>(task: (api: LocalNotificationsPlugin) => Promise<T>): Promise<T> =>
+  exclusive(() => withNotifications(task));
 
 const toPermission = ({ display }: PermissionStatus): Permission => (display === "granted" ? "granted" : display === "denied" ? "denied" : "prompt");
 
@@ -38,9 +45,10 @@ export async function requestPermission(): Promise<Permission> {
 }
 
 // Signing out or deleting the account: no reminder stays scheduled. Never throws, so sign-out always finishes.
+// With the reminders flag off (the v1 release) the plugin is never loaded, since nothing could have been scheduled.
 export async function cancelReminders(): Promise<void> {
-  if (!isNativeApp()) return;
+  if (!FEATURES.reminders || !isNativeApp()) return;
   try {
-    await withNotifications((api) => cancelAll(api));
+    await withNotificationsExclusive((api) => cancelAll(api));
   } catch {}
 }

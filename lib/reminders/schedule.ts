@@ -149,6 +149,23 @@ export async function cancelAll(api: NotificationsApi) {
   if (notifications.length) await api.cancel({ notifications: notifications.map((n) => ({ id: n.id })) });
 }
 
+// One job on the phone at a time, in the order asked. A sign-out's cancel can't land in the middle of a reschedule
+// (getPending, cancel, schedule) and be undone by its last step.
+export function serialized() {
+  let chain: Promise<unknown> = Promise.resolve();
+  return <T>(task: () => Promise<T>): Promise<T> => {
+    const run = chain.then(task, task);
+    chain = run.catch(() => {});
+    return run;
+  };
+}
+
+// Checked inside the lock, just before touching the phone: a reschedule planned for an account that has since
+// signed out clears everything instead
+export function rescheduleIfCurrent(api: NotificationsApi, planned: PlannedReminder[], stillCurrent: () => boolean) {
+  return stillCurrent() ? replaceAll(api, planned) : cancelAll(api);
+}
+
 // Everything pending is cancelled, then the new set scheduled, so a moved or removed reminder never lingers
 export async function replaceAll(api: NotificationsApi, planned: PlannedReminder[]) {
   await cancelAll(api);

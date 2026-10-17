@@ -2,10 +2,11 @@
 
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { BackButton } from "@/components/back-button";
 import { RemindersAsk } from "@/components/deadlines/reminders-ask";
 import { RemindersCard } from "@/components/deadlines/reminders-card";
+import { TurnOnConfirm } from "@/components/deadlines/turn-on-confirm";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
@@ -20,6 +21,7 @@ import { cycleLabel, nextCycle, sourceLine, type Deadline } from "@/lib/deadline
 import { FEATURES } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { dismissRemindersCard, turnOnReminders, useReminders } from "@/lib/reminders";
+import { afterReminderChoice, onReminderTap } from "@/lib/reminders/choice";
 import { DateSheet } from "./date-sheet";
 import { NextUpCard } from "./next-up-card";
 import { TermQuestion, TermSheet } from "./term-question";
@@ -41,15 +43,24 @@ type SheetState = { id: string; open: boolean; reminders: boolean };
 function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const scope = useScope();
   const state = useDeadlines(scope);
-  // ?id= from a reminder opens that date's sheet on arrival
+  // ?id= from a reminder opens that date's sheet, on arrival and on every later navigation to another date
   const arrivalId = useSearchParams().get("id");
   const [sheet, setSheet] = useState<SheetState | null>(arrivalId ? { id: arrivalId, open: true, reminders: false } : null);
+  const [seenId, setSeenId] = useState(arrivalId);
+  if (arrivalId !== seenId) {
+    setSeenId(arrivalId);
+    if (arrivalId) setSheet({ id: arrivalId, open: true, reminders: false });
+  }
+  // A reminder tapped while this screen is open, even for the date already in the address
+  useEffect(() => onReminderTap((id) => setSheet({ id, open: true, reminders: false })), []);
   const [termSheet, setTermSheet] = useState(false);
   const [toast, setToast] = useState<{ key: number; text: string; undo?: string } | null>(null);
   const [settling, setSettling] = useState<string[]>([]);
   const reminders = useReminders();
   // The soft ask is open; `then` runs once the student has answered it (allowed or not)
   const [asking, setAsking] = useState<{ then?: (allowed: boolean) => void } | null>(null);
+  // "Turn on reminders?" is open; `then` brings the date's sheet back
+  const [confirming, setConfirming] = useState<{ then: () => void } | null>(null);
 
   const remindersOnToast = () => setToast({ key: Date.now(), text: "Reminders on" });
 
@@ -81,16 +92,30 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     else openSheet();
   }
 
-  // A reminder choice saves at once. While iOS hasn't asked, the soft ask comes first and the sheet comes back after;
-  // with permission already given, choosing a reminder turns reminders back on if they were off.
-  async function chooseReminders(id: string, days: number[]) {
+  // A reminder choice saves at once. While iOS hasn't asked, the soft ask comes first; when reminders are off in
+  // Settings, adding a day asks before turning them on for every date. Either way the sheet comes back after.
+  function chooseReminders(id: string, days: number[]) {
+    const before = remindersFor(state.status === "ok" ? state.marks[id] : undefined, reminders.days);
     setReminders(id, days);
-    if (reminders.permission === "prompt") {
-      setSheet((s) => (s ? { ...s, open: false } : s));
-      setAsking({ then: () => setSheet({ id, open: true, reminders: true }) });
-    } else if (reminders.permission === "granted" && !reminders.on && days.length > 0) {
-      if ((await turnOnReminders()) === "granted") remindersOnToast();
-    }
+    const next = afterReminderChoice({ permission: reminders.permission, on: reminders.on, before, after: days });
+    if (next === "save") return;
+    const backToSheet = () => setSheet({ id, open: true, reminders: true });
+    setSheet((s) => (s ? { ...s, open: false } : s));
+    if (next === "soft-ask") setAsking({ then: backToSheet });
+    else setConfirming({ then: backToSheet });
+  }
+
+  async function confirmTurnOn() {
+    const then = confirming?.then;
+    setConfirming(null);
+    if ((await turnOnReminders()) === "granted") remindersOnToast();
+    then?.();
+  }
+
+  function declineTurnOn() {
+    const then = confirming?.then;
+    setConfirming(null);
+    then?.();
   }
 
   function markDone(id: string, done: boolean, withToast: boolean) {
@@ -261,6 +286,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
           />
           <TermSheet open={termSheet} onClose={() => setTermSheet(false)} term={ok.term.term} onChoose={chooseTerm} />
           {reminders.supported && <RemindersAsk open={asking !== null} onAllow={allowReminders} onClose={notNow} />}
+          {reminders.supported && <TurnOnConfirm open={confirming !== null} onTurnOn={confirmTurnOn} onClose={declineTurnOn} />}
         </>
       )}
 
