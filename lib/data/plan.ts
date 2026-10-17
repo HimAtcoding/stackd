@@ -110,6 +110,10 @@ function subscribe(onChange: () => void) {
   };
 }
 
+// The plan outside React (reminders), and a way to hear when it changes
+export const readPlanState = getState;
+export const subscribePlan = subscribe;
+
 // Reads the plan again. A failed read keeps whatever copy is already on screen.
 export async function refreshPlan(): Promise<void> {
   const userId = readSessionUser()?.id ?? null;

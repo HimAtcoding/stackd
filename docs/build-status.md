@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-16 (step 16, Ryan's part: deadlines on stand-in data, behind flags, below). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, on branch `deadlines-data`, below; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -334,7 +334,7 @@ Spec 14 on the web build, tested on Windows. Built: Home's Up next stack and Get
 - `lib/data/deadlines.ts` is the one file that changes when the database takes over. `lib/deadlines.ts` holds the rules (which dates a student sees, Pacific-day counts, which checklist shows) and the copy.
 - `fetchPlan()` now reads `institutions.system`, so the plan knows UC from CSU. No schema change. A copy saved before this counts each school as both until the refresh lands.
 
-**For Abyan, when the tables go in:**
+**For Abyan, when the tables go in** (done; see Deadlines, Abyan's part, below):
 - The table needs a way to tell a date with a stated time ("11:59 p.m. Pacific") from one without. The stand-in uses a `due_has_time` column; date-only rows are stored at 23:59:59 Pacific.
 - Abyan's part still to come: reminder scheduling and the permission flow (soft ask, iOS prompt, denied state), the "Reminders on" button state, the reminders card, Settings' Reminders group and Transfer term row. On the iPhone the date sheet's four reminder choices already save to the stand-in store (default 1 week and 1 day before).
 
@@ -348,6 +348,107 @@ Spec 14 on the web build, tested on Windows. Built: Home's Up next stack and Get
 **Tested 2026-10-16** (Windows, stand-in session with mocked plan rows, Playwright's clock for the dates): 48 browser checks against spec 14's Test list for this part, at 393 and 320 wide. Las Positas → UC San Diego shows the UC application on top at 45 days, no Cal State Apply, FAFSA in the stack. Adding a CSU target brings Cal State Apply, and a UC tie picks the UC checklist; CSU-only shows Cal State Apply. Coral and "In 14 days", "Tomorrow", "Today"; "Today / due tonight" on the due day. Mark done hands the next-up card to the next date, the count in Done and past goes up, and Undo puts it back. Term question, toast and term line; Fall 2028 shows the "nothing upcoming" line; no plan shows UC, CSU and aid dates with the note and the "See only your dates" card. The web date sheet says reminders work in the iPhone app, and every date has its source line and "Open official page". Get ready: 2 of 6, checking a step and Undo, all six done. `?id=` opens that date's sheet. Error state on Deadlines; Home hides the section. No sideways scroll at 320. Then lint, `tsc`, `test:db`, `test:import`, `test:oauth` and `npm run build` with the release checks; on the release build with flags off, Home looks as before and `/deadlines/`, `/deadlines/?id=…` and `/upcoming/` go Home.
 
 Not tested: anything on an iPhone, the shared-element push from the stack to the next-up card in Safari (it's a View Transition; where it isn't supported the push runs alone), and VoiceOver itself (accessible names were checked in the DOM).
+
+## Deadlines, Abyan's part (step 16, 2026-10-16)
+
+The data and reminders half of spec 14, on branch `deadlines-data`. Still behind the same flags, so the release doesn't change. **Not applied yet:** Ryan runs `npx supabase db push` and the import after reviewing the pull request.
+
+**Tables** (`supabase/migrations/20261016120000_deadlines.sql`):
+- `deadlines`, `checklists`, `checklist_steps`:
+  - Shaped like Ryan's stand-in rows, with provenance on every row, steps included.
+  - The id is a uuid plus a unique `slug`, as on `institutions`.
+  - `due_has_time` tells "11:59 p.m. Pacific" from a date with no time (stored at 23:59:59 Pacific).
+  - `audience` is `uc`, `csu`, `aid` or `campus`, and `campus` needs `institution_id`. `lib/data/deadlines.ts` maps a campus date to that school's id, the way `lib/deadlines.ts` already matches it.
+  - Checks: https links, `opens_at` before `due_at`, a cycle like `fall-2027`, and verified needs `verified_at`. `protect_verified` and `set_updated_at` work as on the other academic tables.
+- **Only verified rows can be read** (row-level security, `anon` and `authenticated`). A checklist also needs its deadline verified, and a step its checklist. Only the service role writes.
+- `user_deadlines` (`done_at`, `reminders`) and `user_checklist_steps` are owner-only, like the other per-student tables, and go with the account.
+  - `reminders` is an array of 7, 3, 1 or 0 days before. Null means the student's default from Settings, so changing the default reaches every date they haven't set themselves.
+- `profiles.transfer_term` (`fall-2027`, … or null), plus `transfer_term_asked`, so "Not sure yet" (null, asked) is told apart from never asked. A term can't be saved without counting as asked.
+- `npm run test:db` gained 50 checks: verified-only reads, the constraints, owner-only marks, the term, and account deletion taking the new rows.
+
+**Import** (`supabase/migrations/20261016120100_deadlines_import.sql`, `scripts/import/deadlines.mjs`):
+- `npm run import -- data/raw/deadlines/<file>.json`. The folder picks the validator. Same rules as the planning import: all or nothing, unchanged rows left alone, a change to a verified row stops the run, rows start unverified.
+- `verify_planning_rows` now also takes `deadlines`, `checklists` and `checklist_steps`, so `npm run import:verify` works the same way.
+- The validator checks that each time's offset is right for Pacific time on that day (−07:00 / −08:00), that a date with no time sits at 23:59:59, and that a window opens at 00:00:00 and before its due date.
+- Every row has `confirm_on`: the official page to check it on and what to check there. It goes in the review report (new `cycle` and `confirm_on` columns), not the database.
+- `npm run test:import` gained 31 checks, including one that the real file is refused only for the fields a person still has to fill in.
+
+**The first dates** (`data/raw/deadlines/fall-2027.json`):
+- The seven fall 2027 dates and both checklists from spec 14, with sources on UC Admissions, Cal State Apply and CSAC pages.
+- **Waiting for a person.** Every `retrieved_at` is empty and `verified_at` isn't in the file, so the import refuses it until someone checks each row on its `confirm_on` page and fills in the date. `verified_at` comes from the verify step.
+- The UC Transfer Academic Update's opening day is a `TODO` (the spec says only "mid-December").
+- Left out because the spec gives no due date: the Cal State Apply course update (opens "early January") and final transcripts.
+- Things to look for while checking: whether Cal State Apply's Nov 30 and the UC Statement of Intent to Register's June 1 have a stated time, and whether Accept your CSU offer can be confirmed on an official page at all (if not, delete the row).
+
+**Real data on the screens** (`lib/data/deadlines.ts`, the one file Ryan's screens read):
+- Real accounts read the three tables (verified only, filtered again in the app) and their own marks and term.
+- This device keeps a copy of both, so screens draw at once and reminders can reschedule offline. Marks are saved on the device first, then sent; a failed send waits in `stackd.deadlinesQueue` and goes the next time.
+- Nothing is fetched while every deadline flag is off.
+- Demo mode still reads `data/seed/deadlines.json` and `checklists.json`, unchanged.
+- Ryan's per-account device store moved to `lib/account-store.ts`, unchanged, so reminders can use it too. `lib/data/plan.ts` exports `readPlanState` and `subscribePlan` for code outside React.
+
+**Reminders** (`lib/reminders/`, Capacitor Local Notifications `8.3.1`, added to `ios/App/CapApp-SPM/Package.swift` with `npx cap update ios`):
+- `schedule.ts` is the scheduling logic, with no Capacitor:
+  - One notification per chosen day, at 9:00 a.m. on the phone's clock, on the due day in Pacific minus N days.
+  - Passed times, done dates and past dates are skipped.
+  - One notification per day: same-morning dates are combined, and the id is the day number.
+  - Only the soonest 60 are scheduled.
+  - Rescheduling cancels everything pending, then schedules the new set.
+- `sync.ts` runs from the session gate in the iPhone app. It reschedules when the app opens or comes back (and reloads the dates then), and on any change to the plan, term, a done mark, a date's reminder days, the default, the switch, iOS's permission or the dates. Tapping a reminder opens `deadlinesHref("?id=…")`.
+- Sign-out, account deletion, and any session that ends cancel every reminder.
+- `native.ts` wraps the plugin. A Capacitor plugin answers every property, `then` included, so it's never passed through a promise; `withNotifications()` hands it to a callback instead. The browser check below caught this: `await`ing the plugin never settled.
+- **Settings stay on the phone** (`stackd.reminders`, per account, cleared at sign-out): the switch, the default days (1 week and 1 day before) and the card's dismissal. Only this phone schedules its reminders.
+- **Permission flow:**
+  - The soft ask (`components/deadlines/reminders-ask.tsx`) appears only while iOS hasn't asked, and only after "Turn on reminders", "Remind me" or a reminder choice.
+  - Allowed: reminders on, toast "Reminders on". Denied: nothing else pops up.
+  - "Not now" closes it; a reminder control asks again.
+  - From the date sheet, the sheet comes back after the soft ask. With permission already given, choosing a reminder turns reminders back on if the switch was off.
+  - Settings' switch goes straight to iOS's prompt, since the student asked there.
+- **Screens, only what reminders need:**
+  - The next-up card's "Reminders on" state.
+  - The date sheet's denied line with "Open Settings" (`app-settings:`).
+  - The reminders card under the next-up card (iPhone only; hidden once reminders have been on, when dismissed, or when iOS permission is denied).
+  - Settings' Reminders group between Your plan and Account (iPhone only): the switch, disabled with the caption when denied, and "Remind me" with its sheet.
+  - A Transfer term row at the end of Your plan (flag `deadlines`) opening Ryan's term sheet. `TermSheet`'s `term` prop also takes `undefined`, so a term never answered selects no chip.
+  - The Deadlines error state's "Try again" also retries the dates.
+- `npm run test:reminders` (`scripts/test-reminders.mts`, run with `tsx` under Pacific time) has 50 checks:
+  - 9:00 timing across the November clock change, and passed times skipped.
+  - One a day, and the spec's notification copy word for word.
+  - The extra copy below, and no exclamation points or urgency words.
+  - The 60 cap, defaults vs. a date's own days, and done dates.
+  - Settings' "Remind me" value for every number of choices.
+  - Rescheduling, turning off and sign-out, against a fake plugin.
+
+**Notification copy beyond spec 14's table** (for review):
+- Date with no stated time: "…due in 7 days" / "Due Sunday, Jan 31. Open Stackd to see what's left."; "…due in 3 days" / "Due Sunday, Jan 31."; "…due tomorrow" / "Due tomorrow."; "…due today" / "Due today."
+- Date that varies by campus: "Check your campus's date." added after the due sentence.
+- Morning-of with a daytime (not evening) time: "Due today at …" instead of "Due tonight at …".
+- Two or more on one morning, same day but different times: "2 deadlines tomorrow" / "UC application is due tomorrow at 11:59 p.m. Pacific. Cal State Apply is due tomorrow."
+- Two or more on one morning, none with a time: "2 deadlines in 3 days" / "A and B, both due Saturday, May 1."
+- Two or more on one morning, due on different days: "2 deadlines coming up" / "UC application is due tomorrow at 11:59 p.m. Pacific. Test scholarship is due in 7 days, Sunday, Dec 6."
+- Three or more: "all" instead of "both".
+- Settings: the "Remind me" sheet's line "Used for every deadline, unless you change it on that date."
+- Settings: the "Remind me" row's value. With one or two choices it names them ("1 week and 1 day before", "1 week before and the morning it's due", "The morning it's due"); with three or more it reads "{n} reminders"; with none, "None".
+- Settings: the Transfer term row's "Not sure yet" and "Pick a term" (blue, like "Pick a major").
+
+**Tested 2026-10-16** (Windows): lint, `tsc`, `test:db` (all checks), `test:import` (59), `test:reminders` (50), and `npm run build` with the release checks. Plus 58 browser checks on the dev server in real mode, at 393 and 320 wide:
+- **Setup:** every Supabase request was answered by a local mock, so nothing reached the project. A fake iOS bridge stood in for the plugin and recorded what was scheduled.
+- **Data:** Home and Deadlines draw from database-shaped rows with no demo strip. An unverified row never shows, and the term saves to `profiles`.
+- **Fresh install:** the soft ask comes before iOS's prompt, which appears once. "Reminders on", and the card goes. The schedule is a week and a day before at 9:00, never two on a day, nothing for CSU or unverified rows.
+- **Marks:** a date's own choice saves to `user_deadlines` and is scheduled. Mark done removes that date's reminders and Undo brings them back.
+- **Settings:** off cancels everything, and on goes straight to scheduling. The new default reaches only dates not set by hand, and the term sheet saves.
+- **Sign-out** leaves nothing scheduled.
+- **Denied:** no card, the sheet's "Open Settings" line, and the switch off and disabled with the caption.
+- **Not now, then denied at the prompt:** nothing else pops up.
+- **Web:** no card, the "iPhone app" line, and no Reminders group.
+- No page errors.
+
+Not tested, and needs a Mac and a real iPhone:
+- Xcode resolving the new Swift package.
+- iOS's real prompt.
+- Notifications arriving at 9:00, and a tap opening the date (including from a cold start).
+- `app-settings:` opening Stackd's page in Settings. If it doesn't, the fallback is a few lines of Swift in a small plugin, like `AppleSignInPlugin.swift`.
+- Against the real project once the migrations are applied: the verified-only reads and the marks round trip.
 
 ## v1 launch build (step 14, 2026-10-15)
 
@@ -560,7 +661,7 @@ Still placeholders or missing: `app-icon` (temporary icons above until it exists
 
 | Step | Build | Notes |
 |---|---|---|
-| 16 | The rest of deadlines (14): tables, first dates and verify (Abyan), reminders, custom dates, Settings additions | Ryan's screens are built on stand-in data (above). Switch `lib/data/deadlines.ts` to the tables when they land |
+| 16 | The rest of deadlines (14): custom dates; then checking the first dates, applying the migrations and importing; then reminders on a real iPhone | Tables, the import file, real data, reminders and the Settings additions are built (Abyan's part, above), waiting for review. After merging: `npx supabase db push`, check each row of `data/raw/deadlines/fall-2027.json` on its `confirm_on` page, import, verify. Flag `customDeadlines` stays off until custom dates are built |
 | 8 | Essays (04) | |
 | 9 | Task complete and the run loop (05) | `motion` is installed (step 7 uses it for the springs); `canvas-confetti` isn't yet. Open the celebration from `onJourneyStepCompleted()` (see above) |
 
@@ -587,7 +688,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 13. **Status bar text is white when installed.** `black-translucent` is the only iOS status bar style that lets the art run under the status bar, which the specs' safe-area numbers assume. Its clock and icons are white over light sky, so they're low contrast. The alternative (`default`) gives a solid bar with dark text, and the safe-area top becomes 0. Check it on the phone and decide.
 14. **The Playwright test scripts aren't in the repo.** Screens were checked against each spec's Test section with throwaway scripts. A committed test setup is still to be decided.
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
-16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided); they aren't built. Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. If it comes, build the notifications and resubmit.
+16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided). Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. Deadline reminders (local notifications) are built since 2026-10-16 (step 16, Abyan's part) but behind the `reminders` and `deadlines` flags, untested on an iPhone, and need verified dates in the database. If a rejection comes, finish those steps, turn the flags on and resubmit.
 17. ~~Two clicks only a founder can make.~~ Both done 2026-10-13: Google's consent screen published, and Apple's updated Developer Program License Agreement accepted (it was blocking new submissions on the whole account).
 
 ## Built differently from the specs, and why
@@ -628,7 +729,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **The steps sheet's ring at 40** has no number inside (it doesn't fit); "2 of 6" and "Due Nov 30" sit beside it.
 - **Peek titles use the record's title,** so the third layer reads "UC Transfer Academic Update" where the mockup drew "UC grade update".
 - **No light haptic on Mark done.** `@capacitor/haptics` isn't installed; adding it needs a Mac sync. The web vibrate call (as on University) stands in.
-- **Nothing for 14's offline line** ("Showing dates from your last visit") yet: the stand-in data is always on the device. It comes with the database.
+- **Nothing for 14's offline line** ("Showing dates from your last visit") yet. Since Abyan's part the dates come from the database with a copy on the device, so the data for it exists; the caption itself is a screen change still to do.
 
 ### v1 launch build (step 14)
 - **`requirementDetail`** is a flag spec 13 doesn't list. Requirement rows only show for demo schools, but their link had to go through the table like every other unbuilt screen.
@@ -689,7 +790,8 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - To see Welcome again, clear `stackd.seenWelcome` from local storage, or open `/dev/reset`.
 - `npm run build` writes the static app to `out/` (stop the dev server first), and `npm start` serves it at `http://localhost:4000`.
 - `npm run test:db` (schema and security) and `npm run test:import` (import pipeline) run on an in-memory database and touch nothing real.
+- `npm run test:reminders` checks the reminder scheduling logic and copy with made-up clocks and a fake plugin.
 - `npm run test:oauth` checks the Apple and Google callback handling. It calls no provider.
 - Apple and Google sign-in work on `http://localhost:3000` (dev) and `http://localhost:4000` (`npm start`), the two addresses in Supabase's Redirect URLs. Another host or port falls back to the Site URL and the sign-in doesn't finish.
 - If `next dev` answers 404 for `/auth/callback/` while other pages load, its cache is stale. Stop the dev server, delete `.next/dev`, and start it again. Seen once on 2026-10-10; the production build wasn't affected.
-- Importing: see Phase 3 → Running the first slice.
+- Importing: see Phase 3 → Running the first slice. Deadlines files go in `data/raw/deadlines/` and run the same way (step 16, Abyan's part).

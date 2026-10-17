@@ -37,8 +37,8 @@ export function TermQuestion({ onChoose }: { onChoose: (term: string | null) => 
   );
 }
 
-// "Change" on the term line: the same chips, with the current choice selected
-export function TermSheet({ open, onClose, term, onChoose }: { open: boolean; onClose: () => void; term: string | null; onChoose: (term: string | null) => void }) {
+// "Change" on the term line: the same chips, with the current choice selected (none while it's never been answered)
+export function TermSheet({ open, onClose, term, onChoose }: { open: boolean; onClose: () => void; term: string | null | undefined; onChoose: (term: string | null) => void }) {
   return (
     <BottomSheet open={open} onClose={onClose} labelledBy="term-sheet-title">
       <h2 id="term-sheet-title" tabIndex={-1} className="text-navy-900 type-title-2 focus:outline-none">

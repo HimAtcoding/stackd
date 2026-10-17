@@ -2,20 +2,25 @@
 
 import { useEffect, useRef, type RefObject } from "react";
 import { ArrowSquareOutIcon, CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
+import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { isNativeApp } from "@/lib/capacitor";
 import { cn } from "@/lib/cn";
-import { REMINDER_DAYS, remindersFor, setReminders, type DeadlineMark } from "@/lib/data/deadlines";
+import { REMINDER_DAYS, remindersFor, type DeadlineMark } from "@/lib/data/deadlines";
 import { countdownLine, recordSource, sheetForLine, whenLines, type Deadline, type Scope } from "@/lib/deadlines";
 import { FEATURES } from "@/lib/features";
+import { REMINDER_LABELS, toggleDay } from "@/lib/reminders";
 
-const REMINDER_LABELS: Record<(typeof REMINDER_DAYS)[number], string> = {
-  7: "1 week before",
-  3: "3 days before",
-  1: "1 day before",
-  0: "The morning it's due",
+// The student's reminder settings, as the sheet needs them
+type ReminderProps = {
+  // Settings' "Remind me", for a date the student hasn't changed
+  defaults: number[];
+  // iOS permission was denied: the choices give way to the "Open Settings" line
+  denied: boolean;
+  // A choice was tapped; the screen saves it and runs the permission flow if iOS hasn't asked yet
+  onChoose: (days: number[]) => void;
 };
 
 type DateSheetProps = {
@@ -26,12 +31,13 @@ type DateSheetProps = {
   scope: Scope;
   // Opened from "Remind me": the Reminders block scrolls into view
   focusReminders: boolean;
+  reminders: ReminderProps;
   onClose: () => void;
   onMarkDone: (done: boolean) => void;
 };
 
 // One date in full: when, what it is, who it's for, reminders, done, and its official source (14 → Date sheet)
-export function DateSheet({ open, deadline: d, mark, scope, focusReminders, onClose, onMarkDone }: DateSheetProps) {
+export function DateSheet({ open, deadline: d, mark, scope, focusReminders, reminders: reminderProps, onClose, onMarkDone }: DateSheetProps) {
   const reminders = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (open && focusReminders) reminders.current?.scrollIntoView({ block: "nearest" });
@@ -39,7 +45,7 @@ export function DateSheet({ open, deadline: d, mark, scope, focusReminders, onCl
 
   return (
     <BottomSheet open={open && d !== null} onClose={onClose} labelledBy="date-sheet-title">
-      {d && <Content d={d} mark={mark} scope={scope} remindersRef={reminders} onMarkDone={onMarkDone} />}
+      {d && <Content d={d} mark={mark} scope={scope} remindersRef={reminders} reminders={reminderProps} onMarkDone={onMarkDone} />}
     </BottomSheet>
   );
 }
@@ -49,17 +55,19 @@ function Content({
   mark,
   scope,
   remindersRef,
+  reminders,
   onMarkDone,
 }: {
   d: Deadline;
   mark: DeadlineMark | undefined;
   scope: Scope;
   remindersRef: RefObject<HTMLDivElement | null>;
+  reminders: ReminderProps;
   onMarkDone: (done: boolean) => void;
 }) {
   const soon = d.state === "soon";
   const forLine = sheetForLine(d, scope);
-  const chosen = remindersFor(mark);
+  const chosen = remindersFor(mark, reminders.defaults);
 
   return (
     <div className="-mx-6 -mt-6 max-h-[calc(100dvh-var(--safe-top)-72px)] overflow-y-auto px-6 pt-6">
@@ -80,7 +88,11 @@ function Content({
           <h3 id="reminders-title" className="text-navy-900 type-headline">
             Remind me
           </h3>
-          {isNativeApp() ? (
+          {isNativeApp() && reminders.denied ? (
+            <p className="mt-1 text-slate-600 type-body">
+              Reminders are off for Stackd in your iPhone settings. <OpenSettingsLink />
+            </p>
+          ) : isNativeApp() ? (
             <ChoiceList role="group" aria-label="Remind me" className="mt-3">
               {REMINDER_DAYS.map((days) => (
                 <ChoiceRow
@@ -88,9 +100,7 @@ function Content({
                   role="checkbox"
                   checked={chosen.includes(days)}
                   name={REMINDER_LABELS[days]}
-                  onSelect={() =>
-                    setReminders(d.id, chosen.includes(days) ? chosen.filter((n) => n !== days) : [...chosen, days].sort((a, b) => b - a))
-                  }
+                  onSelect={() => reminders.onChoose(toggleDay(chosen, days))}
                 />
               ))}
             </ChoiceList>
