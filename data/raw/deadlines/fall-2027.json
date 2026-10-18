@@ -1,6 +1,6 @@
 {
   "written_by": "Abyan Kashif",
-  "notes": "Fall 2027 deadlines and the UC and Cal State Apply checklists, from docs/specs/14-deadlines.md. Nothing here has been checked yet. For each row: open source_url, check what confirm_on names, fix the row if the page says something else (or delete it if the page doesn't confirm it), then fill in retrieved_at with the date you checked. The import refuses the file while any retrieved_at is empty or any TODO is left. After the import, the review report's checked_by and checked_at mark rows verified (npm run import:verify); only verified rows reach students. Times are Pacific with their offset (-07:00 until Nov 1, 2026 and from Mar 14, 2027; -08:00 between). A date with no stated time is 23:59:59 with due_has_time false. Left out because spec 14 gives them no due date: Cal State Apply course update (opens early January 2027, due date varies by campus) and final transcripts (varies by campus). Dry run: npm run import -- data/raw/deadlines/fall-2027.json --dry-run",
+  "notes": "Fall 2027 deadlines and the UC and Cal State Apply checklists, from docs/specs/14-deadlines.md. For each row: open source_url, check what confirm_on names, fix the row if the page says something else (or delete it if the page doesn't confirm it), then fill in retrieved_at with the date you checked. The import refuses the file while any retrieved_at is empty or any TODO is left. After the import, the review report's checked_by and checked_at mark rows verified (npm run import:verify); only verified rows reach students. Times are Pacific with their offset (-07:00 until Nov 1, 2026 and from Mar 14, 2027; -08:00 between). A date with no stated time is 23:59:59 with due_has_time false. Left out because spec 14 gives them no due date: Cal State Apply course update (opens early January 2027, due date varies by campus) and final transcripts (varies by campus). Also left out: Accept your CSU offer, because no CSU system page states a date. Dry run: npm run import -- data/raw/deadlines/fall-2027.json --dry-run",
   "deadlines": [
     {
       "slug": "tag-fall-2027",
@@ -47,7 +47,7 @@
       "varies_by_campus": false,
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/pages/application-dates-deadlines.aspx",
-      "confirm_on": "Cal State Apply, Application dates & deadlines: the fall 2027 priority filing period, October 1 to November 30, 2026. If the page states a time, set due_has_time to true and use it. Some campuses accept later applications; those dates are on each campus's own page.",
+      "confirm_on": "Cal State Apply, Application dates & deadlines: the fall 2027 priority filing period, August 1 to November 30, 2026, with submissions opening October 1, 2026. Some campuses accept later applications; those dates are on each campus's own page.",
       "retrieved_at": "2026-10-17"
     },
     {
@@ -56,14 +56,14 @@
       "audience": "aid",
       "kind": "aid",
       "title": "FAFSA or Dream Act",
-      "summary": "If you can't file the FAFSA, use the California Dream Act Application instead. If someone on your FAFSA can't finish their part of it, you may be able to use the Dream Act Application. Check with your financial aid office first, because Pell Grants and Work-Study need the FAFSA. Filing by this date keeps you in line for a Cal Grant.",
+      "summary": "U.S. citizens, permanent residents, T-Visa holders and eligible non-citizens file the FAFSA. If you can't file the FAFSA, use the California Dream Act Application instead. If someone on your FAFSA can't finish their part of it, you may be able to use the Dream Act Application. Check with your financial aid office first, because Pell Grants and Work-Study need the FAFSA. Filing by this date keeps you in line for a Cal Grant.",
       "opens_at": "2026-10-01T00:00:00-07:00",
       "due_at": "2027-03-02T23:59:59-08:00",
       "due_has_time": false,
       "varies_by_campus": false,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/dates-and-deadlines.html",
-      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the FAFSA and California Dream Act Application filing period opens October 1, 2026 and runs through March 2, 2027. California Student Aid Commission, How to apply for financial aid (https://www.csac.ca.gov/apply): who files the Dream Act Application (undocumented students, and students in mixed-status families), and that Pell Grants and Work-Study are limited to FAFSA applicants.",
+      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the FAFSA and California Dream Act Application filing period opens October 1, 2026 and runs through March 2, 2027. California Student Aid Commission, How to apply for financial aid (https://www.csac.ca.gov/apply), the source for the summary's first three sentences: who files the FAFSA (U.S. citizens, permanent residents, T-Visa holders and eligible non-citizens), who files the Dream Act Application (undocumented students, and students in mixed-status families), and that Pell Grants and Work-Study are limited to FAFSA applicants.",
       "retrieved_at": "2026-10-17"
     },
     {
@@ -95,7 +95,7 @@
       "varies_by_campus": false,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/after-you-apply/admissions-decisions.html",
-      "confirm_on": "UC Admissions, After you apply, Admissions decisions: the June 1, 2027 deadline for fall transfer admits to accept (the Statement of Intent to Register). If the page states a time, set due_has_time to true and use it.",
+      "confirm_on": "UC Admissions, After you apply, Admissions decisions: the June 1, 2027 deadline for fall transfer admits to accept (the Statement of Intent to Register).",
       "retrieved_at": "2026-10-17"
     }
   ],
