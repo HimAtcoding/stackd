@@ -309,6 +309,46 @@ export function windowProgress(d: Deadline, now: Date): number | null {
   return Math.min(1, Math.max(0, (now.getTime() - start) / (end - start)));
 }
 
+// The Deadlines screen's next line (15 → Top): "Due Monday, Nov 30, in 43 days." With a stated time,
+// "Due Monday, Nov 30 at 5:00 p.m. Pacific, in 43 days." On the due day, "Due today."
+export function nextDueLine(d: Deadline): string {
+  if (d.daysLeft <= 0) return "Due today.";
+  const time = d.due_has_time ? ` at ${timeOfDay(d.due_at)} Pacific` : "";
+  return `${dueOnCard(d)}${time}, in ${d.daysLeft} ${d.daysLeft === 1 ? "day" : "days"}.`;
+}
+
+export type CycleBarNode = { at: number; kind: "soon" | "open" | "later" };
+export type CycleBarView = { start: string; end: string; today: number; nodes: CycleBarNode[] };
+
+const URGENCY = { soon: 0, open: 1, later: 2 } as const;
+
+// "Oct 2026"
+const monthYear = (iso: string) => {
+  const p = pacific(iso);
+  return `${MONTHS[p.month - 1].slice(0, 3)} ${p.year}`;
+};
+
+// The application year on one line (15 → Cycle bar): from the earliest opening or due date among the upcoming
+// dates, or today if that's earlier, to the latest due date. Positions run 0 to 1. Dates on the same day share
+// one node, drawn as the most urgent of them. Null with nothing upcoming.
+export function cycleBar(upcoming: Deadline[], now: Date): CycleBarView | null {
+  if (upcoming.length === 0) return null;
+  const times = upcoming.flatMap((d) => (d.opens_at ? [d.opens_at, d.due_at] : [d.due_at])).map((t) => new Date(t).getTime());
+  const start = Math.min(now.getTime(), ...times);
+  const end = Math.max(...upcoming.map((d) => new Date(d.due_at).getTime()));
+  const at = (t: number) => (end === start ? 0 : Math.min(1, Math.max(0, (t - start) / (end - start))));
+  const byDay = new Map<string, CycleBarNode>();
+  for (const d of upcoming) {
+    if (d.state !== "soon" && d.state !== "open" && d.state !== "later") continue;
+    const p = pacific(d.due_at);
+    const day = `${p.year}-${p.month}-${p.day}`;
+    const seen = byDay.get(day);
+    if (!seen) byDay.set(day, { at: at(new Date(d.due_at).getTime()), kind: d.state });
+    else if (URGENCY[d.state] < URGENCY[seen.kind]) seen.kind = d.state;
+  }
+  return { start: monthYear(new Date(start).toISOString()), end: monthYear(new Date(end).toISOString()), today: at(now.getTime()), nodes: [...byDay.values()] };
+}
+
 const dueIn = (days: number) => (days <= 0 ? "due today" : days === 1 ? "due tomorrow" : `due in ${days} days`);
 
 // "Up next: UC application, due in 45 days, Monday November 30. Then Cal State Apply, November 30. … Opens all deadlines."

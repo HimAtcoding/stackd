@@ -1,7 +1,3 @@
-"use client";
-
-import { animate, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
 import { WindowBar } from "@/components/ui/window-bar";
 import { cn } from "@/lib/cn";
 import { cardForLine, dueOnCard, SOON_DAYS, shortDate, timeLine, windowProgress, type Deadline, type Scope } from "@/lib/deadlines";
@@ -10,28 +6,14 @@ type CountdownBlockProps = {
   deadline: Deadline;
   now: Date;
   scope: Scope;
-  // Counts from this number to the real one over 400 ms (the next-up card handing over after Mark done)
-  countFrom?: number;
+  // No plan: the setup card is Home's hero, so the number steps down to title-1 (15 → Up next)
+  quiet?: boolean;
 };
 
-// The day count in heavy type, starting from `from` when given
-function useCount(to: number, from: number | undefined) {
-  const still = useReducedMotion();
-  const [shown, setShown] = useState(from ?? to);
-  const counting = from !== undefined && from !== to && !still;
-  useEffect(() => {
-    if (!counting) return;
-    const run = animate(from, to, { duration: 0.4, ease: [0.2, 0.8, 0.2, 1], onUpdate: (v) => setShown(Math.round(v)) });
-    return () => run.stop();
-  }, [counting, from, to]);
-  return counting ? shown : to;
-}
-
 // The top layer's content (14 → The stack): the countdown, the date and time, and the window bar.
-// Home's stack and the Deadlines screen's next-up card both draw it. Decorative; the parent names it.
-export function CountdownBlock({ deadline: d, now, scope, countFrom }: CountdownBlockProps) {
+// Decorative; the stack names it.
+export function CountdownBlock({ deadline: d, now, scope, quiet }: CountdownBlockProps) {
   const soon = d.daysLeft <= SOON_DAYS;
-  const count = useCount(d.daysLeft, countFrom);
   const time = timeLine(d);
   const forLine = cardForLine(d, scope);
   const progress = windowProgress(d, now);
@@ -44,7 +26,7 @@ export function CountdownBlock({ deadline: d, now, scope, countFrom }: Countdown
           {d.daysLeft <= 0 ? (
             <p className="text-coral-700 type-title-1">Today</p>
           ) : (
-            <p className={cn("type-countdown", soon ? "text-coral-700" : "text-navy-900")}>{count}</p>
+            <p className={cn(quiet ? "type-title-1" : "type-countdown", soon ? "text-coral-700" : "text-navy-900")}>{d.daysLeft}</p>
           )}
           <p className="mt-0.5 text-slate-600 type-caption">{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
         </div>

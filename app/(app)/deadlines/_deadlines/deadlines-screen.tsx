@@ -1,12 +1,15 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { BellIcon, BellRingingIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { RemindersAsk } from "@/components/deadlines/reminders-ask";
 import { RemindersCard } from "@/components/deadlines/reminders-card";
 import { TurnOnConfirm } from "@/components/deadlines/turn-on-confirm";
+import { CompactButton } from "@/components/ui/compact-button";
+import { CycleBar } from "@/components/ui/cycle-bar";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
@@ -17,20 +20,20 @@ import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
 import { markDeadline, remindersFor, retryDeadlines, saveTerm, setReminders, useDeadlines, useScope } from "@/lib/data/deadlines";
 import { retryPlan } from "@/lib/data/plan";
-import { cycleLabel, nextCycle, sourceLine, type Deadline } from "@/lib/deadlines";
+import { cn } from "@/lib/cn";
+import { cycleBar, cycleLabel, nextCycle, nextDueLine, SOON_DAYS, sourceLine, type Deadline } from "@/lib/deadlines";
 import { FEATURES } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { dismissRemindersCard, turnOnReminders, useReminders } from "@/lib/reminders";
 import { afterReminderChoice, onReminderTap } from "@/lib/reminders/choice";
 import { DateSheet } from "./date-sheet";
-import { NextUpCard } from "./next-up-card";
 import { TermQuestion, TermSheet } from "./term-question";
 import { DonePast, Timeline } from "./timeline";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
 const COLLAPSE = { duration: 0.24, ease: [0.2, 0.8, 0.2, 1] } as const;
-// A date marked done keeps its row long enough for the green node to land, then the row folds away
-const SETTLE_MS = 400;
+// A date marked done keeps its row while its buttons fade out, then the row folds away (15 → The next row opens)
+const SETTLE_MS = 120;
 
 // The Deadlines screen exists only with its flag on; otherwise the address goes Home (13: no dead ends)
 export function DeadlinesRoute({ husky }: { husky: ReactNode }) {
@@ -61,6 +64,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const [asking, setAsking] = useState<{ then?: (allowed: boolean) => void } | null>(null);
   // "Turn on reminders?" is open; `then` brings the date's sheet back
   const [confirming, setConfirming] = useState<{ then: () => void } | null>(null);
+  const still = useReducedMotion();
 
   const remindersOnToast = () => setToast({ key: Date.now(), text: "Reminders on" });
 
@@ -125,7 +129,8 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     } catch {}
     if (done) {
       setSettling((ids) => [...ids, id]);
-      setTimeout(() => setSettling((ids) => ids.filter((x) => x !== id)), SETTLE_MS);
+      // Reduced motion: no collapse, the row swaps out at once
+      setTimeout(() => setSettling((ids) => ids.filter((x) => x !== id)), still ? 0 : SETTLE_MS);
     }
     setToast(done && withToast ? { key: Date.now(), text: "Marked done", undo: id } : null);
   }
@@ -145,6 +150,26 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     : [];
   const finished = ok ? ok.view.finished.filter((d) => !settling.includes(d.id)) : [];
   const cycle = ok ? cycleLabel(ok.view.cycle) : "";
+  const bar = ok ? cycleBar(ok.view.upcoming, ok.now) : null;
+  const remindersOn = (id: string) => Boolean(ok && reminders.active && remindersFor(ok.marks[id], reminders.days).length > 0);
+
+  // The next row's buttons (15 → The next row opens)
+  const rowActions = (d: Deadline) => (
+    <>
+      {FEATURES.reminders && (
+        <CompactButton
+          icon={remindersOn(d.id) ? <BellRingingIcon weight="fill" size={16} aria-hidden /> : <BellIcon weight="bold" size={16} aria-hidden />}
+          onClick={() => remind(d.id)}
+          aria-label={`${remindersOn(d.id) ? "Reminders on" : "Remind me"}: ${d.title}`}
+        >
+          {remindersOn(d.id) ? "Reminders on" : "Remind me"}
+        </CompactButton>
+      )}
+      <CompactButton icon={<CheckIcon weight="bold" size={16} aria-hidden />} onClick={() => markDone(d.id, true, true)} aria-label={`Mark ${d.title} done`}>
+        Mark done
+      </CompactButton>
+    </>
+  );
   // Shown once, until reminders have been on or the card is closed. Hidden when iOS permission is denied, since
   // its button couldn't do anything; Settings explains that case.
   const showRemindersCard =
@@ -213,7 +238,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             </AnimatePresence>
 
             {!ok.scope && (
-              <section aria-labelledby="no-plan-title" className="mx-4 mt-6 rounded-lg bg-surface p-4 shadow-card">
+              <section aria-labelledby="no-plan-title" className="mx-4 mt-6 rounded-md border border-border bg-surface p-4">
                 <h2 id="no-plan-title" className="text-navy-900 type-headline">
                   See only your dates
                 </h2>
@@ -226,15 +251,11 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
 
             {next ? (
               <>
-                <div className="mx-4 mt-6">
-                  <NextUpCard
-                    deadline={next}
-                    now={ok.now}
-                    scope={ok.scope}
-                    remindersOn={reminders.active && remindersFor(ok.marks[next.id], reminders.days).length > 0}
-                    onRemind={() => remind(next.id)}
-                    onMarkDone={() => markDone(next.id, true, true)}
-                  />
+                {/* What's next and the whole year on one line, in place of a second countdown (15 → Top) */}
+                <div className="mt-6 px-6">
+                  <p className="text-navy-900 type-headline">{next.title} is next</p>
+                  <p className={cn("mt-1 type-body", next.daysLeft <= SOON_DAYS ? "text-coral-700" : "text-slate-700")}>{nextDueLine(next)}</p>
+                  {bar && <CycleBar view={bar} className="mt-4" />}
                 </div>
                 {showRemindersCard && (
                   <div className="mx-4 mt-6">
@@ -255,7 +276,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             )}
 
             <div className="mt-6">
-              <Timeline rows={timelineRows} scope={ok.scope} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
+              <Timeline rows={timelineRows} scope={ok.scope} actions={rowActions} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
             </div>
             <DonePast rows={finished} scope={ok.scope} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
 

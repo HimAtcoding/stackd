@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import { useState } from "react";
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
+import { useState, type ReactNode } from "react";
 import { CaretDownIcon } from "@phosphor-icons/react/ssr";
 import { Expand } from "@/components/ui/expand";
 import { Pill } from "@/components/ui/pill";
@@ -19,7 +19,9 @@ function status(d: Deadline) {
   return null;
 }
 
-function Row({ d, scope, spineUp, spineDown, onOpen, dimmed }: { d: Deadline; scope: Scope; spineUp: boolean; spineDown: boolean; onOpen: () => void; dimmed?: boolean }) {
+type RowProps = { d: Deadline; scope: Scope; spineUp: boolean; spineDown: boolean; onOpen: () => void; dimmed?: boolean; actions?: ReactNode };
+
+function Row({ d, scope, spineUp, spineDown, onOpen, dimmed, actions }: RowProps) {
   const { month, day } = dateBlock(d.due_at);
   return (
     <TimelineRow
@@ -32,6 +34,7 @@ function Row({ d, scope, spineUp, spineDown, onOpen, dimmed }: { d: Deadline; sc
       dimmed={dimmed}
       spineUp={spineUp}
       spineDown={spineDown}
+      actions={actions}
       onOpen={onOpen}
       aria-label={rowLabel(d)}
     />
@@ -43,11 +46,19 @@ type TimelineProps = {
   rows: Deadline[];
   scope: Scope;
   onOpen: (id: string) => void;
+  // The buttons the next row opens with (15 → The next row opens)
+  actions?: (d: Deadline) => ReactNode;
 };
 
-// Every upcoming date grouped by month, on one spine per month (14 → Timeline). Month headers stay at the top
-// while their rows are on screen. A date marked done shows its green node, then its row folds away.
-export function Timeline({ rows, scope, onOpen }: TimelineProps) {
+// x of the spine's center: row padding 16 + date block 40 + 12 + half the 12 node
+const SPINE_X = "73px";
+
+// Every upcoming date grouped by month, on one spine from the first row's node to the last (15 → Timeline). The
+// month headers sit in the text column and stay at the top while their rows are on screen. The first date not done
+// opens with its buttons. A date marked done fades its buttons, then folds away and the next row's buttons fade in.
+export function Timeline({ rows, scope, onOpen, actions }: TimelineProps) {
+  const still = useReducedMotion();
+  const collapse = still ? { duration: 0 } : COLLAPSE;
   const months: { key: string; title: string; rows: Deadline[] }[] = [];
   for (const d of rows) {
     const { key, title } = monthOf(d.due_at);
@@ -55,26 +66,55 @@ export function Timeline({ rows, scope, onOpen }: TimelineProps) {
     if (month) month.rows.push(d);
     else months.push({ key, title, rows: [d] });
   }
+  const order = new Map(rows.map((d, i) => [d.id, i]));
+  const last = rows.length - 1;
+
+  // The open row, the one before it (fading out while it settles), and the first one shown, which doesn't fade in
+  const openId = rows.find((d) => d.state !== "done")?.id;
+  const [opened, setOpened] = useState({ open: openId, closing: undefined as string | undefined, first: openId });
+  if (opened.open !== openId) setOpened({ open: openId, closing: opened.open, first: opened.first });
+
+  function rowActions(d: Deadline) {
+    if (!actions) return undefined;
+    const closing = d.id === opened.closing && d.state === "done";
+    if (d.id !== openId && !closing) return undefined;
+    return (
+      <motion.span
+        key={closing ? "out" : "in"}
+        initial={closing || d.id === opened.first ? false : { opacity: 0 }}
+        animate={{ opacity: closing ? 0 : 1 }}
+        transition={{ duration: still ? 0 : closing ? 0.12 : 0.16 }}
+        className="flex flex-wrap gap-2"
+      >
+        {actions(d)}
+      </motion.span>
+    );
+  }
 
   return (
     <MotionConfig reducedMotion="user">
       <AnimatePresence initial={false}>
         {months.map((m, i) => (
-          <motion.section key={m.key} aria-labelledby={`month-${m.key}`} exit={{ opacity: 0, height: 0 }} transition={COLLAPSE}>
+          <motion.section key={m.key} aria-labelledby={`month-${m.key}`} exit={{ opacity: 0, height: 0 }} transition={collapse}>
             <h2
               id={`month-${m.key}`}
-              className={cn("sticky z-10 bg-sky-50 px-6 py-2 text-navy-900 type-title-3", i === 0 ? "mt-2" : "mt-4")}
+              className={cn("sticky z-10 bg-sky-50 pb-5 pl-[92px] pr-6 text-slate-600 type-label", i > 0 && "pt-2")}
               style={{ top: "calc(var(--safe-top) + var(--strip-h))" }}
             >
+              {/* The spine carries on behind the header between two months */}
+              {i > 0 && <span aria-hidden className="absolute inset-y-0 w-0.5 bg-border" style={{ left: SPINE_X }} />}
               {m.title}
             </h2>
             <ul className="mx-2">
               <AnimatePresence initial={false}>
-                {m.rows.map((d, j) => (
-                  <motion.li key={d.id} exit={{ height: 0, opacity: 0 }} transition={COLLAPSE} className="overflow-hidden">
-                    <Row d={d} scope={scope} spineUp={j > 0} spineDown={j < m.rows.length - 1} onOpen={() => onOpen(d.id)} />
-                  </motion.li>
-                ))}
+                {m.rows.map((d) => {
+                  const at = order.get(d.id) ?? 0;
+                  return (
+                    <motion.li key={d.id} exit={{ height: 0, opacity: 0 }} transition={collapse} className="overflow-hidden">
+                      <Row d={d} scope={scope} spineUp={at > 0} spineDown={at < last} actions={rowActions(d)} onOpen={() => onOpen(d.id)} />
+                    </motion.li>
+                  );
+                })}
               </AnimatePresence>
             </ul>
           </motion.section>

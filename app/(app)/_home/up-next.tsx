@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ViewTransition, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { AfterWait } from "@/components/deadlines/after-wait";
 import { CountdownBlock } from "@/components/deadlines/countdown-block";
 import { TextLink } from "@/components/ui/text-link";
@@ -73,13 +73,14 @@ export function UpNext({ state }: { state: DeadlinesState }) {
       {state.status === "ok" && top && (
         <>
           <Stack href={href} label={stackLabel(items, Boolean(href))}>
-            <div className="relative z-3 rounded-lg bg-surface p-4 shadow-card transition-colors duration-200 ease-out group-pressed:bg-surface-pressed group-pressed:duration-120">
-              {/* The same object as the Deadlines screen's next-up card, for the push (14 → Motion) */}
-              <ViewTransition name="next-deadline" share="next-deadline" enter="none" exit="none" update="none">
-                <div>
-                  <CountdownBlock deadline={top} now={state.now} scope={state.scope} />
-                </div>
-              </ViewTransition>
+            {/* Tier 1 with a plan. With none, the setup card is the hero, so this steps down to a border (15 → Up next) */}
+            <div
+              className={cn(
+                "relative z-3 rounded-lg bg-surface p-4 transition-colors duration-200 ease-out group-pressed:bg-surface-pressed group-pressed:duration-120",
+                state.scope ? "shadow-lift" : "border border-border",
+              )}
+            >
+              <CountdownBlock deadline={top} now={state.now} scope={state.scope} quiet={!state.scope} />
             </div>
             {peeks[0] && <Peek deadline={peeks[0]} layer={2} />}
             {peeks[1] && <Peek deadline={peeks[1]} layer={3} />}

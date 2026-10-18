@@ -4,14 +4,15 @@ import { useSyncExternalStore } from "react";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
-import { usePlanScope } from "@/lib/data/deadlines";
+import { usePlanScope, useTerm } from "@/lib/data/deadlines";
 import { retryPlan, usePlan } from "@/lib/data/plan";
+import { cycleLabel } from "@/lib/deadlines";
 import { universityHref } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { readFirstName } from "@/lib/profile";
 import { subscribeNoop } from "@/lib/session";
 import { HomeFrame, type HomeArt } from "./home-frame";
-import { PlanCard } from "./plan-card";
+import { PlanRoute } from "./plan-route";
 import { SetupCard } from "./setup-card";
 import { homeTiles } from "./tiles";
 
@@ -25,15 +26,18 @@ export function AccountHome({ art }: { art: HomeArt }) {
   const plan = state.status === "ok" ? state.plan : null;
   const [first, ...rest] = plan?.targets ?? [];
   const scope = usePlanScope(plan, state.status === "error");
+  const { term } = useTerm();
 
+  // With a term set, the route below names the school, so the subtitle says when instead (15 → Greeting subtitle)
   let subtitle: string | null = null;
   if (plan) {
     if (!first) subtitle = "Let's set up your transfer plan.";
+    else if (term) subtitle = `Transferring ${cycleLabel(term).toLowerCase()}.`;
     else subtitle = rest.length ? `Transferring to ${first.name} and ${rest.length} more.` : `Transferring to ${first.name}.`;
   }
 
   let card;
-  if (plan) card = first ? <PlanCard plan={plan} /> : <SetupCard />;
+  if (plan) card = first ? <PlanRoute plan={plan} /> : <SetupCard />;
   else if (state.status === "error") {
     card = (
       <InlineError
