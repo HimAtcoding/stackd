@@ -16,7 +16,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-admission-guarantee-tag.html",
       "confirm_on": "UC Admissions, Transfer Admission Guarantee (TAG) page: the fall 2027 filing period, September 1 to 30, 2026. The page may show it as closed now.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "uc-application-fall-2027",
@@ -26,13 +26,13 @@
       "title": "UC application",
       "summary": "One application covers every UC campus you pick. Submit it before the deadline.",
       "opens_at": "2026-10-01T00:00:00-07:00",
-      "due_at": "2026-11-30T23:59:00-08:00",
-      "due_has_time": true,
+      "due_at": "2026-11-30T23:59:59-08:00",
+      "due_has_time": false,
       "varies_by_campus": false,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/dates-and-deadlines.html",
-      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the fall 2027 filing period, October 1 to November 30, 2026, and the 11:59 p.m. Pacific deadline time.",
-      "retrieved_at": ""
+      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the fall 2027 filing period, October 1 to November 30, 2026. The page states no deadline time.",
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "cal-state-apply-fall-2027",
@@ -48,7 +48,7 @@
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/pages/application-dates-deadlines.aspx",
       "confirm_on": "Cal State Apply, Application dates & deadlines: the fall 2027 priority filing period, October 1 to November 30, 2026. If the page states a time, set due_has_time to true and use it. Some campuses accept later applications; those dates are on each campus's own page.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "fafsa-dream-act-fall-2027",
@@ -56,15 +56,15 @@
       "audience": "aid",
       "kind": "aid",
       "title": "FAFSA or Dream Act",
-      "summary": "File the FAFSA, or the California Dream Act Application if you can't file the FAFSA. Filing by this date keeps you in line for a Cal Grant.",
+      "summary": "If you can't file the FAFSA, use the California Dream Act Application instead. If someone on your FAFSA can't finish their part of it, you may be able to use the Dream Act Application. Check with your financial aid office first, because Pell Grants and Work-Study need the FAFSA. Filing by this date keeps you in line for a Cal Grant.",
       "opens_at": "2026-10-01T00:00:00-07:00",
       "due_at": "2027-03-02T23:59:59-08:00",
       "due_has_time": false,
       "varies_by_campus": false,
-      "source_name": "California Student Aid Commission",
-      "source_url": "https://www.csac.ca.gov/apply",
-      "confirm_on": "California Student Aid Commission, How to apply for financial aid: the March 2, 2027 Cal Grant priority deadline. studentaid.gov, FAFSA deadlines (https://studentaid.gov/apply-for-aid/fafsa/fafsa-deadlines): that the 2027-28 FAFSA opens October 1, 2026.",
-      "retrieved_at": ""
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/dates-and-deadlines.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the FAFSA and California Dream Act Application filing period opens October 1, 2026 and runs through March 2, 2027. California Student Aid Commission, How to apply for financial aid (https://www.csac.ca.gov/apply): who files the Dream Act Application (undocumented students, and students in mixed-status families), and that Pell Grants and Work-Study are limited to FAFSA applicants.",
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "uc-academic-update-fall-2027",
@@ -72,15 +72,15 @@
       "audience": "uc",
       "kind": "update",
       "title": "UC Transfer Academic Update",
-      "summary": "After you apply, add your fall grades and any changes to your spring classes. UC uses this update when it decides.",
-      "opens_at": null,
+      "summary": "After you apply, add your fall grades and any changes to your spring classes. UC uses this update when it decides. January 31 is UC's priority deadline.",
+      "opens_at": "2026-12-15T00:00:00-08:00",
       "due_at": "2027-01-31T23:59:59-08:00",
       "due_has_time": false,
       "varies_by_campus": false,
       "source_name": "UC Admissions",
-      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/after-you-apply/transfer-academic-update.html",
-      "confirm_on": "UC Admissions, After you apply, Transfer academic update: the January 31, 2027 priority deadline. The page gave no opening day on 2026-10-17, so opens_at is null (no window bar); add one only if the page states it.",
-      "retrieved_at": ""
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/dates-and-deadlines.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Dates & deadlines: the Transfer Academic Update opens December 15, 2026, with a January 31, 2027 priority deadline. Also on the Transfer academic update page (https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/after-you-apply/transfer-academic-update.html): \"Fall 2027 … The priority deadline is January 31, 2027.\" Neither page states a time.",
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "accept-uc-fall-2027",
@@ -88,7 +88,7 @@
       "audience": "uc",
       "kind": "enroll",
       "title": "Accept your UC offer",
-      "summary": "Accept the offer from the UC campus you pick, through that campus's student portal.",
+      "summary": "Accept your offer by submitting the Statement of Intent to Register (SIR) to the UC campus you pick.",
       "opens_at": null,
       "due_at": "2027-06-01T23:59:59-07:00",
       "due_has_time": false,
@@ -96,23 +96,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/after-you-apply/admissions-decisions.html",
       "confirm_on": "UC Admissions, After you apply, Admissions decisions: the June 1, 2027 deadline for fall transfer admits to accept (the Statement of Intent to Register). If the page states a time, set due_has_time to true and use it.",
-      "retrieved_at": ""
-    },
-    {
-      "slug": "accept-csu-fall-2027",
-      "cycle": "fall-2027",
-      "audience": "csu",
-      "kind": "enroll",
-      "title": "Accept your CSU offer",
-      "summary": "Tell the CSU campus you pick that you're coming. Most campuses ask by May 1; check yours.",
-      "opens_at": null,
-      "due_at": "2027-05-01T23:59:59-07:00",
-      "due_has_time": false,
-      "varies_by_campus": true,
-      "source_name": "Cal State Apply",
-      "source_url": "https://www.calstate.edu/apply/pages/application-dates-deadlines.aspx",
-      "confirm_on": "Cal State Apply, Application dates & deadlines, or the CSU's admitted-student page: May 1, 2027 as the usual deadline to accept. Each target campus's admitted-student page has its own date; the row says the date varies by campus.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     }
   ],
   "checklists": [
@@ -126,7 +110,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "UC Admissions, Applying as a transfer, Filling out the application: the parts of the transfer application, and that apply_url opens the official application site.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "slug": "cal-state-apply-fall-2027",
@@ -138,7 +122,7 @@
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
       "confirm_on": "Cal State Apply, Transfer Application Guide 2027-2028: the parts of the transfer application, and that apply_url opens the official application site.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     }
   ],
   "checklist_steps": [
@@ -150,37 +134,37 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "Filling out the application: choosing campuses and a major at each, and that the fee is charged per campus.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "uc-application-fall-2027",
       "position": 2,
       "title": "Enter your courses and grades",
-      "summary": "Type in every college course and grade from your transcripts. UC uses what you enter.",
+      "summary": "Type in every college course and grade from your transcripts.",
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "Filling out the application: entering every college course and grade from your transcripts.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "uc-application-fall-2027",
       "position": 3,
       "title": "Write your personal insight answers",
-      "summary": "Transfer applicants answer a set number of short questions, including one required question. Check the current rules on UC's page.",
+      "summary": "Answer four questions. One is required, and you choose the other three.",
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "Filling out the application: the personal insight questions for transfer applicants, including the required one.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "uc-application-fall-2027",
       "position": 4,
       "title": "Add activities and awards",
-      "summary": "List work, family responsibilities, clubs, volunteering, and awards.",
+      "summary": "List your work, volunteering, extracurricular activities, educational programs and awards.",
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "Filling out the application: the activities and awards section.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "uc-application-fall-2027",
@@ -190,17 +174,17 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/filling-out-the-application.html",
       "confirm_on": "Filling out the application: the application fee per campus and the fee waiver.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "uc-application-fall-2027",
       "position": 6,
       "title": "Submit by Nov 30",
-      "summary": "Submit before 11:59 p.m. Pacific on November 30, 2026.",
+      "summary": "Submit by November 30, 2026.",
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/dates-and-deadlines.html",
-      "confirm_on": "Dates & deadlines: the November 30, 2026 deadline at 11:59 p.m. Pacific.",
-      "retrieved_at": ""
+      "confirm_on": "Dates & deadlines: the November 30, 2026 deadline. The page states no time.",
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "cal-state-apply-fall-2027",
@@ -210,7 +194,7 @@
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
       "confirm_on": "Transfer Application Guide 2027-2028: choosing campuses and programs.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "cal-state-apply-fall-2027",
@@ -220,47 +204,37 @@
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
       "confirm_on": "Transfer Application Guide 2027-2028: entering college coursework and grades from transcripts.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "cal-state-apply-fall-2027",
       "position": 3,
-      "title": "Add your work and activities",
-      "summary": "Some campuses and programs use this; check yours.",
-      "source_name": "Cal State Apply",
-      "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
-      "confirm_on": "Transfer Application Guide 2027-2028: the work and activities section, and that some campuses and programs use it.",
-      "retrieved_at": ""
-    },
-    {
-      "checklist": "cal-state-apply-fall-2027",
-      "position": 4,
       "title": "Check for extra campus steps",
       "summary": "Some majors and campuses ask for a supplemental application or more materials.",
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
       "confirm_on": "Transfer Application Guide 2027-2028: supplemental applications or materials some majors and campuses ask for.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "cal-state-apply-fall-2027",
-      "position": 5,
+      "position": 4,
       "title": "Pay the fee or ask for a waiver",
       "summary": "Each campus has an application fee. Fee waivers are available for students who qualify.",
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/transfer/Documents/cal-state-apply-transfer-application-guide.pdf",
       "confirm_on": "Transfer Application Guide 2027-2028: the application fee per campus and the fee waiver.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     },
     {
       "checklist": "cal-state-apply-fall-2027",
-      "position": 6,
+      "position": 5,
       "title": "Submit by Nov 30",
-      "summary": "Submit before November 30, 2026. Some campuses accept later applications.",
+      "summary": "Submit by November 30, 2026. Some campuses accept later applications.",
       "source_name": "Cal State Apply",
       "source_url": "https://www.calstate.edu/apply/pages/application-dates-deadlines.aspx",
       "confirm_on": "Application dates & deadlines: the November 30, 2026 priority deadline, and that some campuses accept later applications.",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-17"
     }
   ]
 }

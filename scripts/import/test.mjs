@@ -234,25 +234,27 @@ await badDates("a step twice", (d) => d.checklist_steps.push({ ...d.checklist_st
 await badDates("a flag as text", (d) => (d.deadlines[0].due_has_time = "yes"), /must be true or false/);
 check("deadlines: validation failures never reach the database", (await count("import_runs")) === beforeDates);
 
-// 12. The real fall 2027 file waits for a person: refused only for the dates nobody has checked yet
+// 12. The real fall 2027 file, checked on 2026-10-17 (docs/date-check.md)
 const real = JSON.parse(fs.readFileSync("data/raw/deadlines/fall-2027.json", "utf8"));
 const realCheck = validateDeadlinesFile(real);
 const rowCount = real.deadlines.length + real.checklists.length + real.checklist_steps.length;
-check("fall-2027.json is refused until each row is checked",
-  realCheck.problems.filter((p) => /retrieved_at is empty/.test(p)).length === rowCount, `${rowCount} rows, problems: ${JSON.stringify(realCheck.problems)}`);
-check("fall-2027.json is refused only for retrieved_at",
-  realCheck.problems.every((p) => /retrieved_at is empty/.test(p)), JSON.stringify(realCheck.problems));
+check("fall-2027.json passes as checked", realCheck.problems.length === 0, JSON.stringify(realCheck.problems));
 check("fall-2027.json rows have no placeholder left", !/TODO|TBD|PASTE/.test(JSON.stringify([real.deadlines, real.checklists, real.checklist_steps])));
-// UC's page states no opening day for the Transfer Academic Update, so it has none rather than a guessed one
-check("the Transfer Academic Update has no opening day", real.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at === null);
+// UC Dates & deadlines states the Transfer Academic Update's opening day
+check("the Transfer Academic Update opens December 15", real.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at === "2026-12-15T00:00:00-08:00");
 check("summaries leave out the claims removed after review",
   ![...real.deadlines, ...real.checklist_steps].some((r) => /late applications|Six UC campuses|deposit/.test(r.summary)));
-// Filled in here only, never written: everything else in the file is already well-formed
-for (const table of ["deadlines", "checklists", "checklist_steps"]) for (const row of real[table]) row.retrieved_at = "2026-10-16";
-const filled = validateDeadlinesFile(real);
-check("fall-2027.json passes once a person fills in retrieved_at", filled.problems.length === 0, JSON.stringify(filled.problems));
+// No page states a time, and no CSU page states May 1
+check("no date in the file shows a time", real.deadlines.every((d) => d.due_has_time === false) && !/11:59/.test(JSON.stringify(real)));
+check("the unconfirmed CSU offer date is gone", !real.deadlines.some((d) => d.slug === "accept-csu-fall-2027"));
 check("a null opening day reaches the database as null",
-  filled.payload.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at === null);
+  realCheck.payload.deadlines.find((d) => d.slug === "accept-uc-fall-2027").opens_at === null);
+// Emptied here only, never written: a row nobody has checked is still refused
+for (const table of ["deadlines", "checklists", "checklist_steps"]) for (const row of real[table]) row.retrieved_at = "";
+const emptied = validateDeadlinesFile(real);
+check("fall-2027.json is refused while any row is unchecked",
+  emptied.problems.filter((p) => /retrieved_at is empty/.test(p)).length === rowCount && emptied.problems.every((p) => /retrieved_at is empty/.test(p)),
+  `${rowCount} rows, problems: ${JSON.stringify(emptied.problems)}`);
 
 // 13. The app's roles can't run a deadlines import
 try {
