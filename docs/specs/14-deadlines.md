@@ -163,7 +163,7 @@ The stack says *when*. This card says *what's left*: the steps of the applicatio
 │ ┌───────────────────────────┐ │
 │ │ ◔    Get your UC          │ │  ring 56; title-3, wraps to 2 lines
 │ │2of6  application ready    │ │
-│ │      4 steps left before  │ │  body --slate-600
+│ │      4 steps left, due by │ │  body --slate-600
 │ │      Nov 30               │ │
 │ │ ○  Write your personal    │ │  16; next two unchecked steps
 │ │    insight answers        │ │
@@ -178,11 +178,11 @@ The stack says *when*. This card says *what's left*: the steps of the applicatio
 | Card | Card (00), margins 16, padding 16 |
 | Ring | 56 × 56, top-left. Progress ring: 5 px stroke, track `--blue-100`, arc `--blue-600`, starting at 12 o'clock and running clockwise, round caps. Center: "{done} of {total}" in `label` (14/18 600) `--navy-900`, tabular-nums. All done: the ring becomes a filled `--green-600` circle with a white `Check` bold 24, and the center text is removed. `aria-hidden` (the card's label carries it) |
 | Title | 16 right of the ring, top-aligned: "Get your UC application ready" (or "Get your Cal State Apply ready"), `title-3` (18/24 700) `--navy-900`, up to 2 lines |
-| Subtitle | 4 below: "{n} steps left before Nov 30" in `body` `--slate-600`. One left: "1 step left before Nov 30". Not repeating the next step here, because the list below already shows it (the first mockup drew "Next: …", which said it twice) |
+| Subtitle | 4 below: "{n} steps left, due by Nov 30" in `body` `--slate-600`. One left: "1 step left, due by Nov 30". Not repeating the next step here, because the list below already shows it (the first mockup drew "Next: …", which said it twice) |
 | Step list | 16 below the ring or the subtitle, whichever is lower. The next two unchecked steps, in order. Each row: min height 44, the status icon (00) "not started" ring 24 at left, 16 gap, the step in `body-md` `--navy-900`, up to 2 lines. Tapping the ring checks the step off (the same status control as 03: `role="checkbox"`, fill animation, toast "Marked complete" with "Undo"). Tapping the text opens the steps sheet at that step |
 | Link | "See all {total} steps", text link (`label` `--blue-600`), right-aligned, 8 below the list, 44 hit area. Opens the steps sheet |
 
-**Which checklist shows**: the one for the application with the nearest upcoming due date among the student's systems. UC-only plan: UC. CSU-only plan: Cal State Apply. Both: the one due first (on a tie, UC, then the other after it's done). No plan: the UC checklist, since most students in the first slice target a UC.
+**Which checklist shows**: the one for the application with the nearest upcoming due date among the student's systems. UC-only plan: UC. CSU-only plan: Cal State Apply. Both: the one due first (on a tie, UC, then the other after it's done). No plan: no card. The setup card is the one thing to do on Home then (02), so Get ready waits until the plan names a school.
 
 **When every step is done**: the green ring, the title "Your UC application is ready", the subtitle "Submit it by Nov 30." and no list. After the due date passes, the card disappears.
 
@@ -480,7 +480,8 @@ And in "Your plan", a new row **Transfer term** ("Fall 2027"), opening the term 
 - Every shown date has a source line and an "Open official page" link, and no unverified date appears anywhere.
 - VoiceOver reads the stack as one button with the next three dates, and each row with its full date and status.
 - At 320 wide: the countdown block keeps 72, titles wrap to 2 lines, and the peek layers' titles truncate with an ellipsis.
-- Get ready: with 2 of 6 steps done, the ring shows a third filled, the subtitle says "4 steps left before Nov 30", and the next two unchecked steps show. Checking one off on Home fills its ring, updates the count, brings up the next step, and "Undo" reverses it. All six done: the green ring and "Your UC application is ready".
+- Get ready: with 2 of 6 steps done, the ring shows a third filled, the subtitle says "4 steps left, due by Nov 30", and the next two unchecked steps show. Checking one off on Home fills its ring, updates the count, brings up the next step, and "Undo" reverses it. All six done: the green ring and "Your UC application is ready".
 - A CSU-only plan shows the Cal State Apply checklist; a plan with both shows the one due first.
+- No plan: Home shows the setup card and the stack, and no Get ready card.
 
 One line on what makes this Stackd's and no one else's: the deadlines arrive as a literal stack, the next one on top, counting down in the same heavy type as "Hi, Ryan!", with the window bar showing how much of the filing period is already gone.

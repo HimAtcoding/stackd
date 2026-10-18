@@ -24,7 +24,7 @@
       "audience": "uc",
       "kind": "application",
       "title": "UC application",
-      "summary": "One application covers every UC campus you pick. Submit it before the deadline.",
+      "summary": "One application covers every UC campus you pick. Submit it by the deadline.",
       "opens_at": "2026-10-01T00:00:00-07:00",
       "due_at": "2026-11-30T23:59:59-08:00",
       "due_has_time": false,

@@ -58,10 +58,12 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
   const router = useRouter();
   const notifications = unbuiltHref("notifications");
   const deadlines = useDeadlines(scope);
+  // No plan yet: the setup card is the one thing to do, so Get ready waits until there's a plan (14 → Get ready card)
+  const showGetReady = FEATURES.getReady && !(scope.status === "ok" && scope.scope === null);
   // Stand-in deadline rows are demo records, so the strip shows with them (00 → Demo strip)
   const demoDates =
     deadlines.status === "ok" &&
-    ((FEATURES.upcoming && deadlines.view.demo) || (FEATURES.getReady && Boolean(deadlines.checklist?.checklist.demo)));
+    ((FEATURES.upcoming && deadlines.view.demo) || (showGetReady && Boolean(deadlines.checklist?.checklist.demo)));
 
   return (
     <div className="relative min-h-dvh bg-sky-50 bg-[linear-gradient(180deg,var(--sky-100)_0,var(--sky-50)_360px)]">
@@ -145,7 +147,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
             )}
 
             {FEATURES.upcoming && <UpNext state={deadlines} />}
-            {FEATURES.getReady && <GetReadyCard state={deadlines} toastBottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />}
+            {showGetReady && <GetReadyCard state={deadlines} toastBottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />}
 
             {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
             <UnofficialFooter className="mt-6 px-4" />

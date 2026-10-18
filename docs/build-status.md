@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-18 (v1.1 copy fixes from the design review, on branch `v1-1-copy-fixes`). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -492,6 +492,16 @@ Every line of `docs/date-check.md` checked on its official page by Ryan Saleh, o
 **Imported and verified:** dry run, then the real import (6 dates, 2 checklists, 11 steps inserted), then `import:verify` with `data/review/2026-10-18T02-11-33-606-fall-2027.csv` (checked by Ryan Saleh, 2026-10-17): 19 rows verified. Read back with the anon key, all 19 are live.
 
 **Tested 2026-10-17** (Windows, dev server with `NEXT_PUBLIC_FEATURES=all`, stand-in session; the plan was mocked, the dates came from the database): 12 checks. With a UC San Diego plan, Home's Up next card and the Deadlines screen show "UC application, Due Monday, Nov 30" with no time, the date sheet reads "Monday, November 30, 2026", and there's no CSU offer row. With a stand-in CSU target, Home's Get ready card reads "0 of 5 steps done" and "See all 5 steps", and the sheet lists the five steps in order. The release build is unchanged (all deadline flags off).
+
+## v1.1 copy fixes from the design review (2026-10-18)
+
+On branch `v1-1-copy-fixes`. Still behind the deadline flags, so the release build doesn't change.
+
+- **UC application summary:** "Submit it by the deadline." instead of "before". It's the only "before" about a due date in `fall-2027.json` (the TAG's "before the UC application" is about order and stays). The row is verified, so it goes in through `docs/date-check.md` → Fixing a verified row after merge.
+- **Get ready subtitle:** "{n} steps left, due by Nov 30" instead of "left before Nov 30" (`checklistSubtitle`, spec 14). `test:deadlines` checks both the plural and the singular.
+- **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
+- **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
+- `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
 
 ## v1 launch build (step 14, 2026-10-15)
 
