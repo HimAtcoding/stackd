@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, on branch `deadlines-data`, below; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-17 (step 16 follow-ups from the PR #3 review, on branch `deadlines-followups`, below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -450,6 +450,30 @@ Not tested, and needs a Mac and a real iPhone:
 - `app-settings:` opening Stackd's page in Settings. If it doesn't, the fallback is a few lines of Swift in a small plugin, like `AppleSignInPlugin.swift`.
 - Against the real project once the migrations are applied: the verified-only reads and the marks round trip.
 
+## Deadlines follow-ups (step 16, 2026-10-17)
+
+Fixes from the review of PR #3, on branch `deadlines-followups`. Still all behind the deadline flags, so the release build doesn't change.
+
+**The first-dates file** (`data/raw/deadlines/fall-2027.json`):
+- Removed three claims no `confirm_on` page was set to check: "UC doesn't take late applications" (stand-in wording from Ryan's part), "Six UC campuses guarantee a spot…", and "and pay its deposit". The same sentences are gone from the demo seed.
+- The Transfer Academic Update has no opening day (`opens_at: null`, so no window bar). UC's page, read 2026-10-17, gives only "The priority deadline is January 31, 2027." The validator already allowed null there; the tests now expect it, and expect the file to be refused only for its empty `retrieved_at`.
+- `docs/date-check.md` lists every row with its official link, what to check, and a box to tick. It flags the summary sentences that say more than `confirm_on` asks to check (TAG, UC application, Cal State Apply, FAFSA, the Transfer Academic Update, Accept your UC offer, and UC steps 2 and 4): each is to be confirmed on the page or deleted. Nothing is verified and no `retrieved_at` is filled in.
+
+**Code:**
+- **Saving marks** (`lib/data/mark-queue.ts`, used by `lib/data/deadlines.ts`): a mark the account refuses stays queued and the marks after it still go; a dropped connection ends the pass. Anything left is retried after 2 s, 4 s, 8 s … up to 5 minutes, and the waits start over after a success. Reading the account's marks no longer waits for an empty queue: the account's copy wins, except for marks still waiting or made during the read. A retry never sends after sign-out.
+- **Turning reminders on from a date sheet:** with reminders off in Settings, adding a day asks "Turn on reminders?" ("Turn on" / "Not now"), with the line "Reminders are off in Settings. Turning them on reminds you about every date you're tracking." "Not now" keeps the date's choice and leaves reminders off. Taking a day away never asks. The decision is `afterReminderChoice` in `lib/reminders/choice.ts`.
+- **Sign-out during a reschedule:** every reschedule and cancel goes through one lock on the phone (`serialized` in `lib/reminders/schedule.ts`), and a reschedule checks, inside the lock, that the same account is still signed in; if not, it cancels everything instead.
+- **`cancelReminders`** returns early while the `reminders` flag is off, so the v1 release never loads the plugin.
+- **A tapped reminder on an open Deadlines screen** opens that date's sheet: `?id=` is read on every navigation, and a tap also tells an open screen directly, for the same date tapped twice.
+
+**Tested 2026-10-17** (Windows):
+- `test:reminders` (15 new, 65 in all): the race without the lock and its absence with it, a reschedule after sign-out, the choice rules, the tap reaching an open screen, and the plugin load count in a pretend iPhone with the flags off (0) and on (1).
+- `test:deadlines`, new (22): refused, offline, removed and stand-in marks, the backoff, sign-out, and reading the account back.
+- `test:import` (4 new, 1 changed): the real file is refused only for `retrieved_at`, has no placeholders, no opening day for the update, and none of the removed claims.
+- Browser, stand-in session with mocked tables, flags on: 61 checks, including step 16's 52, a refused mark retried at growing gaps while the account's marks are still read, and reminder taps on an open Deadlines screen.
+- Lint, `tsc`, `test:db`, `test:oauth` and `npm run build` with the release checks.
+- Not tested: the "Turn on reminders?" sheet and the lock on a real iPhone (both need the native plugin).
+
 ## v1 launch build (step 14, 2026-10-15)
 
 Spec 13 (`docs/specs/13-v1-launch.md`) on the web build, tested on Windows. **iOS build 2 isn't made yet:** that's the Mac steps below.
@@ -661,7 +685,7 @@ Still placeholders or missing: `app-icon` (temporary icons above until it exists
 
 | Step | Build | Notes |
 |---|---|---|
-| 16 | The rest of deadlines (14): custom dates; then checking the first dates, applying the migrations and importing; then reminders on a real iPhone | Tables, the import file, real data, reminders and the Settings additions are built (Abyan's part, above), waiting for review. After merging: `npx supabase db push`, check each row of `data/raw/deadlines/fall-2027.json` on its `confirm_on` page, import, verify. Flag `customDeadlines` stays off until custom dates are built |
+| 16 | The rest of deadlines (14): custom dates; then checking the first dates, applying the migrations and importing; then reminders on a real iPhone | Tables, the import file, real data, reminders and the Settings additions are merged (PR #3); review follow-ups on `deadlines-followups` (above). Next: `npx supabase db push`, check each row with `docs/date-check.md`, import, verify. Flag `customDeadlines` stays off until custom dates are built |
 | 8 | Essays (04) | |
 | 9 | Task complete and the run loop (05) | `motion` is installed (step 7 uses it for the springs); `canvas-confetti` isn't yet. Open the celebration from `onJourneyStepCompleted()` (see above) |
 

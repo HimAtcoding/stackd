@@ -18,6 +18,7 @@ import { readSeedResult } from "@/lib/seed";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
 import { getTargetUniversity } from "./index";
+import { createMarkQueue, mergeFromAccount, type PushError } from "./mark-queue";
 import { readPlanState, usePlan, type Plan } from "./plan";
 
 // Deadlines and checklists for the screens (14), and the student's marks on them.
@@ -205,15 +206,49 @@ export function retryDeadlines() {
 // The student's marks in the account
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-let flushing = false;
-let flushAgain = false;
+
+// Every change gets the next number, so a read of the account can tell which marks were made while it was running
+let editCount = 0;
+const lastEdit = new Map<string, number>();
+
+let sending: { userId: string; queue: ReturnType<typeof createMarkQueue> } | null = null;
+
+// The signed-in account's send queue (lib/data/mark-queue.ts): one failed mark never holds up the others, and
+// whatever is left is tried again later, waiting longer each time
+function sendQueue(supabase: SupabaseClient, userId: string) {
+  if (sending?.userId === userId) return sending.queue;
+  sending?.queue.stop();
+  const next = createMarkQueue({
+    keys: queue.get,
+    remove: (key) => queue.set((prev) => prev.filter((k) => k !== key)),
+    snapshot: (key) => JSON.stringify(currentValue(key)),
+    send: async (key) => {
+      try {
+        const { error } = await push(supabase, userId, key);
+        return { error: error as PushError };
+      } catch (e) {
+        return { error: { message: String(e) } };
+      }
+    },
+    // A record that isn't in the database (a stand-in id) never will be
+    unsendable: (key) => key !== "term" && !UUID.test(key.slice(2)),
+    stillCurrent: () => readSessionUser()?.id === userId,
+    later: (run, ms) => {
+      const timer = setTimeout(run, ms);
+      return () => clearTimeout(timer);
+    },
+  });
+  sending = { userId, queue: next };
+  return next;
+}
 
 function enqueue(key: string) {
   if (DEMO_MODE) return;
+  lastEdit.set(key, ++editCount);
   queue.set((prev) => (prev.includes(key) ? prev : [...prev, key]));
   const supabase = getSupabase();
   const userId = readSessionUser()?.id;
-  if (supabase && userId) flush(supabase, userId).catch(() => {});
+  if (supabase && userId) sendQueue(supabase, userId).flush().catch(() => {});
 }
 
 // What a queued key stands for right now; sent as it is when the queue is pushed
@@ -242,57 +277,29 @@ async function push(supabase: SupabaseClient, userId: string, key: string) {
     : supabase.from("user_checklist_steps").delete().match({ user_id: userId, step_id: id });
 }
 
-// Pushes queued changes, oldest first. Stops at the first failure and keeps the rest for next time.
-async function flush(supabase: SupabaseClient, userId: string) {
-  if (flushing) {
-    flushAgain = true;
-    return;
-  }
-  flushing = true;
-  try {
-    for (const key of queue.get()) {
-      // A record that isn't in the database (a stand-in id) never will be: drop it
-      const stale = key !== "term" && !UUID.test(key.slice(2));
-      const sent = JSON.stringify(currentValue(key));
-      if (!stale) {
-        const { error } = await push(supabase, userId, key);
-        // A date or step removed from the database (foreign-key miss) is dropped too
-        if (error && error.code !== "23503") break;
-      }
-      if (readSessionUser()?.id !== userId) return;
-      // Changed again while it was being sent: it stays queued, and goes next time
-      if (JSON.stringify(currentValue(key)) === sent) queue.set((prev) => prev.filter((k) => k !== key));
-    }
-  } finally {
-    flushing = false;
-  }
-  if (flushAgain) {
-    flushAgain = false;
-    await flush(supabase, userId);
-  }
-}
-
-// The account's marks and term replace this device's copy, once everything queued has been sent
+// Sends what's queued, then reads the account's marks and term. The account's copy replaces this device's, except
+// for marks still waiting to be sent or made while the read was running, so a failed send never stops the pull.
 async function syncMarks(supabase: SupabaseClient, userId: string) {
-  await flush(supabase, userId);
-  if (queue.get().length) return;
+  await sendQueue(supabase, userId).flush();
+  const readFrom = editCount;
   const [dates, steps, profile] = await Promise.all([
     supabase.from("user_deadlines").select("deadline_id, done_at, reminders"),
     supabase.from("user_checklist_steps").select("step_id, done_at"),
     supabase.from("profiles").select("transfer_term, transfer_term_asked").maybeSingle(),
   ]);
-  if (dates.error || steps.error || profile.error || readSessionUser()?.id !== userId || queue.get().length) return;
-  marks.set(() =>
-    Object.fromEntries(
-      (dates.data as { deadline_id: string; done_at: string | null; reminders: number[] | null }[]).map((r) => [
-        r.deadline_id,
-        r.reminders ? { done_at: r.done_at, reminders: r.reminders } : { done_at: r.done_at },
-      ]),
-    ),
+  if (dates.error || steps.error || profile.error || readSessionUser()?.id !== userId) return;
+  const keepDevice = (key: string) => queue.get().includes(key) || (lastEdit.get(key) ?? 0) > readFrom;
+  const accountMarks = Object.fromEntries(
+    (dates.data as { deadline_id: string; done_at: string | null; reminders: number[] | null }[]).map((r) => [
+      r.deadline_id,
+      r.reminders ? { done_at: r.done_at, reminders: r.reminders } : { done_at: r.done_at },
+    ]),
   );
-  stepMarks.set(() => Object.fromEntries((steps.data as { step_id: string; done_at: string }[]).map((r) => [r.step_id, r.done_at])));
+  const accountSteps = Object.fromEntries((steps.data as { step_id: string; done_at: string }[]).map((r) => [r.step_id, r.done_at]));
+  marks.set((device) => mergeFromAccount<DeadlineMark>(accountMarks, device, (id) => keepDevice(`d:${id}`)));
+  stepMarks.set((device) => mergeFromAccount(accountSteps, device, (id) => keepDevice(`s:${id}`)));
   const p = profile.data as { transfer_term: string | null; transfer_term_asked: boolean } | null;
-  if (p) termChoice.set(() => ({ asked: p.transfer_term_asked, term: p.transfer_term }));
+  if (p && !keepDevice("term")) termChoice.set(() => ({ asked: p.transfer_term_asked, term: p.transfer_term }));
 }
 
 // Today, read again whenever the app comes back to the foreground (14 → Motion: the window bar updates then)

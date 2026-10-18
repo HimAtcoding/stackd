@@ -1,6 +1,7 @@
 // Checks the reminder scheduling logic (lib/reminders/schedule.ts) against 14 → Reminders, with made-up clocks.
 // No phone and no plugin: a fake stands in for Local Notifications. `npm run test:reminders`
 import { describe, type DeadlineRecord } from "../lib/deadlines";
+import { afterReminderChoice, announceReminderTap, onReminderTap } from "../lib/reminders/choice";
 import {
   cancelAll,
   MAX_SCHEDULED,
@@ -9,6 +10,8 @@ import {
   reminderItems,
   remindersSummary,
   replaceAll,
+  rescheduleIfCurrent,
+  serialized,
   type NotificationsApi,
   type PlannedReminder,
 } from "../lib/reminders/schedule";
@@ -161,6 +164,95 @@ check("turning reminders off leaves nothing scheduled", phone.pending().length =
 await replaceAll(phone.api, first);
 await cancelAll(phone.api);
 check("signing out cancels every scheduled reminder", phone.pending().length === 0, phone.pending());
+
+// Signing out while a reschedule is still on the phone (getPending, cancel, schedule, each a moment apart)
+function slowPhone() {
+  const phone = fakePhone([1, 2, 3]);
+  const later = <T,>(work: () => Promise<T>) => new Promise<T>((resolve) => setTimeout(() => resolve(work()), 5));
+  const api: NotificationsApi = {
+    getPending: () => later(() => phone.api.getPending()),
+    cancel: (o) => later(() => phone.api.cancel(o)),
+    schedule: (o) => later(() => phone.api.schedule(o)),
+  };
+  return { api, pending: phone.pending };
+}
+let racing = slowPhone();
+await Promise.all([replaceAll(racing.api, first), cancelAll(racing.api)]);
+check("without the lock, a sign-out's cancel can be undone (the race this guards against)", racing.pending().length > 0, racing.pending());
+
+racing = slowPhone();
+let signedIn = true;
+let lock = serialized();
+const rescheduling = lock(() => rescheduleIfCurrent(racing.api, first, () => signedIn));
+// The reschedule is already on the phone (between getPending and cancel) when the student signs out
+await new Promise((resolve) => setTimeout(resolve, 2));
+signedIn = false;
+await Promise.all([rescheduling, lock(() => cancelAll(racing.api))]);
+check("with the lock, signing out mid-reschedule leaves nothing scheduled", racing.pending().length === 0, racing.pending());
+
+racing = slowPhone();
+signedIn = true;
+lock = serialized();
+const cancelling = lock(() => cancelAll(racing.api));
+signedIn = false;
+await Promise.all([cancelling, lock(() => rescheduleIfCurrent(racing.api, first, () => signedIn))]);
+check("a reschedule that starts after sign-out schedules nothing for that account", racing.pending().length === 0, racing.pending());
+
+racing = slowPhone();
+lock = serialized();
+await Promise.all([lock(() => rescheduleIfCurrent(racing.api, first, () => true)), lock(() => rescheduleIfCurrent(racing.api, afterDone, () => true))]);
+check("two reschedules in a row end with the newer set", racing.pending().length === 2 && racing.pending().every((p) => p.title.startsWith("Cal State Apply")), racing.pending());
+
+lock = serialized();
+const order: string[] = [];
+await Promise.allSettled([
+  lock(async () => {
+    order.push("a");
+    throw new Error("phone said no");
+  }),
+  lock(async () => void order.push("b")),
+]);
+check("a failed job doesn't block the next one", order.join() === "a,b", order);
+
+// A reminder choice in a date sheet: what comes next
+const choice = (permission: string, on: boolean, before: number[], after: number[]) => afterReminderChoice({ permission, on, before, after });
+check("iOS hasn't asked yet: the soft ask comes first", choice("prompt", false, [7, 1], [7, 3, 1]) === "soft-ask");
+check("reminders off in Settings, a day added: asked before turning them on", choice("granted", false, [7, 1], [7, 3, 1]) === "confirm-turn-on");
+check("reminders off in Settings, a day taken away: just saved, nothing turned on", choice("granted", false, [7, 1], [7]) === "save");
+check("reminders off in Settings, the last day taken away: just saved", choice("granted", false, [1], []) === "save");
+check("reminders already on: just saved", choice("granted", true, [7, 1], [7, 3, 1]) === "save");
+check("iOS permission denied: just saved (the sheet shows Open Settings instead)", choice("denied", false, [7, 1], [7, 3, 1]) === "save");
+
+// A reminder tapped while the Deadlines screen is open reaches it, even for the date already in the address
+const globals = globalThis as Record<string, unknown>;
+globals.window = new EventTarget();
+const opened: string[] = [];
+const stopListening = onReminderTap((id) => opened.push(id));
+announceReminderTap("uc");
+announceReminderTap("uc");
+check("each tap reaches the open screen, the same date twice included", opened.join() === "uc,uc", opened);
+stopListening();
+announceReminderTap("csu");
+check("after the screen closes, taps go nowhere", opened.join() === "uc,uc", opened);
+delete globals.window;
+
+// The v1 release: with the reminders flag off, signing out on an iPhone never loads the notifications plugin
+const { spawnSync } = await import("node:child_process");
+const probe = (features: string | undefined) => {
+  const env = { ...process.env };
+  if (features) env.NEXT_PUBLIC_FEATURES = features;
+  else delete env.NEXT_PUBLIC_FEATURES;
+  const run = spawnSync(process.execPath, ["--import", "tsx", "scripts/reminders-gate-probe.mts"], { env, encoding: "utf8" });
+  try {
+    return JSON.parse(run.stdout.trim().split("\n").at(-1) ?? "") as { loads: number };
+  } catch {
+    return { loads: -1, error: run.stderr.slice(0, 300) };
+  }
+};
+const off = probe(undefined);
+check("flags off: sign-out on an iPhone doesn't load the plugin", off.loads === 0, off);
+const on = probe("all");
+check("reminders on: sign-out on an iPhone cancels through the plugin", on.loads === 1, on);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

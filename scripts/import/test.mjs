@@ -240,13 +240,19 @@ const realCheck = validateDeadlinesFile(real);
 const rowCount = real.deadlines.length + real.checklists.length + real.checklist_steps.length;
 check("fall-2027.json is refused until each row is checked",
   realCheck.problems.filter((p) => /retrieved_at is empty/.test(p)).length === rowCount, `${rowCount} rows, problems: ${JSON.stringify(realCheck.problems)}`);
-check("fall-2027.json is refused only for retrieved_at and the TODO opening date",
-  realCheck.problems.every((p) => /retrieved_at is empty|uc-academic-update-fall-2027\): opens_at still has a placeholder/.test(p)), JSON.stringify(realCheck.problems));
+check("fall-2027.json is refused only for retrieved_at",
+  realCheck.problems.every((p) => /retrieved_at is empty/.test(p)), JSON.stringify(realCheck.problems));
+check("fall-2027.json rows have no placeholder left", !/TODO|TBD|PASTE/.test(JSON.stringify([real.deadlines, real.checklists, real.checklist_steps])));
+// UC's page states no opening day for the Transfer Academic Update, so it has none rather than a guessed one
+check("the Transfer Academic Update has no opening day", real.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at === null);
+check("summaries leave out the claims removed after review",
+  ![...real.deadlines, ...real.checklist_steps].some((r) => /late applications|Six UC campuses|deposit/.test(r.summary)));
 // Filled in here only, never written: everything else in the file is already well-formed
 for (const table of ["deadlines", "checklists", "checklist_steps"]) for (const row of real[table]) row.retrieved_at = "2026-10-16";
-real.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at = "2026-12-15T00:00:00-08:00";
 const filled = validateDeadlinesFile(real);
-check("fall-2027.json passes once a person fills in those fields", filled.problems.length === 0, JSON.stringify(filled.problems));
+check("fall-2027.json passes once a person fills in retrieved_at", filled.problems.length === 0, JSON.stringify(filled.problems));
+check("a null opening day reaches the database as null",
+  filled.payload.deadlines.find((d) => d.slug === "uc-academic-update-fall-2027").opens_at === null);
 
 // 13. The app's roles can't run a deadlines import
 try {
