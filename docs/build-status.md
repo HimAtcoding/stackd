@@ -486,7 +486,7 @@ Every line of `docs/date-check.md` checked on its official page by Ryan Saleh, o
 - **Summaries:** Accept your UC offer names the SIR; UC steps 2, 3, 4 and 6 and Cal State Apply step 5 now say only what the pages say.
 - A row has one source, so a second page (the TAU page, CSAC) is named in `confirm_on`, which goes in the review report.
 
-**Spec 14:** the UC application's examples show no time (cards, sheet, timeline, notification copy, accessible names), and Accept your CSU offer says "varies by campus".
+**Spec 14:** the UC application's examples show no time (cards, sheet, timeline, notification copy, accessible names), and Accept your CSU offer says "varies by campus". The step tables now match the file (UC 1–6, CSU 1–5), and so do the dates table (TAU opens Dec 15; FAFSA confirmed on UC Dates & deadlines and CSAC), the timeline wireframe's second lines, and the source lines (checked Oct 17, 2026).
 
 **Imported and verified:** dry run, then the real import (6 dates, 2 checklists, 11 steps inserted), then `import:verify` with `data/review/2026-10-18T02-11-33-606-fall-2027.csv` (checked by Ryan Saleh, 2026-10-17): 19 rows verified. Read back with the anon key, all 19 are live.
 
@@ -733,6 +733,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided). Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. Deadline reminders (local notifications) are built since 2026-10-16 (step 16, Abyan's part) but behind the `reminders` and `deadlines` flags, untested on an iPhone, and need verified dates in the database. If a rejection comes, finish those steps, turn the flags on and resubmit.
 17. ~~Two clicks only a founder can make.~~ Both done 2026-10-13: Google's consent screen published, and Apple's updated Developer Program License Agreement accepted (it was blocking new submissions on the whole account).
 18. **"Checked" dates show a day early.** A date-only `retrieved_at` like 2026-10-17 is stored as midnight UTC, and `checkedDate` in `lib/deadlines.ts` shows it in Pacific time, so the source lines read "checked Oct 16, 2026". Fix by formatting that date in UTC (or storing it as Pacific midnight); seen 2026-10-17 after the first real import.
+19. **A verified row can't be corrected.** The import refuses any file that would change a verified row, and `verify` only moves rows to verified, so nothing in the pipeline can reopen one. Hit 2026-10-17: a new FAFSA or Dream Act summary (adding who files the FAFSA) stopped the dry run with "deadline fafsa-dream-act-fall-2027 is verified and the file would change it". The file and the database still have the earlier summary. Needs a decision: a reviewed way to reopen a verified row (a migration), or a one-off change in the Supabase SQL editor.
 
 ## Built differently from the specs, and why
 

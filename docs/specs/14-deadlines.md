@@ -77,11 +77,11 @@ Each must be checked on its official page before import; the "Confirm on" column
 
 | Title | Audience | Opens | Due | Confirm on |
 |---|---|---|---|---|
-| TAG (Transfer Admission Guarantee) | uc | Sep 1, 2026 | Sep 30, 2026 | UC Admissions, TAG page (shows as closed) |
+| TAG (Transfer Admission Guarantee) | uc | Sep 1, 2026 | Sep 30, 2026 | UC Admissions, TAG page |
 | UC application | uc | Oct 1, 2026 | Nov 30, 2026 (no time stated) | UC Admissions, "Applying as a transfer" |
 | Cal State Apply | csu | Oct 1, 2026 | Nov 30, 2026 (some campuses accept later) | Cal State Apply, and each target campus's deadlines page |
-| FAFSA or California Dream Act Application | aid | Oct 1, 2026 | Mar 2, 2027 (the Cal Grant deadline) | studentaid.gov and the California Student Aid Commission |
-| UC Transfer Academic Update | uc | mid-December 2026 | Jan 31, 2027 | UC Admissions, "Transfer academic update" |
+| FAFSA or California Dream Act Application | aid | Oct 1, 2026 | Mar 2, 2027 (the Cal Grant deadline) | UC Admissions, "Dates & deadlines", and the California Student Aid Commission |
+| UC Transfer Academic Update | uc | Dec 15, 2026 | Jan 31, 2027 (UC's priority deadline) | UC Admissions, "Dates & deadlines" and "Transfer academic update" |
 | Cal State Apply course update | csu | early January 2027 | varies by campus | each target campus |
 | Accept your UC offer | uc | | Jun 1, 2027 | UC Admissions |
 | Accept your CSU offer | csu | | varies by campus | each target campus |
@@ -107,7 +107,7 @@ Home gains two things under the plan card, so the screen reads top to bottom as 
 │ │ Opened Oct 1       Nov 30 │ │
 │ └───────────────────────────┘ │
 │  └ Nov 30  Cal State Apply ┘  │  layer 2 peek, 24 tall
-│    └ Jan 31  UC update ───┘   │  layer 3 peek, 24 tall
+│    └ Jan 31  UC Transfer…─┘   │  layer 3 peek, 24 tall
 │                               │  24
 │ ┌ ◔ Get your UC application ┐ │  Get ready card (below)
 │ └───────────────────────────┘ │  24
@@ -193,9 +193,9 @@ Stored like the deadlines: a `checklists` record per application per cycle, `che
 | # | UC application (fall 2027) | Summary for the sheet |
 |---|---|---|
 | 1 | Pick your campuses and majors | Choose which UC campuses to apply to and your major at each. The fee is per campus. |
-| 2 | Enter your courses and grades | Type in every college course and grade from your transcripts. UC uses what you enter. |
-| 3 | Write your personal insight answers | Transfer applicants answer a set number of short questions, including one required question. Check the current rules on UC's page. |
-| 4 | Add activities and awards | List work, family responsibilities, clubs, volunteering, and awards. |
+| 2 | Enter your courses and grades | Type in every college course and grade from your transcripts. |
+| 3 | Write your personal insight answers | Answer four questions. One is required, and you choose the other three. |
+| 4 | Add activities and awards | List your work, volunteering, extracurricular activities, educational programs and awards. |
 | 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
 | 6 | Submit by Nov 30 | Submit by November 30, 2026. |
 
@@ -203,10 +203,9 @@ Stored like the deadlines: a `checklists` record per application per cycle, `che
 |---|---|---|
 | 1 | Pick your campuses and majors | Choose which CSU campuses and programs to apply to. |
 | 2 | Enter your courses and grades | Enter your college coursework and grades from your transcripts. |
-| 3 | Add your work and activities | Some campuses and programs use this; check yours. |
-| 4 | Check for extra campus steps | Some majors and campuses ask for a supplemental application or more materials. |
-| 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
-| 6 | Submit by Nov 30 | Submit before November 30, 2026. Some campuses accept later applications. |
+| 3 | Check for extra campus steps | Some majors and campuses ask for a supplemental application or more materials. |
+| 4 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
+| 5 | Submit by Nov 30 | Submit by November 30, 2026. Some campuses accept later applications. |
 
 ### Steps sheet
 
@@ -214,7 +213,7 @@ Bottom sheet (00), opened from the link or a step's text.
 
 - Title: the card's title, `title-2`. Under it, the ring at 40 with "{done} of {total}", and "Due Nov 30" in `body` `--slate-600` beside it.
 - All steps in order, done and not done, as rows (the status icon, the step title in `row-title`, and its summary in `body` `--slate-600` below it). A row opened from Home is scrolled into view and briefly tinted `--blue-50` (600 ms) so the student sees which one they tapped.
-- At the bottom: a tinted button "Open the UC application" (or "Open Cal State Apply") with `ArrowSquareOut`, opening the official application site outside the app; then the source line in `caption`: "Steps from UC Admissions, checked Oct 16, 2026."
+- At the bottom: a tinted button "Open the UC application" (or "Open Cal State Apply") with `ArrowSquareOut`, opening the official application site outside the app; then the source line in `caption`: "Steps from UC Admissions, checked Oct 17, 2026."
 
 ### Get ready states
 
@@ -248,13 +247,13 @@ Route: `/deadlines/`, pushed, no tab bar. Opens from the stack, from "All deadli
 │  Nov ●┊ UC application   In 4…│  rows on one spine
 │  30   ┊ All UC campuses       │
 │  Nov ●┊ Cal State Apply       │
-│  30   ┊ Most CSU campuses     │
+│  30   ┊ All CSU campuses      │
 │ January 2027                  │
-│  Jan ○┊ UC update             │
-│  31   ┊ Grades through fall   │
+│  Jan ○┊ UC Transfer Academic… │
+│  31   ┊ Opens Dec 15          │
 │ March 2027                    │
 │  Mar ○┊ FAFSA or Dream Act    │
-│   2   ┊ For Cal Grant         │
+│   2   ┊ Financial aid         │
 │ [ + Add a date ]              │  tinted, flag customDeadlines
 │ Done and past (1)          ⌄  │  collapsed group
 │ Dates from UC Admissions, …   │  source line
@@ -335,7 +334,7 @@ Every upcoming date, oldest first, grouped by month.
 
 **Done and past**: a collapsed group 24 below. Header row 44 tall: "Done and past ({n})" in `row-title` `--navy-900`, `CaretDown` bold 20 at the right, rotating 180° when open (200 ms). Inside: the same rows, dimmed (text `--slate-600`), done ones with the green node and "Done" as the status, missed ones with a `--slate-400` ring and "Closed Sep 30". Newest first.
 
-**Source line**: 24 below, `caption` `--slate-600`, x 24, max 320: "Dates from UC Admissions, Cal State Apply and the California Student Aid Commission, checked Oct 16, 2026. Schools can change dates, so confirm on the official site." The names come from the shown records' `source_name`, and the date from the oldest `verified_at`. Then the unofficial footer line (00), 16 below.
+**Source line**: 24 below, `caption` `--slate-600`, x 24, max 320: "Dates from UC Admissions and Cal State Apply, checked Oct 17, 2026. Schools can change dates, so confirm on the official site." The names come from the shown records' `source_name`, and the date from the oldest `verified_at`. Then the unofficial footer line (00), 16 below.
 
 ### Date sheet
 
@@ -350,7 +349,7 @@ Bottom sheet (00), opened by any timeline row, the next-up card's buttons, or a 
 | For | When the audience covers the student's schools: "For UC San Diego" or "For UC San Diego and UC Davis" in `body` `--slate-700` |
 | Reminders | 24 below. Label "Remind me" in `headline`. Then choice rows (00 choice row, multiple choice): "1 week before", "3 days before", "1 day before", "The morning it's due". Defaults: 1 week and 1 day. Changes save as they're made, with no button. In the web app this block is one `body` `--slate-600` line instead: "Reminders work in the Stackd iPhone app." If iOS permission was denied: "Reminders are off for Stackd in your iPhone settings." with a text link "Open Settings" |
 | Mark done | 24 below, tinted button "Mark done" (`Check`), or after marking, "Marked done" with `CheckCircle` fill 20 `--green-600` and a text link "Undo" beside it |
-| Source | 16 below, `caption` `--slate-600`: "From UC Admissions, checked Oct 16, 2026." then a text link "Open official page" with `ArrowSquareOut` bold 16, opening `source_url` outside the app |
+| Source | 16 below, `caption` `--slate-600`: "From UC Admissions, checked Oct 17, 2026." then a text link "Open official page" with `ArrowSquareOut` bold 16, opening `source_url` outside the app |
 
 Custom dates show the same sheet with "Your date" under the title, the student's note as "What it is", no source line, and two text links at the bottom: "Edit" and "Delete date" (`--coral-700`, with a confirm step reading "Delete this date?" / "Delete" / "Keep it").
 
