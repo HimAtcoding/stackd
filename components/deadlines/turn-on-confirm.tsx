@@ -17,7 +17,7 @@ export function TurnOnConfirm({ open, onTurnOn, onClose }: TurnOnConfirmProps) {
       <h2 id="turn-on-title" tabIndex={-1} className="text-navy-900 type-title-2 focus:outline-none">
         Turn on reminders?
       </h2>
-      <p className="mt-2 text-slate-600 type-body">They&apos;re off in Settings. Turning them on reminds you about every date you&apos;re tracking.</p>
+      <p className="mt-2 text-slate-600 type-body">Reminders are off in Settings. Turning them on reminds you about every date you&apos;re tracking.</p>
       <PrimaryButton onClick={onTurnOn} className="mt-6">
         Turn on
       </PrimaryButton>
