@@ -399,7 +399,7 @@ const sameDay = (a: Deadline, b: Deadline) => dayIndex(pacific(a.due_at)) === da
 export const checklistTitle = (c: ChecklistView) =>
   c.doneCount === c.steps.length ? `Your ${c.checklist.name} is ready` : `Get your ${c.checklist.name} ready`;
 
-// "4 steps left before Nov 30", or once every step is done, when to submit
+// "4 steps left, due by Nov 30", or once every step is done, when to submit
 export function checklistSubtitle(c: ChecklistView): string {
   const left = c.steps.length - c.doneCount;
   const due = shortDate(c.deadline.due_at);
@@ -407,7 +407,7 @@ export function checklistSubtitle(c: ChecklistView): string {
     const time = c.deadline.due_has_time ? `, ${timeOfDay(c.deadline.due_at)} Pacific` : "";
     return `Submit it by ${due}${time}.`;
   }
-  return `${left} ${left === 1 ? "step" : "steps"} left before ${due}`;
+  return `${left} ${left === 1 ? "step" : "steps"} left, due by ${due}`;
 }
 
 // "Steps from UC Admissions, checked Oct 17, 2026."

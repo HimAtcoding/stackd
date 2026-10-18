@@ -3,7 +3,7 @@
 // A fake account and a fake clock stand in for Supabase and timers. Also: the dates on the deadline screens show the
 // right day in Pacific time. `npm run test:deadlines`
 import { createMarkQueue, mergeFromAccount, retryDelay, RETRY_FIRST_MS, RETRY_MAX_MS, type PushError } from "../lib/data/mark-queue";
-import { checkedDate, fullDate, recordSource, shortDate, type Deadline } from "../lib/deadlines";
+import { checkedDate, checklistSubtitle, fullDate, recordSource, shortDate, type ChecklistView, type Deadline } from "../lib/deadlines";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -145,6 +145,10 @@ const checkedRow = { source_name: "UC Admissions", verified_at: "2026-10-17T00:0
 check("the date sheet's source line says checked Oct 17, 2026", recordSource(checkedRow) === "From UC Admissions, checked Oct 17, 2026.", recordSource(checkedRow));
 check("an opening day at Pacific midnight shows as Oct 1", shortDate("2026-10-01T07:00:00+00:00") === "Oct 1", shortDate("2026-10-01T07:00:00+00:00"));
 check("a winter opening day shows as Dec 15", shortDate("2026-12-15T08:00:00+00:00") === "Dec 15", shortDate("2026-12-15T08:00:00+00:00"));
+// The Get ready card's subtitle names the due date with "due by"
+const card = (left: number) => ({ steps: Array(6).fill({}), doneCount: 6 - left, deadline: { due_at: "2026-12-01T07:59:59+00:00", due_has_time: false } }) as unknown as ChecklistView;
+check("Get ready: 4 steps left, due by Nov 30", checklistSubtitle(card(4)) === "4 steps left, due by Nov 30", checklistSubtitle(card(4)));
+check("Get ready: 1 step left, due by Nov 30", checklistSubtitle(card(1)) === "1 step left, due by Nov 30", checklistSubtitle(card(1)));
 check("a due date at 23:59:59 Pacific stays Nov 30", shortDate("2026-12-01T07:59:59+00:00") === "Nov 30" && fullDate("2026-12-01T07:59:59+00:00") === "Monday, November 30, 2026", fullDate("2026-12-01T07:59:59+00:00"));
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
