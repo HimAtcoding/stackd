@@ -14,6 +14,7 @@
     "test:db": "node scripts/test-migrations.mjs",
     "import": "node scripts/import/run.mjs",
     "import:verify": "node scripts/import/verify.mjs",
+    "import:reopen": "node scripts/import/reopen.mjs",
     "test:import": "node scripts/import/test.mjs",
     "test:reminders": "tsx scripts/test-reminders.mts",
     "test:deadlines": "tsx scripts/test-deadline-sync.mts",

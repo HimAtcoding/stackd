@@ -6,6 +6,7 @@ import { asRole, createTestDatabase } from "../test-db.mjs";
 import { CONTACT_EMAIL } from "./config.mjs";
 import { validateDeadlinesFile } from "./deadlines.mjs";
 import { fetchSource } from "./fetch.mjs";
+import { reopenRow } from "./reopen.mjs";
 import { readReportCsv } from "./report.mjs";
 import { runImport } from "./run.mjs";
 import { verifyFromCsv } from "./verify.mjs";
@@ -39,6 +40,10 @@ const testDatabase = {
   },
   async logFailure(sourceFile, dryRun, error) {
     await asRole(db, "service_role", null, "insert into import_runs (source_file, dry_run, status, error) values ($1, $2, 'failed', $3)", [sourceFile, dryRun, error]);
+  },
+  async reopenRow(id, by, reason, dryRun) {
+    const r = await asRole(db, "service_role", null, "select reopen_verified_row($1, $2, $3, $4) as r", [id, by, reason, dryRun]);
+    return r.rows[0].r;
   },
 };
 
@@ -209,6 +214,62 @@ movedDate.checklist_steps.push({ checklist: "test-checklist", position: 3, title
 out = await runImport({ file: writeDates("moved", movedDate), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("deadlines: moving a verified date stops the import", !out.ok && out.stage === "upsert" && /verified and the file would change it/.test(out.problems[0]), JSON.stringify(out));
 check("deadlines: nothing from that file applied", (await count("checklist_steps")) === 2 && (await count("deadlines", "due_at = '2026-12-03T07:59:00Z'")) === 0);
+
+// Reopening a verified row: the one way to correct it. Service role only and logged; then the corrected file is
+// imported and verified like a new row.
+const movedId = (await db.query("select id from deadlines where slug = 'test-application'")).rows[0].id;
+const otherId = (await db.query("select id from deadlines where slug = 'test-update'")).rows[0].id;
+for (const role of ["anon", "authenticated"]) {
+  try {
+    await asRole(db, role, "00000000-0000-0000-0000-00000000000a", "select reopen_verified_row($1, $2, $3, false)", [movedId, "tester", "the date moved"]);
+    check(`reopen: refused for ${role}`, false, "it ran");
+  } catch (e) {
+    check(`reopen: refused for ${role}`, /permission denied/.test(e.message), e.message);
+  }
+}
+const refusesDirectEdit = async (id) => {
+  try {
+    await asRole(db, "service_role", null, "update deadlines set summary = 'Changed by hand.' where id = $1", [id]);
+    return false;
+  } catch (e) {
+    return /refusing to update verified deadlines row/.test(e.message);
+  }
+};
+check("reopen: a verified row still can't be edited directly, even by the service role", await refusesDirectEdit(movedId));
+let reopened = await reopenRow({ id: movedId, by: " ", reason: "", apply: true, db: testDatabase });
+check("reopen: refused without who and why", !reopened.ok && reopened.problems.length === 2, JSON.stringify(reopened));
+reopened = await reopenRow({ id: movedId, by: "tester", reason: "the date moved", apply: false, db: testDatabase });
+check("reopen: a dry run unless --apply", reopened.ok && reopened.status === "dry_run" && reopened.table === "deadlines" && reopened.record === "test-application", JSON.stringify(reopened));
+check("reopen: a dry run changes nothing", (await count("deadlines", "verification_status = 'verified'")) === 2 && (await count("reopen_log")) === 0);
+reopened = await reopenRow({ id: movedId, by: "tester", reason: "the date moved", apply: true, db: testDatabase });
+check("reopen: --apply sets the row back to unverified", reopened.ok && reopened.status === "reopened" && (await count("deadlines", `id = '${movedId}' and verification_status = 'unverified' and verified_at is null`)) === 1, JSON.stringify(reopened));
+check("reopen: who, when and why are logged", (await count("reopen_log", `row_id = '${movedId}' and table_name = 'deadlines' and reopened_by = 'tester' and reason = 'the date moved' and was_verified_at is not null and created_at is not null`)) === 1);
+for (const role of ["anon", "authenticated"]) {
+  try {
+    await asRole(db, role, "00000000-0000-0000-0000-00000000000a", "select * from reopen_log");
+    check(`reopen: the log is hidden from ${role}`, false, "it was readable");
+  } catch (e) {
+    check(`reopen: the log is hidden from ${role}`, /permission denied/.test(e.message), e.message);
+  }
+}
+check("reopen: students can't see the row, or its checklist, until it's verified again",
+  (await asRole(db, "anon", null, "select id from deadlines where id = $1", [movedId])).rows.length === 0 && (await asRole(db, "anon", null, "select id from checklists")).rows.length === 0);
+check("reopen: the guard is back on for every other verified row", await refusesDirectEdit(otherId));
+reopened = await reopenRow({ id: movedId, by: "tester", reason: "again", apply: true, db: testDatabase });
+check("reopen: a row that isn't verified is refused", !reopened.ok && /isn't verified/.test(reopened.problems[0]), JSON.stringify(reopened));
+reopened = await reopenRow({ id: "00000000-0000-4000-8000-000000000000", by: "tester", reason: "no such row", apply: true, db: testDatabase });
+check("reopen: an unknown id is refused", !reopened.ok && /no deadline, checklist or checklist step has id/.test(reopened.problems[0]), JSON.stringify(reopened));
+
+out = await runImport({ file: writeDates("moved", movedDate), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("reopen, then import: the corrected file applies", out.ok && out.counts.deadlines.updated === 1 && out.counts.checklist_steps.inserted === 1, JSON.stringify(out));
+const reopenReport = `${out.report}.csv`;
+const reopenCsv = fs.readFileSync(reopenReport, "utf8").split("\n");
+fs.writeFileSync(reopenReport, [reopenCsv[0], ...reopenCsv.slice(1).filter(Boolean).map((l) => l.replace(/,,$/, ",tester,2026-10-17"))].join("\n") + "\n");
+v = await verifyFromCsv({ file: reopenReport, db: testDatabase });
+check("reopen, then import, then verify: only the changed rows are verified again", v.ok && v.verified === 2, JSON.stringify(v));
+check("reopen, then import, then verify: students see the corrected date and its checklist again",
+  (await asRole(db, "anon", null, "select id from deadlines where due_at = '2026-12-03T07:59:00Z'")).rows.length === 1 &&
+    (await asRole(db, "anon", null, "select id from checklist_steps")).rows.length === 3);
 
 // 11. Bad deadline files never reach the database
 const beforeDates = await count("import_runs");

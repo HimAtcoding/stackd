@@ -44,6 +44,8 @@ export function supabaseDatabase() {
       if (steps.error) throw new Error(steps.error.message);
       return { deadlines: deadlines.data, checklists: lists.data, checklist_steps: steps.data };
     },
+    // supabase/migrations/20261017120000_reopen_verified.sql
+    reopenRow: (id, by, reason, dryRun) => call("reopen_verified_row", { p_id: id, p_by: by, p_reason: reason, p_dry_run: dryRun }),
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });
     },
