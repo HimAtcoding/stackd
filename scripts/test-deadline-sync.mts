@@ -1,7 +1,9 @@
 // Checks how the student's deadline marks reach their account (lib/data/mark-queue.ts): a failed mark never holds up
 // the others, failures are retried with a growing wait, and reading the account never undoes an unsent mark.
-// A fake account and a fake clock stand in for Supabase and timers. `npm run test:deadlines`
+// A fake account and a fake clock stand in for Supabase and timers. Also: the dates on the deadline screens show the
+// right day in Pacific time. `npm run test:deadlines`
 import { createMarkQueue, mergeFromAccount, retryDelay, RETRY_FIRST_MS, RETRY_MAX_MS, type PushError } from "../lib/data/mark-queue";
+import { checkedDate, fullDate, recordSource, shortDate, type Deadline } from "../lib/deadlines";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -134,6 +136,16 @@ check("a mark still waiting to be sent keeps this device's value", merged.b === 
 check("a mark the account no longer has is removed from this device", !("c" in merged), merged);
 const undone = mergeFromAccount({ a: "account-a" }, {} as Record<string, string>, (id) => id === "a");
 check("an undo still waiting to be sent isn't brought back by the read", !("a" in undone), undone);
+
+// Dates as the database returns them. A check date is date-only, stored as midnight UTC: 5 p.m. the day before in
+// Pacific, so it's read as a calendar date. Opening and due dates are Pacific times, so they're read in Pacific.
+check("a date-only 2026-10-17 shows as Oct 17", checkedDate("2026-10-17") === "Oct 17, 2026", checkedDate("2026-10-17"));
+check("…and as the database returns it", checkedDate("2026-10-17T00:00:00+00:00") === "Oct 17, 2026", checkedDate("2026-10-17T00:00:00+00:00"));
+const checkedRow = { source_name: "UC Admissions", verified_at: "2026-10-17T00:00:00+00:00" } as Deadline;
+check("the date sheet's source line says checked Oct 17, 2026", recordSource(checkedRow) === "From UC Admissions, checked Oct 17, 2026.", recordSource(checkedRow));
+check("an opening day at Pacific midnight shows as Oct 1", shortDate("2026-10-01T07:00:00+00:00") === "Oct 1", shortDate("2026-10-01T07:00:00+00:00"));
+check("a winter opening day shows as Dec 15", shortDate("2026-12-15T08:00:00+00:00") === "Dec 15", shortDate("2026-12-15T08:00:00+00:00"));
+check("a due date at 23:59:59 Pacific stays Nov 30", shortDate("2026-12-01T07:59:59+00:00") === "Nov 30" && fullDate("2026-12-01T07:59:59+00:00") === "Monday, November 30, 2026", fullDate("2026-12-01T07:59:59+00:00"));
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

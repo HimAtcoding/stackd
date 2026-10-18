@@ -120,10 +120,10 @@ export function fullDate(iso: string) {
   return `${p.weekday}, ${MONTHS[p.month - 1]} ${p.day}, ${p.year}`;
 }
 
-// "Oct 16, 2026"
+// "Oct 17, 2026". A check is a calendar date (stored as midnight UTC), so it's read as written, not moved to Pacific
 export function checkedDate(iso: string) {
-  const p = pacific(iso);
-  return `${MONTHS[p.month - 1].slice(0, 3)} ${p.day}, ${p.year}`;
+  const [year, month, day] = iso.slice(0, 10).split("-").map(Number);
+  return `${MONTHS[month - 1].slice(0, 3)} ${day}, ${year}`;
 }
 
 const weekday = (iso: string) => pacific(iso).weekday;
@@ -334,7 +334,7 @@ export function rowLabel(d: Deadline): string {
 
 const unchecked = (items: { demo?: boolean; verified_at: string | null }[]) => items.some((i) => i.demo || !i.verified_at);
 
-// The oldest check among the records, "Oct 16, 2026"
+// The oldest check among the records, "Oct 17, 2026"
 function oldestCheck(items: { verified_at: string | null }[]) {
   const dates = items.map((i) => i.verified_at).filter((v): v is string => Boolean(v)).sort();
   return dates.length ? checkedDate(dates[0]) : null;
@@ -349,7 +349,7 @@ export function sourceLine(shown: Deadline[]): string {
   return `Dates from ${names}${when} Schools can change dates, so confirm on the official site.`;
 }
 
-// The date sheet's source: "From UC Admissions, checked Oct 16, 2026."
+// The date sheet's source: "From UC Admissions, checked Oct 17, 2026."
 export function recordSource(d: Deadline): string {
   const checked = oldestCheck([d]);
   return unchecked([d]) || !checked
@@ -410,7 +410,7 @@ export function checklistSubtitle(c: ChecklistView): string {
   return `${left} ${left === 1 ? "step" : "steps"} left before ${due}`;
 }
 
-// "Steps from UC Admissions, checked Oct 16, 2026."
+// "Steps from UC Admissions, checked Oct 17, 2026."
 export function checklistSource(c: ChecklistView): string {
   const checked = oldestCheck([c.checklist]);
   return unchecked([c.checklist]) || c.steps.some((s) => s.step.demo) || !checked

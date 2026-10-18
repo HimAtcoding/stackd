@@ -128,7 +128,7 @@ A single button (the whole stack), margins 16, 12 below the header. Its parts:
 
 | Part | Spec |
 |---|---|
-| Countdown block | Left column, width 72. The number in the new `countdown` type (56/52, 900, -0.03em, tabular-nums), `--navy-900`. Under it, 2 gap, "days left" (regular weight, as the mockup's second version drew it) (or "day left" for 1) in `caption` `--slate-600`. When the due date is 14 days away or less, the number turns `--coral-700`. On the due day the number is replaced by "Today" in `title-1` `--coral-700` and the label reads "due tonight" |
+| Countdown block | Left column, width 72. The number in the new `countdown` type (56/52, 900, -0.03em, tabular-nums), `--navy-900`. Under it, 2 gap, "days left" (regular weight, as the mockup's second version drew it) (or "day left" for 1) in `caption` `--slate-600`. When the due date is 14 days away or less, the number turns `--coral-700`. On the due day the number is replaced by "Today" in `title-1` `--coral-700` and the label reads "Due today" |
 | Text column | 16 gap from the countdown. Title `headline` `--navy-900`, single line. Then 4 below, `body` `--slate-700`: "Due Monday, Nov 30", and on the next line the time in Pacific when the source states one (`due_has_time`; the UC application states none, so its card has no time line), or "Date varies by campus" when `varies_by_campus`. If the student has more than one school in the audience, a third line in `caption` `--slate-600`: "For UC San Diego" or "For your 3 UC schools" |
 | Window bar | Only when the item has `opens_at` and the window is open. 16 below the columns, full inner width, 6 tall, `--r-full`. Track `--blue-100`; fill `--blue-600` from the start to today's position (coral when 14 days or less remain). Today marker: a 2 × 14 `--navy-900` bar, radius 1, centered on today's position. Under the bar, 6 below, two `caption` `--slate-600` labels: "Opened Oct 1" left, "Nov 30" right. Before the window opens: track only, labels "Opens Oct 1" and "Nov 30". `aria-hidden`; the button's label carries the meaning |
 
@@ -468,7 +468,7 @@ And in "Your plan", a new row **Transfer term** ("Fall 2027"), opening the term 
 - With the Las Positas → UC San Diego plan and term Fall 2027: Home's stack shows the UC application on top with the right day count, Cal State Apply is absent (no CSU target), and the FAFSA date is in the stack or timeline.
 - Add a CSU target: Cal State Apply appears.
 - At 14 days or less, the countdown, the window bar and the row's pill turn coral, and the pill says "In 14 days", then "Tomorrow", then "Today".
-- On the due day, the top layer shows "Today / due tonight".
+- On the due day, the top layer shows "Today / Due today".
 - Mark the UC application done: the node turns green, the row moves to "Done and past", the next-up card moves to the next date with the number counting, and "Undo" puts everything back.
 - Tap "Remind me" on a fresh install: the soft ask appears, then iOS's prompt. Allow: reminders for 7 days and 1 day before are scheduled at 9:00 a.m. Deny: the sheet shows "Open Settings".
 - Two dates due the same day produce one combined notification, not two.

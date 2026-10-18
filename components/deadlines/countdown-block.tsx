@@ -46,7 +46,7 @@ export function CountdownBlock({ deadline: d, now, scope, countFrom }: Countdown
           ) : (
             <p className={cn("type-countdown", soon ? "text-coral-700" : "text-navy-900")}>{count}</p>
           )}
-          <p className="mt-0.5 text-slate-600 type-caption">{d.daysLeft <= 0 ? "due tonight" : d.daysLeft === 1 ? "day left" : "days left"}</p>
+          <p className="mt-0.5 text-slate-600 type-caption">{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
         </div>
         <div className="ml-4 min-w-0 flex-1">
           <p className="truncate text-navy-900 type-headline">{d.title}</p>
