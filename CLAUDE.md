@@ -16,7 +16,12 @@ Transfer-planning web app for California community college students. Next.js, Ty
 2. Start in plan mode. Give the design plan the UI rules ask for before writing code.
 3. For any new screen or major UI change, use the Mobbin MCP to pull the references listed in that screen's spec (or 2–3 real shipped screens that match its pattern), and say which ones you used. Report differences as a list. Don't change the design based on them unless I say so. Skip this for small fixes.
 4. Match the team's mockups in `docs/mockup/` first. Don't redesign them.
-5. When a task is done: commit, update `docs/build-status.md`, and push.
+5. When a task is done: commit, update `docs/build-status.md`, and push. Where it goes depends on the change (see Workflow below).
+
+## Workflow
+
+- **Straight to main:** small, low-risk changes (copy, docs, specs, small UI fixes), after the tests and `npm run build` pass.
+- **Branch and pull request:** database migrations, data imports, sign-in changes, and other developers' work.
 
 ## Current phase
 
