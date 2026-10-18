@@ -77,14 +77,14 @@ Each must be checked on its official page before import; the "Confirm on" column
 
 | Title | Audience | Opens | Due | Confirm on |
 |---|---|---|---|---|
-| TAG (Transfer Admission Guarantee) | uc | Sep 1, 2026 | Sep 30, 2026 | UC Admissions, TAG page (shows as closed) |
-| UC application | uc | Oct 1, 2026 | Nov 30, 2026, 11:59 p.m. Pacific | UC Admissions, "Applying as a transfer" |
+| TAG (Transfer Admission Guarantee) | uc | Sep 1, 2026 | Sep 30, 2026 | UC Admissions, TAG page |
+| UC application | uc | Oct 1, 2026 | Nov 30, 2026 (no time stated) | UC Admissions, "Applying as a transfer" |
 | Cal State Apply | csu | Oct 1, 2026 | Nov 30, 2026 (some campuses accept later) | Cal State Apply, and each target campus's deadlines page |
-| FAFSA or California Dream Act Application | aid | Oct 1, 2026 | Mar 2, 2027 (the Cal Grant deadline) | studentaid.gov and the California Student Aid Commission |
-| UC Transfer Academic Update | uc | mid-December 2026 | Jan 31, 2027 | UC Admissions, "Transfer academic update" |
+| FAFSA or California Dream Act Application | aid | Oct 1, 2026 | Mar 2, 2027 (the Cal Grant deadline) | UC Admissions, "Dates & deadlines", and the California Student Aid Commission |
+| UC Transfer Academic Update | uc | Dec 15, 2026 | Jan 31, 2027 (UC's priority deadline) | UC Admissions, "Dates & deadlines" and "Transfer academic update" |
 | Cal State Apply course update | csu | early January 2027 | varies by campus | each target campus |
 | Accept your UC offer | uc | | Jun 1, 2027 | UC Admissions |
-| Accept your CSU offer | csu | | May 1, 2027 at most campuses | each target campus |
+| Accept your CSU offer | csu | | varies by campus | each target campus |
 | Final transcripts | uc, csu | | varies by campus | each target campus |
 
 ## Home: Up next (flag `upcoming`)
@@ -102,12 +102,12 @@ Home gains two things under the plan card, so the screen reads top to bottom as 
 │ ┌───────────────────────────┐ │  12
 │ │ 45     UC application     │ │
 │ │ days   Due Monday, Nov 30 │ │  top layer
-│ │ left   11:59 p.m. Pacific │ │
+│ │ left                      │ │
 │ │ ━━━━━━━━━━━━━━━━━│─────── │ │  window bar, today marker
 │ │ Opened Oct 1       Nov 30 │ │
 │ └───────────────────────────┘ │
 │  └ Nov 30  Cal State Apply ┘  │  layer 2 peek, 24 tall
-│    └ Jan 31  UC update ───┘   │  layer 3 peek, 24 tall
+│    └ Jan 31  UC Transfer…─┘   │  layer 3 peek, 24 tall
 │                               │  24
 │ ┌ ◔ Get your UC application ┐ │  Get ready card (below)
 │ └───────────────────────────┘ │  24
@@ -129,7 +129,7 @@ A single button (the whole stack), margins 16, 12 below the header. Its parts:
 | Part | Spec |
 |---|---|
 | Countdown block | Left column, width 72. The number in the new `countdown` type (56/52, 900, -0.03em, tabular-nums), `--navy-900`. Under it, 2 gap, "days left" (regular weight, as the mockup's second version drew it) (or "day left" for 1) in `caption` `--slate-600`. When the due date is 14 days away or less, the number turns `--coral-700`. On the due day the number is replaced by "Today" in `title-1` `--coral-700` and the label reads "due tonight" |
-| Text column | 16 gap from the countdown. Title `headline` `--navy-900`, single line. Then 4 below, `body` `--slate-700`: "Due Monday, Nov 30", and on the next line "11:59 p.m. Pacific" (or "Date varies by campus" when `varies_by_campus`). If the student has more than one school in the audience, a third line in `caption` `--slate-600`: "For UC San Diego" or "For your 3 UC schools" |
+| Text column | 16 gap from the countdown. Title `headline` `--navy-900`, single line. Then 4 below, `body` `--slate-700`: "Due Monday, Nov 30", and on the next line the time in Pacific when the source states one (`due_has_time`; the UC application states none, so its card has no time line), or "Date varies by campus" when `varies_by_campus`. If the student has more than one school in the audience, a third line in `caption` `--slate-600`: "For UC San Diego" or "For your 3 UC schools" |
 | Window bar | Only when the item has `opens_at` and the window is open. 16 below the columns, full inner width, 6 tall, `--r-full`. Track `--blue-100`; fill `--blue-600` from the start to today's position (coral when 14 days or less remain). Today marker: a 2 × 14 `--navy-900` bar, radius 1, centered on today's position. Under the bar, 6 below, two `caption` `--slate-600` labels: "Opened Oct 1" left, "Nov 30" right. Before the window opens: track only, labels "Opens Oct 1" and "Nov 30". `aria-hidden`; the button's label carries the meaning |
 
 **Peek layers.** Two layers behind the top one, each visible only as a 24-tall strip below the layer above it.
@@ -184,7 +184,7 @@ The stack says *when*. This card says *what's left*: the steps of the applicatio
 
 **Which checklist shows**: the one for the application with the nearest upcoming due date among the student's systems. UC-only plan: UC. CSU-only plan: Cal State Apply. Both: the one due first (on a tie, UC, then the other after it's done). No plan: the UC checklist, since most students in the first slice target a UC.
 
-**When every step is done**: the green ring, the title "Your UC application is ready", the subtitle "Submit it by Nov 30, 11:59 p.m. Pacific." and no list. After the due date passes, the card disappears.
+**When every step is done**: the green ring, the title "Your UC application is ready", the subtitle "Submit it by Nov 30." and no list. After the due date passes, the card disappears.
 
 ### The steps
 
@@ -193,20 +193,19 @@ Stored like the deadlines: a `checklists` record per application per cycle, `che
 | # | UC application (fall 2027) | Summary for the sheet |
 |---|---|---|
 | 1 | Pick your campuses and majors | Choose which UC campuses to apply to and your major at each. The fee is per campus. |
-| 2 | Enter your courses and grades | Type in every college course and grade from your transcripts. UC uses what you enter. |
-| 3 | Write your personal insight answers | Transfer applicants answer a set number of short questions, including one required question. Check the current rules on UC's page. |
-| 4 | Add activities and awards | List work, family responsibilities, clubs, volunteering, and awards. |
+| 2 | Enter your courses and grades | Type in every college course and grade from your transcripts. |
+| 3 | Write your personal insight answers | Answer four questions. One is required, and you choose the other three. |
+| 4 | Add activities and awards | List your work, volunteering, extracurricular activities, educational programs and awards. |
 | 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
-| 6 | Submit by Nov 30 | Submit before 11:59 p.m. Pacific on November 30, 2026. |
+| 6 | Submit by Nov 30 | Submit by November 30, 2026. |
 
 | # | Cal State Apply (fall 2027) | Summary |
 |---|---|---|
 | 1 | Pick your campuses and majors | Choose which CSU campuses and programs to apply to. |
 | 2 | Enter your courses and grades | Enter your college coursework and grades from your transcripts. |
-| 3 | Add your work and activities | Some campuses and programs use this; check yours. |
-| 4 | Check for extra campus steps | Some majors and campuses ask for a supplemental application or more materials. |
-| 5 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
-| 6 | Submit by Nov 30 | Submit before November 30, 2026. Some campuses accept later applications. |
+| 3 | Check for extra campus steps | Some majors and campuses ask for a supplemental application or more materials. |
+| 4 | Pay the fee or ask for a waiver | Each campus has an application fee. Fee waivers are available for students who qualify. |
+| 5 | Submit by Nov 30 | Submit by November 30, 2026. Some campuses accept later applications. |
 
 ### Steps sheet
 
@@ -214,7 +213,7 @@ Bottom sheet (00), opened from the link or a step's text.
 
 - Title: the card's title, `title-2`. Under it, the ring at 40 with "{done} of {total}", and "Due Nov 30" in `body` `--slate-600` beside it.
 - All steps in order, done and not done, as rows (the status icon, the step title in `row-title`, and its summary in `body` `--slate-600` below it). A row opened from Home is scrolled into view and briefly tinted `--blue-50` (600 ms) so the student sees which one they tapped.
-- At the bottom: a tinted button "Open the UC application" (or "Open Cal State Apply") with `ArrowSquareOut`, opening the official application site outside the app; then the source line in `caption`: "Steps from UC Admissions, checked Oct 16, 2026."
+- At the bottom: a tinted button "Open the UC application" (or "Open Cal State Apply") with `ArrowSquareOut`, opening the official application site outside the app; then the source line in `caption`: "Steps from UC Admissions, checked Oct 17, 2026."
 
 ### Get ready states
 
@@ -237,7 +236,7 @@ Route: `/deadlines/`, pushed, no tab bar. Opens from the stack, from "All deadli
 │ ┌───────────────────────────┐ │  next-up card
 │ │ 45     UC application     │ │
 │ │ days   Due Monday, Nov 30 │ │
-│ │ left   11:59 p.m. Pacific │ │
+│ │ left                      │ │
 │ │ ━━━━━━━━━━━━━━━━━│─────── │ │
 │ │ Opened Oct 1       Nov 30 │ │
 │ │ [🔔 Remind me] [✓ Mark done]│ │  two tinted buttons
@@ -248,13 +247,13 @@ Route: `/deadlines/`, pushed, no tab bar. Opens from the stack, from "All deadli
 │  Nov ●┊ UC application   In 4…│  rows on one spine
 │  30   ┊ All UC campuses       │
 │  Nov ●┊ Cal State Apply       │
-│  30   ┊ Most CSU campuses     │
+│  30   ┊ All CSU campuses      │
 │ January 2027                  │
-│  Jan ○┊ UC update             │
-│  31   ┊ Grades through fall   │
+│  Jan ○┊ UC Transfer Academic… │
+│  31   ┊ Opens Dec 15          │
 │ March 2027                    │
 │  Mar ○┊ FAFSA or Dream Act    │
-│   2   ┊ For Cal Grant         │
+│   2   ┊ Financial aid         │
 │ [ + Add a date ]              │  tinted, flag customDeadlines
 │ Done and past (1)          ⌄  │  collapsed group
 │ Dates from UC Admissions, …   │  source line
@@ -317,7 +316,7 @@ Every upcoming date, oldest first, grouped by month.
 | Gap | 12 | |
 | Node | 12 | On the spine (below). Status dot, see the table |
 | Gap | 12 | |
-| Text | flex | Title `row-title` `--navy-900`, up to 2 lines. Second line `caption` `--slate-600`: who it's for and the time ("All UC campuses, 11:59 p.m. Pacific"), "Date varies by campus", or "Your date" for a custom date. When the window isn't open yet: "Opens Dec 15" |
+| Text | flex | Title `row-title` `--navy-900`, up to 2 lines. Second line `caption` `--slate-600`: who it's for ("All UC campuses"), followed by the time when the source states one, "Date varies by campus", or "Your date" for a custom date. When the window isn't open yet: "Opens Dec 15" |
 | Status | auto | Right-aligned: a `due` pill (00) "In 4 days", "Tomorrow" or "Today" when 14 days or less remain; "Open now" in `caption` 600 `--blue-700` when the window is open with more time left; nothing otherwise |
 
 **The spine**: a 2 px `--border` vertical line through the center of the node column, running from the first row's node to the last row's node within each month. It breaks at month headers. It's what turns a list into a timeline.
@@ -335,7 +334,7 @@ Every upcoming date, oldest first, grouped by month.
 
 **Done and past**: a collapsed group 24 below. Header row 44 tall: "Done and past ({n})" in `row-title` `--navy-900`, `CaretDown` bold 20 at the right, rotating 180° when open (200 ms). Inside: the same rows, dimmed (text `--slate-600`), done ones with the green node and "Done" as the status, missed ones with a `--slate-400` ring and "Closed Sep 30". Newest first.
 
-**Source line**: 24 below, `caption` `--slate-600`, x 24, max 320: "Dates from UC Admissions, Cal State Apply and the California Student Aid Commission, checked Oct 16, 2026. Schools can change dates, so confirm on the official site." The names come from the shown records' `source_name`, and the date from the oldest `verified_at`. Then the unofficial footer line (00), 16 below.
+**Source line**: 24 below, `caption` `--slate-600`, x 24, max 320: "Dates from UC Admissions and Cal State Apply, checked Oct 17, 2026. Schools can change dates, so confirm on the official site." The names come from the shown records' `source_name`, and the date from the oldest `verified_at`. Then the unofficial footer line (00), 16 below.
 
 ### Date sheet
 
@@ -345,12 +344,12 @@ Bottom sheet (00), opened by any timeline row, the next-up card's buttons, or a 
 |---|---|
 | Title | The date's title, `title-2` `--navy-900`. Focus starts here |
 | Countdown line | 8 below: "45 days left" in `headline`, `--navy-900`, or `--coral-700` at 14 days or less. "Due today" / "Closed" / "Done Oct 20" as the state requires |
-| When | 16 below, `body` `--slate-700`: "Monday, November 30, 2026, 11:59 p.m. Pacific". With a window: a second line "Open since October 1" or "Opens October 1" |
+| When | 16 below, `body` `--slate-700`: "Monday, November 30, 2026", followed by the time in Pacific when the source states one. With a window: a second line "Open since October 1" or "Opens October 1" |
 | What it is | 16 below, `body` `--navy-900`, the record's `summary`, max 2–3 short sentences |
 | For | When the audience covers the student's schools: "For UC San Diego" or "For UC San Diego and UC Davis" in `body` `--slate-700` |
 | Reminders | 24 below. Label "Remind me" in `headline`. Then choice rows (00 choice row, multiple choice): "1 week before", "3 days before", "1 day before", "The morning it's due". Defaults: 1 week and 1 day. Changes save as they're made, with no button. In the web app this block is one `body` `--slate-600` line instead: "Reminders work in the Stackd iPhone app." If iOS permission was denied: "Reminders are off for Stackd in your iPhone settings." with a text link "Open Settings" |
 | Mark done | 24 below, tinted button "Mark done" (`Check`), or after marking, "Marked done" with `CheckCircle` fill 20 `--green-600` and a text link "Undo" beside it |
-| Source | 16 below, `caption` `--slate-600`: "From UC Admissions, checked Oct 16, 2026." then a text link "Open official page" with `ArrowSquareOut` bold 16, opening `source_url` outside the app |
+| Source | 16 below, `caption` `--slate-600`: "From UC Admissions, checked Oct 17, 2026." then a text link "Open official page" with `ArrowSquareOut` bold 16, opening `source_url` outside the app |
 
 Custom dates show the same sheet with "Your date" under the title, the student's note as "What it is", no source line, and two text links at the bottom: "Edit" and "Delete date" (`--coral-700`, with a confirm step reading "Delete this date?" / "Delete" / "Keep it").
 
@@ -393,11 +392,11 @@ Never on launch. Only when the student asks for a reminder: tapping "Turn on rem
 
 | When | Title | Body |
 |---|---|---|
-| 1 week before | UC application due in 7 days | Due Monday, Nov 30 at 11:59 p.m. Pacific. Open Stackd to see what's left. |
-| 3 days before | UC application due in 3 days | Due Monday at 11:59 p.m. Pacific. |
-| 1 day before | UC application due tomorrow | Due tomorrow at 11:59 p.m. Pacific. |
-| The morning it's due | UC application due today | Due tonight at 11:59 p.m. Pacific. |
-| Two or more on one morning | 2 deadlines tomorrow | UC application and Cal State Apply, both due at 11:59 p.m. Pacific. |
+| 1 week before | UC application due in 7 days | Due Monday, Nov 30. Open Stackd to see what's left. |
+| 3 days before | UC application due in 3 days | Due Monday, Nov 30. |
+| 1 day before | UC application due tomorrow | Due tomorrow. |
+| The morning it's due | UC application due today | Due today. |
+| Two or more on one morning | 2 deadlines tomorrow | UC application and Cal State Apply, both due tomorrow. |
 
 Calm and exact: no exclamation points, no "Don't miss out". Tapping a notification opens `/deadlines/?id={id}` with that date's sheet.
 
@@ -430,7 +429,7 @@ And in "Your plan", a new row **Transfer term** ("Fall 2027"), opening the term 
 ## Accessibility
 
 - Home's stack is one button with the full accessible name above. The visual layers are `aria-hidden`.
-- Each timeline row is one button: "UC application, due Monday November 30 at 11:59 p.m. Pacific, in 45 days, window open." Done rows: "Cal State Apply, done."
+- Each timeline row is one button: "UC application, due Monday November 30, in 45 days, window open." Done rows: "Cal State Apply, done."
 - Month headers are `h2`. The countdown number is never the only place the date appears.
 - The coral color is always paired with words ("In 4 days", "Today"), never alone.
 - Choice chips and choice rows are radio buttons or checkboxes with labels, as in 10.
@@ -438,8 +437,8 @@ And in "Your plan", a new row **Transfer term** ("Fall 2027"), opening the term 
 
 ## Copy rules for this feature
 
-- Dates are always full and unambiguous where it matters: "Monday, November 30, 2026, 11:59 p.m. Pacific" in the sheet; shorter ("Due Monday, Nov 30") on cards.
-- Say what to do, not what to feel: "Due tomorrow at 11:59 p.m. Pacific", never "Hurry!".
+- Dates are always full and unambiguous where it matters: "Monday, November 30, 2026" in the sheet, with the time when the source states one; shorter ("Due Monday, Nov 30") on cards.
+- Say what to do, not what to feel: "Due tomorrow", never "Hurry!".
 - Name things the way students do: "UC application", "Cal State Apply", "FAFSA or Dream Act". Official names appear in the summary and source line.
 - When a date varies by campus, say so and point to the campus; never guess one.
 

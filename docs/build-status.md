@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-17 (step 16 follow-ups from the PR #3 review, on branch `deadlines-followups`, below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-17 (the fall 2027 dates checked, imported and verified, on branch `deadlines-dates`; and step 16 follow-ups from the PR #3 review, merged in PR #4; both below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -474,6 +474,24 @@ Fixes from the review of PR #3, on branch `deadlines-followups`. Still all behin
 - Lint, `tsc`, `test:db`, `test:oauth` and `npm run build` with the release checks.
 - Not tested: the "Turn on reminders?" sheet and the lock on a real iPhone (both need the native plugin).
 
+## Fall 2027 dates checked (step 16, 2026-10-17)
+
+Every line of `docs/date-check.md` checked on its official page by Ryan Saleh, on branch `deadlines-dates`. What each page said and what changed is under each line there.
+
+**The file** (`data/raw/deadlines/fall-2027.json`), every row with `retrieved_at` 2026-10-17:
+- **Deleted:** Accept your CSU offer (no CSU page states May 1), and the Cal State Apply step "Add your work and activities" (not in the 2027-2028 guide). The other CSU steps moved up to 1–5; nothing was in the database yet, so no step ID changed.
+- **UC application:** due November 30 with no time. No UC page states 11:59 p.m. Pacific.
+- **UC Transfer Academic Update:** opens December 15, 2026, and the summary says January 31 is UC's priority deadline. Source is now UC Dates & deadlines, which states both.
+- **FAFSA or Dream Act:** source is now UC Dates & deadlines (October 1 and March 2, 2027). studentaid.gov only loads in a browser and couldn't be read. The who-files sentences, from the California Student Aid Commission's page, cover mixed-status families and say Pell Grants and Work-Study need the FAFSA.
+- **Summaries:** Accept your UC offer names the SIR; UC steps 2, 3, 4 and 6 and Cal State Apply step 5 now say only what the pages say.
+- A row has one source, so a second page (the TAU page, CSAC) is named in `confirm_on`, which goes in the review report.
+
+**Spec 14:** the UC application's examples show no time (cards, sheet, timeline, notification copy, accessible names), and Accept your CSU offer says "varies by campus". The step tables now match the file (UC 1–6, CSU 1–5), and so do the dates table (TAU opens Dec 15; FAFSA confirmed on UC Dates & deadlines and CSAC), the timeline wireframe's second lines, and the source lines (checked Oct 17, 2026).
+
+**Imported and verified:** dry run, then the real import (6 dates, 2 checklists, 11 steps inserted), then `import:verify` with `data/review/2026-10-18T02-11-33-606-fall-2027.csv` (checked by Ryan Saleh, 2026-10-17): 19 rows verified. Read back with the anon key, all 19 are live.
+
+**Tested 2026-10-17** (Windows, dev server with `NEXT_PUBLIC_FEATURES=all`, stand-in session; the plan was mocked, the dates came from the database): 12 checks. With a UC San Diego plan, Home's Up next card and the Deadlines screen show "UC application, Due Monday, Nov 30" with no time, the date sheet reads "Monday, November 30, 2026", and there's no CSU offer row. With a stand-in CSU target, Home's Get ready card reads "0 of 5 steps done" and "See all 5 steps", and the sheet lists the five steps in order. The release build is unchanged (all deadline flags off).
+
 ## v1 launch build (step 14, 2026-10-15)
 
 Spec 13 (`docs/specs/13-v1-launch.md`) on the web build, tested on Windows. **iOS build 2 isn't made yet:** that's the Mac steps below.
@@ -714,6 +732,8 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 15. **A hidden tab's page transition logs a recoverable error.** When a tab in the background navigates (for example the other tab after a sign-out), the dev overlay shows "Recoverable InvalidStateError: Transition was aborted because of invalid state. Document hidden". The browser refuses a view transition in a hidden document; the navigation itself completes. Seen 2026-10-09; it comes from the page transitions, not from sign-in.
 16. **App Review Guideline 4.2.** The team picked deadline push notifications as Stackd's native feature (16 → Decided). Version 1.0 adds native Sign in with Apple, but a minimum-functionality rejection is possible. Deadline reminders (local notifications) are built since 2026-10-16 (step 16, Abyan's part) but behind the `reminders` and `deadlines` flags, untested on an iPhone, and need verified dates in the database. If a rejection comes, finish those steps, turn the flags on and resubmit.
 17. ~~Two clicks only a founder can make.~~ Both done 2026-10-13: Google's consent screen published, and Apple's updated Developer Program License Agreement accepted (it was blocking new submissions on the whole account).
+18. **"Checked" dates show a day early.** A date-only `retrieved_at` like 2026-10-17 is stored as midnight UTC, and `checkedDate` in `lib/deadlines.ts` shows it in Pacific time, so the source lines read "checked Oct 16, 2026". Fix by formatting that date in UTC (or storing it as Pacific midnight); seen 2026-10-17 after the first real import.
+19. **A verified row can't be corrected.** The import refuses any file that would change a verified row, and `verify` only moves rows to verified, so nothing in the pipeline can reopen one. Hit 2026-10-17: a new FAFSA or Dream Act summary (adding who files the FAFSA) stopped the dry run with "deadline fafsa-dream-act-fall-2027 is verified and the file would change it". The file and the database still have the earlier summary. Needs a decision: a reviewed way to reopen a verified row (a migration), or a one-off change in the Supabase SQL editor.
 
 ## Built differently from the specs, and why
 
