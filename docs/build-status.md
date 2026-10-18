@@ -520,6 +520,7 @@ Spec `15-home-deadlines-rev2.md`, on branch `home-deadlines-rev2`. Looks only; b
   - The reminders card is tier 3 and the no-plan card is tier 2.
 - **Removed:** `plan-card.tsx`, `next-up-card.tsx`, the count-up on the countdown, and the shared view transition between the two countdowns.
 - **Not gated:** the route and greeting aren't behind a flag. A release build with the deadline flags off now shows the route instead of the plan card. The greeting there still reads "Transferring to {school}." because no term loads with the flags off.
+- **After the PR #8 review:** the spine is `--border-strong`, so it shows on the sky background. Each month header has its space above it (24, or 16 for the first month) and sits 4 above its first row. Spec 15 is rev 2: it now records the 42 tall cycle bar, the 7% today marker on Oct 18, the 44 tap area on the 36 tall buttons, the buttons' own line, the route's text rules, "Major not listed yet", the ringing bell for "Reminders on" and the tier 2 no-plan card.
 
 **Tested 2026-10-18** (Windows, dev server with only `upcoming`, `getReady`, `deadlines` and `reminders` on via a temporary `lib/features.ts` edit, stand-in session, dates from the database): 33 browser checks from spec 15's test list, at 393 and 320. `test:deadlines` has 8 new checks for the next line and the cycle bar. `test:import`, lint, `tsc` and `npm run build` pass.
 

@@ -83,8 +83,8 @@ export function TimelineRow({ month, day, node, title, detail, status, dimmed, s
             <span className="mt-0.5 tabular-nums text-navy-900 type-title-2">{day}</span>
           </span>
           <span aria-hidden className="relative row-span-2 -my-2.5 self-stretch">
-            {spineUp && <span className="absolute left-1/2 top-0 w-0.5 -translate-x-1/2 bg-border" style={{ height: OPEN_NODE_Y }} />}
-            {spineDown && <span className="absolute bottom-0 left-1/2 w-0.5 -translate-x-1/2 bg-border" style={{ top: OPEN_NODE_Y }} />}
+            {spineUp && <span className="absolute left-1/2 top-0 w-0.5 -translate-x-1/2 bg-border-strong" style={{ height: OPEN_NODE_Y }} />}
+            {spineDown && <span className="absolute bottom-0 left-1/2 w-0.5 -translate-x-1/2 bg-border-strong" style={{ top: OPEN_NODE_Y }} />}
             <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ top: OPEN_NODE_Y }}>
               <TimelineNode kind={node} big />
             </span>
@@ -114,8 +114,8 @@ export function TimelineRow({ month, day, node, title, detail, status, dimmed, s
       </span>
       {/* The node column runs the row's full height, padding included, so the spine meets the next row's */}
       <span aria-hidden className="relative -my-2.5 ml-3 flex w-3 shrink-0 items-center justify-center self-stretch">
-        {spineUp && <span className="absolute bottom-1/2 left-1/2 top-0 w-0.5 -translate-x-1/2 bg-border" />}
-        {spineDown && <span className="absolute bottom-0 left-1/2 top-1/2 w-0.5 -translate-x-1/2 bg-border" />}
+        {spineUp && <span className="absolute bottom-1/2 left-1/2 top-0 w-0.5 -translate-x-1/2 bg-border-strong" />}
+        {spineDown && <span className="absolute bottom-0 left-1/2 top-1/2 w-0.5 -translate-x-1/2 bg-border-strong" />}
         <TimelineNode kind={node} />
       </span>
       <span aria-hidden className="ml-3 min-w-0 flex-1">

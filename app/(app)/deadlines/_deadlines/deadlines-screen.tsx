@@ -275,9 +275,8 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
               </p>
             )}
 
-            <div className="mt-6">
-              <Timeline rows={timelineRows} scope={ok.scope} actions={rowActions} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
-            </div>
+            {/* The first month header's own 16 is the space above the timeline */}
+            <Timeline rows={timelineRows} scope={ok.scope} actions={rowActions} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
             <DonePast rows={finished} scope={ok.scope} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
 
             {all.length > 0 && <p className="mt-6 max-w-[368px] px-6 text-slate-600 type-caption">{sourceLine(all)}</p>}

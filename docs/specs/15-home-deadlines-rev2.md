@@ -1,5 +1,7 @@
 # 15 · Home and Deadlines, design rev 2
 
+Status: rev 2 (2026-10-18), matched to the build after the PR #8 review.
+
 Release: v1.1, before the deadline flags turn on. Changes the look of Home (02, 14 → Up next and Get ready) and the Deadlines screen (14). Behavior, data, copy rules and accessibility from 02 and 14 stay unless this file says otherwise. If this file and 02 or 14 disagree on looks, this file wins.
 
 Custom dates (flag `customDeadlines`) move to v1.2. They were never built; the "Add a date" button and its sheet stay out of v1.1.
@@ -114,8 +116,8 @@ Tier 2, margins 16, padding 16. The husky anchors to it exactly as it did to the
 | From node | 10 px circle, 2 px `--slate-400` ring, `--surface` center |
 | Connector | 2 px wide, 16 tall, dashed `--border-strong` (dash 3, gap 3), centered in the node column, from the from node's bottom to the to node's top. Dashed because the student hasn't made the trip yet |
 | To node | 12 px filled `--blue-600` circle |
-| From text | 12 right of the node column. Home college name in `body` `--slate-600`, single line. College not listed: "Your community college" |
-| To text | School name `headline` `--navy-900`. Under it, 2 below, the major in `caption` `--slate-600`. No major: "Pick a major". More schools: a third line, `caption` `--slate-600`, "and {n} more" |
+| From text | 12 right of the node column. Home college name in `body` `--slate-600`, one line, truncated with an ellipsis. College not listed: "Your community college" |
+| To text | School name `headline` `--navy-900`, wrapping to 2 lines when it's long. Under it, 2 below, the major in `caption` `--slate-600`. No major: "Pick a major", or "Major not listed yet" for a student who chose that. More schools: a third line, `caption` `--slate-600`, "and {n} more" |
 | Edit | Text link (`label` `--blue-600`, 44 hit area), right side, on the from row. Opens `/settings/`. Its own button |
 
 No "Your plan" heading: the route says what it is. Accessible name: "Your plan: Las Positas College to UC San Diego, Computer Science B.S. Opens UC San Diego requirements."
@@ -172,7 +174,7 @@ Back button, title and term line: unchanged (14 → Header). The next-up card is
 | Part | Spec |
 |---|---|
 | Next line | "{title} is next", `headline` `--navy-900`, x 24. Under it, 4 below: "Due Monday, Nov 30, in 43 days." `body` `--slate-700`. With a stated time: "Due Monday, Nov 30 at 5:00 p.m. Pacific, in 43 days." 14 days or less: the second line is `--coral-700`. On the due day: "Due today." |
-| Cycle bar | 16 below, x 24 to 24, 32 tall in total (below) |
+| Cycle bar | 16 below, x 24 to 24, 42 tall in total: the 20 row, 6 gap, 16 labels (below) |
 
 ### Cycle bar
 
@@ -190,15 +192,15 @@ The whole application year on one line, so the student sees how the dates spread
 
 Rows, date blocks and node styles stay as in 14. Changes:
 
-**One spine for the whole list.** A 2 px `--border` line runs from the first row's node to the last row's node, through every month, without breaks. This replaces the per-month spine, which drew nothing when a month had one date.
+**One spine for the whole list.** A 2 px `--border-strong` line runs from the first row's node to the last row's node, through every month, without breaks. `--border-strong`, because `--border` barely shows on the sky background. This replaces the per-month spine, which drew nothing when a month had one date.
 
-**Month headers move into the text column.** "November 2026", `label` `--slate-600` (not `title-3`), aligned with the row titles (x = row padding 16 + date block 40 + 12 + node 12 + 12 = 92), 20 above the month's first row. Sticky as before, on `--sky-50`; the spine runs behind it. The date blocks already say the month, so the header can be quiet.
+**Month headers move into the text column.** "November 2026", `label` `--slate-600` (not `title-3`), aligned with the row titles (x = row padding 16 + date block 40 + 12 + node 12 + 12 = 92). The space sits above the header, not below it, so each header clearly belongs to the row under it: 24 above the header (16 for the first month, which is also the space above the timeline) and 4 between the header and its first row. Sticky as before, on `--sky-50`; the spine runs through it. The date blocks already say the month, so the header can be quiet.
 
-**The next row opens.** The first not-done row shows two compact buttons under its second line, 12 below, 8 apart:
+**The next row opens.** The first not-done row shows two compact buttons on their own line under its second line: 12 below, 8 apart, starting at the text column (x 92) and running under the status as well, so a status like "Open now" doesn't push them onto two lines. They wrap to a second line only when they don't fit (at 320 wide).
 
 | Button | Spec |
 |---|---|
-| Remind me / Reminders on | Height 36, padding 0 12, `--r-full`, `--blue-50` fill, 1 px `--blue-50-border`, `Bell` bold 16 + 6 + `label` `--blue-700`. Opens the date's sheet at Reminders, as before |
+| Remind me / Reminders on | Looks 36 tall; its tap area reaches 44 (4 more above and below). Padding 0 12, `--r-full`, `--blue-50` fill, 1 px `--blue-50-border`, `Bell` bold 16 + 6 + `label` `--blue-700`. "Reminders on" uses `BellRinging` fill 16, as the date sheet does. Opens the date's sheet at Reminders, as before |
 | Mark done | Same shape, `Check` bold 16. Marks it done, toast "Marked done" with "Undo" |
 
 Its node is 16 instead of 12. Only this row opens; every other row stays one tap to its sheet. Tapping the row outside the buttons still opens the sheet.
@@ -206,6 +208,8 @@ Its node is 16 instead of 12. Only this row opens; every other row stays one tap
 After Mark done: the row's buttons fade out (120 ms), the row collapses out of the list (240 ms `--ease-out`) into Done and past, and the next row's buttons fade in (160 ms). The next line and cycle bar update at the same time. Reduced motion: no collapse, instant swap.
 
 **Reminders ask.** The reminders card from 14 becomes tier 3 (`--blue-50` fill, border, no shadow, no icon tile; `BellRinging` fill 24 `--blue-600` inline at the left). Same copy and behavior, 24 below the cycle bar. iPhone only.
+
+**No plan card** ("See only your dates", from 14 → States): tier 2.
 
 **Add a date**: removed for v1.1 (moves to v1.2 with `customDeadlines`).
 
@@ -224,7 +228,7 @@ Date sheet, steps sheet, term question, reminders permission flow, notification 
 | Component: route | As under Home → Route |
 | Component: segmented bar | As under Home → Get ready |
 | Component: cycle bar | As under Deadlines → Cycle bar |
-| Component: compact tinted button | Height 36, padding 0 12, `--r-full`, tinted colors, icon 16, `label` |
+| Component: compact tinted button | Looks 36 tall with a 44 tap area, padding 0 12, `--r-full`, tinted colors, icon 16, `label` |
 
 ## Test
 
@@ -232,10 +236,10 @@ Date sheet, steps sheet, term question, reminders permission flow, notification 
 - Greeting subtitle reads "Transferring fall 2027." once the term is set on Deadlines, and "Transferring to UC San Diego." before.
 - Get ready has no container around its title; the bar has 6 segments, all pale. Check off step 1: its segment turns green, the count reads "1 of 6", and the list shows steps 2 and 3.
 - Home with no plan: the setup card is the only shadowed block; the stack has a border, no shadow, and a 36-size number; no Get ready.
-- Deadlines opens with "UC application is next", "Due Monday, Nov 30, in 43 days." and the cycle bar from Oct 2026 to Jun 2027 with nodes at Nov 30, Jan 31, Mar 2 and Jun 1, and today's marker about a fifth of the way.
+- Deadlines opens with "UC application is next", "Due Monday, Nov 30, in 43 days." and the cycle bar from Oct 2026 to Jun 2027 with nodes at Nov 30, Jan 31, Mar 2 and Jun 1, and today's marker about 7% along the bar (on Oct 18).
 - No countdown card on Deadlines. The Nov 30 row has Remind me and Mark done; no other row does.
-- One spine runs from the Nov 30 node to the Jun 1 node through every month header.
+- One `--border-strong` spine runs from the Nov 30 node to the Jun 1 node through every month header. Each header sits 4 above its first row, with the space above it.
 - Mark done on the UC application: the row leaves, the next row (Cal State Apply for a both-systems plan, or the TAU for UC only) gets the buttons, and the next line and cycle bar update. Undo brings it back.
 - No "Add a date" button.
 - Reduced motion: every change above is instant.
-- At 320 wide: the route's names wrap to 2 lines, the cycle bar's labels don't overlap, and the open row's two buttons wrap to two lines if needed.
+- At 320 wide: a long school name in the route wraps to 2 lines while the college name stays on one line, the cycle bar's labels don't overlap, and the open row's two buttons wrap to two lines if needed. At 393 they sit side by side.
