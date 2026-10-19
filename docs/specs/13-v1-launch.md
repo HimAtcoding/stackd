@@ -83,8 +83,18 @@ Apple's reviewer needs a working login. PR #2 already made one; keep using it, a
 
 - Email: an inbox you control, for example `joinstackd+review@gmail.com` (Gmail delivers `+` addresses to the main inbox).
 - Confirm it with the code, save the Las Positas → UC San Diego CS plan, and keep the password somewhere safe.
-- Put the email and password in App Store Connect → App Review Information, with this note: "Stackd is a transfer-planning app for California community college students. Sign in with the account above to see a saved plan; the plan card opens the student's official ASSIST agreement. New accounts confirm their email with a 6-digit code."
+- Put the email and password in App Store Connect → App Review Information, with this note (1.1): "Stackd is a transfer-planning app for California community college students. Sign in with the account above to see a saved plan. Home shows the next transfer deadlines and a checklist for the application. Deadlines lists every date with its official source. Reminders are local notifications, and the app asks for permission only when you tap Remind me."
 - Don't delete this account or change its password while a review is open.
+
+## 1.1 submission
+
+Version 1.1.0 turns on the deadline features (`upcoming`, `getReady`, `deadlines`, `reminders`; `14`, `15`). Before submitting:
+
+- **App Privacy answers:** check them against `/privacy/` (updated October 18, 2026). 1.1 adds the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline. All of it is user content linked to the student's account, used for app functionality only, and not used for tracking. Reminders are local notifications scheduled on the phone, so they need no data type of their own.
+- **Screenshots:** a new 6.9-inch set taken from the 1.1 build, on a 6.9-inch simulator or iPhone. Show Home with Up next and Get ready, the Deadlines screen, and a date sheet.
+- **Review note:** the 1.1 note above.
+- **What's New:** "Deadlines are here. Home now shows your next transfer deadline with a countdown, and a checklist for your UC or Cal State application. The new Deadlines screen lists every date for your transfer year, each with its official source. Turn on reminders to get a heads-up before each one."
+- **One version at a time:** 1.0 must be approved, released or withdrawn before 1.1 can go into review.
 
 ## Test
 

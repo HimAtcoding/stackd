@@ -513,14 +513,12 @@ On branch `v1-1-release`.
 - **Checked:** `npm run build` passes `check-release` and `check-service-key`, with no `/dev/` page in `out/`. Every suite passes (`test:db` 102, `test:import` 81, `test:reminders` 65, `test:deadlines` 38, `test:oauth` 31), as do lint and `tsc`. No exported page links to an unbuilt route.
   - A crawl of the served `out/` with a stand-in session collected every link on Home (with and without a plan), the steps sheet, Deadlines, the date sheet, Settings and University. All of them go to built screens or official sites.
 
-**Before submitting 1.1 to App Review:**
-1. **Privacy text.** `/privacy/` doesn't yet mention what v1.1 adds to the account: the transfer term, the dates and checklist steps marked done, and the reminder days chosen for each date. Update it and `POLICIES_UPDATED`.
-   - Reminders are scheduled on the phone as local notifications, and nothing about a reminder is sent anywhere when it fires.
-   - The reminder choices themselves sync to the account (`user_deadlines.reminders`).
-2. **App Privacy answers** must match the updated page. The new data is the student's own content, linked to their account and used only for app functionality, with no tracking. If 1.0 already declares that kind of data for the plan, the categories may not change, but the answers need checking. Local notifications need no Info.plist entry and no privacy answer.
-3. **Review note:** spec 13's note says "the plan card opens the student's official ASSIST agreement". In 1.1 that's the route on Home, and the Deadlines feature needs explaining.
+**Before submitting 1.1 to App Review** (the list is in `docs/specs/13-v1-launch.md → 1.1 submission`):
+1. ~~**Privacy text.**~~ Done 2026-10-18. `/privacy/` (updated October 18, 2026, `PRIVACY_UPDATED`) now names the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline. It says reminders are local notifications the iPhone schedules itself, and that nothing is used for tracking or ads. Terms has its own date (`TERMS_UPDATED`, still October 13). The hosted copy on joinstackd-chi.vercel.app is this repo's `out/`, so it changes when `out/` is redeployed (see "Redeploying" under iOS app and App Store prep).
+2. **App Privacy answers** must match the updated page: user content linked to the account, used for app functionality only, not used for tracking. Local notifications need no Info.plist entry and no privacy answer.
+3. ~~**Review note.**~~ Spec 13 has the 1.1 note. `docs/app-store/listing.md` still has 1.0's longer reviewer notes, privacy table and screenshot list.
 4. **Screenshots:** retake the 6.9-inch set from the 1.1 build, showing Home with Up next and Get ready, the Deadlines screen and a date sheet. The 1.0 set predates v1 launch (step 14) and v1.1.
-5. **What's New** text for the update.
+5. ~~**What's New** text.~~ In spec 13.
 6. **One version in review at a time:** if 1.0 is still waiting for review, it has to be approved, released or withdrawn before 1.1 can be submitted.
 
 ## Home and Deadlines, design rev 2 (step 17, 2026-10-18)

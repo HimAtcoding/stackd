@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DocPage, DocSection, ExternalLink, List, P, SupportEmail } from "@/components/doc-page";
-import { POLICIES_UPDATED } from "@/lib/about";
+import { TERMS_UPDATED } from "@/lib/about";
 
 export const metadata: Metadata = { title: "Stackd terms of use" };
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Stackd terms of use" };
 // agreement and never stands in for it.
 export default function TermsPage() {
   return (
-    <DocPage title="Terms of use" updated={POLICIES_UPDATED}>
+    <DocPage title="Terms of use" updated={TERMS_UPDATED}>
       <P className="mt-6">
         These terms apply when you use Stackd, on the web or in the iPhone app. By using Stackd, you agree to them.
       </P>

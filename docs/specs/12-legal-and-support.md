@@ -34,7 +34,7 @@ Alignment: left, text at x 24 in the 480 column. The footer is centered. No card
 
 ## Content rules
 
-- **Privacy** says only what the code does. Check it against `supabase/migrations/` and `lib/` whenever data collection changes, and change `POLICIES_UPDATED` in `lib/about.ts` with it.
+- **Privacy** says only what the code does. Check it against `supabase/migrations/` and `lib/` whenever data collection changes, and change `PRIVACY_UPDATED` in `lib/about.ts` with it (`TERMS_UPDATED` for the Terms page).
 - **Terms** keeps the unofficial-tool line from 06-trust-and-provenance: no affiliation, no admission or transfer guarantee, the official agreement and counselor are the final word.
 - **Support** covers contacting the team, signing in (codes, Apple and Google), changing the plan, deleting the account, and whether Stackd is official.
 - The support address and the developer credit come from `lib/about.ts` and appear nowhere else in code.
