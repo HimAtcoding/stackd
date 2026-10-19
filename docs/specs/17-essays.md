@@ -17,14 +17,14 @@ From the official page, confirmed Oct 19, 2026. Stored in our own words, with th
 
 | Key | Short name (ours) | Summary (ours) | Required |
 |---|---|---|---|
-| `major` | Your major | How you've prepared for your intended major, and why you're ready for upper-division work | Yes |
+| `major` | Your major | How you've prepared for your intended major, and why you're ready for upper-division work. | Yes |
 | `leadership` | Leadership | A time you led: influencing others, helping settle a disagreement, or contributing to a group over time. | |
 | `creativity` | Creativity | How your creativity shows up, whether in solving problems, new ideas or art. | |
-| `talent` | A talent or skill | Your greatest talent or skill, and how you've built and used it | |
-| `opportunity` | Opportunity or barrier | An educational opportunity you made the most of, or a barrier you worked to get past | |
+| `talent` | A talent or skill | Your greatest talent or skill, and how you've built and used it. | |
+| `opportunity` | Opportunity or barrier | An educational opportunity you made the most of, or a barrier you worked to get past. | |
 | `challenge` | A challenge | The biggest challenge you've faced, how you handled it, and how it affected your schoolwork. | |
 | `community` | Community | Ways you've made your school or community better. | |
-| `beyond` | Beyond the application | What else makes you a strong candidate for UC that isn't shown elsewhere | |
+| `beyond` | Beyond the application | What else makes you a strong candidate for UC that isn't shown elsewhere. | |
 
 These are stored like deadlines: a `piq_prompts` data file (`data/raw/essays/piq-fall-2027.json`) imported with source, `retrieved_at` and verification, so the summaries are checked against UC's page before students see them. Only verified rows show.
 
