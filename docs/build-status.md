@@ -507,15 +507,21 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 
 Spec `16-color-pass.md`, on branch `color-pass`. Looks only; no database changes.
 
-- **Tokens** (`globals.css`, `00`): `--indigo-600`, `--amber-700`, `--mint-600`, `--yellow-50`, plus the hero's own shadows and its coral pressed fill (#9C2D16, given in 16).
+- **Tokens** (`globals.css`, `00`): `--indigo-600`, `--amber-700`, `--mint-600`, plus the hero's own shadows and its coral pressed fill (#9C2D16, given in 16). `--yellow-50` was added for an Events band, then removed with the bands.
 - **Up next hero:** with a plan, the top layer is solid `--blue-600`, or `--coral-700` at 14 days or less and on the due day. Every word on it is white. The window bar has a white fill on a 28% white track and a yellow today marker. Each color has its own shadow and pressed fill. With no plan it stays pale (15). Keyboard focus on the stack is a white outline with a blue ring outside it.
 - **Step tiles** (`components/ui/step-tile.tsx`, `lib/step-icons.ts`): each step's icon tile is its check control, 36 on Home and 40 in the steps sheet, with a 44 hit area. Steps have no slug column, so the map is keyed by a slug made from the step's title. "Submit by…" matches by its start, so the next cycle's date keeps the paper plane. Unknown steps get `CheckSquare` on sky.
 - **Burst:** checking a tile turns it green over 160 ms (scale 0.9 to 1) while six yellow dashes burst to 28 px and fade over 360 ms. Unchecking swaps back at once. Reduced motion: colors only.
 - **Steps sheet:** the segmented bar and "{done} of {total} done, due by Nov 30" replace the ring. Done steps' titles turn slate.
-- **Deadlines band:** `--amber-50` from the physical top to 24 below the term line, the screen's full width. The term question, before a term is chosen, sits under the band on the sky page.
+- **Deadlines panel** (replaced the amber band after the PR #10 review): the screen opens with a solid `--blue-600` panel, coral at 14 days or less by the hero's rule.
+  - It's the full width with 28 bottom corners, and every word on it is white: the title, the term line with a white underlined "Change", "{title} is next" and the due line.
+  - The year bar sits inside it in white, with a yellow today marker and white nodes (16 → Deadlines panel). The panel ends 24 below the bar's labels, and the timeline starts 24 below it.
+  - Before a term is chosen, the term question card sits in the panel where the next line goes.
+  - Focus outlines on the panel are white. The band, its amber fill and the "section color band" idea are gone; `--amber-50` stays for the trophy tile and University's reminder banner.
+- **Outside-link row** (`components/ui/outside-link-row.tsx`): a tier 2 row with a globe tile, the title, the site's domain and the outside-link arrow. It replaces the steps sheet's "Open the UC application" button and the date sheet's "Open official page" link, which is now "Open the official page". Its name ends ", opens outside the app".
+- **Specs:** 16's section colors are now feature panels, with the Deadlines panel described as built and the outside-link row added to 00. 17's Essays screen gets a solid indigo panel with its 4-answer bar and an outside-link row for "Read UC's exact wording"; the editor keeps a light strip.
 - **Not built: the celebration when every step is done.** It opens the task-complete screen (05), which was never built (build step 9). 05 needs `husky-celebrate`, `confetti-static.svg` and the `canvas-confetti` package, none of which are in the repo.
 
-**Tested 2026-10-19** (Windows, dev server with the v1.1 flags, which are on in `lib/features.ts` since PR #9; stand-in session; dates from the database): 22 browser checks from spec 16's test list at 393 and 320, including Nov 20 and Nov 30 with the browser clock set. `test:deadlines` has 10 new checks for the step icon map. `test:import`, lint, `tsc` and `npm run build` pass.
+**Tested 2026-10-19** (Windows, dev server with the v1.1 flags, which are on in `lib/features.ts` since PR #9; stand-in session; dates from the database): 22 browser checks from spec 16's test list at 393 and 320, including Nov 20 and Nov 30 with the browser clock set. `test:deadlines` has 10 new checks for the step icon map. `test:import`, lint, `tsc` and `npm run build` pass. After the panel change: 16 more browser checks (blue and Nov 20 coral panel, its white year bar and nodes, the term question inside it, spacing, focus, both outside-link rows), and `test:deadlines`, lint, `tsc` and `npm run build` again.
 
 ## v1.1 release prep (2026-10-18)
 

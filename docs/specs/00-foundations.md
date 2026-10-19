@@ -49,11 +49,10 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 | `--yellow-400` | #FDC940 | Sparkle dashes, confetti, balloon |
 | `--confetti-sky` | #4FA8F7 | Confetti only |
 | `--indigo-600` | #4F55E0 | Essays section color, the writing step's icon (`16-color-pass.md`) |
-| `--amber-700` | #A86A00 | Deadlines section color, the activities step's icon (16) |
+| `--amber-700` | #A86A00 | The activities step's icon (16) |
 | `--mint-600` | #12946A | Explore section color later, the courses step's icon (16) |
-| `--yellow-50` | #FFF6D6 | Events header band (16) |
 
-Section colors, the step tile, the header band and the step burst are specified in `16-color-pass.md`. Section colors never carry status: the status colors below stay fixed everywhere.
+Feature panels, the step tile, the outside-link row and the step burst are specified in `16-color-pass.md`. The section colors above mark features and never carry status: the status colors below stay fixed everywhere.
 
 ### Status colors
 

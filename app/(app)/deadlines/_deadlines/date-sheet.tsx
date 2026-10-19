@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
-import { ArrowSquareOutIcon, CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
+import { CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
+import { OutsideLinkRow } from "@/components/ui/outside-link-row";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { isNativeApp } from "@/lib/capacitor";
 import { cn } from "@/lib/cn";
@@ -131,15 +132,7 @@ function Content({
       </div>
 
       <p className="mt-4 text-slate-600 type-caption">{recordSource(d)}</p>
-      <a
-        href={d.source_url}
-        target="_blank"
-        rel="noopener"
-        className="-my-[13px] inline-flex items-center gap-1 py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
-      >
-        Open official page
-        <ArrowSquareOutIcon weight="bold" size={16} aria-hidden />
-      </a>
+      <OutsideLinkRow href={d.source_url} title="Open the official page" className="mt-3" />
     </div>
   );
 }

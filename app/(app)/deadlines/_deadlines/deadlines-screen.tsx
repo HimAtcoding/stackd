@@ -151,6 +151,8 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const finished = ok ? ok.view.finished.filter((d) => !settling.includes(d.id)) : [];
   const cycle = ok ? cycleLabel(ok.view.cycle) : "";
   const bar = ok ? cycleBar(ok.view.upcoming, ok.now) : null;
+  // The panel's color, by the same rule as Home's hero: coral when the next date is 14 days or less away
+  const panel = next && next.daysLeft <= SOON_DAYS ? "coral" : "blue";
   const remindersOn = (id: string) => Boolean(ok && reminders.active && remindersFor(ok.marks[id], reminders.days).length > 0);
 
   // The next row's buttons (15 → The next row opens)
@@ -179,26 +181,48 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     <div className="min-h-dvh overflow-x-clip bg-sky-50">
       {ok?.view.demo && <DemoStrip />}
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
-        {/* The Deadlines band (16 → Section colors): amber from the physical top to 24 below the last header line,
-            the screen's full width, straight edge. The page below it is sky. */}
-        <header className="relative pb-6" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
-          <span aria-hidden className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 bg-amber-50" />
-          <div className="relative px-4">
+        {/* The Deadlines panel (16 → Deadlines panel) continues Home's hero: blue, or coral when the next date is 14 days
+            or less away, the screen's full width with 28 bottom corners, every word white. It holds the term, what's
+            next and the year bar, and ends 24 below the bar's labels. Focus outlines are white on it. */}
+        <header className="relative pb-6 text-white" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
+          <span aria-hidden className={cn("absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-[28px]", panel === "coral" ? "bg-coral-700" : "bg-blue-600")} />
+          <div className="relative px-4 [&_a:focus-visible]:outline-white [&_button:focus-visible]:outline-white">
             <BackButton fallback="/" slideBack />
           </div>
-          <h1 className="relative mt-6 px-6 text-navy-900 type-title-1">Deadlines</h1>
+          <h1 className="relative mt-6 px-6 type-title-1">Deadlines</h1>
           {ok?.term.asked && (
-            <p className="relative mt-1 flex items-baseline gap-2 px-6 text-slate-600 type-body">
+            <p className="relative mt-1 flex items-baseline gap-2 px-6 type-body">
               {cycle} transfer
               <button
                 type="button"
                 onClick={() => setTermSheet(true)}
                 aria-label={`Change transfer term, now ${cycle}`}
-                className="-my-[13px] py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
+                className="-my-[13px] py-[13px] underline type-label focus-ring:outline-white"
               >
                 Change
               </button>
             </p>
+          )}
+          {ok && (
+            <MotionConfig reducedMotion="user">
+              {/* Before a term is chosen, its question takes the next line's place, as a surface card on the panel */}
+              <AnimatePresence initial={false}>
+                {!ok.term.asked && (
+                  <motion.div key="question" exit={{ height: 0, opacity: 0 }} transition={COLLAPSE} className="relative overflow-hidden">
+                    <div className="mx-4 mt-6">
+                      <TermQuestion onChoose={chooseTerm} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </MotionConfig>
+          )}
+          {ok?.term.asked && next && (
+            <div className="relative mt-6 px-6">
+              <p className="type-headline">{next.title} is next</p>
+              <p className="mt-1 type-body">{nextDueLine(next)}</p>
+              {bar && <CycleBar view={bar} panel={panel} className="mt-4" />}
+            </div>
           )}
         </header>
 
@@ -229,18 +253,6 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
 
         {ok && (
           <MotionConfig reducedMotion="user">
-            {/* The term question sits under the band until it's answered, then folds away and the term line shows in
-                the band */}
-            <AnimatePresence initial={false}>
-              {!ok.term.asked && (
-                <motion.div key="question" exit={{ height: 0, opacity: 0 }} transition={COLLAPSE} className="overflow-hidden">
-                  <div className="mx-4 mt-6">
-                    <TermQuestion onChoose={chooseTerm} />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             {!ok.scope && (
               <section aria-labelledby="no-plan-title" className="mx-4 mt-6 rounded-md border border-border bg-surface p-4">
                 <h2 id="no-plan-title" className="text-navy-900 type-headline">
@@ -254,19 +266,11 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
             )}
 
             {next ? (
-              <>
-                {/* What's next and the whole year on one line, in place of a second countdown (15 → Top) */}
-                <div className="mt-6 px-6">
-                  <p className="text-navy-900 type-headline">{next.title} is next</p>
-                  <p className={cn("mt-1 type-body", next.daysLeft <= SOON_DAYS ? "text-coral-700" : "text-slate-700")}>{nextDueLine(next)}</p>
-                  {bar && <CycleBar view={bar} className="mt-4" />}
+              showRemindersCard && (
+                <div className="mx-4 mt-6">
+                  <RemindersCard onTurnOn={turnOnFromCard} onDismiss={dismissRemindersCard} />
                 </div>
-                {showRemindersCard && (
-                  <div className="mx-4 mt-6">
-                    <RemindersCard onTurnOn={turnOnFromCard} onDismiss={dismissRemindersCard} />
-                  </div>
-                )}
-              </>
+              )
             ) : all.length > 0 ? (
               <EmptyState
                 icon={husky}
@@ -279,7 +283,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
               </p>
             )}
 
-            {/* The first month header's own 16 is the space above the timeline */}
+            {/* The first month header's own 24 is the space between the panel and the timeline */}
             <Timeline rows={timelineRows} scope={ok.scope} actions={rowActions} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
             <DonePast rows={finished} scope={ok.scope} onOpen={(id) => setSheet({ id, open: true, reminders: false })} />
 

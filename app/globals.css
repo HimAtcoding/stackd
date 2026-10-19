@@ -39,11 +39,10 @@
   --amber-500: #eaa005;
   --yellow-400: #fdc940;
   --confetti-sky: #4fa8f7;
-  /* Section colors (16): Essays, Deadlines, Explore, and the Events band */
+  /* Section colors (16): Essays, Deadlines and Explore, also used by the step icons */
   --indigo-600: #4f55e0;
   --amber-700: #a86a00;
   --mint-600: #12946a;
-  --yellow-50: #fff6d6;
   /* The Up next hero pressed at 14 days or less (16) */
   --coral-pressed: #9c2d16;
   /* The second and third layers of the deadline stack (14) */
@@ -129,7 +128,6 @@
   --color-indigo-600: var(--indigo-600);
   --color-amber-700: var(--amber-700);
   --color-mint-600: var(--mint-600);
-  --color-yellow-50: var(--yellow-50);
   --color-coral-pressed: var(--coral-pressed);
   --color-confetti-sky: var(--confetti-sky);
   --color-stack-2: var(--stack-2);
