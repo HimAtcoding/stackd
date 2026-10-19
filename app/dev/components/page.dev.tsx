@@ -28,7 +28,7 @@ import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { ProgressRing } from "@/components/ui/progress-ring";
-import { TimelineRow } from "@/components/ui/timeline-row";
+import { DateRow } from "@/components/ui/date-row";
 import { WindowBar } from "@/components/ui/window-bar";
 import { BottomSheetDemo, ChipDemo, ChoiceDemo, SwitchDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
 
@@ -253,12 +253,13 @@ export default function ComponentsPage() {
         </div>
       </Section>
 
-      <Section title="Timeline row and spine (14)">
-        <ul className="-mx-2">
-          <li><TimelineRow month="Nov" day="30" node="soon" title="Sample deadline" detail="All UC campuses, 11:59 p.m. Pacific" status={<Pill variant="due">In 4 days</Pill>} spineUp={false} spineDown onOpen={() => {}} aria-label="Sample, soon" /></li>
-          <li><TimelineRow month="Dec" day="15" node="open" title="Window open" detail="Financial aid" status={<span className="text-blue-700 type-caption font-semibold">Open now</span>} spineUp spineDown onOpen={() => {}} aria-label="Sample, open" /></li>
-          <li><TimelineRow month="Jan" day="31" node="later" title="Not open yet, with a longer title that wraps to two lines" detail="Opens Dec 15" spineUp spineDown onOpen={() => {}} aria-label="Sample, later" data-pressed /></li>
-          <li><TimelineRow month="Sep" day="30" node="done" dimmed title="Done" detail="All UC campuses" status={<span className="text-slate-600 type-caption">Done</span>} spineUp spineDown={false} onOpen={() => {}} aria-label="Sample, done" /></li>
+      <Section title="Date row and tile (18)">
+        <ul className="-mx-2 flex flex-col gap-1">
+          <li><DateRow month="Nov" day="30" status="soon" title="Sample deadline" detail="All UC campuses, 11:59 p.m. Pacific" onOpen={() => {}} aria-label="Sample, soon" /></li>
+          <li><DateRow month="Dec" day="15" status="open" title="Window open" detail="Financial aid" onOpen={() => {}} aria-label="Sample, open" /></li>
+          <li><DateRow month="Jan" day="31" status="later" title="Not open yet, with a longer title that wraps to two lines" detail="Opens Dec 15" onOpen={() => {}} aria-label="Sample, later" data-pressed /></li>
+          <li><DateRow month="Sep" day="30" status="done" dimmed title="Done" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, done" /></li>
+          <li><DateRow month="Sep" day="30" status="missed" dimmed title="Missed" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, missed" /></li>
         </ul>
       </Section>
 

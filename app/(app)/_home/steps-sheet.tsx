@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
-import { OutsideLinkRow } from "@/components/ui/outside-link-row";
+import { LinkLine } from "@/components/ui/link-line";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { StepTile } from "@/components/ui/step-tile";
 import { cn } from "@/lib/cn";
@@ -56,9 +56,9 @@ export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle, f
           ))}
         </ol>
 
-        {/* It leaves the app, so it's a link row, not the main action (16 → Outside-link row) */}
-        <OutsideLinkRow href={c.checklist.apply_url} title={c.checklist.apply_label} className="mt-6" />
-        <p className="mt-3 text-slate-600 type-caption">{checklistSource(c)}</p>
+        {/* It leaves the app, so it's a link line, not the main action (18 → Link lines). Its 4 padding counts toward the gaps. */}
+        <LinkLine href={c.checklist.apply_url} label={c.checklist.apply_label} className="mt-5" />
+        <p className="mt-2 text-slate-600 type-caption">{checklistSource(c)}</p>
       </div>
     </BottomSheet>
   );

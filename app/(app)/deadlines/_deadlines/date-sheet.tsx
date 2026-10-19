@@ -5,7 +5,7 @@ import { CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
-import { OutsideLinkRow } from "@/components/ui/outside-link-row";
+import { LinkLine } from "@/components/ui/link-line";
 import { isNativeApp } from "@/lib/capacitor";
 import { cn } from "@/lib/cn";
 import { REMINDER_DAYS, remindersFor, type DeadlineMark } from "@/lib/data/deadlines";
@@ -136,8 +136,9 @@ function Content({
         )}
       </div>
 
+      {/* The source and its link are one block (18 → Link lines) */}
       <p className="mt-4 text-slate-600 type-caption">{recordSource(d)}</p>
-      <OutsideLinkRow href={d.source_url} title="Open the official page" className="mt-3" />
+      <LinkLine href={d.source_url} label="Open the official page" className="mt-1" />
     </div>
   );
 }
