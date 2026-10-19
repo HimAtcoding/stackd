@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
-import { ArrowSquareOutIcon, CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
+import { CheckCircleIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { OutsideLinkRow } from "@/components/ui/outside-link-row";
 import { isNativeApp } from "@/lib/capacitor";
 import { cn } from "@/lib/cn";
 import { REMINDER_DAYS, remindersFor, type DeadlineMark } from "@/lib/data/deadlines";
@@ -124,22 +124,20 @@ function Content({
             </button>
           </div>
         ) : (
-          <TintedButton icon={<CheckIcon weight="bold" size={20} aria-hidden />} onClick={() => onMarkDone(true)}>
+          // The sheet's one solid action (16 → Open row actions): full width, 48 tall, --blue-600
+          <button
+            type="button"
+            onClick={() => onMarkDone(true)}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white type-button transition-[background-color,transform] duration-200 ease-out pressed:bg-blue-700 pressed:duration-120 motion-safe:pressed:scale-[0.98]"
+          >
+            <CheckIcon weight="bold" size={20} aria-hidden />
             Mark done
-          </TintedButton>
+          </button>
         )}
       </div>
 
       <p className="mt-4 text-slate-600 type-caption">{recordSource(d)}</p>
-      <a
-        href={d.source_url}
-        target="_blank"
-        rel="noopener"
-        className="-my-[13px] inline-flex items-center gap-1 py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
-      >
-        Open official page
-        <ArrowSquareOutIcon weight="bold" size={16} aria-hidden />
-      </a>
+      <OutsideLinkRow href={d.source_url} title="Open the official page" className="mt-3" />
     </div>
   );
 }

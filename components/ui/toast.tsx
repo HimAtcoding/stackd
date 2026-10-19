@@ -12,12 +12,14 @@ type ToastProps = {
   onDone: () => void;
   // Static specimen for /dev/components: no timer, no fixed positioning.
   still?: boolean;
+  // Shown while a bottom sheet is open, so it sits above the sheet and its scrim
+  overSheet?: boolean;
 };
 
 const VISIBLE_MS = 4000;
 const EXIT_MS = 160;
 
-export function Toast({ message, action, bottom, within, onDone, still }: ToastProps) {
+export function Toast({ message, action, bottom, within, onDone, still, overSheet }: ToastProps) {
   const [leaving, setLeaving] = useState(false);
   const done = useRef(onDone);
   useEffect(() => {
@@ -40,7 +42,7 @@ export function Toast({ message, action, bottom, within, onDone, still }: ToastP
       className={
         still
           ? "flex items-center gap-4 rounded-md bg-navy-900 px-4 py-3"
-          : `${within ? "absolute inset-x-0" : "fixed inset-x-4"} z-40 mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 text-left ${leaving ? "toast-out" : "toast-in"}`
+          : `${within ? "absolute inset-x-0" : "fixed inset-x-4"} ${overSheet ? "z-60" : "z-40"} mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 text-left ${leaving ? "toast-out" : "toast-in"}`
       }
       style={still ? undefined : { bottom }}
     >

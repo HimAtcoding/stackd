@@ -6,7 +6,7 @@ import { AfterWait } from "@/components/deadlines/after-wait";
 import { CountdownBlock } from "@/components/deadlines/countdown-block";
 import { TextLink } from "@/components/ui/text-link";
 import type { DeadlinesState } from "@/lib/data/deadlines";
-import { cycleLabel, shortDate, stackLabel, type Deadline } from "@/lib/deadlines";
+import { cycleLabel, shortDate, SOON_DAYS, stackLabel, type Deadline } from "@/lib/deadlines";
 import { cn } from "@/lib/cn";
 import { deadlinesHref } from "@/lib/features";
 
@@ -72,15 +72,20 @@ export function UpNext({ state }: { state: DeadlinesState }) {
 
       {state.status === "ok" && top && (
         <>
-          <Stack href={href} label={stackLabel(items, Boolean(href))}>
-            {/* Tier 1 with a plan. With none, the setup card is the hero, so this steps down to a border (15 → Up next) */}
+          <Stack href={href} label={stackLabel(items, Boolean(href))} filled={Boolean(state.scope)}>
+            {/* With a plan, the solid hero: blue, or coral at 14 days or less (16). With none, the setup card is the
+                hero, so this steps down to a border (15 → Up next) */}
             <div
               className={cn(
-                "relative z-3 rounded-lg bg-surface p-4 transition-colors duration-200 ease-out group-pressed:bg-surface-pressed group-pressed:duration-120",
-                state.scope ? "shadow-lift" : "border border-border",
+                "relative z-3 rounded-lg p-4 transition-colors duration-200 ease-out group-pressed:duration-120",
+                !state.scope
+                  ? "border border-border bg-surface group-pressed:bg-surface-pressed"
+                  : top.daysLeft <= SOON_DAYS
+                    ? "bg-coral-700 shadow-hero-coral group-pressed:bg-coral-pressed"
+                    : "bg-blue-600 shadow-hero-blue group-pressed:bg-blue-700",
               )}
             >
-              <CountdownBlock deadline={top} now={state.now} scope={state.scope} quiet={!state.scope} />
+              <CountdownBlock deadline={top} now={state.now} scope={state.scope} quiet={!state.scope} onFill={Boolean(state.scope)} />
             </div>
             {peeks[0] && <Peek deadline={peeks[0]} layer={2} />}
             {peeks[1] && <Peek deadline={peeks[1]} layer={3} />}
@@ -95,8 +100,12 @@ export function UpNext({ state }: { state: DeadlinesState }) {
 }
 
 // One link around every layer. Without the Deadlines screen (its flag off) the stack is still read as one item.
-function Stack({ href, label, children }: { href: string | null; label: string; children: ReactNode }) {
-  const className = "group mx-4 mt-3 block rounded-lg focus-ring:outline-offset-2";
+function Stack({ href, label, filled, children }: { href: string | null; label: string; filled: boolean; children: ReactNode }) {
+  // On the solid hero the ring is white, with a 2 px blue ring outside it so it shows on blue (16)
+  const className = cn(
+    "group mx-4 mt-3 block rounded-lg",
+    filled ? "focus-ring:outline-white focus-ring:outline-offset-0 focus-ring:shadow-[0_0_0_4px_var(--blue-600)]" : "focus-ring:outline-offset-2",
+  );
   if (!href) {
     return (
       <div role="group" aria-label={label} className={className}>
