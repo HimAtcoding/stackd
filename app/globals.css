@@ -60,6 +60,8 @@
   --shadow-card: 0 1px 2px rgba(5, 16, 66, 0.04), 0 6px 16px rgba(5, 16, 66, 0.05);
   --shadow-float: 0 4px 12px rgba(5, 16, 66, 0.1);
   --shadow-cta: 0 8px 20px rgba(3, 100, 250, 0.28);
+  /* Tier 1 only: the one hero on Home or Deadlines (15) */
+  --shadow-lift: 0 2px 4px rgba(5, 16, 66, 0.05), 0 12px 28px rgba(5, 16, 66, 0.09);
 
   --dur-fast: 120ms;
   --dur-base: 200ms;
@@ -138,6 +140,9 @@
 }
 @utility shadow-cta {
   box-shadow: var(--shadow-cta);
+}
+@utility shadow-lift {
+  box-shadow: var(--shadow-lift);
 }
 
 /* Type scale from 00-foundations */

@@ -5,13 +5,12 @@ import { TintedButton } from "@/components/ui/tinted-button";
 
 // Shown once on the Deadlines screen, iPhone app only, until reminders are turned on or it's dismissed
 // (14 → Reminders card). Dismissing hides it for good; the Reminders group in Settings stays.
+// Tier 3, the ask (15 → Reminders ask): tinted fill and border, no shadow, the bell inline at the left.
 export function RemindersCard({ onTurnOn, onDismiss }: { onTurnOn: () => void; onDismiss: () => void }) {
   return (
-    <section aria-labelledby="reminders-card-title" className="relative rounded-lg bg-surface p-4 shadow-card">
-      <div className="flex gap-4">
-        <span aria-hidden className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-tint-sky">
-          <BellRingingIcon weight="fill" size={24} className="text-blue-600" />
-        </span>
+    <section aria-labelledby="reminders-card-title" className="relative rounded-md border border-blue-50-border bg-blue-50 p-4">
+      <div className="flex gap-3">
+        <BellRingingIcon weight="fill" size={24} aria-hidden className="shrink-0 text-blue-600" />
         <div className="min-w-0 flex-1">
           <h2 id="reminders-card-title" className="pr-8 text-navy-900 type-headline">
             Get a heads-up before each deadline
@@ -26,7 +25,7 @@ export function RemindersCard({ onTurnOn, onDismiss }: { onTurnOn: () => void; o
         type="button"
         aria-label="Not now"
         onClick={onDismiss}
-        className="absolute right-1 top-1 flex size-11 items-center justify-center rounded-full text-slate-600 pressed:bg-surface-pressed"
+        className="absolute right-1 top-1 flex size-11 items-center justify-center rounded-full text-slate-600 pressed:bg-blue-100"
       >
         <XIcon weight="bold" size={20} aria-hidden />
       </button>

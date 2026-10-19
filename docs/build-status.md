@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-18 (v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-18 (Home and Deadlines design rev 2, spec 15, on branch `home-deadlines-rev2`; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,27 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## Home and Deadlines, design rev 2 (step 17, 2026-10-18)
+
+Spec `15-home-deadlines-rev2.md`, on branch `home-deadlines-rev2`. Looks only; behavior and data are unchanged.
+
+- **Tiers:** `--shadow-lift` (`globals.css`, `00`) is on one block per screen: the stack's top layer with a plan, the setup card without one.
+- **Home:**
+  - The plan card is now the route (`plan-route.tsx`, tier 2): the home college with a hollow node, a dashed connector, and the first school with a filled node and its major. It's one link to the school's requirements, with Edit as its own link.
+  - The greeting reads "Transferring fall 2027." once a term is set.
+  - Get ready has no container: title, count and a segmented bar (`segmented-bar.tsx`) on the page, then the next two steps in a tier 2 list. The ring is gone from Home; the steps sheet keeps it.
+  - With no plan, the stack steps down to a border and a 36 number.
+- **Deadlines:**
+  - The next-up card is gone. In its place: "{title} is next", the due line (`nextDueLine`), and the cycle bar (`cycle-bar.tsx`, `cycleBar` in `lib/deadlines.ts`).
+  - One spine runs through every month. Month headers are quiet labels in the text column.
+  - The first not-done row opens with compact Remind me and Mark done buttons (`compact-button.tsx`). Mark done fades them, folds the row away after 120 ms and fades the next row's in. All instant with reduced motion.
+  - The reminders card is tier 3 and the no-plan card is tier 2.
+- **Removed:** `plan-card.tsx`, `next-up-card.tsx`, the count-up on the countdown, and the shared view transition between the two countdowns.
+- **Not gated:** the route and greeting aren't behind a flag. A release build with the deadline flags off now shows the route instead of the plan card. The greeting there still reads "Transferring to {school}." because no term loads with the flags off.
+- **After the PR #8 review:** the spine is `--border-strong`, so it shows on the sky background. Each month header has its space above it (24, or 16 for the first month) and sits 4 above its first row. Spec 15 is rev 2: it now records the 42 tall cycle bar, the 7% today marker on Oct 18, the 44 tap area on the 36 tall buttons, the buttons' own line, the route's text rules, "Major not listed yet", the ringing bell for "Reminders on" and the tier 2 no-plan card.
+
+**Tested 2026-10-18** (Windows, dev server with only `upcoming`, `getReady`, `deadlines` and `reminders` on via a temporary `lib/features.ts` edit, stand-in session, dates from the database): 33 browser checks from spec 15's test list, at 393 and 320. `test:deadlines` has 8 new checks for the next line and the cycle bar. `test:import`, lint, `tsc` and `npm run build` pass.
 
 ## v1 launch build (step 14, 2026-10-15)
 

@@ -130,6 +130,9 @@ The mockup's shadows are faint (1–2 levels of RGB below cards). Three levels, 
 | `--shadow-card` | `0 1px 2px rgba(5,16,66,.04), 0 6px 16px rgba(5,16,66,.05)` | Cards, tiles, list container |
 | `--shadow-float` | `0 4px 12px rgba(5,16,66,.10)` | Circle buttons over art (back, heart, bell) |
 | `--shadow-cta` | `0 8px 20px rgba(3,100,250,.28)` | Primary pill buttons, "+" button |
+| `--shadow-lift` | `0 2px 4px rgba(5,16,66,.05), 0 12px 28px rgba(5,16,66,.09)` | Tier 1 only: the one hero on Home or Deadlines (`15-home-deadlines-rev2.md`) |
+
+**Container tiers** (from `15-home-deadlines-rev2.md`): on Home and Deadlines, "Card" means one of the tiers there (1 hero, 2 list, 3 ask, or plain on the page). The route, segmented bar, cycle bar and compact tinted button are specified there too. Other screens keep Card until they're next touched.
 
 The tab bar uses a 1 px `--border` top edge plus `0 -8px 24px rgba(5,16,66,.04)`.
 

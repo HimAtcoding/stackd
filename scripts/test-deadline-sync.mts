@@ -3,7 +3,19 @@
 // A fake account and a fake clock stand in for Supabase and timers. Also: the dates on the deadline screens show the
 // right day in Pacific time. `npm run test:deadlines`
 import { createMarkQueue, mergeFromAccount, retryDelay, RETRY_FIRST_MS, RETRY_MAX_MS, type PushError } from "../lib/data/mark-queue";
-import { checkedDate, checklistSubtitle, fullDate, recordSource, shortDate, type ChecklistView, type Deadline } from "../lib/deadlines";
+import {
+  checkedDate,
+  checklistSubtitle,
+  cycleBar,
+  describe,
+  fullDate,
+  nextDueLine,
+  recordSource,
+  shortDate,
+  type ChecklistView,
+  type Deadline,
+  type DeadlineRecord,
+} from "../lib/deadlines";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -150,6 +162,28 @@ const card = (left: number) => ({ steps: Array(6).fill({}), doneCount: 6 - left,
 check("Get ready: 4 steps left, due by Nov 30", checklistSubtitle(card(4)) === "4 steps left, due by Nov 30", checklistSubtitle(card(4)));
 check("Get ready: 1 step left, due by Nov 30", checklistSubtitle(card(1)) === "1 step left, due by Nov 30", checklistSubtitle(card(1)));
 check("a due date at 23:59:59 Pacific stays Nov 30", shortDate("2026-12-01T07:59:59+00:00") === "Nov 30" && fullDate("2026-12-01T07:59:59+00:00") === "Monday, November 30, 2026", fullDate("2026-12-01T07:59:59+00:00"));
+
+// The Deadlines screen's next line and cycle bar (15 → Top), with the fall 2027 dates on Oct 18, 2026
+const record = (id: string, opens_at: string | null, due_at: string, due_has_time = false) =>
+  ({ id, cycle: "fall-2027", audience: "uc", title: id, opens_at, due_at, due_has_time, varies_by_campus: false }) as unknown as DeadlineRecord;
+const oct18 = new Date("2026-10-18T12:00:00-07:00");
+const fall = [
+  record("uc-application", "2026-10-01T00:00:00-07:00", "2026-11-30T23:59:59-08:00"),
+  record("cal-state-apply", "2026-10-01T00:00:00-07:00", "2026-11-30T23:59:59-08:00"),
+  record("academic-update", "2026-12-15T00:00:00-08:00", "2027-01-31T23:59:59-08:00"),
+  record("fafsa", "2026-10-01T00:00:00-07:00", "2027-03-02T23:59:59-08:00"),
+  record("accept-uc", null, "2027-06-01T23:59:59-07:00"),
+].map((r) => describe(r, null, oct18));
+check("next line: Due Monday, Nov 30, in 43 days.", nextDueLine(fall[0]) === "Due Monday, Nov 30, in 43 days.", nextDueLine(fall[0]));
+const timed = describe(record("timed", null, "2026-11-30T17:00:00-08:00", true), null, oct18);
+check("next line with a stated time", nextDueLine(timed) === "Due Monday, Nov 30 at 5:00 p.m. Pacific, in 43 days.", nextDueLine(timed));
+check("next line on the due day: Due today.", nextDueLine(describe(record("today", null, "2026-11-30T23:59:59-08:00"), null, new Date("2026-11-30T09:00:00-08:00"))) === "Due today.");
+const bar = cycleBar(fall, oct18);
+check("cycle bar runs Oct 2026 to Jun 2027", bar?.start === "Oct 2026" && bar.end === "Jun 2027", bar);
+check("cycle bar: two dates on Nov 30 share one node, so 4 nodes", bar?.nodes.length === 4, bar?.nodes);
+check("cycle bar: open windows are blue rings, not-yet-open dates slate", JSON.stringify(bar?.nodes.map((n) => n.kind)) === JSON.stringify(["open", "later", "open", "later"]), bar?.nodes);
+check("cycle bar: Jun 1 sits at the end, today about 7% in", bar?.nodes.at(-1)?.at === 1 && Math.abs((bar?.today ?? 0) - 0.07) < 0.01, bar?.today);
+check("cycle bar: nothing upcoming, no bar", cycleBar([], oct18) === null);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
