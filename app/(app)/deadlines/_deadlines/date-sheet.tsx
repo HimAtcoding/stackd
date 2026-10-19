@@ -6,7 +6,6 @@ import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { OutsideLinkRow } from "@/components/ui/outside-link-row";
-import { TintedButton } from "@/components/ui/tinted-button";
 import { isNativeApp } from "@/lib/capacitor";
 import { cn } from "@/lib/cn";
 import { REMINDER_DAYS, remindersFor, type DeadlineMark } from "@/lib/data/deadlines";
@@ -125,9 +124,15 @@ function Content({
             </button>
           </div>
         ) : (
-          <TintedButton icon={<CheckIcon weight="bold" size={20} aria-hidden />} onClick={() => onMarkDone(true)}>
+          // The sheet's one solid action (16 → Open row actions): full width, 48 tall, --blue-600
+          <button
+            type="button"
+            onClick={() => onMarkDone(true)}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white type-button transition-[background-color,transform] duration-200 ease-out pressed:bg-blue-700 pressed:duration-120 motion-safe:pressed:scale-[0.98]"
+          >
+            <CheckIcon weight="bold" size={20} aria-hidden />
             Mark done
-          </TintedButton>
+          </button>
         )}
       </div>
 

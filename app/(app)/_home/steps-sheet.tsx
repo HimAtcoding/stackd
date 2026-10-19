@@ -15,10 +15,12 @@ type StepsSheetProps = {
   // The step the student tapped on Home: scrolled into view and tinted for 600 ms
   focusStep: string | null;
   onToggle: (stepId: string, done: boolean) => void;
+  // One step left and not yet finished on this device: checking it gets the bigger burst (16 → All steps done)
+  finale: boolean;
 };
 
 // Every step of the application, done and not done, with the official site and where the steps come from (14 → Steps sheet)
-export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle }: StepsSheetProps) {
+export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle, finale }: StepsSheetProps) {
   const list = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle }:
               className={cn("-mx-2 flex min-h-14 items-start gap-2.5 rounded-md px-2 py-2", focusStep === step.id && "tint-flash")}
             >
               {/* The 40 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
-              <StepTile title={step.title} size={40} done={done} onToggle={() => onToggle(step.id, !done)} className="-m-0.5" />
+              <StepTile title={step.title} size={40} done={done} finale={finale && !done} onToggle={() => onToggle(step.id, !done)} className="-m-0.5" />
               <div className="min-w-0 flex-1 pt-2">
                 <p className={cn("type-row-title", done ? "text-slate-600" : "text-navy-900")}>{step.title}</p>
                 <p className="mt-0.5 text-slate-600 type-body">{step.summary}</p>

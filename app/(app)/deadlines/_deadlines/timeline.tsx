@@ -84,7 +84,7 @@ export function Timeline({ rows, scope, onOpen, actions }: TimelineProps) {
         initial={closing || d.id === opened.first ? false : { opacity: 0 }}
         animate={{ opacity: closing ? 0 : 1 }}
         transition={{ duration: still ? 0 : closing ? 0.12 : 0.16 }}
-        className="flex flex-wrap gap-2"
+        className="flex flex-wrap items-center gap-4"
       >
         {actions(d)}
       </motion.span>

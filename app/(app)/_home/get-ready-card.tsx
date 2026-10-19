@@ -5,6 +5,7 @@ import { AfterWait } from "@/components/deadlines/after-wait";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { StepTile } from "@/components/ui/step-tile";
 import { Toast } from "@/components/ui/toast";
+import { checklistCelebrated, claimChecklistReady } from "@/lib/celebration";
 import { markStep, type DeadlinesState } from "@/lib/data/deadlines";
 import { checklistSubtitle, checklistTitle } from "@/lib/deadlines";
 import { StepsSheet } from "./steps-sheet";
@@ -16,7 +17,8 @@ const SHOWN_STEPS = 2;
 // Hidden when dates couldn't load, and once the application's due date has passed.
 export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; toastBottom: string }) {
   const [sheet, setSheet] = useState<{ open: boolean; focus: string | null }>({ open: false, focus: null });
-  const [toast, setToast] = useState<{ key: number; stepId: string } | null>(null);
+  // `ready`: this check finished the checklist (16 → All steps done)
+  const [toast, setToast] = useState<{ key: number; stepId: string; ready?: boolean } | null>(null);
   // A step just checked on Home stays a moment, so the fill is seen before the next step comes up
   const [settling, setSettling] = useState<string[]>([]);
 
@@ -34,8 +36,14 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
   const total = c.steps.length;
   const finished = c.doneCount === total;
   const next = c.steps.filter((s) => !s.done || settling.includes(s.step.id)).slice(0, SHOWN_STEPS);
+  // One step left, and this checklist hasn't been finished on this device yet: checking it gets the bigger burst
+  const finale = c.doneCount === total - 1 && !checklistCelebrated(c.checklist.id);
 
+  const view = c;
   function check(stepId: string, done: boolean, fromHome: boolean) {
+    // The last step done finishes the checklist; the reward comes once per checklist per device
+    const finishes = done && view.doneCount === total - 1 && view.steps.some((s) => s.step.id === stepId && !s.done);
+    const ready = finishes && claimChecklistReady(view.checklist.id);
     markStep(stepId, done);
     if (done && fromHome) {
       setSettling((ids) => [...ids, stepId]);
@@ -44,7 +52,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
     try {
       navigator.vibrate?.(10);
     } catch {}
-    setToast((t) => (done && fromHome ? { key: (t?.key ?? 0) + 1, stepId } : null));
+    setToast((t) => (ready || (done && fromHome) ? { key: (t?.key ?? 0) + 1, stepId, ready } : null));
   }
 
   return (
@@ -61,13 +69,14 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
       <p className="mt-1 px-6 text-slate-600 type-body">{checklistSubtitle(c)}</p>
       <SegmentedBar steps={c.steps.map((s) => s.done)} className="mx-6 mt-3" />
 
-      {!finished && (
+      {/* Once every step is done, the list goes, after the last check has settled so its burst is seen */}
+      {(!finished || settling.length > 0) && (
         <>
           <ul className="mx-4 mt-4 divide-y divide-border rounded-md border border-border bg-surface">
             {next.map(({ step, done }) => (
               <li key={step.id} className="flex min-h-14 items-center gap-2 px-4">
                 {/* The 36 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
-                <StepTile title={step.title} done={done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
+                <StepTile title={step.title} done={done} finale={finale && !done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
                 <button
                   type="button"
                   onClick={() => setSheet({ open: true, focus: step.id })}
@@ -95,13 +104,15 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
         onClose={() => setSheet((s) => ({ ...s, open: false }))}
         checklist={c}
         focusStep={sheet.focus}
+        finale={finale}
         onToggle={(id, done) => check(id, done, false)}
       />
 
       {toast && (
         <Toast
           key={toast.key}
-          message="Marked complete"
+          message={toast.ready ? `Your ${c.checklist.name} is ready!` : "Marked complete"}
+          overSheet={sheet.open}
           action={{
             label: "Undo",
             onClick: () => {

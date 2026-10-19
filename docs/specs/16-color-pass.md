@@ -86,7 +86,15 @@ The submit step is the only solid tile: it's the goal.
 
 **Unchecking** (or Undo): instant swap back, no burst.
 
-**All steps done**: after the last tile's burst finishes, open the task-complete screen (05) once per checklist per device:
+**All steps done** (the simple version, built now). Once per checklist per device, checking the last step:
+
+- **Burst:** 10 dashes reaching 40 px, instead of 6 reaching 28. Same dash size, timing and color.
+- **Home's Get ready:** shows its all-done state (15): every segment green, the title "Your UC application is ready", the subtitle "Submit it by Nov 30.", no list and no link. When the last check is made on Home, the list stays for the step's short settle (450 ms) so the burst is seen, then goes.
+- **Toast:** "Your UC application is ready!" (or "Your Cal State Apply is ready!") with "Undo", in place of "Marked complete". It shows above the steps sheet when the last step is checked there. Undo unchecks the step.
+- **Once:** the device remembers the checklist was finished (`stackd.checklistsReady`). Unchecking a step and checking it again gives the normal burst and "Marked complete".
+- **Reduced motion:** no burst. The colors and the toast still change.
+
+**Later:** the task-complete screen (05) replaces this simple version once the `husky-celebrate` art exists. It then opens after the last tile's burst, once per checklist per device:
 
 | Element | Text |
 |---|---|
@@ -144,6 +152,19 @@ For a link that leaves Stackd: "Open the UC application" and "Open Cal State App
 
 In the date sheet the row sits 12 under the source line; in the steps sheet, 24 under the last step with the source line 12 under it.
 
+## 7. Open row actions
+
+The Deadlines timeline's open next row (15) gets two kinds of action, replacing 15's two pale tinted pills:
+
+| Action | Spec |
+|---|---|
+| Mark done | Compact solid button: looks 36 tall (44 tap area), padding 0 14, `--r-full`, `--blue-600` fill, white `Check` bold 16 + 6 + label 14/18 600 white. Pressed `--blue-700`. Marks the date done, toast "Marked done" with "Undo" |
+| Remind me / Reminders on | Text button: no fill or border. `Bell` bold 16 (`BellRinging` fill when reminders are on) + 6 + label 14/18 600 `--blue-700`, 44 tap area. Opens the date's sheet at Reminders, as before |
+
+Order: Mark done first, then Remind me, 16 apart. They wrap to two lines only when they don't fit.
+
+**Date sheet:** Mark done becomes a full-width solid button (height 48, `--r-full`, `--blue-600`, white `Check` bold 20 and white label, pressed `--blue-700`). The sheet's Remind me section stays as it is.
+
 ## Not in this pass
 
 The husky reacting to the student's state (waving with no plan, alert at 14 days, celebrating when done) needs new art first: `husky-wave`, `husky-alert`, `husky-celebrate` at the current Home size. When the art exists, a small spec swaps it in by state.
@@ -158,6 +179,9 @@ The husky reacting to the student's state (waving with no plan, alert at 14 days
 | Component: step tile | As in 2 |
 | Component: feature panel | As in 5 (Deadlines as built; Essays in 17) |
 | Component: outside-link row | As in 6 |
+| Component: compact solid button | As in 7: 36 tall (44 tap area), padding 0 14, `--r-full`, `--blue-600`, white icon 16 + 6 + `label`, pressed `--blue-700`. Replaces 15's compact tinted button |
+| Component: text button | As in 7: no fill or border, icon 16 + 6 + `label` `--blue-700`, 44 tap area |
+| Motion: finishing burst | As in 3: 10 dashes reaching 40 |
 | Motion: step burst | As in 3 |
 
 ## Test
@@ -167,7 +191,8 @@ The husky reacting to the student's state (waving with no plan, alert at 14 days
 - Home with no plan: the stack stays pale with a border; the setup button is the only blue block.
 - Get ready rows show a map pin and a book on their tints; no separate circles.
 - Tap the map pin tile: it turns green with a white check, yellow dashes burst and fade, the first bar segment fills green, the toast shows. Undo: it swaps back with no burst.
-- Check all six (in the sheet): after the sixth, the celebration opens with "Your UC application is ready!". Close it, uncheck one and check it again: no second celebration.
+- Check all six: the sixth bursts with 10 dashes, the toast says "Your UC application is ready!" with Undo, and Get ready shows its all-done state (green bar, "Your UC application is ready", "Submit it by Nov 30.", no list). Uncheck one and check it again: the normal burst and "Marked complete", no second finish.
+- Deadlines: the open row shows a solid blue "Mark done" and then a text "Remind me", 16 apart. The date sheet's Mark done is a full-width solid blue button.
 - The steps sheet shows the segmented bar and "1 of 6 done, due by Nov 30" instead of the ring.
 - Deadlines: a solid blue panel with 28 bottom corners holds the white title, term line, "UC application is next", the due line and the white year bar with its yellow today marker. The back button is a white circle on it. The timeline starts 24 below it on the sky page.
 - Set the device clock to Nov 20: the Deadlines panel is coral, and the Nov 30 node on its bar is a filled white dot.

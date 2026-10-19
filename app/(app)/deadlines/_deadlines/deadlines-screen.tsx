@@ -132,7 +132,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
       // Reduced motion: no collapse, the row swaps out at once
       setTimeout(() => setSettling((ids) => ids.filter((x) => x !== id)), still ? 0 : SETTLE_MS);
     }
-    setToast(done && withToast ? { key: Date.now(), text: "Marked done", undo: id } : null);
+    setToast((t) => (done && withToast ? { key: (t?.key ?? 0) + 1, text: "Marked done", undo: id } : null));
   }
 
   function chooseTerm(term: string | null) {
@@ -156,10 +156,20 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const remindersOn = (id: string) => Boolean(ok && reminders.active && remindersFor(ok.marks[id], reminders.days).length > 0);
 
   // The next row's buttons (15 → The next row opens)
+  // Mark done first as the one solid action, then Remind me as a text button (16 → Open row actions)
   const rowActions = (d: Deadline) => (
     <>
+      <CompactButton
+        variant="solid"
+        icon={<CheckIcon weight="bold" size={16} aria-hidden />}
+        onClick={() => markDone(d.id, true, true)}
+        aria-label={`Mark ${d.title} done`}
+      >
+        Mark done
+      </CompactButton>
       {FEATURES.reminders && (
         <CompactButton
+          variant="text"
           icon={remindersOn(d.id) ? <BellRingingIcon weight="fill" size={16} aria-hidden /> : <BellIcon weight="bold" size={16} aria-hidden />}
           onClick={() => remind(d.id)}
           aria-label={`${remindersOn(d.id) ? "Reminders on" : "Remind me"}: ${d.title}`}
@@ -167,9 +177,6 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
           {remindersOn(d.id) ? "Reminders on" : "Remind me"}
         </CompactButton>
       )}
-      <CompactButton icon={<CheckIcon weight="bold" size={16} aria-hidden />} onClick={() => markDone(d.id, true, true)} aria-label={`Mark ${d.title} done`}>
-        Mark done
-      </CompactButton>
     </>
   );
   // Shown once, until reminders have been on or the card is closed. Hidden when iOS permission is denied, since
