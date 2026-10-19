@@ -5,6 +5,7 @@ import path from "node:path";
 import { asRole, createTestDatabase } from "../test-db.mjs";
 import { CONTACT_EMAIL } from "./config.mjs";
 import { validateDeadlinesFile } from "./deadlines.mjs";
+import { validateEssaysFile } from "./essays.mjs";
 import { fetchSource } from "./fetch.mjs";
 import { reopenRow } from "./reopen.mjs";
 import { readReportCsv } from "./report.mjs";
@@ -37,6 +38,13 @@ const testDatabase = {
   async deadlineRowsFor() {
     const q = async (t) => (await asRole(db, "service_role", null, `select * from ${t}`)).rows;
     return { deadlines: await q("deadlines"), checklists: await q("checklists"), checklist_steps: await q("checklist_steps") };
+  },
+  async importEssays(payload, sourceFile, dryRun) {
+    const r = await asRole(db, "service_role", null, "select import_essays_batch($1::jsonb, $2, $3) as r", [JSON.stringify(payload), sourceFile, dryRun]);
+    return r.rows[0].r;
+  },
+  async essayRowsFor() {
+    return { piq_prompts: (await asRole(db, "service_role", null, "select * from piq_prompts")).rows };
   },
   async logFailure(sourceFile, dryRun, error) {
     await asRole(db, "service_role", null, "insert into import_runs (source_file, dry_run, status, error) values ($1, $2, 'failed', $3)", [sourceFile, dryRun, error]);
@@ -258,7 +266,7 @@ check("reopen: the guard is back on for every other verified row", await refuses
 reopened = await reopenRow({ id: movedId, by: "tester", reason: "again", apply: true, db: testDatabase });
 check("reopen: a row that isn't verified is refused", !reopened.ok && /isn't verified/.test(reopened.problems[0]), JSON.stringify(reopened));
 reopened = await reopenRow({ id: "00000000-0000-4000-8000-000000000000", by: "tester", reason: "no such row", apply: true, db: testDatabase });
-check("reopen: an unknown id is refused", !reopened.ok && /no deadline, checklist or checklist step has id/.test(reopened.problems[0]), JSON.stringify(reopened));
+check("reopen: an unknown id is refused", !reopened.ok && /no deadline, checklist, checklist step or personal insight question has id/.test(reopened.problems[0]), JSON.stringify(reopened));
 
 out = await runImport({ file: writeDates("moved", movedDate), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("reopen, then import: the corrected file applies", out.ok && out.counts.deadlines.updated === 1 && out.counts.checklist_steps.inserted === 1, JSON.stringify(out));
@@ -325,7 +333,117 @@ try {
   check("a signed-in student can't run a deadlines import", /permission denied/.test(e.message), e.message);
 }
 
+// 14. Personal insight questions (17), with made-up questions: the same pipeline, the same rules
+const RAW_ESSAYS = "data/raw/essays/.test-import";
+fs.mkdirSync(RAW_ESSAYS, { recursive: true });
+const piqProv = { cycle: "fall-2027", source_name: "Test source", source_url: "https://example.org/piq", confirm_on: "Test source, questions page", retrieved_at: "2026-10-19" };
+const questions = () => ({
+  written_by: "test",
+  piq_prompts: [
+    { key: "test-required", short_name: "Required one", summary: "A made-up required question.", required: true, sort: 1, ...piqProv },
+    { key: "test-optional", short_name: "Optional one", summary: "A made-up optional question.", required: false, sort: 2, ...piqProv },
+  ],
+});
+function writeQuestions(name, data) {
+  const file = path.join(RAW_ESSAYS, `${name}.json`);
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  return file;
+}
+const asStudent = (sql) => asRole(db, "authenticated", "00000000-0000-0000-0000-00000000000a", sql);
+
+out = await runImport({ file: writeQuestions("piq", questions()), dryRun: true, db: testDatabase, reportDir: REVIEW });
+check("essays: a dry run reports what it would insert", out.ok && out.status === "dry_run" && out.counts.piq_prompts.inserted === 2, JSON.stringify(out));
+check("essays: a dry run keeps nothing", (await count("piq_prompts")) === 0);
+out = await runImport({ file: writeQuestions("piq", questions()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("essays: an import applies", out.ok && out.status === "applied", JSON.stringify(out));
+check("essays: imported questions start unverified", (await count("piq_prompts", "verification_status = 'unverified'")) === 2);
+check("essays: students can't see them yet", (await asStudent("select id from piq_prompts")).rows.length === 0);
+const piqReport = `${out.report}.csv`;
+const piqRows = readReportCsv(piqReport);
+check("essays: the review report lists every question", piqRows.length === 2, `${piqRows.length} rows`);
+check("essays: each report row says where to confirm it", piqRows.every((r) => r.confirm_on === "Test source, questions page" && r.cycle === "fall-2027"));
+check(
+  "essays: the report shows the summary to check",
+  piqRows.some((r) => r.record === "test-required (required): Required one. A made-up required question."),
+  JSON.stringify(piqRows.map((r) => r.record)),
+);
+out = await runImport({ file: writeQuestions("piq", questions()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("essays: re-importing the same file changes nothing", out.ok && out.counts.piq_prompts.unchanged === 2, JSON.stringify(out.counts));
+const piqCsv = fs.readFileSync(piqReport, "utf8").split("\n");
+fs.writeFileSync(piqReport, [piqCsv[0], ...piqCsv.slice(1).filter(Boolean).map((l) => l.replace(/,,$/, ",tester,2026-10-19"))].join("\n") + "\n");
+v = await verifyFromCsv({ file: piqReport, db: testDatabase });
+check("essays: checked questions become verified", v.ok && v.verified === 2, JSON.stringify(v));
+check("essays: signed-in students can read them now", (await asStudent("select id from piq_prompts")).rows.length === 2);
+try {
+  await asRole(db, "anon", null, "select id from piq_prompts");
+  check("essays: signed-out visitors still can't read them", false, "it was readable");
+} catch (e) {
+  check("essays: signed-out visitors still can't read them", /permission denied/.test(e.message), e.message);
+}
+const reworded = questions();
+reworded.piq_prompts[1].summary = "A reworded summary.";
+out = await runImport({ file: writeQuestions("piq-reworded", reworded), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("essays: rewording a verified question stops the import", !out.ok && out.stage === "upsert" && /is verified and the file would change it/.test(out.problems[0]), JSON.stringify(out));
+const optionalId = (await db.query("select id from piq_prompts where key = 'test-optional'")).rows[0].id;
+reopened = await reopenRow({ id: optionalId, by: "tester", reason: "summary reworded", apply: true, db: testDatabase });
+check(
+  "essays: a verified question can be reopened",
+  reopened.ok && reopened.status === "reopened" && reopened.table === "piq_prompts" && reopened.record === "fall-2027 test-optional: Optional one",
+  JSON.stringify(reopened),
+);
+out = await runImport({ file: writeQuestions("piq-reworded", reworded), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check(
+  "essays: then the reworded file applies, unverified",
+  out.ok && out.counts.piq_prompts.updated === 1 && (await count("piq_prompts", "verification_status = 'unverified'")) === 1,
+  JSON.stringify(out),
+);
+
+const beforeEssays = await count("import_runs");
+const badQuestions = (name, mutate, pattern) => {
+  const data = questions();
+  mutate(data);
+  return runImport({ file: writeQuestions(name, data), dryRun: false, db: testDatabase, reportDir: REVIEW }).then((o) =>
+    check(`essays refused: ${name}`, !o.ok && o.stage === "validate" && o.problems.some((p) => pattern.test(p)), JSON.stringify(o.problems)),
+  );
+};
+await badQuestions("an empty retrieved_at", (d) => (d.piq_prompts[0].retrieved_at = ""), /retrieved_at is empty: check this row on the confirm_on page/);
+await badQuestions("a TODO summary", (d) => (d.piq_prompts[0].summary = "TODO"), /summary still has a placeholder/);
+await badQuestions("two required questions", (d) => (d.piq_prompts[1].required = true), /exactly 1 required question \(has 2\)/);
+await badQuestions("no required question", (d) => (d.piq_prompts[0].required = false), /exactly 1 required question \(has 0\)/);
+await badQuestions("a key twice", (d) => (d.piq_prompts[1].key = "test-required"), /key appears twice/);
+await badQuestions("a sort twice", (d) => (d.piq_prompts[1].sort = 1), /sort appears twice/);
+await badQuestions("setting verified_at", (d) => (d.piq_prompts[0].verified_at = "2026-10-19"), /can't be set by an import/);
+await badQuestions("an http source", (d) => (d.piq_prompts[0].source_url = "http://example.org"), /https/);
+await badQuestions("a missing confirm_on", (d) => delete d.piq_prompts[0].confirm_on, /confirm_on is missing/);
+await badQuestions("a cycle like 2026-27", (d) => (d.piq_prompts[0].cycle = "2026-27"), /cycle must look like fall-2027/);
+await badQuestions("required as text", (d) => (d.piq_prompts[0].required = "yes"), /required must be true or false/);
+await badQuestions("an unknown field", (d) => (d.piq_prompts[0].prompt_text = "UC's words"), /isn't a field this table takes/);
+check("essays: validation failures never reach the database", (await count("import_runs")) === beforeEssays);
+
+// 15. The real fall 2027 questions file, checked on 2026-10-19
+const realQ = JSON.parse(fs.readFileSync("data/raw/essays/piq-fall-2027.json", "utf8"));
+const realQCheck = validateEssaysFile(realQ);
+check("piq-fall-2027.json passes as checked", realQCheck.problems.length === 0, JSON.stringify(realQCheck.problems));
+check(
+  "piq-fall-2027.json has the 8 transfer questions, one required",
+  realQ.piq_prompts.length === 8 && realQ.piq_prompts.filter((q) => q.required).map((q) => q.key).join() === "major",
+);
+check("piq-fall-2027.json rows have no placeholder left", !/TODO|TBD|PASTE/.test(JSON.stringify(realQ.piq_prompts)));
+check(
+  "piq-fall-2027.json points every row at UC's transfer questions page",
+  realQ.piq_prompts.every((q) => q.source_url === "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html"),
+);
+for (const row of realQ.piq_prompts) row.retrieved_at = "";
+check("piq-fall-2027.json is refused while any row is unchecked", validateEssaysFile(realQ).problems.filter((p) => /retrieved_at is empty/.test(p)).length === 8);
+try {
+  await asRole(db, "authenticated", "00000000-0000-0000-0000-00000000000a", "select import_essays_batch('{}'::jsonb, 'x', false)");
+  check("a signed-in student can't run an essays import", false);
+} catch (e) {
+  check("a signed-in student can't run an essays import", /permission denied/.test(e.message), e.message);
+}
+
 fs.rmSync(RAW, { recursive: true, force: true });
+fs.rmSync(RAW_ESSAYS, { recursive: true, force: true });
 fs.rmSync(RAW_DATES, { recursive: true, force: true });
 fs.rmSync(REVIEW, { recursive: true, force: true });
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");

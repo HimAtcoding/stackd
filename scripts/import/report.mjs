@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pacificWall } from "./deadlines.mjs";
 
-// cycle and confirm_on are for deadlines files; a planning report leaves them blank
+// cycle and confirm_on are for deadlines and essays files; a planning report leaves them blank
 export const REPORT_COLUMNS = [
   "table", "id", "record", "academic_year", "cycle", "source_name", "source_url", "confirm_on", "retrieved_at", "verification_status", "updated_at",
   "checked_by", "checked_at",
@@ -66,6 +66,19 @@ export function deadlineReportRows(payload, confirmOn, stored) {
   payload.checklist_steps.forEach((r, i) => {
     const s = stored.checklist_steps.find((st) => listSlug.get(st.checklist_id) === r.checklist && st.position === r.position);
     if (s) rows.push({ table: "checklist_steps", ...s, cycle: stored.checklists.find((c) => c.id === s.checklist_id)?.cycle, record: `${r.checklist} step ${s.position}: ${s.title}. ${s.summary}`, confirm_on: confirmOn.checklist_steps[i] });
+  });
+  return finish(rows);
+}
+
+// The essays file's questions as the database now holds them. The record column has the short name and summary,
+// which are what the reviewer checks against UC's page.
+export function essayReportRows(payload, confirmOn, stored) {
+  const rows = [];
+  payload.piq_prompts.forEach((r, i) => {
+    const s = stored.piq_prompts.find((q) => q.key === r.key && q.cycle === r.cycle);
+    if (!s) return;
+    const required = s.required ? " (required)" : "";
+    rows.push({ table: "piq_prompts", ...s, record: `${s.key}${required}: ${s.short_name}. ${s.summary}`, confirm_on: confirmOn.piq_prompts[i] });
   });
   return finish(rows);
 }
