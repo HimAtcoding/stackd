@@ -78,3 +78,13 @@ export function StepTile({ title, done, onToggle, size = 36, finale, className }
     </button>
   );
 }
+
+// The same tile at 40 without the control, for the step sheet's header (18 → Step sheets). Green with a check when done.
+export function StepIconTile({ title, done, className }: { title: string; done: boolean; className?: string }) {
+  const { icon: Icon, tile, color } = stepLook(title);
+  return (
+    <span aria-hidden className={cn("flex size-10 shrink-0 items-center justify-center rounded-sm", done ? "bg-green-600 text-white" : `${tile} ${color}`, className)}>
+      {done ? <CheckIcon weight="bold" size={20} /> : <Icon weight="duotone" size={22} />}
+    </span>
+  );
+}

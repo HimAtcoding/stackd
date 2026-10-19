@@ -30,6 +30,7 @@ const PER_ACCOUNT_KEYS = [
   "stackd.steps",
   "stackd.term",
   "stackd.deadlinesQueue",
+  "stackd.stepsUnchecked",
   // Reminder switch, default days and the card's dismissal (lib/reminders)
   "stackd.reminders",
 ];
