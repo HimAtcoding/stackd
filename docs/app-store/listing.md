@@ -39,7 +39,7 @@ Plan your California transfer
 **Promotional text** (optional, 170 max):
 
 ```
-Plan your transfer from a California community college: pick your college, schools, and major, and open the official agreement for your path.
+See your next transfer deadline, check off your UC or Cal State application, and get a reminder before each date.
 ```
 
 **Keywords** (99 of 100 characters; no brand names):
@@ -52,6 +52,9 @@ transfer,college,community college,university,California,education,planning,majo
 
 ```
 Stackd helps California community college students organize their transfer plan.
+
+Never miss a transfer deadline
+Home shows your next deadline with a countdown, and a checklist for your UC or Cal State application. The Deadlines screen lists every date for your transfer year, from the UC application to the FAFSA, each linked to its official source. Turn on reminders to get a heads-up before each one.
 
 Pick your community college, the universities you're aiming for, and your major. Stackd saves your plan to your account, so it's there on any device you sign in on, and opens the official transfer agreement for your path on ASSIST, the official source for California transfer agreements.
 
