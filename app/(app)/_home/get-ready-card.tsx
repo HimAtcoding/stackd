@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AfterWait } from "@/components/deadlines/after-wait";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
-import { StatusControl } from "@/components/ui/status-control";
+import { StepTile } from "@/components/ui/step-tile";
 import { Toast } from "@/components/ui/toast";
 import { markStep, type DeadlinesState } from "@/lib/data/deadlines";
 import { checklistSubtitle, checklistTitle } from "@/lib/deadlines";
@@ -24,7 +24,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
   if (state.status === "loading") {
     return (
       <AfterWait>
-        <div aria-hidden className="mx-4 mt-6 h-[213px] rounded-md bg-stack-2" />
+        <div aria-hidden className="mx-4 mt-6 h-[221px] rounded-md bg-stack-2" />
       </AfterWait>
     );
   }
@@ -65,16 +65,9 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
         <>
           <ul className="mx-4 mt-4 divide-y divide-border rounded-md border border-border bg-surface">
             {next.map(({ step, done }) => (
-              <li key={step.id} className="flex min-h-13 items-center gap-1.5 px-4">
-                {/* 24 ring in a 44 target, so the text starts 16 from the ring */}
-                <StatusControl
-                  size={24}
-                  done={done}
-                  restStatus="not_started"
-                  label={`Mark ${step.title} complete`}
-                  onToggle={() => check(step.id, !done, true)}
-                  className="-ml-2.5 shrink-0"
-                />
+              <li key={step.id} className="flex min-h-14 items-center gap-2 px-4">
+                {/* The 36 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
+                <StepTile title={step.title} done={done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
                 <button
                   type="button"
                   onClick={() => setSheet({ open: true, focus: step.id })}

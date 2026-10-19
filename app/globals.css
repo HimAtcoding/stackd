@@ -39,6 +39,13 @@
   --amber-500: #eaa005;
   --yellow-400: #fdc940;
   --confetti-sky: #4fa8f7;
+  /* Section colors (16): Essays, Deadlines, Explore, and the Events band */
+  --indigo-600: #4f55e0;
+  --amber-700: #a86a00;
+  --mint-600: #12946a;
+  --yellow-50: #fff6d6;
+  /* The Up next hero pressed at 14 days or less (16) */
+  --coral-pressed: #9c2d16;
   /* The second and third layers of the deadline stack (14) */
   --stack-2: #f1f7fd;
   --stack-3: #e6f0fa;
@@ -62,6 +69,9 @@
   --shadow-cta: 0 8px 20px rgba(3, 100, 250, 0.28);
   /* Tier 1 only: the one hero on Home or Deadlines (15) */
   --shadow-lift: 0 2px 4px rgba(5, 16, 66, 0.05), 0 12px 28px rgba(5, 16, 66, 0.09);
+  /* The solid Up next hero, in its own color (16) */
+  --shadow-hero-blue: 0 10px 24px rgba(3, 100, 250, 0.3);
+  --shadow-hero-coral: 0 10px 24px rgba(184, 54, 27, 0.3);
 
   --dur-fast: 120ms;
   --dur-base: 200ms;
@@ -116,6 +126,11 @@
   --color-amber-50: var(--amber-50);
   --color-amber-500: var(--amber-500);
   --color-yellow-400: var(--yellow-400);
+  --color-indigo-600: var(--indigo-600);
+  --color-amber-700: var(--amber-700);
+  --color-mint-600: var(--mint-600);
+  --color-yellow-50: var(--yellow-50);
+  --color-coral-pressed: var(--coral-pressed);
   --color-confetti-sky: var(--confetti-sky);
   --color-stack-2: var(--stack-2);
   --color-stack-3: var(--stack-3);
@@ -143,6 +158,12 @@
 }
 @utility shadow-lift {
   box-shadow: var(--shadow-lift);
+}
+@utility shadow-hero-blue {
+  box-shadow: var(--shadow-hero-blue);
+}
+@utility shadow-hero-coral {
+  box-shadow: var(--shadow-hero-coral);
 }
 
 /* Type scale from 00-foundations */

@@ -176,16 +176,31 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     FEATURES.reminders && reminders.supported && !reminders.everOn && !reminders.dismissed && reminders.permission !== "denied";
 
   return (
-    <div className="min-h-dvh bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-sky-50">
       {ok?.view.demo && <DemoStrip />}
-      <main
-        className="mx-auto max-w-[480px]"
-        style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)", paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
-      >
-        <div className="px-4">
-          <BackButton fallback="/" slideBack />
-        </div>
-        <h1 className="mt-6 px-6 text-navy-900 type-title-1">Deadlines</h1>
+      <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
+        {/* The Deadlines band (16 → Section colors): amber from the physical top to 24 below the last header line,
+            the screen's full width, straight edge. The page below it is sky. */}
+        <header className="relative pb-6" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
+          <span aria-hidden className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 bg-amber-50" />
+          <div className="relative px-4">
+            <BackButton fallback="/" slideBack />
+          </div>
+          <h1 className="relative mt-6 px-6 text-navy-900 type-title-1">Deadlines</h1>
+          {ok?.term.asked && (
+            <p className="relative mt-1 flex items-baseline gap-2 px-6 text-slate-600 type-body">
+              {cycle} transfer
+              <button
+                type="button"
+                onClick={() => setTermSheet(true)}
+                aria-label={`Change transfer term, now ${cycle}`}
+                className="-my-[13px] py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
+              >
+                Change
+              </button>
+            </p>
+          )}
+        </header>
 
         {state.status === "loading" && (
           <div className="pt-12">
@@ -214,21 +229,10 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
 
         {ok && (
           <MotionConfig reducedMotion="user">
-            {/* The term question takes the term line's place until it's answered, then folds into it */}
+            {/* The term question sits under the band until it's answered, then folds away and the term line shows in
+                the band */}
             <AnimatePresence initial={false}>
-              {ok.term.asked ? (
-                <p key="line" className="mt-1 flex items-baseline gap-2 px-6 text-slate-600 type-body">
-                  {cycle} transfer
-                  <button
-                    type="button"
-                    onClick={() => setTermSheet(true)}
-                    aria-label={`Change transfer term, now ${cycle}`}
-                    className="-my-[13px] py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
-                  >
-                    Change
-                  </button>
-                </p>
-              ) : (
+              {!ok.term.asked && (
                 <motion.div key="question" exit={{ height: 0, opacity: 0 }} transition={COLLAPSE} className="overflow-hidden">
                   <div className="mx-4 mt-6">
                     <TermQuestion onChoose={chooseTerm} />
