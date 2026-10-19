@@ -23,6 +23,8 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `14-deadlines.md` | v1.1: Home's Up next stack, the Deadlines screen, date sheets, reminders (local notifications), custom dates, and the deadlines tables |
 | `13-v1-launch.md` | What the first App Store version shows and hides, the review account, and release-build checks |
 | `15-home-deadlines-rev2.md` | v1.1 design rev 2 of Home and the Deadlines screen: container tiers, the route, Get ready's segmented bar, the cycle bar, one timeline spine and the open next row. Changes the look of `02` and `14`; custom dates move to v1.2 |
+| `16-color-pass.md` | Color pass: the solid Up next hero, step icon tiles that are the check control, the step burst and checklist celebration, the steps sheet's bar, and section colors with the Deadlines header band. Adds `--indigo-600`, `--amber-700`, `--mint-600`, `--yellow-50` |
+| `17-essays.md` | v1.2 Essays: the four UC personal insight answers, drafts and word counts, with AI feedback behind its own flag. Replaces `04` for real accounts |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
@@ -70,6 +72,8 @@ Each step depends on the one before it.
 | 15 | iOS app with Capacitor: project, icon, launch screen, signing, TestFlight (done in PR #2; build 2 adds step 14) | `13`, `docs/13-distribution-and-app-store.md` | The app runs on a real iPhone from Xcode and a build is in TestFlight |
 | 16 | v1.1 Deadlines and reminders: tables and first dates (Abyan), Up next and the Deadlines screen (Ryan), then reminders and custom dates | `14` | The test list in `14` passes, reminders tested on a real iPhone |
 | 17 | v1.1 design rev 2 of Home and Deadlines: container tiers, route, segmented bar, cycle bar, one spine, open next row | `15`, `02`, `14` | The test list in `15` passes at 393 and 320 wide, with only the v1.1 deadline flags on |
+| 18 | Color pass: solid Up next hero, step icon tiles, step burst and celebration, steps sheet bar, section colors and the Deadlines band | `16`, `15`, `14` | The test list in `16` passes at 393 and 320 wide |
+| 19 | Essays: personal insight answers, drafts, AI feedback | `17` | The test list in `17` passes |
 
 ## Prompt template for Claude Code
 
@@ -107,7 +111,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `16-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `18-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 
