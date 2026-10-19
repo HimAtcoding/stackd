@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-18 (Home and Deadlines design rev 2, spec 15, on branch `home-deadlines-rev2`; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-18 (v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,24 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## v1.1 release prep (2026-10-18)
+
+On branch `v1-1-release`.
+
+- **Flags:** `upcoming`, `getReady`, `deadlines` and `reminders` are on in `lib/features.ts`, so the release build and `npm run dev` both show them. `notifications`, `essays`, `explore`, `events`, `mentors`, `trackApplication`, `universityTabs`, `savedSchools`, `requirementDetail` and `devRoutes` stay off. `customDeadlines` doesn't exist yet.
+- **Version:** 1.1.0 in `package.json`, `package-lock.json` and `MARKETING_VERSION`. Build number 2 in `CURRENT_PROJECT_VERSION`, Debug and Release (`ios/App/App.xcodeproj/project.pbxproj`). Build 2 of 1.0.0 was never committed, so the repo went from 1 to 2. Settings' footer reads "Stackd 1.1.0".
+- **`test:reminders`:** the plugin check assumed reminders were off in the release. It now runs once as the release (the plugin loads on sign-out) and once with the reminders flag forced off (it doesn't).
+- **Checked:** `npm run build` passes `check-release` and `check-service-key`, with no `/dev/` page in `out/`. Every suite passes (`test:db` 102, `test:import` 81, `test:reminders` 65, `test:deadlines` 38, `test:oauth` 31), as do lint and `tsc`. No exported page links to an unbuilt route.
+  - A crawl of the served `out/` with a stand-in session collected every link on Home (with and without a plan), the steps sheet, Deadlines, the date sheet, Settings and University. All of them go to built screens or official sites.
+
+**Before submitting 1.1 to App Review** (the list is in `docs/specs/13-v1-launch.md → 1.1 submission`):
+1. ~~**Privacy text.**~~ Done 2026-10-18. `/privacy/` (updated October 18, 2026, `PRIVACY_UPDATED`) now names the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline. It says reminders are local notifications the iPhone schedules itself, and that nothing is used for tracking or ads. Terms has its own date (`TERMS_UPDATED`, still October 13). The hosted copy on joinstackd-chi.vercel.app is this repo's `out/`, so it changes when `out/` is redeployed (see "Redeploying" under iOS app and App Store prep).
+2. **App Privacy answers** must match the updated page: user content linked to the account, used for app functionality only, not used for tracking. Local notifications need no Info.plist entry and no privacy answer.
+3. ~~**Review note.**~~ Spec 13 has the 1.1 note. `docs/app-store/listing.md` still has 1.0's longer reviewer notes, privacy table and screenshot list.
+4. **Screenshots:** retake the 6.9-inch set from the 1.1 build, showing Home with Up next and Get ready, the Deadlines screen and a date sheet. The 1.0 set predates v1 launch (step 14) and v1.1.
+5. ~~**What's New** text.~~ In spec 13.
+6. **One version in review at a time:** if 1.0 is still waiting for review, it has to be approved, released or withdrawn before 1.1 can be submitted.
 
 ## Home and Deadlines, design rev 2 (step 17, 2026-10-18)
 

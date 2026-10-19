@@ -6,5 +6,6 @@ export const DEVELOPER_CREDIT = "Developed by Ryan Saleh, Shikhar Sisodia, Abyan
 // The public support address, approved by the founders on 2026-10-12
 export const SUPPORT_EMAIL = "joinstackd@gmail.com";
 
-// When Privacy and Terms last changed. Change it with their text.
-export const POLICIES_UPDATED = "October 13, 2026";
+// When Privacy and Terms last changed. Change each with its own text.
+export const PRIVACY_UPDATED = "October 18, 2026";
+export const TERMS_UPDATED = "October 13, 2026";

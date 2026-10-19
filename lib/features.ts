@@ -8,11 +8,12 @@ const V1 = {
   events: false,
   explore: false,
   notifications: false,
-  // Deadlines (14): Home's Up next stack, Home's Get ready card, the Deadlines screen, and reminders in the iPhone app
-  upcoming: false,
-  getReady: false,
-  deadlines: false,
-  reminders: false,
+  // Deadlines (14, 15): Home's Up next stack, Home's Get ready, the Deadlines screen, and reminders in the iPhone app.
+  // On from v1.1.
+  upcoming: true,
+  getReady: true,
+  deadlines: true,
+  reminders: true,
   trackApplication: false,
   universityTabs: false,
   savedSchools: false,
