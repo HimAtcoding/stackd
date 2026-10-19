@@ -8,15 +8,20 @@ type CountdownBlockProps = {
   scope: Scope;
   // No plan: the setup card is Home's hero, so the number steps down to title-1 (15 → Up next)
   quiet?: boolean;
+  // On the solid blue or coral hero (16): every word white, at full opacity
+  onFill?: boolean;
 };
 
 // The top layer's content (14 → The stack): the countdown, the date and time, and the window bar.
 // Decorative; the stack names it.
-export function CountdownBlock({ deadline: d, now, scope, quiet }: CountdownBlockProps) {
+export function CountdownBlock({ deadline: d, now, scope, quiet, onFill }: CountdownBlockProps) {
   const soon = d.daysLeft <= SOON_DAYS;
   const time = timeLine(d);
   const forLine = cardForLine(d, scope);
   const progress = windowProgress(d, now);
+  const main = onFill ? "text-white" : "text-navy-900";
+  const quietText = onFill ? "text-white" : "text-slate-600";
+  const dueText = onFill ? "text-white" : "text-slate-700";
 
   return (
     <div aria-hidden>
@@ -24,17 +29,19 @@ export function CountdownBlock({ deadline: d, now, scope, quiet }: CountdownBloc
         {/* 72 wide; a three-digit count widens it rather than overlapping the text */}
         <div className="min-w-18 shrink-0">
           {d.daysLeft <= 0 ? (
-            <p className="text-coral-700 type-title-1">Today</p>
+            <p className={cn("type-title-1", onFill ? "text-white" : "text-coral-700")}>Today</p>
           ) : (
-            <p className={cn(quiet ? "type-title-1" : "type-countdown", soon ? "text-coral-700" : "text-navy-900")}>{d.daysLeft}</p>
+            <p className={cn(quiet ? "type-title-1" : "type-countdown", onFill ? "text-white" : soon ? "text-coral-700" : "text-navy-900")}>
+              {d.daysLeft}
+            </p>
           )}
-          <p className="mt-0.5 text-slate-600 type-caption">{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
+          <p className={cn("mt-0.5 type-caption", quietText)}>{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
         </div>
         <div className="ml-4 min-w-0 flex-1">
-          <p className="truncate text-navy-900 type-headline">{d.title}</p>
-          <p className="mt-1 text-slate-700 type-body">{dueOnCard(d)}</p>
-          {time && <p className="text-slate-700 type-body">{time}</p>}
-          {forLine && <p className="mt-0.5 text-slate-600 type-caption">{forLine}</p>}
+          <p className={cn("truncate type-headline", main)}>{d.title}</p>
+          <p className={cn("mt-1 type-body", dueText)}>{dueOnCard(d)}</p>
+          {time && <p className={cn("type-body", dueText)}>{time}</p>}
+          {forLine && <p className={cn("mt-0.5 type-caption", quietText)}>{forLine}</p>}
         </div>
       </div>
       {d.opens_at && (
@@ -42,6 +49,7 @@ export function CountdownBlock({ deadline: d, now, scope, quiet }: CountdownBloc
           className="mt-4"
           progress={progress}
           soon={soon}
+          onFill={onFill}
           start={`${d.notOpenYet ? "Opens" : "Opened"} ${shortDate(d.opens_at)}`}
           end={shortDate(d.due_at)}
         />

@@ -16,6 +16,7 @@ import {
   type Deadline,
   type DeadlineRecord,
 } from "../lib/deadlines";
+import { stepLook, stepSlug } from "../lib/step-icons";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -184,6 +185,25 @@ check("cycle bar: two dates on Nov 30 share one node, so 4 nodes", bar?.nodes.le
 check("cycle bar: open windows are blue rings, not-yet-open dates slate", JSON.stringify(bar?.nodes.map((n) => n.kind)) === JSON.stringify(["open", "later", "open", "later"]), bar?.nodes);
 check("cycle bar: Jun 1 sits at the end, today about 7% in", bar?.nodes.at(-1)?.at === 1 && Math.abs((bar?.today ?? 0) - 0.07) < 0.01, bar?.today);
 check("cycle bar: nothing upcoming, no bar", cycleBar([], oct18) === null);
+
+// Step icons (16 → Step icons), keyed by a slug made from the step's title
+// Phosphor names its components "MapPinLineIcon" and so on
+const iconName = (title: string) => ((stepLook(title).icon as { displayName?: string }).displayName ?? "").replace(/Icon$/, "");
+check("step slug", stepSlug("Pay the fee or ask for a waiver") === "pay-the-fee-or-ask-for-a-waiver", stepSlug("Pay the fee or ask for a waiver"));
+const fall2027Steps: [string, string, string][] = [
+  ["Pick your campuses and majors", "MapPinLine", "bg-tint-sky"],
+  ["Enter your courses and grades", "BookOpenText", "bg-mint-100"],
+  ["Write your personal insight answers", "PencilLine", "bg-tint-indigo"],
+  ["Add activities and awards", "Trophy", "bg-amber-50"],
+  ["Check for extra campus steps", "ListChecks", "bg-tint-indigo"],
+  ["Pay the fee or ask for a waiver", "Receipt", "bg-tint-sky"],
+  ["Submit by Nov 30", "PaperPlaneTilt", "bg-blue-600"],
+];
+for (const [title, icon, tile] of fall2027Steps) {
+  check(`step icon: ${title} → ${icon}`, iconName(title) === icon && stepLook(title).tile === tile, `${iconName(title)} ${stepLook(title).tile}`);
+}
+check("step icon: the submit step keeps its tile when the date changes", iconName("Submit by Dec 1") === "PaperPlaneTilt");
+check("step icon: an unknown step gets CheckSquare on sky", iconName("Send your transcripts") === "CheckSquare" && stepLook("Send your transcripts").tile === "bg-tint-sky");
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

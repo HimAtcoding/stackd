@@ -84,7 +84,7 @@ export function Timeline({ rows, scope, onOpen, actions }: TimelineProps) {
         initial={closing || d.id === opened.first ? false : { opacity: 0 }}
         animate={{ opacity: closing ? 0 : 1 }}
         transition={{ duration: still ? 0 : closing ? 0.12 : 0.16 }}
-        className="flex flex-wrap gap-2"
+        className="flex flex-wrap items-center gap-4"
       >
         {actions(d)}
       </motion.span>
@@ -96,10 +96,10 @@ export function Timeline({ rows, scope, onOpen, actions }: TimelineProps) {
       <AnimatePresence initial={false}>
         {months.map((m, i) => (
           <motion.section key={m.key} aria-labelledby={`month-${m.key}`} exit={{ opacity: 0, height: 0 }} transition={collapse}>
-            {/* The space sits above the header, so each header belongs to the row under it: 24 above (16 for the first), 4 below */}
+            {/* The space sits above the header, so each header belongs to the row under it: 24 above (the first one is the space below the Deadlines panel), 4 below */}
             <h2
               id={`month-${m.key}`}
-              className={cn("sticky z-10 bg-sky-50 pb-1 pl-[92px] pr-6 text-slate-600 type-label", i > 0 ? "pt-6" : "pt-4")}
+              className="sticky z-10 bg-sky-50 pb-1 pt-6 pl-[92px] pr-6 text-slate-600 type-label"
               style={{ top: "calc(var(--safe-top) + var(--strip-h))" }}
             >
               {/* The spine carries on behind the header between two months */}

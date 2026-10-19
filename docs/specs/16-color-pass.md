@@ -18,12 +18,12 @@ This pass adds color that means something: the one thing that matters on Home be
 | `--coral-700` | #B8361B | Hero fill at 14 days or less (existing) |
 | `--yellow-400` | #FDC940 | Today marker on the hero, step burst (existing) |
 | `--indigo-600` | #4F55E0 (new) | Essays section color, writing step icon |
-| `--amber-700` | #A86A00 (new) | Deadlines section color, activities icon |
+| `--amber-700` | #A86A00 (new) | Activities step icon |
 | `--mint-600` | #12946A (new) | Explore section color later; courses icon |
 
-Contrast (checked): white on `--blue-600` 4.99:1, white on `--coral-700` 5.86:1, so 13 px captions pass on both. `--slate-600` on `--amber-50` 4.64:1. Icon colors on their tints: indigo 4.86, amber 3.95, mint 3.25, blue 4.43 (icons are decorative; the step text carries the meaning). The yellow today marker on blue is 3.23:1, above the 3:1 for graphics.
+Contrast (checked): white on `--blue-600` 4.99:1, white on `--coral-700` 5.86:1, so 13 px captions pass on both. Icon colors on their tints: indigo 4.86, amber 3.95, mint 3.25, blue 4.43 (icons are decorative; the step text carries the meaning). The yellow today marker on blue is 3.23:1, above the 3:1 for graphics.
 
-**Layout.** Unchanged from 15. Only fills, icons and one header band change.
+**Layout.** Unchanged from 15, except the Deadlines screen: its header, next line and year bar move into one solid panel (5). Elsewhere only fills, icons and the outside-link rows change.
 
 **Hierarchy.** Home: the countdown, now a solid blue block. It was already the hero; now it looks like one.
 
@@ -53,7 +53,7 @@ The stack's top layer (14 → The stack, 15 → Up next):
 - "days left" and the window labels stay regular weight. They're white at full opacity (not faded), so they pass contrast.
 - Peek layers don't change. Against the blue top they now read clearly as "more behind this".
 - Focus ring on the hero: 2 px `--white` outline with a 2 px `--blue-600` ring outside it, so it shows on blue.
-- The Deadlines screen has no hero (15), so nothing there turns blue.
+- The Deadlines screen opens with a panel in the same colors (5).
 
 ## 2. Step icons
 
@@ -86,7 +86,15 @@ The submit step is the only solid tile: it's the goal.
 
 **Unchecking** (or Undo): instant swap back, no burst.
 
-**All steps done**: after the last tile's burst finishes, open the task-complete screen (05) once per checklist per device:
+**All steps done** (the simple version, built now). Once per checklist per device, checking the last step:
+
+- **Burst:** 10 dashes reaching 40 px, instead of 6 reaching 28. Same dash size, timing and color.
+- **Home's Get ready:** shows its all-done state (15): every segment green, the title "Your UC application is ready", the subtitle "Submit it by Nov 30.", no list and no link. When the last check is made on Home, the list stays for the step's short settle (450 ms) so the burst is seen, then goes.
+- **Toast:** "Your UC application is ready!" (or "Your Cal State Apply is ready!") with "Undo", in place of "Marked complete". It shows above the steps sheet when the last step is checked there. Undo unchecks the step.
+- **Once:** the device remembers the checklist was finished (`stackd.checklistsReady`). Unchecking a step and checking it again gives the normal burst and "Marked complete".
+- **Reduced motion:** no burst. The colors and the toast still change.
+
+**Later:** the task-complete screen (05) replaces this simple version once the `husky-celebrate` art exists. It then opens after the last tile's burst, once per checklist per device:
 
 | Element | Text |
 |---|---|
@@ -103,23 +111,59 @@ Replaces the sheet's empty ring (14 → Steps sheet):
 
 - Under the title, the same segmented bar as Home's Get ready (one segment per step), full sheet width, 12 below the title. Under it, 6 below: "{done} of {total} done, due by Nov 30" in `body` `--slate-600`.
 - Rows use the step tiles (above) at 40.
-- The "Open the UC application" button stays tinted (it leaves the app; it isn't the main action).
+- "Open the UC application" (or "Open Cal State Apply") is an outside-link row (6), 24 below the last step, with the source line 12 under it. It leaves the app, so it isn't styled as the main action.
 
-## 5. Section colors
+## 5. Feature panels
 
-Each feature gets one hue. It shows in the feature's header band and its icon tiles, never in status (status colors from 00 stay fixed everywhere).
+Each feature's main screen opens with a solid panel in its color, holding that feature's progress. Deadlines: blue (coral at 14 days or less), with the year bar. Essays: indigo, with its 4-answer bar. Explore and Events get theirs in their specs.
 
-| Section | Band fill | Accent | Used from |
-|---|---|---|---|
-| Home | Sky gradient (as now) | `--blue-600` | Now |
-| Deadlines | `--amber-50` | `--amber-700` | Now (below) |
-| Essays | `--tint-indigo` | `--indigo-600` | 17 |
-| Explore | `--mint-100` | `--mint-600` | Its spec |
-| Events | #FFF6D6 | `--yellow-400` on icons, `--amber-700` on text | Its spec |
+### Deadlines panel (as built)
 
-**Header band**: a pushed screen's top area, from the physical top to 24 below its last header line, filled with the band color. A straight bottom edge, no gradient, no rounded corners. Below it the page is `--sky-50`. The back button stays a `--surface` circle on the band.
+The screen's top, from the physical top down, the full screen width. It continues Home's hero (1).
 
-**Deadlines now**: the band covers the back button, "Deadlines", and the term line. The "next" line and the cycle bar sit below it on the sky page. Nothing else on the screen changes.
+| Part | Spec |
+|---|---|
+| Fill | `--blue-600`. `--coral-700` when the next date is 14 days or less away, by the same rule as Home's hero. No band of any other color |
+| Shape | Bottom corners rounded 28; straight top. No shadow |
+| Back button | `--surface` circle with the navy arrow, as everywhere, at the usual place |
+| Title | "Deadlines", `title-1`, white, 24 below the back button |
+| Term line | "Fall 2027 transfer" in `body` white, 4 below the title, then 8 gap and "Change" as a white, underlined text link (`label`, 44 hit area). It opens the term sheet, as before |
+| Next line | 24 below the term line: "{title} is next" in `headline` white, then 4 below the due line ("Due Monday, Nov 30, in 42 days.") in `body` white |
+| Cycle bar | 16 below the due line, styled like Home's window bar: track `rgba(255,255,255,.28)`, fill `--white`, today marker 2 × 16 `--yellow-400`. Nodes: 14 days or less, a filled white 12 px dot; open, a 2.5 px white ring with the panel's color inside; not open yet, a 2 px white ring at 60% opacity with the panel's color inside. Two dates on one day share a node. Labels ("Oct 2026", "Jun 2027") `caption` white |
+| End | 24 below the cycle bar's labels |
+| Before a term is chosen | The term question card (14) sits inside the panel as a `--surface` card where the next line would be, 24 below the title. The term line, next line and cycle bar appear once it's answered. The panel ends 24 below the card |
+| No upcoming date | The panel ends 24 below the term line, blue; the empty state sits below it on the sky page |
+| Focus | Outlines on the panel's own controls (back button, "Change") are white |
+
+Below the panel, on the `--sky-50` page: the no-plan card and the reminders card when they show (24 apart), then the timeline. The timeline's first month header has 24 above it, so the timeline starts 24 below the panel.
+
+## 6. Outside-link row
+
+For a link that leaves Stackd: "Open the UC application" and "Open Cal State Apply" in the steps sheet, and "Open the official page" in the date sheet (it replaces 14's "Open official page" text link).
+
+| Part | Spec |
+|---|---|
+| Container | Tier 2 (15): `--surface`, 1 px `--border`, `--r-md`, no shadow. Min height 64, padding 0 16. The whole row is the link. Pressed: `--surface-pressed` |
+| Tile | Left, 36 × 36, `--r-sm`, `--tint-sky`, `Globe` regular 20 `--blue-600`. 12 gap to the text |
+| Title | `row-title` `--navy-900`: "Open the UC application", "Open Cal State Apply", "Open the official page" |
+| Domain | 2 below the title, the site's domain in `caption` `--slate-600`, one line, ellipsis ("apply.universityofcalifornia.edu"). A leading "www." is left off ("calstate.edu") |
+| Arrow | Right, `ArrowSquareOut` regular 20 `--slate-600` |
+| Name | The title plus ", opens outside the app" ("Open the UC application, opens outside the app") |
+
+In the date sheet the row sits 12 under the source line; in the steps sheet, 24 under the last step with the source line 12 under it.
+
+## 7. Open row actions
+
+The Deadlines timeline's open next row (15) gets two kinds of action, replacing 15's two pale tinted pills:
+
+| Action | Spec |
+|---|---|
+| Mark done | Compact solid button: looks 36 tall (44 tap area), padding 0 14, `--r-full`, `--blue-600` fill, white `Check` bold 16 + 6 + label 14/18 600 white. Pressed `--blue-700`. Marks the date done, toast "Marked done" with "Undo" |
+| Remind me / Reminders on | Text button: no fill or border. `Bell` bold 16 (`BellRinging` fill when reminders are on) + 6 + label 14/18 600 `--blue-700`, 44 tap area. Opens the date's sheet at Reminders, as before |
+
+Order: Mark done first, then Remind me, 16 apart. They wrap to two lines only when they don't fit.
+
+**Date sheet:** Mark done becomes a full-width solid button (height 48, `--r-full`, `--blue-600`, white `Check` bold 20 and white label, pressed `--blue-700`). The sheet's Remind me section stays as it is.
 
 ## Not in this pass
 
@@ -132,9 +176,12 @@ The husky reacting to the student's state (waving with no plan, alert at 14 days
 | `--indigo-600` | #4F55E0 |
 | `--amber-700` | #A86A00 |
 | `--mint-600` | #12946A |
-| `--yellow-50` | #FFF6D6 (Events band) |
 | Component: step tile | As in 2 |
-| Component: header band | As in 5 |
+| Component: feature panel | As in 5 (Deadlines as built; Essays in 17) |
+| Component: outside-link row | As in 6 |
+| Component: compact solid button | As in 7: 36 tall (44 tap area), padding 0 14, `--r-full`, `--blue-600`, white icon 16 + 6 + `label`, pressed `--blue-700`. Replaces 15's compact tinted button |
+| Component: text button | As in 7: no fill or border, icon 16 + 6 + `label` `--blue-700`, 44 tap area |
+| Motion: finishing burst | As in 3: 10 dashes reaching 40 |
 | Motion: step burst | As in 3 |
 
 ## Test
@@ -144,9 +191,12 @@ The husky reacting to the student's state (waving with no plan, alert at 14 days
 - Home with no plan: the stack stays pale with a border; the setup button is the only blue block.
 - Get ready rows show a map pin and a book on their tints; no separate circles.
 - Tap the map pin tile: it turns green with a white check, yellow dashes burst and fade, the first bar segment fills green, the toast shows. Undo: it swaps back with no burst.
-- Check all six (in the sheet): after the sixth, the celebration opens with "Your UC application is ready!". Close it, uncheck one and check it again: no second celebration.
+- Check all six: the sixth bursts with 10 dashes, the toast says "Your UC application is ready!" with Undo, and Get ready shows its all-done state (green bar, "Your UC application is ready", "Submit it by Nov 30.", no list). Uncheck one and check it again: the normal burst and "Marked complete", no second finish.
+- Deadlines: the open row shows a solid blue "Mark done" and then a text "Remind me", 16 apart. The date sheet's Mark done is a full-width solid blue button.
 - The steps sheet shows the segmented bar and "1 of 6 done, due by Nov 30" instead of the ring.
-- Deadlines: the top band is pale amber down to 24 below "Fall 2027 transfer"; the back button is a white circle on it; below the band the page is sky.
+- Deadlines: a solid blue panel with 28 bottom corners holds the white title, term line, "UC application is next", the due line and the white year bar with its yellow today marker. The back button is a white circle on it. The timeline starts 24 below it on the sky page.
+- Set the device clock to Nov 20: the Deadlines panel is coral, and the Nov 30 node on its bar is a filled white dot.
+- The steps sheet ends with an "Open the UC application" row showing a globe tile and "apply.universityofcalifornia.edu"; the date sheet has an "Open the official page" row. Both open the site outside the app, and their names end with ", opens outside the app".
 - Focus: tabbing to the hero shows a white-and-blue ring.
 - Reduced motion: no burst, no scale; colors still change.
 - At 320 wide: step text wraps to 2 lines beside the tile; nothing overlaps.

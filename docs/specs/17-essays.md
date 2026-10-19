@@ -41,15 +41,15 @@ Where we differ on purpose: every AI writing tool on Mobbin offers "write it for
 
 ## Design plan
 
-**Tokens.** Essays' section color from 16: band `--tint-indigo`, accent `--indigo-600`. Status colors from 00. Figtree only. The editor body uses `body-lg` (18/24) for comfortable writing.
+**Tokens.** Essays' color from 16: the Essays screen opens with a solid `--indigo-600` panel with white text (16 → Feature panels); the editor has a light `--tint-indigo` strip. Status colors from 00. Figtree only. The editor body uses `body-lg` (18/24) for comfortable writing.
 
 **Layout.**
 
 ```
 Essays                                Editor
 ┌───────────────────────────────┐     ┌───────────────────────────────┐
-│ (←)                           │band │ (←)            Saved      (✓) │
-│ Personal insight answers      │     │ Your major                    │ band
+│ (←)                           │panel│ (←)            Saved      (✓) │
+│ Personal insight answers      │     │ Your major                    │ strip
 │ 1 of 4 done                   │     │ How you've prepared for…      │
 │ ▬▬▬ ▬▬▬ ▬▬▬ ▬▬▬               │     │ Read UC's exact wording       │
 ├───────────────────────────────┤     ├───────────────────────────────┤
@@ -83,11 +83,11 @@ Left-aligned. Free text at x 24, lists at 16.
 
 | Part | Spec |
 |---|---|
-| Band | Header band (16) in `--tint-indigo`: back button, title "Personal insight answers" `title-1` `--navy-900` `h1` (wraps to 2 lines), then "{done} of 4 done" `body` `--slate-600`, then a 4-segment bar (16's segmented bar; done = `--green-600`, drafting = `--indigo-600`, empty = `--blue-100`), 12 below. Band ends 24 below the bar |
-| Intro | Under the band, x 24, 16 below: "UC asks transfer students for 4 answers, up to 350 words each. One is required; you choose the other 3." `body` `--slate-600`, max 320 |
+| Panel | A solid `--indigo-600` panel (16 → Feature panels) from the physical top, the full screen width, bottom corners rounded 28, every word white. It holds the back button (`--surface` circle, navy arrow), the title "Personal insight answers" `title-1` `h1` (wraps to 2 lines), then "{done} of 4 done" `body`, then a 4-segment bar 12 below (16's segmented bar; on the panel, done = `--white`, drafting = `rgba(255,255,255,.6)`, empty = `rgba(255,255,255,.25)`). The panel ends 24 below the bar. Focus outlines on its controls are white |
+| Intro | Under the panel on the `--sky-50` page, x 24, 24 below: "UC asks transfer students for 4 answers, up to 350 words each. One is required; you choose the other 3." `body` `--slate-600`, max 320 |
 | Required | Label "Required" `label` `--slate-600`, x 24, 24 below. Then a tier 2 list with one row: `major` |
 | Choose 3 | Label "Choose 3 ({n} chosen)" 24 below. Tier 2 list with the 7 optional rows |
-| Source line | 24 below: "Questions summarized from UC Admissions, checked Oct 19, 2026." + text link "Read UC's exact wording" (`ArrowSquareOut`), opens the official page outside the app. Then the unofficial footer |
+| Source line | 24 below: "Questions summarized from UC Admissions, checked Oct 19, 2026." in `caption` `--slate-600`. 12 under it, "Read UC's exact wording" as an outside-link row (16 → Outside-link row), showing UC's domain and opening the official page outside the app. Then the unofficial footer |
 
 **Question row**: min 64, padding 0 16, the whole row a button.
 
@@ -106,7 +106,7 @@ Full screen, no tab bar.
 | Part | Spec |
 |---|---|
 | Top bar | Back (circle, left). Center: save state in `caption` `--slate-600`: "Saving…", "Saved", or "Saved on this phone" when offline. Right: a "Mark done" circle button (`Check` bold 22); filled `--green-600` when done. Done means the student says it's final; it doesn't lock the text |
-| Band | `--tint-indigo`: short name `title-2` `--navy-900`, summary `body` `--slate-700`, then "Read UC's exact wording" text link. Band ends 16 below. Collapses to just the short name (one line, 200 ms) once the student starts typing, and expands when they scroll to the top |
+| Strip | A light `--tint-indigo` strip, not a panel: this is a writing screen, not a progress screen. Short name `title-2` `--navy-900`, summary `body` `--slate-700`, then "Read UC's exact wording" text link. The strip ends 16 below. Collapses to just the short name (one line, 200 ms) once the student starts typing, and expands when they scroll to the top |
 | Text | A plain multiline field, `body-lg` (18/24) `--navy-900`, padding 16 24, no border, placeholder "Start writing. It saves as you go." `autocapitalize="sentences"`, spellcheck on. No formatting (UC's form takes plain text) |
 | Counter | Pinned bottom-right above the bottom bar: "{n} / 350" `label` tabular-nums, `--slate-600`; at 330–350 `--amber-700`; over 350 `--coral-700` with "{n} / 350, {over} over". Words counted by whitespace, the same way as UC's form (confirm on the form before release) |
 | Bottom bar | `--surface`, top 1 px `--border`, padding 12 16 + safe area. One button: "Get feedback" (tinted button with `Sparkle` fill 20, indigo variant: `--tint-indigo` fill, `--indigo-600` text). Hidden when `essayFeedback` is off. Under 50 words: disabled, with "Write at least 50 words to get feedback." in `caption` above it |
@@ -198,7 +198,7 @@ Deleting an account deletes all of these (extend `delete_my_account()`).
 
 ## Motion
 
-Segmented bar fills over 200 ms when a status changes. Band collapse in the editor 200 ms. Feedback sheet uses the bottom sheet's motion (00). No entrance animations. Reduced motion: all instant.
+Segmented bar fills over 200 ms when a status changes. Strip collapse in the editor 200 ms. Feedback sheet uses the bottom sheet's motion (00). No entrance animations. Reduced motion: all instant.
 
 ## Building it
 
@@ -226,4 +226,4 @@ Ship the editor first behind `essays` with `essayFeedback` off if feedback isn't
 - Feedback can't be requested for another account's draft (call the function with a different user's draft id: refused).
 - Delete account: drafts and feedback are gone.
 - `essayFeedback` off: no button, no sheet, editor works.
-- At 320 wide: band text wraps, counter and button never overlap the keyboard.
+- At 320 wide: the panel's title wraps, counter and button never overlap the keyboard.
