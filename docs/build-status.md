@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-19 (date tiles, link lines and step sheets, spec 18, on branch `date-tiles`, which includes `color-pass`; spec 18 added as build step 20). Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-19 (Essays part 1, spec 17: the personal insight questions file, the essays tables and the importer, on branch `essays-data`; not yet pushed to the database or imported). Before that, the same day: date tiles, link lines and step sheets, spec 18, merged in PR #11, and the color pass, spec 16, merged in PR #10; spec 18 added as build step 20. Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,47 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## Essays part 1: questions and tables (step 19, 2026-10-19)
+
+Spec `17-essays.md`, on branch `essays-data`. Data and database only; no screens yet. The migration isn't pushed and the file isn't imported (see After merge).
+
+- **Questions file** (`data/raw/essays/piq-fall-2027.json`): the 8 UC personal insight questions for transfer applicants, cycle `fall-2027` (the deadlines file's format; spec 17's Data table and file name changed to match).
+  - Short names and summaries are in Stackd's words. Ryan approved them on Oct 19, 2026, after each one was checked against UC's transfer personal insight questions page.
+  - Four summaries changed from 17's first table, and 17 now shows the approved text: leadership, challenge ("your schoolwork"), creativity and community.
+  - Each row has `source_name`, `source_url`, `confirm_on` and `retrieved_at` (2026-10-19), and none sets verification.
+  - The page confirms the rules: 4 answers, 1 required, 3 of 7, 350 words each.
+- **Migration** (`supabase/migrations/20261019120000_essays.sql`):
+  - `piq_prompts`: provenance, unique (`key`, `cycle`) and (`cycle`, `sort`), and one required question per cycle. Verified rows are readable by signed-in students only (not anon); only the import writes. `protect_verified` and `set_updated_at` apply as on deadlines.
+  - `essay_drafts`: owner-only row-level security, unique per user, question and cycle. Each draft must name a question that exists (foreign key to `piq_prompts` key and cycle). The body is capped at 20,000 characters.
+  - `essay_feedback`: the owner reads their own rows; students can't insert, change or delete them, so only the service role (the essay-feedback function) writes. A row names its draft together with its owner (foreign key on `draft_id`, `user_id`), so feedback can't point at another student's draft. Indexed by account and by draft and time for the daily limits.
+  - `profiles.ai_feedback_consent_at` (owner, like the rest of the profile).
+  - `delete_my_account()` now deletes the student's feedback and drafts by name before the account; the foreign keys cascade too.
+  - The import functions `apply_essays_batch` and `import_essays_batch` (service role only). `verify_planning_rows` and `reopen_verified_row` now also take `piq_prompts`.
+- **Importer:** `scripts/import/essays.mjs` validates the file with the deadlines file's rules. It also checks exactly one required question per cycle, and no key or sort twice. `run.mjs` sends `data/raw/essays/` files to it. The review report lists each question as "key (required): short name. summary" with its `confirm_on`, and `import:verify` and `import:reopen` work for questions.
+- **Not in this part:**
+  - Students can't set `essay_feedback.helpful` (thumbs up or down) themselves under "only the function writes". The feedback part has to give the function, or a narrow owner-checked database function, that job.
+  - The 3-chosen limit on `essay_drafts.chosen` is left to the app; the database doesn't enforce it.
+
+**Tested 2026-10-19:**
+- `test:db`, 32 new checks (134 in all):
+  - questions are hidden until verified, hidden from anon, and only the import writes them;
+  - one required question per cycle;
+  - drafts are owner-only: another account can't read, change or delete them, or save one as someone else;
+  - one draft per question;
+  - feedback can be read by its owner only, and can't be written, changed or deleted by students or pointed at another student's draft;
+  - consent on the student's own profile only;
+  - account deletion removes the drafts and feedback and leaves another account's alone.
+- `test:import`, 34 new checks (115 in all): dry run, apply, unverified on import, the review report, re-import unchanged, verify, rewording a verified question stops the import, reopen, then re-import. Also twelve bad files, the real file passing as checked, and students can't run the import.
+- Lint, `tsc` and `npm run build` pass.
+
+**After merge** (Ryan, in order):
+1. `git checkout main`, then `git pull`
+2. `npx supabase db push` (lists `20261019120000_essays.sql`; confirm)
+3. `npm run import -- data/raw/essays/piq-fall-2027.json --dry-run`
+4. `npm run import -- data/raw/essays/piq-fall-2027.json`
+5. Open the review report it names (`data/review/<time>-piq-fall-2027.md`), check each question on UC's page, fill in `checked_by` and `checked_at` in the `.csv`
+6. `npm run import:verify -- data/review/<time>-piq-fall-2027.csv`
 
 ## Date tiles, link lines and step sheets (step 20, 2026-10-19)
 

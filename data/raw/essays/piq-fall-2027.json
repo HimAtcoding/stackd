@@ -1,0 +1,102 @@
+{
+  "written_by": "Ryan Saleh (drafted by Claude Code)",
+  "notes": "The UC personal insight questions for transfer applicants, fall 2027 cycle (applications filed in fall 2026), from docs/specs/17-essays.md. Short names and summaries are in Stackd's own words, never UC's text; the app links to UC's page for the exact wording. Transfer applicants answer 4: the one required question plus 3 of the 7 others, up to 350 words each. For each row: open source_url, check the question confirm_on names, fix the summary if it says something the question doesn't, then fill in retrieved_at with the date you checked. The import refuses the file while any retrieved_at is empty or any TODO is left. After the import, the review report's checked_by and checked_at mark rows verified (npm run import:verify); only verified rows reach students. Dry run: npm run import -- data/raw/essays/piq-fall-2027.json --dry-run",
+  "piq_prompts": [
+    {
+      "key": "major",
+      "cycle": "fall-2027",
+      "short_name": "Your major",
+      "summary": "How you've prepared for your intended major, and why you're ready for upper-division work.",
+      "required": true,
+      "sort": 1,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: the required question for transfer applicants (preparing for your intended major and readiness for upper-division courses).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "leadership",
+      "cycle": "fall-2027",
+      "short_name": "Leadership",
+      "summary": "A time you led: influencing others, helping settle a disagreement, or contributing to a group over time.",
+      "required": false,
+      "sort": 2,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 1 (leadership experience).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "creativity",
+      "cycle": "fall-2027",
+      "short_name": "Creativity",
+      "summary": "How your creativity shows up, whether in solving problems, new ideas or art.",
+      "required": false,
+      "sort": 3,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 2 (creative side).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "talent",
+      "cycle": "fall-2027",
+      "short_name": "A talent or skill",
+      "summary": "Your greatest talent or skill, and how you've built and used it.",
+      "required": false,
+      "sort": 4,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 3 (greatest talent or skill).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "opportunity",
+      "cycle": "fall-2027",
+      "short_name": "Opportunity or barrier",
+      "summary": "An educational opportunity you made the most of, or a barrier you worked to get past.",
+      "required": false,
+      "sort": 5,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 4 (educational opportunity or barrier).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "challenge",
+      "cycle": "fall-2027",
+      "short_name": "A challenge",
+      "summary": "The biggest challenge you've faced, how you handled it, and how it affected your schoolwork.",
+      "required": false,
+      "sort": 6,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 5 (most significant challenge).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "community",
+      "cycle": "fall-2027",
+      "short_name": "Community",
+      "summary": "Ways you've made your school or community better.",
+      "required": false,
+      "sort": 7,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 6 (school or community).",
+      "retrieved_at": "2026-10-19"
+    },
+    {
+      "key": "beyond",
+      "cycle": "fall-2027",
+      "short_name": "Beyond the application",
+      "summary": "What else makes you a strong candidate for UC that isn't shown elsewhere.",
+      "required": false,
+      "sort": 8,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/how-to-apply/applying-as-a-transfer/personal-insight-questions.html",
+      "confirm_on": "UC Admissions, Applying as a transfer, Personal insight questions: question 7 (beyond what's in your application).",
+      "retrieved_at": "2026-10-19"
+    }
+  ]
+}

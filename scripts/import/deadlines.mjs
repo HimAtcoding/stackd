@@ -3,9 +3,9 @@
 // Each row names the official page it has to be checked on (confirm_on). retrieved_at stays empty until a person has
 // checked the row there, so a file nobody checked can't be imported. verified_at comes later, from the verify step.
 
-const PLACEHOLDER = /TODO|PASTE|TBD/;
-const SLUG = /^[a-z0-9-]+$/;
-const CYCLE = /^(fall|winter|spring|summer)-\d{4}$/;
+export const PLACEHOLDER = /TODO|PASTE|TBD/;
+export const SLUG = /^[a-z0-9-]+$/;
+export const CYCLE = /^(fall|winter|spring|summer)-\d{4}$/;
 const AUDIENCES = ["uc", "csu", "aid", "campus"];
 const KINDS = ["application", "update", "aid", "decision", "enroll", "documents"];
 const ZONE = "America/Los_Angeles";
@@ -60,7 +60,7 @@ function timeProblem(value) {
   return null;
 }
 
-function httpsProblem(value) {
+export function httpsProblem(value) {
   try {
     return new URL(value).protocol === "https:" ? null : "must be an https:// link";
   } catch {

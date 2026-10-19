@@ -17,16 +17,16 @@ From the official page, confirmed Oct 19, 2026. Stored in our own words, with th
 
 | Key | Short name (ours) | Summary (ours) | Required |
 |---|---|---|---|
-| `major` | Your major | How you've prepared for your intended major, and why you're ready for upper-division work | Yes |
-| `leadership` | Leadership | A time you led, helped resolve a conflict, or made a group better | |
-| `creativity` | Creativity | How you express your creative side | |
-| `talent` | A talent or skill | Your greatest talent or skill, and how you've built and used it | |
-| `opportunity` | Opportunity or barrier | An educational opportunity you made the most of, or a barrier you worked to get past | |
-| `challenge` | A challenge | The biggest challenge you've faced, how you handled it, and how it affected your school | |
-| `community` | Community | What you've done to make your school or community better | |
-| `beyond` | Beyond the application | What else makes you a strong candidate for UC that isn't shown elsewhere | |
+| `major` | Your major | How you've prepared for your intended major, and why you're ready for upper-division work. | Yes |
+| `leadership` | Leadership | A time you led: influencing others, helping settle a disagreement, or contributing to a group over time. | |
+| `creativity` | Creativity | How your creativity shows up, whether in solving problems, new ideas or art. | |
+| `talent` | A talent or skill | Your greatest talent or skill, and how you've built and used it. | |
+| `opportunity` | Opportunity or barrier | An educational opportunity you made the most of, or a barrier you worked to get past. | |
+| `challenge` | A challenge | The biggest challenge you've faced, how you handled it, and how it affected your schoolwork. | |
+| `community` | Community | Ways you've made your school or community better. | |
+| `beyond` | Beyond the application | What else makes you a strong candidate for UC that isn't shown elsewhere. | |
 
-These are stored like deadlines: a `piq_prompts` data file (`data/raw/essays/piq-2026-27.json`) imported with source, `retrieved_at` and verification, so the summaries are checked against UC's page before students see them. Only verified rows show.
+These are stored like deadlines: a `piq_prompts` data file (`data/raw/essays/piq-fall-2027.json`) imported with source, `retrieved_at` and verification, so the summaries are checked against UC's page before students see them. Only verified rows show.
 
 ## Mobbin references
 
@@ -172,7 +172,7 @@ Server checks (in the function, before returning): the response matches the JSON
 
 | Table | Columns | Access |
 |---|---|---|
-| `piq_prompts` | `key`, `cycle` ("2026-27"), `short_name`, `summary`, `required`, `sort`, provenance fields | Read: verified rows, anyone signed in. Write: importer only |
+| `piq_prompts` | `key`, `cycle` ("fall-2027", as in the deadlines file), `short_name`, `summary`, `required`, `sort`, provenance fields | Read: verified rows, anyone signed in. Write: importer only |
 | `essay_drafts` | `id`, `user_id`, `prompt_key`, `cycle`, `body`, `word_count`, `chosen` (bool), `done_at`, `updated_at`; unique (`user_id`, `prompt_key`, `cycle`) | Owner only (row-level security) |
 | `essay_feedback` | `id`, `user_id`, `draft_id`, `created_at`, `model`, `input_words`, `result` (json), `helpful` (bool, null) | Owner reads own rows; only the function writes |
 | `profiles` | add `ai_feedback_consent_at` | Owner |
@@ -204,7 +204,7 @@ Segmented bar fills over 200 ms when a status changes. Strip collapse in the edi
 
 | Part | Who |
 |---|---|
-| `piq-2026-27.json` written in our words, checked against UC's page, imported and verified | Ryan (Claude Code), same date-check process as deadlines |
+| `piq-fall-2027.json` written in our words, checked against UC's page, imported and verified | Ryan (Claude Code), same date-check process as deadlines |
 | Tables, row-level security, account deletion | Ryan, migration PR |
 | Essays screen and editor, saving, offline | Ryan |
 | Edge Function, prompt, server checks, limits, consent sheet, feedback sheet | Ryan; Abyan can review the prompt |

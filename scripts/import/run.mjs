@@ -1,6 +1,7 @@
 // Imports one hand-written file from data/raw. Its folder says what it holds:
 //   data/raw/planning/<file>.json   institutions, majors and official agreement links
 //   data/raw/deadlines/<file>.json  deadlines and application checklists (14)
+//   data/raw/essays/<file>.json     UC personal insight questions (17)
 //   node scripts/import/run.mjs data/raw/<folder>/<file>.json [--dry-run]
 // Stages (docs/12): raw (the file, kept untouched, with its hash) → parse → validate → upsert → review report.
 // Validation problems stop the run before the database is touched. The upsert is one transaction: all or nothing.
@@ -9,8 +10,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateDeadlinesFile } from "./deadlines.mjs";
+import { validateEssaysFile } from "./essays.mjs";
 import { validatePlanningFile } from "./planning.mjs";
-import { deadlineReportRows, reportRows, writeReport } from "./report.mjs";
+import { deadlineReportRows, essayReportRows, reportRows, writeReport } from "./report.mjs";
 
 const KINDS = {
   planning: {
@@ -25,9 +27,19 @@ const KINDS = {
     importBatch: (db, ...args) => db.importDeadlines(...args),
     report: async (db, payload, confirmOn) => deadlineReportRows(payload, confirmOn, await db.deadlineRowsFor(payload)),
   },
+  essays: {
+    validate: validateEssaysFile,
+    counted: (p) => `${p.piq_prompts.length} personal insight questions`,
+    importBatch: (db, ...args) => db.importEssays(...args),
+    report: async (db, payload, confirmOn) => essayReportRows(payload, confirmOn, await db.essayRowsFor(payload)),
+  },
 };
 
-export const kindOf = (rel) => (rel.startsWith("data/raw/deadlines/") ? "deadlines" : "planning");
+export function kindOf(rel) {
+  if (rel.startsWith("data/raw/deadlines/")) return "deadlines";
+  if (rel.startsWith("data/raw/essays/")) return "essays";
+  return "planning";
+}
 
 export async function runImport({ file, dryRun, db, reportDir }) {
   const rel = path.relative(process.cwd(), path.resolve(file)).split(path.sep).join("/");
@@ -71,7 +83,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith("--"));
   if (!file) {
-    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines>/<file>.json [--dry-run]");
+    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines|essays>/<file>.json [--dry-run]");
     process.exit(2);
   }
   const { supabaseDatabase } = await import("./db.mjs");

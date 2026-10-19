@@ -1,5 +1,5 @@
-// Sets one verified deadline, checklist or checklist step back to unverified, so a corrected file can be imported
-// and checked again (docs/date-check.md → Fixing a verified row). Logs who did it and why. A dry run unless --apply.
+// Sets one verified deadline, checklist, checklist step or personal insight question back to unverified, so a corrected
+// file can be imported and checked again (docs/date-check.md → Fixing a verified row). Logs who did it and why. A dry run unless --apply.
 //   node scripts/import/reopen.mjs --id <row id> --by "<name>" --reason "<text>" [--apply]
 // The row is hidden from students from the moment it's reopened until it's verified again; a reopened date also
 // hides its checklist and steps.

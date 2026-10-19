@@ -8,7 +8,8 @@ function readEnv(name) {
   return env.match(new RegExp(`^${name}=(.*)$`, "m"))?.[1]?.trim().replace(/^["']|["']$/g, "") || null;
 }
 
-// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql and 20261016120100_deadlines_import.sql
+// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql, 20261016120100_deadlines_import.sql
+// and 20261019120000_essays.sql
 export function supabaseDatabase() {
   const url = readEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = readEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -44,7 +45,15 @@ export function supabaseDatabase() {
       if (steps.error) throw new Error(steps.error.message);
       return { deadlines: deadlines.data, checklists: lists.data, checklist_steps: steps.data };
     },
-    // supabase/migrations/20261017120000_reopen_verified.sql
+    importEssays: (payload, sourceFile, dryRun) => call("import_essays_batch", { payload, source_file: sourceFile, dry_run: dryRun }),
+    // Personal insight questions as stored, for the review report
+    async essayRowsFor(payload) {
+      const cycles = [...new Set(payload.piq_prompts.map((q) => q.cycle))];
+      const prompts = await client.from("piq_prompts").select("*").in("cycle", cycles);
+      if (prompts.error) throw new Error(prompts.error.message);
+      return { piq_prompts: prompts.data };
+    },
+    // supabase/migrations/20261017120000_reopen_verified.sql and 20261019120000_essays.sql
     reopenRow: (id, by, reason, dryRun) => call("reopen_verified_row", { p_id: id, p_by: by, p_reason: reason, p_dry_run: dryRun }),
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });

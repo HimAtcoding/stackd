@@ -266,13 +266,72 @@ const termChange = await expectOk("a student can't change another student's term
   as("authenticated", B, "update profiles set transfer_term = 'fall-2028' where user_id = $1 returning user_id", [A]));
 check("the term update reached no one else's row", termChange?.rows.length === 0, termChange?.rows);
 
+// Essays (17): questions readable by signed-in students once verified, written only by the import
+const addPrompt = (key, sort, required = false) => as("service_role", null, `insert into piq_prompts (key, cycle, short_name, summary, required, sort, source_name, source_url, retrieved_at)
+  values ($1, 'fall-2027', 'Test question', 'A made-up summary.', $2, $3, 'Test source', 'https://example.org/piq', now()) returning id`, [key, required, sort]);
+await expectError("a student cannot add a question", () => as("authenticated", A, "insert into piq_prompts (key) values ('x')"), /permission denied/);
+const requiredQ = (await expectOk("service role adds a question", () => addPrompt("major", 1, true)))?.rows[0].id;
+await addPrompt("leadership", 2);
+await expectError("only one required question per cycle", () => addPrompt("other", 3, true), /piq_prompts_one_required/);
+await expectRows("an unverified question is hidden from students", () => as("authenticated", A, "select * from piq_prompts"), 0);
+await verifyRow("piq_prompts", requiredQ);
+await expectRows("a verified question is readable by a signed-in student", () => as("authenticated", A, "select * from piq_prompts"), 1);
+await expectError("anon can't read questions", () => as("anon", null, "select * from piq_prompts"), /permission denied/);
+await expectError("a student cannot change a question", () => as("authenticated", A, "update piq_prompts set summary = 'x'"), /permission denied/);
+await expectError("a verified question can't be changed, even by the service role", () =>
+  as("service_role", null, "update piq_prompts set summary = 'Changed' where id = $1", [requiredQ]), /refusing to update verified/);
+
+// Drafts: owner only, one per question and cycle
+const addDraft = (sub, key, body = "Draft text.") =>
+  as("authenticated", sub, "insert into essay_drafts (user_id, prompt_key, cycle, body, word_count) values ($1, $2, 'fall-2027', $3, 2) returning id", [sub, key, body]);
+const draftA = (await expectOk("a student saves a draft", () => addDraft(A, "major")))?.rows[0].id;
+await expectError("one draft per question and cycle", () => addDraft(A, "major"), /essay_drafts_user_id_prompt_key_cycle_key/);
+await expectError("a draft needs a real question", () => addDraft(A, "no-such-question"), /foreign key/);
+await expectError("a student can't save a draft as someone else", () =>
+  as("authenticated", A, "insert into essay_drafts (user_id, prompt_key, cycle) values ($1, 'leadership', 'fall-2027')", [B]), /row-level security/);
+const draftB = (await addDraft(B, "major", "Their own words.")).rows[0].id;
+await expectRows("a student sees only their own drafts", () => as("authenticated", A, "select * from essay_drafts"), 1);
+await expectRows("another student's draft can't be read by its id", () => as("authenticated", A, "select * from essay_drafts where id = $1", [draftB]), 0);
+const draftEdit = await expectOk("a student can't change another student's draft", () =>
+  as("authenticated", A, "update essay_drafts set body = 'x' where id = $1 returning id", [draftB]));
+check("the draft update reached no one else's row", draftEdit?.rows.length === 0, draftEdit?.rows);
+const draftDelete = await expectOk("a student can't delete another student's draft", () =>
+  as("authenticated", A, "delete from essay_drafts where id = $1 returning id", [draftB]));
+check("the draft delete reached no one else's row", draftDelete?.rows.length === 0, draftDelete?.rows);
+await expectError("anon can't read drafts", () => as("anon", null, "select * from essay_drafts"), /permission denied/);
+
+// Feedback: the function (service role) writes it; the student only reads their own
+const addFeedback = (sub, draft) =>
+  as("service_role", null, "insert into essay_feedback (user_id, draft_id, model, input_words, result) values ($1, $2, 'test-model', 2, '{}'::jsonb) returning id", [sub, draft]);
+await expectError("a student can't write feedback", () =>
+  as("authenticated", A, "insert into essay_feedback (user_id, draft_id, model, input_words, result) values ($1, $2, 'x', 1, '{}')", [A, draftA]), /permission denied/);
+const feedbackA = (await expectOk("the function saves feedback", () => addFeedback(A, draftA)))?.rows[0].id;
+await addFeedback(B, draftB);
+await expectError("feedback can't point at another student's draft", () => addFeedback(A, draftB), /foreign key/);
+await expectRows("a student reads their own feedback", () => as("authenticated", A, "select * from essay_feedback"), 1);
+await expectRows("another student's feedback can't be read", () => as("authenticated", B, "select * from essay_feedback where user_id = $1", [A]), 0);
+await expectError("a student can't change feedback, even their own", () =>
+  as("authenticated", A, "update essay_feedback set helpful = true where id = $1", [feedbackA]), /permission denied/);
+await expectError("a student can't delete feedback", () => as("authenticated", A, "delete from essay_feedback where id = $1", [feedbackA]), /permission denied/);
+await expectError("anon can't read feedback", () => as("anon", null, "select * from essay_feedback"), /permission denied/);
+
+// Consent to AI feedback, on the student's own profile
+await expectOk("a student records consent to AI feedback", () =>
+  as("authenticated", A, "update profiles set ai_feedback_consent_at = now() where user_id = $1", [A]));
+const consentOther = await expectOk("a student can't record consent for someone else", () =>
+  as("authenticated", B, "update profiles set ai_feedback_consent_at = now() where user_id = $1 returning user_id", [A]));
+check("the consent update reached no one else's row", consentOther?.rows.length === 0, consentOther?.rows);
+
 // Deleting an account: only the caller's, with every per-student row
 const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
 await as("authenticated", A, "insert into saved_courses (user_id, course_id) values ($1, $2)", [A, course.rows[0].id]);
 await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major_id: majorId }]);
 await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
-const PER_STUDENT = ["profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps"];
+const PER_STUDENT = [
+  "profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps",
+  "essay_drafts", "essay_feedback",
+];
 const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
   PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));
 const before = await rowCounts(A);
@@ -286,6 +345,9 @@ const after = await rowCounts(A);
 check("every per-student row went with it", Object.values(after).every((n) => n === 0), after);
 const others = await rowCounts(B);
 check("another student's rows are untouched", others.profiles === 1 && others.user_targets === 1 && others.saved_schools === 1, others);
+check("another student's draft and feedback are untouched", others.essay_drafts === 1 && others.essay_feedback === 1, others);
+const leftover = (await db.query("select (select count(*)::int from essay_drafts where id = $1) as d, (select count(*)::int from essay_feedback where id = $2) as f", [draftA, feedbackA])).rows[0];
+check("the deleted student's draft and feedback are gone by id", leftover.d === 0 && leftover.f === 0, leftover);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
