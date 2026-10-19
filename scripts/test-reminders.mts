@@ -236,23 +236,25 @@ announceReminderTap("csu");
 check("after the screen closes, taps go nowhere", opened.join() === "uc,uc", opened);
 delete globals.window;
 
-// The v1 release: with the reminders flag off, signing out on an iPhone never loads the notifications plugin
+// The release (v1.1, reminders on) cancels through the notifications plugin when an iPhone signs out. With the
+// reminders flag off, sign-out never loads the plugin.
 const { spawnSync } = await import("node:child_process");
-const probe = (features: string | undefined) => {
+const probe = (remindersOff: boolean) => {
   const env = { ...process.env };
-  if (features) env.NEXT_PUBLIC_FEATURES = features;
-  else delete env.NEXT_PUBLIC_FEATURES;
+  delete env.NEXT_PUBLIC_FEATURES;
+  if (remindersOff) env.STACKD_REMINDERS_OFF = "1";
+  else delete env.STACKD_REMINDERS_OFF;
   const run = spawnSync(process.execPath, ["--import", "tsx", "scripts/reminders-gate-probe.mts"], { env, encoding: "utf8" });
   try {
-    return JSON.parse(run.stdout.trim().split("\n").at(-1) ?? "") as { loads: number };
+    return JSON.parse(run.stdout.trim().split("\n").at(-1) ?? "") as { loads: number; reminders: boolean };
   } catch {
-    return { loads: -1, error: run.stderr.slice(0, 300) };
+    return { loads: -1, reminders: undefined, error: run.stderr.slice(0, 300) };
   }
 };
-const off = probe(undefined);
-check("flags off: sign-out on an iPhone doesn't load the plugin", off.loads === 0, off);
-const on = probe("all");
-check("reminders on: sign-out on an iPhone cancels through the plugin", on.loads === 1, on);
+const off = probe(true);
+check("reminders flag off: sign-out on an iPhone doesn't load the plugin", off.loads === 0 && off.reminders === false, off);
+const on = probe(false);
+check("release (reminders on): sign-out on an iPhone cancels through the plugin", on.loads === 1 && on.reminders === true, on);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
