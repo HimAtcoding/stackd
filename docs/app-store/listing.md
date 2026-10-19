@@ -1,6 +1,8 @@
-# App Store listing (version 1.0)
+# App Store listing (version 1.1)
 
-Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat/ios-app-store-prep`, and **entered in App Store Connect the same day** (app record "Stackd: Transfer Planner", Apple ID `6822523006`, version 1.0 Prepare for Submission). Only the build and the screenshots are missing; they come from the Mac. Re-check the privacy answers whenever what the app collects changes (`docs/specs/12-legal-and-support.md`).
+Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat/ios-app-store-prep`, and **entered in App Store Connect the same day** (app record "Stackd: Transfer Planner", Apple ID `6822523006`, version 1.0 Prepare for Submission). Re-check the privacy answers whenever what the app collects changes (`docs/specs/12-legal-and-support.md`).
+
+**Updated 2026-10-18 for version 1.1** (`docs/specs/13-v1-launch.md → 1.1 submission`): the privacy answers, the reviewer notes, the screenshots, What's New and the checklist. The 1.1 changes still have to be entered in App Store Connect.
 
 ## Credits
 
@@ -18,7 +20,7 @@ Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat
 | Bundle ID | `app.stackd.transfer` |
 | SKU | `stackd-ios-1` |
 | Primary language | English (U.S.) |
-| Version | 1.0 (the binary is 1.0.0, build 1) |
+| Version | 1.1 (the binary is 1.1.0, build 2). 1.0 was 1.0.0, build 1 |
 | Primary category | Education |
 | Secondary category | None |
 | Price | Free ($0.00 in all regions) |
@@ -69,6 +71,12 @@ Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 
 Kept truthful on purpose: no course matches, no statewide coverage, no admission chances. Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
 
+**What's New in This Version** (1.1):
+
+```
+Deadlines are here. Home now shows your next transfer deadline with a countdown, and a checklist for your UC or Cal State application. The new Deadlines screen lists every date for your transfer year, each with its official source. Turn on reminders to get a heads-up before each one.
+```
+
 | Field | Value |
 |---|---|
 | Support URL | https://joinstackd-chi.vercel.app/support/ |
@@ -78,7 +86,7 @@ Kept truthful on purpose: no course matches, no statewide coverage, no admission
 
 ## App Privacy (the "nutrition label")
 
-Checked against the code: the Supabase tables (`profiles`, `user_targets`, `saved_schools`, `user_requirement_status`, `saved_courses`), `lib/auth`, and `package.json`. There's no analytics, advertising, crash-reporting or tracking SDK in the app.
+Checked against the code: the Supabase tables (`profiles`, `user_targets`, `saved_schools`, `user_requirement_status`, `saved_courses`, and from 1.1 `user_deadlines`, `user_checklist_steps` and `profiles.transfer_term`), `lib/auth`, and `package.json`. There's no analytics, advertising, crash-reporting or tracking SDK in the app. Re-checked for 1.1 on 2026-10-18 against `/privacy/` (updated October 18, 2026).
 
 **Do you or your third-party partners collect data from this app?** Yes.
 
@@ -87,7 +95,9 @@ Checked against the code: the Supabase tables (`profiles`, `user_targets`, `save
 | Contact Info → Email Address | Yes (sign-up, or shared by Apple or Google) | Yes | No | App Functionality |
 | Contact Info → Name | Yes (first name only; typed, or shared by Apple or Google) | Yes | No | App Functionality |
 | Identifiers → User ID | Yes (the account ID, and the Apple or Google account ID behind a social sign-in) | Yes | No | App Functionality |
-| User Content → Other User Content | Yes (the plan: community college, target schools, majors, saved schools, progress) | Yes | No | App Functionality |
+| User Content → Other User Content | Yes (the plan: community college, target schools, majors, saved schools, progress. From 1.1, the deadline data: the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline) | Yes | No | App Functionality |
+
+The deadline data adds no new data type: it's the student's own content in the same row, linked to their account, used for app functionality only, and not used for tracking. Reminders are local notifications that the iPhone schedules itself. Nothing is sent when one goes off, and the reminders switch and default days in Settings stay on the phone, so notifications need no data type of their own.
 
 Everything else (location, contacts, health, financial, browsing or search history, usage data, diagnostics, purchases, sensitive info, photos, audio): **not collected**.
 
@@ -134,18 +144,10 @@ Expected result: **4+**.
 
 The review account: first name "Taylor", email confirmed, plan Las Positas College → UC San Diego, Computer Science (B.S.). Nothing personal in it.
 
-**Notes for the reviewer:**
+**Notes for the reviewer** (1.1). The first paragraph is spec 13's 1.1 note. The last two lines are kept from 1.0 because they still hold and reviewers check account deletion:
 
 ```
-Stackd is an unofficial transfer-planning tool for California community college students. It is not affiliated with ASSIST, the UC, the CSU, or any college, and it does not guarantee admission.
-
-Sign in with the demo account above (email and password). It already has a plan: Las Positas College to UC San Diego, Computer Science.
-
-Core path:
-1. Sign in.
-2. Home shows the plan. Tap the plan card or the Requirements tile to open UC San Diego.
-3. "Open on ASSIST" opens the official transfer agreement for that college, school, and major in Safari.
-4. Settings (the gear on Home) changes the college, schools, or major.
+Stackd is a transfer-planning app for California community college students. Sign in with the account above to see a saved plan. Home shows the next transfer deadlines and a checklist for the application. Deadlines lists every date with its official source. Reminders are local notifications, and the app asks for permission only when you tap Remind me.
 
 You can also create a new account with email (a 6-digit code is emailed), Sign in with Apple, or Continue with Google. A new account goes through a three-step setup: college, schools, major.
 
@@ -156,18 +158,23 @@ Account deletion: Settings > Delete account > Delete account. It deletes the acc
 
 Captured on the Mac from the iOS Simulator or a real iPhone, never from the web build. iPhone only, so only iPhone sizes: 6.9-inch (1320 × 2868, e.g. iPhone 16 Pro Max simulator). App Store Connect scales them down for smaller iPhones.
 
-Use the review account (no founder email on screen) and no debug or dev pages:
-1. Welcome
-2. Home with the plan
-3. Onboarding, choosing the schools (step 2)
-4. UC San Diego with the official agreement card
-5. Settings
+Use the review account (no founder email on screen) and no debug or dev pages. The 1.1 set is a new one from the 1.1.0 (2) build; the 1.0 set showed tiles, the bell and the tab bar.
+1. Home with the plan, Up next and Get ready
+2. The Deadlines screen: "UC application is next", the cycle bar and the timeline
+3. A date sheet (the UC application)
+4. The reminders prompt, "Want a heads-up before deadlines?", the app's own sheet before iOS asks (tap Remind me while iOS hasn't asked yet)
+5. UC San Diego with the official agreement card
+6. Onboarding, choosing the schools (step 2)
+7. Welcome
+8. Settings
 
-## Before pressing Submit
+## Before pressing Submit (1.1)
 
-- [ ] Build 1.0.0 (1) uploaded, processed, and tested in TestFlight
-- [ ] That build selected for version 1.0
-- [ ] Screenshots uploaded
-- [ ] Every field above filled in
+- [ ] 1.0 is approved, released or withdrawn (only one version can be in review)
+- [ ] Build 1.1.0 (2) uploaded, processed, and tested in TestFlight
+- [ ] That build selected for version 1.1
+- [ ] Website redeployed from the same build, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 18, 2026"
+- [ ] App Privacy answers match the table above
+- [ ] What's New, the 1.1 reviewer notes and the new screenshots entered
 - [ ] Review account still signs in and still has its plan
 - [ ] Add for Review, then Submit for Review
