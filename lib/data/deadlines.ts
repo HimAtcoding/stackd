@@ -17,7 +17,7 @@ import { readSessionUser } from "@/lib/profile";
 import { readSeedResult } from "@/lib/seed";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
-import { getTargetUniversity } from "./index";
+import { getHome, getTargetUniversity } from "./index";
 import { createMarkQueue, mergeFromAccount, type PushError } from "./mark-queue";
 import { readPlanState, usePlan, type Plan } from "./plan";
 
@@ -30,6 +30,8 @@ import { readPlanState, usePlan, type Plan } from "./plan";
 export const DEADLINES_KEY = "stackd.deadlines";
 export const STEPS_KEY = "stackd.steps";
 export const TERM_KEY = "stackd.term";
+// Steps the student unchecked although the plan checks them. This device only, no database change (18).
+export const STEPS_UNCHECKED_KEY = "stackd.stepsUnchecked";
 // Marks and the term still waiting to reach the account (cleared at sign-out with the other per-account keys)
 export const DEADLINES_QUEUE_KEY = "stackd.deadlinesQueue";
 // This device's copy of the verified dates and checklists. Not per account: everyone reads the same rows.
@@ -57,11 +59,13 @@ const NO_MARKS: Record<string, DeadlineMark> = {};
 const NO_STEPS: Record<string, string> = {};
 const NOT_ASKED: TermChoice = { asked: false, term: null };
 const NO_QUEUE: string[] = [];
+const NONE_UNCHECKED: string[] = [];
 
 const marks = accountStore(DEADLINES_KEY, NO_MARKS);
 const stepMarks = accountStore(STEPS_KEY, NO_STEPS);
 const termChoice = accountStore(TERM_KEY, NOT_ASKED);
 const queue = accountStore(DEADLINES_QUEUE_KEY, NO_QUEUE);
+const stepsUnchecked = accountStore(STEPS_UNCHECKED_KEY, NONE_UNCHECKED);
 
 // The dates and checklists
 
@@ -324,12 +328,14 @@ export type ScopeState = { status: "loading" } | { status: "error" } | { status:
 // The plan's schools. A plan with no schools counts as no plan.
 export function scopeFromPlan(plan: Plan): Scope {
   if (plan.targets.length === 0) return null;
-  return plan.targets.map((t) => ({ id: t.institutionId, name: t.name, system: t.system }));
+  return plan.targets.map((t) => ({ id: t.institutionId, name: t.name, system: t.system, hasMajor: t.majorId !== null }));
 }
 
 function demoScope(): Scope {
   const university = getTargetUniversity();
-  return university ? [{ id: university.slug, name: university.name, system: university.system ?? null }] : null;
+  // The demo journey says whether its major is chosen
+  const hasMajor = Boolean(getHome()?.journey?.steps?.some((s) => s.id === "major" && s.status === "done"));
+  return university ? [{ id: university.slug, name: university.name, system: university.system ?? null, hasMajor }] : null;
 }
 
 // The student's schools outside React (reminders): undefined until the plan has loaded
@@ -376,6 +382,7 @@ export function useDeadlines(scopeState: ScopeState): DeadlinesState {
   const today = useNow();
   const doneMarks = marks.use();
   const steps = stepMarks.use();
+  const unchecked = stepsUnchecked.use();
   const term = termChoice.use();
   const loadedRecords = useSyncExternalStore(subscribeRecords, getRecords, () => LOADING);
   const scope = scopeState.status === "ok" ? scopeState.scope : undefined;
@@ -389,9 +396,9 @@ export function useDeadlines(scopeState: ScopeState): DeadlinesState {
     if (loadedRecords.status === "loading" || scope === undefined || !today) return { status: "loading" };
     const { deadlines, checklists, steps: allSteps } = loadedRecords.data;
     const view = buildView(deadlines, (id) => doneMarks[id]?.done_at ?? null, scope, term.term, today);
-    const checklist = pickChecklist(checklists, allSteps, view, scope, (id) => Boolean(steps[id]));
+    const checklist = pickChecklist(checklists, allSteps, view, scope, (id) => Boolean(steps[id]), (id) => unchecked.includes(id));
     return { status: "ok", now: today, scope, view, checklist, term, marks: doneMarks };
-  }, [loadedRecords, scopeState.status, scope, today, doneMarks, steps, term]);
+  }, [loadedRecords, scopeState.status, scope, today, doneMarks, steps, unchecked, term]);
 }
 
 // The term on its own, for Settings' Transfer term row
@@ -424,6 +431,8 @@ export function setReminders(id: string, days: number[]) {
 export const remindersFor = (mark: DeadlineMark | undefined, defaults: number[] = DEFAULT_REMINDERS) => mark?.reminders ?? defaults;
 
 export function markStep(id: string, done: boolean) {
+  // Unchecking keeps a step the plan checks unchecked; checking it again lets the plan check it
+  stepsUnchecked.set((prev) => (done ? prev.filter((x) => x !== id) : prev.includes(id) ? prev : [...prev, id]));
   stepMarks.set((prev) => {
     const next = { ...prev };
     if (done) next[id] = new Date().toISOString();

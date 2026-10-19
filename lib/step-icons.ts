@@ -9,6 +9,7 @@ import {
   ReceiptIcon,
   TrophyIcon,
 } from "@phosphor-icons/react/ssr";
+import { stepSlug } from "./deadlines";
 
 // Each checklist step's icon tile (16 → Step icons), keyed in code by a slug made from the step's title, so the
 // database and its verified rows don't change. A step not in the map gets the default.
@@ -33,12 +34,7 @@ const LOOKS: Record<string, StepLook> = {
 const SUBMIT: StepLook = { icon: PaperPlaneTiltIcon, tile: "bg-blue-600", color: "text-white" };
 const DEFAULT: StepLook = { icon: CheckSquareIcon, ...SKY };
 
-// "Pick your campuses and majors" → "pick-your-campuses-and-majors"
-export const stepSlug = (title: string) =>
-  title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+export { stepSlug };
 
 export function stepLook(title: string): StepLook {
   const slug = stepSlug(title);

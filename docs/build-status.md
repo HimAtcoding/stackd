@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-19 (color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19). Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-19 (date tiles, link lines and step sheets, spec 18, on branch `date-tiles`, which includes `color-pass`; spec 18 added as build step 20). Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,45 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## Date tiles, link lines and step sheets (step 20, 2026-10-19)
+
+Spec `18-list-link-steps.md`, on branch `date-tiles`. The branch was made from main and merges `color-pass` (PR #10), which 18 builds on, so it merges after PR #10. No database changes.
+
+- **Date tiles** (`components/ui/date-row.tsx`): the Deadlines list is a plain list of rows, 4 apart, with no spine, nodes, month headers, "Open now" or days pill. The 48 tile carries the status:
+  - coral with white text at 14 days or less;
+  - sky with a 1.5 blue ring when the window is open (an inset shadow, since browsers round a 1.5 border down to 1);
+  - white with a grey border when later;
+  - green with a check when done;
+  - faint when missed.
+
+  The open next row keeps Mark done and Remind me under its text. `timeline-row.tsx` is gone; the cycle bar keeps its own small nodes.
+- **Link lines** (`components/ui/link-line.tsx`): icon and label in `--blue-700` with the domain under the label, 44 tall, no box. They replace the outside-link row (deleted) in the date sheet, under its source line, and at the steps sheet's bottom. Outside links are named "{label}, {domain}, opens outside the app". A link inside Stackd shows the step's own icon and names where it goes.
+- **Step sheets** (`app/(app)/_home/step-sheet.tsx`): a step's text on Home, or in the steps sheet, opens its own sheet. From the steps sheet, that sheet closes first and the step sheet opens 200 ms later. The step sheet holds:
+  - the 40 icon tile, title and summary;
+  - "What you'll need", with 1 to 4 items;
+  - a link where Stackd has the tool: "See your plan" (`/settings/`, "Your schools"), "Write them in Stackd" (only with the `essays` flag on), or "Open the UC application" / "Open Cal State Apply" on the submit step;
+  - Mark done (or "Mark not done"), and "Step n of total".
+- **What you'll need** (`lib/step-content.ts`): keyed by system (`uc`, `csu`) and step slug, with each item's source URL (or guide page) in a comment. Checked against the sources on Oct 19, 2026 and approved by Ryan:
+  - UC: "Filling out the application" (transfer), the personal insight questions page and "Apply now".
+  - Cal State Apply: the Transfer Application Guide 2027-2028.
+
+  `stepSlug` moved to `lib/deadlines.ts`; `lib/step-icons.ts` re-exports it.
+- **Steps that know their status:** "Pick your campuses and majors" is checked when the plan has a school in the checklist's system with a major. Its rows read "From your plan". Unchecking it is remembered on this device only (`stackd.stepsUnchecked`, cleared at sign-out), and checking it again lets the plan check it. The Essays signal waits for 17.
+- **All-done wording:** "Your UC application is ready" / "Submit it by Nov 30." only when every step is checked and the plan signal agrees. Otherwise "All 6 steps checked" / "Submit it by Nov 30. Double-check your campuses and answers on UC's site." The finishing toast follows the title, with "!".
+- **Demo seed:** the extra Cal State Apply step "Add your work and activities" is removed, so the demo checklist matches the real five steps (`csu-1` to `csu-5`).
+
+**Tested 2026-10-19** (Windows, dev server with the v1.1 flags, stand-in session, dates from the database):
+- Spec 18's test list in the browser at 393 and 320: 20 scripted checks plus measurements of the tiles and link lines, covering
+  - the tiles' colors, sizes and type, today and with the clock at Nov 20;
+  - Mark done turning the tile green and moving the row;
+  - both link lines;
+  - the step sheet from Home, with no Essays link while the flag is off;
+  - "From your plan" and unchecking it;
+  - a steps sheet row opening its step sheet;
+  - "See your plan";
+  - the ready and not-ready finish and toast.
+- `test:deadlines` has 16 new checks for the items, the plan signal and the all-done wording. Lint, `tsc` and `npm run build` pass.
 
 ## Color pass (step 18, 2026-10-19)
 

@@ -52,7 +52,7 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 | `--amber-700` | #A86A00 | The activities step's icon (16) |
 | `--mint-600` | #12946A | Explore section color later, the courses step's icon (16) |
 
-Feature panels, the step tile, the outside-link row and the step burst are specified in `16-color-pass.md`. The section colors above mark features and never carry status: the status colors below stay fixed everywhere.
+Feature panels, the step tile and the step burst are specified in `16-color-pass.md`. The date tile, the link line (which replaces 16's outside-link row) and the step sheet are specified in `18-list-link-steps.md`; the Deadlines list has no timeline spine or nodes since 18. The section colors above mark features and never carry status: the status colors below stay fixed everywhere.
 
 ### Status colors
 

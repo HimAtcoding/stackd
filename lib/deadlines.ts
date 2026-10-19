@@ -46,7 +46,8 @@ export type ChecklistStep = {
 };
 
 // A school on the student's plan. system undefined: a plan saved before systems were read, so it counts for both.
-export type School = { id: string; name: string; system: string | null | undefined };
+// hasMajor: the student picked a major there.
+export type School = { id: string; name: string; system: string | null | undefined; hasMajor?: boolean };
 // The student's schools, or null with no plan yet
 export type Scope = School[] | null;
 
@@ -400,9 +401,26 @@ export function recordSource(d: Deadline): string {
 export type ChecklistView = {
   checklist: ChecklistRecord;
   deadline: Deadline;
-  steps: { step: ChecklistStep; done: boolean }[];
+  // auto: checked because the plan says so ("From your plan"), not by a tap
+  steps: { step: ChecklistStep; done: boolean; auto: boolean }[];
   doneCount: number;
+  // Every step checked and the signals agree, so the app can say the application is ready (18 → All-done wording)
+  ready: boolean;
 };
+
+// The plan has a school in this system (uc, csu) with a major (18 → Steps that know their own status)
+export const planHasMajor = (scope: Scope, system: string) =>
+  Boolean(scope?.some((s) => (s.system === undefined || s.system?.toLowerCase() === system) && s.hasMajor));
+
+// The step the plan can check by itself
+const PLAN_STEP = "pick-your-campuses-and-majors";
+
+// "Pick your campuses and majors" → "pick-your-campuses-and-majors". Step icons and content are keyed by it.
+export const stepSlug = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 // The checklist for the application due next among the student's systems (14 → Which checklist shows).
 // On the same due day UC comes first, and the other takes over once it's finished. No plan: UC.
@@ -412,18 +430,27 @@ export function pickChecklist(
   view: DeadlineView,
   scope: Scope,
   stepDone: (id: string) => boolean,
+  // Steps the student unchecked although the plan checks them
+  unchecked: (id: string) => boolean = () => false,
 ): ChecklistView | null {
   const candidates = view.upcoming
     .filter((d) => (scope ? true : d.audience === "uc"))
     .flatMap((deadline) => {
       const checklist = checklists.find((c) => c.deadline_id === deadline.id && c.cycle === view.cycle);
       if (!checklist) return [];
+      const fromPlan = planHasMajor(scope, deadline.audience);
       const own = steps
         .filter((s) => s.checklist_id === checklist.id)
         .sort((a, b) => a.position - b.position)
-        .map((step) => ({ step, done: stepDone(step.id) }));
+        .map((step) => {
+          const auto = fromPlan && stepSlug(step.title) === PLAN_STEP && !unchecked(step.id);
+          return { step, done: auto || stepDone(step.id), auto };
+        });
       if (own.length === 0) return [];
-      return [{ checklist, deadline, steps: own, doneCount: own.filter((s) => s.done).length }];
+      const doneCount = own.filter((s) => s.done).length;
+      // The Essays signal (4 of 4) joins this once 17 ships
+      const ready = doneCount === own.length && fromPlan;
+      return [{ checklist, deadline, steps: own, doneCount, ready }];
     });
   const [first, second] = candidates;
   if (!first) return null;
@@ -436,8 +463,17 @@ export function pickChecklist(
 
 const sameDay = (a: Deadline, b: Deadline) => dayIndex(pacific(a.due_at)) === dayIndex(pacific(b.due_at));
 
-export const checklistTitle = (c: ChecklistView) =>
-  c.doneCount === c.steps.length ? `Your ${c.checklist.name} is ready` : `Get your ${c.checklist.name} ready`;
+// Six checks are six checks: "ready" only when the signals agree, otherwise what happened (18 → All-done wording)
+export function checklistTitle(c: ChecklistView): string {
+  if (c.doneCount < c.steps.length) return `Get your ${c.checklist.name} ready`;
+  return c.ready ? `Your ${c.checklist.name} is ready` : `All ${c.steps.length} steps checked`;
+}
+
+// Where to double-check, when a signal is missing
+const CHECK_ON: Record<string, string> = {
+  uc: "Double-check your campuses and answers on UC's site.",
+  csu: "Double-check your campuses and courses on Cal State Apply.",
+};
 
 // "4 steps left, due by Nov 30", or once every step is done, when to submit
 export function checklistSubtitle(c: ChecklistView): string {
@@ -445,7 +481,9 @@ export function checklistSubtitle(c: ChecklistView): string {
   const due = shortDate(c.deadline.due_at);
   if (left === 0) {
     const time = c.deadline.due_has_time ? `, ${timeOfDay(c.deadline.due_at)} Pacific` : "";
-    return `Submit it by ${due}${time}.`;
+    const submit = `Submit it by ${due}${time}.`;
+    const check = CHECK_ON[c.deadline.audience];
+    return c.ready || !check ? submit : `${submit} ${check}`;
   }
   return `${left} ${left === 1 ? "step" : "steps"} left, due by ${due}`;
 }

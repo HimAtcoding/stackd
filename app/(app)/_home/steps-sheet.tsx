@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
-import { OutsideLinkRow } from "@/components/ui/outside-link-row";
+import { LinkLine } from "@/components/ui/link-line";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { StepTile } from "@/components/ui/step-tile";
 import { cn } from "@/lib/cn";
@@ -12,21 +11,15 @@ type StepsSheetProps = {
   open: boolean;
   onClose: () => void;
   checklist: ChecklistView;
-  // The step the student tapped on Home: scrolled into view and tinted for 600 ms
-  focusStep: string | null;
   onToggle: (stepId: string, done: boolean) => void;
+  // A row's text opens that step's own sheet (18 → Step sheets)
+  onOpenStep: (stepId: string) => void;
   // One step left and not yet finished on this device: checking it gets the bigger burst (16 → All steps done)
   finale: boolean;
 };
 
 // Every step of the application, done and not done, with the official site and where the steps come from (14 → Steps sheet)
-export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle, finale }: StepsSheetProps) {
-  const list = useRef<HTMLOListElement>(null);
-
-  useEffect(() => {
-    if (open && focusStep) list.current?.querySelector(`[data-step="${focusStep}"]`)?.scrollIntoView({ block: "nearest" });
-  }, [open, focusStep]);
-
+export function StepsSheet({ open, onClose, checklist: c, onToggle, onOpenStep, finale }: StepsSheetProps) {
   return (
     <BottomSheet open={open} onClose={onClose} labelledBy="steps-sheet-title">
       <div className="-mx-6 -mt-6 max-h-[calc(100dvh-var(--safe-top)-72px)] overflow-y-auto px-6 pt-6">
@@ -39,26 +32,28 @@ export function StepsSheet({ open, onClose, checklist: c, focusStep, onToggle, f
           {c.doneCount} of {c.steps.length} done, due by {shortDate(c.deadline.due_at)}
         </p>
 
-        <ol ref={list} className="mt-4 flex flex-col">
-          {c.steps.map(({ step, done }) => (
-            <li
-              key={step.id}
-              data-step={step.id}
-              className={cn("-mx-2 flex min-h-14 items-start gap-2.5 rounded-md px-2 py-2", focusStep === step.id && "tint-flash")}
-            >
+        <ol className="mt-4 flex flex-col">
+          {c.steps.map(({ step, done, auto }) => (
+            <li key={step.id} className="-mx-2 flex min-h-14 items-start gap-2.5 px-2 py-2">
               {/* The 40 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
               <StepTile title={step.title} size={40} done={done} finale={finale && !done} onToggle={() => onToggle(step.id, !done)} className="-m-0.5" />
-              <div className="min-w-0 flex-1 pt-2">
-                <p className={cn("type-row-title", done ? "text-slate-600" : "text-navy-900")}>{step.title}</p>
-                <p className="mt-0.5 text-slate-600 type-body">{step.summary}</p>
-              </div>
+              {/* The text opens the step's own sheet, and its tap area runs the row's full height */}
+              <button
+                type="button"
+                onClick={() => onOpenStep(step.id)}
+                className="-my-2 min-w-0 flex-1 rounded-sm pb-2 pt-4 text-left transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120"
+              >
+                <span className={cn("block type-row-title", done ? "text-slate-600" : "text-navy-900")}>{step.title}</span>
+                {auto && <span className="mt-0.5 block text-slate-600 type-caption">From your plan</span>}
+                <span className="mt-0.5 block text-slate-600 type-body">{step.summary}</span>
+              </button>
             </li>
           ))}
         </ol>
 
-        {/* It leaves the app, so it's a link row, not the main action (16 → Outside-link row) */}
-        <OutsideLinkRow href={c.checklist.apply_url} title={c.checklist.apply_label} className="mt-6" />
-        <p className="mt-3 text-slate-600 type-caption">{checklistSource(c)}</p>
+        {/* It leaves the app, so it's a link line, not the main action (18 → Link lines). Its 4 padding counts toward the gaps. */}
+        <LinkLine href={c.checklist.apply_url} label={c.checklist.apply_label} className="mt-5" />
+        <p className="mt-2 text-slate-600 type-caption">{checklistSource(c)}</p>
       </div>
     </BottomSheet>
   );

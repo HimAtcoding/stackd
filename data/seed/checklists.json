@@ -40,9 +40,8 @@
     { "demo": true, "id": "uc-6", "checklist_id": "uc-application-fall-2027", "position": 6, "title": "Submit by Nov 30", "summary": "Submit before 11:59 p.m. Pacific on November 30, 2026." },
     { "demo": true, "id": "csu-1", "checklist_id": "cal-state-apply-fall-2027", "position": 1, "title": "Pick your campuses and majors", "summary": "Choose which CSU campuses and programs to apply to." },
     { "demo": true, "id": "csu-2", "checklist_id": "cal-state-apply-fall-2027", "position": 2, "title": "Enter your courses and grades", "summary": "Enter your college coursework and grades from your transcripts." },
-    { "demo": true, "id": "csu-3", "checklist_id": "cal-state-apply-fall-2027", "position": 3, "title": "Add your work and activities", "summary": "Some campuses and programs use this; check yours." },
-    { "demo": true, "id": "csu-4", "checklist_id": "cal-state-apply-fall-2027", "position": 4, "title": "Check for extra campus steps", "summary": "Some majors and campuses ask for a supplemental application or more materials." },
-    { "demo": true, "id": "csu-5", "checklist_id": "cal-state-apply-fall-2027", "position": 5, "title": "Pay the fee or ask for a waiver", "summary": "Each campus has an application fee. Fee waivers are available for students who qualify." },
-    { "demo": true, "id": "csu-6", "checklist_id": "cal-state-apply-fall-2027", "position": 6, "title": "Submit by Nov 30", "summary": "Submit before November 30, 2026. Some campuses accept later applications." }
+    { "demo": true, "id": "csu-3", "checklist_id": "cal-state-apply-fall-2027", "position": 3, "title": "Check for extra campus steps", "summary": "Some majors and campuses ask for a supplemental application or more materials." },
+    { "demo": true, "id": "csu-4", "checklist_id": "cal-state-apply-fall-2027", "position": 4, "title": "Pay the fee or ask for a waiver", "summary": "Each campus has an application fee. Fee waivers are available for students who qualify." },
+    { "demo": true, "id": "csu-5", "checklist_id": "cal-state-apply-fall-2027", "position": 5, "title": "Submit by Nov 30", "summary": "Submit before November 30, 2026. Some campuses accept later applications." }
   ]
 }

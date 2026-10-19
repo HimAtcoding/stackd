@@ -6,16 +6,24 @@ import { createMarkQueue, mergeFromAccount, retryDelay, RETRY_FIRST_MS, RETRY_MA
 import {
   checkedDate,
   checklistSubtitle,
+  checklistTitle,
   cycleBar,
   describe,
   fullDate,
   nextDueLine,
+  pickChecklist,
+  planHasMajor,
   recordSource,
   shortDate,
+  type ChecklistRecord,
+  type ChecklistStep,
   type ChecklistView,
   type Deadline,
   type DeadlineRecord,
+  type DeadlineView,
+  type Scope,
 } from "../lib/deadlines";
+import { stepNeeds } from "../lib/step-content";
 import { stepLook, stepSlug } from "../lib/step-icons";
 
 let failed = 0;
@@ -204,6 +212,54 @@ for (const [title, icon, tile] of fall2027Steps) {
 }
 check("step icon: the submit step keeps its tile when the date changes", iconName("Submit by Dec 1") === "PaperPlaneTilt");
 check("step icon: an unknown step gets CheckSquare on sky", iconName("Send your transcripts") === "CheckSquare" && stepLook("Send your transcripts").tile === "bg-tint-sky");
+
+// Step sheets and all-done wording (18): what each step needs, steps the plan checks, and "ready" only with the signals
+check("needs: personal insight answers has two items", stepNeeds("uc", "Write your personal insight answers").length === 2);
+check(
+  "needs: UC fee is split in two",
+  JSON.stringify(stepNeeds("uc", "Pay the fee or ask for a waiver")) ===
+    JSON.stringify(["A credit card for the fee.", "For a fee waiver: your family's income and household size. The application tells you if you qualify."]),
+);
+check("needs: the submit step matches by its start", stepNeeds("uc", "Submit by Dec 1").length === 1 && stepNeeds("csu", "Submit by Nov 30").length === 2);
+check("needs: Cal State Apply's campus step has four items", stepNeeds("csu", "Pick your campuses and majors").length === 4);
+check("needs: no step has more than 4 items", ["uc", "csu"].every((sys) => fall2027Steps.every(([t]) => stepNeeds(sys, t).length <= 4)));
+check("needs: an unknown step or system shows none", stepNeeds("uc", "Send your transcripts").length === 0 && stepNeeds("aid", "Submit by Nov 30").length === 0);
+
+const ucsd: Scope = [{ id: "ucsd", name: "UC San Diego", system: "UC", hasMajor: true }];
+const ucsdNoMajor: Scope = [{ id: "ucsd", name: "UC San Diego", system: "UC", hasMajor: false }];
+check("plan signal: a UC with a major", planHasMajor(ucsd, "uc") && !planHasMajor(ucsdNoMajor, "uc") && !planHasMajor(ucsd, "csu") && !planHasMajor(null, "uc"));
+
+const ucList = { id: "ucl", cycle: "fall-2027", deadline_id: "uc-application", name: "UC application" } as ChecklistRecord;
+const ucSteps = [
+  "Pick your campuses and majors",
+  "Enter your courses and grades",
+  "Write your personal insight answers",
+  "Add activities and awards",
+  "Pay the fee or ask for a waiver",
+  "Submit by Nov 30",
+].map((title, i) => ({ id: `s${i + 1}`, checklist_id: "ucl", position: i + 1, title, summary: "" }) as ChecklistStep);
+const ucView: DeadlineView = { cycle: "fall-2027", upcoming: [fall[0]], finished: [], demo: false };
+const pick = (scope: Scope, marked: string[], unchecked: string[] = []) =>
+  pickChecklist([ucList], ucSteps, ucView, scope, (id) => marked.includes(id), (id) => unchecked.includes(id))!;
+const fromPlan = pick(ucsd, []);
+check("a plan with a UC and a major checks step 1, From your plan", fromPlan.steps[0].done && fromPlan.steps[0].auto && fromPlan.doneCount === 1);
+check("no major: step 1 isn't checked", !pick(ucsdNoMajor, []).steps[0].done);
+const unchecked = pick(ucsd, [], ["s1"]);
+check("unchecking step 1 sticks with the plan", !unchecked.steps[0].done && !unchecked.steps[0].auto);
+const allSix = ["s1", "s2", "s3", "s4", "s5", "s6"];
+const ready = pick(ucsd, allSix.slice(1));
+check(
+  "all six checked with a UC and a major: ready",
+  ready.ready && checklistTitle(ready) === "Your UC application is ready" && checklistSubtitle(ready) === "Submit it by Nov 30.",
+  [checklistTitle(ready), checklistSubtitle(ready)],
+);
+const notReady = pick(ucsdNoMajor, allSix);
+check("all six checked with no major: All 6 steps checked", !notReady.ready && checklistTitle(notReady) === "All 6 steps checked", checklistTitle(notReady));
+check(
+  "…with the longer subtitle",
+  checklistSubtitle(notReady) === "Submit it by Nov 30. Double-check your campuses and answers on UC's site.",
+  checklistSubtitle(notReady),
+);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

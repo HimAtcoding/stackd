@@ -1,10 +1,23 @@
 import { cn } from "@/lib/cn";
 import type { CycleBarNode, CycleBarView } from "@/lib/deadlines";
-import { TimelineNode } from "./timeline-row";
 
 const at = (n: number) => `${n * 100}%`;
 
 type Panel = "blue" | "coral";
+
+// A date's node on the sky page: coral dot at 14 days or less, blue ring when open, slate ring when not open yet
+function SkyNode({ kind }: { kind: CycleBarNode["kind"] }) {
+  return (
+    <span
+      className={cn(
+        "block size-3 rounded-full",
+        kind === "soon" && "bg-coral-500",
+        kind === "open" && "border-[2.5px] border-blue-600 bg-surface",
+        kind === "later" && "border-2 border-slate-400 bg-sky-50",
+      )}
+    />
+  );
+}
 
 // A date's node on the Deadlines panel (16 → Deadlines panel): 14 days or less, a filled white dot; open, a white
 // ring with the panel's color inside; not open yet, a fainter white ring.
@@ -35,7 +48,7 @@ export function CycleBar({ view, panel, className }: { view: CycleBarView; panel
         </div>
         {view.nodes.map((n, i) => (
           <span key={i} className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ left: at(n.at) }}>
-            {panel ? <PanelNode kind={n.kind} panel={panel} /> : <TimelineNode kind={n.kind} />}
+            {panel ? <PanelNode kind={n.kind} panel={panel} /> : <SkyNode kind={n.kind} />}
           </span>
         ))}
         <span
