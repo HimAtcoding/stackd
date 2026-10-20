@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowSquareOutIcon, CheckIcon } from "@phosphor-icons/react/ssr";
+import { ArrowSquareOutIcon, CheckIcon, DotsThreeIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { CircleButton } from "@/components/ui/circle-button";
 import { Expand } from "@/components/ui/expand";
@@ -167,18 +167,30 @@ function Editor({ prompt, saved }: EditorProps) {
       {/* The light strip (17 → Editor): a writing screen, not a progress screen, so no solid panel */}
       <div className="bg-tint-indigo">
         <div className="mx-auto max-w-[480px] pb-4" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
-          <div className="grid grid-cols-[44px_1fr_44px] items-center gap-2 px-4">
+          {/* Equal side columns keep the save state centered between Back and the two buttons on the right */}
+          <div className="grid grid-cols-[96px_1fr_96px] items-center gap-2 px-4">
             <BackButton fallback={essaysHref() ?? "/"} slideBack />
             <p aria-live="polite" className="text-center text-slate-600 type-caption">
               {saveState ? SAVE_TEXT[saveState] : ""}
             </p>
-            <CircleButton
-              aria-label="Mark done"
-              aria-pressed={done}
-              icon={<CheckIcon weight="bold" size={22} aria-hidden />}
-              onClick={toggleDone}
-              variant={done ? "done" : "surface"}
-            />
+            <div className="flex justify-end gap-2">
+              {/* The overflow menu, empty until 19 fills it (copy, share, review, import). Disabled meanwhile, so
+                  it's never a button that does nothing. */}
+              <CircleButton
+                aria-label="More"
+                aria-disabled="true"
+                disabled
+                icon={<DotsThreeIcon weight="bold" size={22} aria-hidden />}
+                className="opacity-40"
+              />
+              <CircleButton
+                aria-label="Mark done"
+                aria-pressed={done}
+                icon={<CheckIcon weight="bold" size={22} aria-hidden />}
+                onClick={toggleDone}
+                variant={done ? "done" : "surface"}
+              />
+            </div>
           </div>
           <div className="mt-3 px-6">
             {collapsed ? (
