@@ -26,6 +26,7 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `16-color-pass.md` | Color pass: the solid Up next hero, step icon tiles that are the check control, the step burst and checklist celebration, the steps sheet's bar, and section colors with the Deadlines header band. Adds `--indigo-600`, `--amber-700`, `--mint-600`, `--yellow-50` |
 | `17-essays.md` | v1.2 Essays: the four UC personal insight answers, drafts and word counts, with AI feedback behind its own flag. Replaces `04` for real accounts |
 | `18-list-link-steps.md` | Date tiles in the Deadlines list, plain link lines for outside links, step sheets with what each step needs, and honest all-done wording. Replaces the matching parts of `15` and `16` |
+| `19-essay-import-share-review.md` | v1.2 Essays additions: paste or import a draft, copy, share or download answers, and private review links with comments from a reviewer who needs no account. Part of `17`'s `essays` flag |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
@@ -74,8 +75,10 @@ Each step depends on the one before it.
 | 16 | v1.1 Deadlines and reminders: tables and first dates (Abyan), Up next and the Deadlines screen (Ryan), then reminders and custom dates | `14` | The test list in `14` passes, reminders tested on a real iPhone |
 | 17 | v1.1 design rev 2 of Home and Deadlines: container tiers, route, segmented bar, cycle bar, one spine, open next row | `15`, `02`, `14` | The test list in `15` passes at 393 and 320 wide, with only the v1.1 deadline flags on |
 | 18 | Color pass: solid Up next hero, step icon tiles, step burst and celebration, steps sheet bar, section colors and the Deadlines band | `16`, `15`, `14` | The test list in `16` passes at 393 and 320 wide |
-| 19 | Essays: personal insight answers, drafts, AI feedback | `17` | The test list in `17` passes |
+| 19 | Essays part 1: the personal insight questions file, the essays tables and the import (done in PR #12) | `17` | The questions are imported and verified, and `test:db` and `test:import` pass |
 | 20 | Date tiles, link lines, step sheets and all-done wording | `18`, `16`, `15`, `14` | The test list in `18` passes at 393 and 320 wide |
+| 21 | Essays part 2: the Essays screen, the editor, saving and the entry points, behind `essays`; AI feedback stays off behind `essayFeedback` | `17`, `18` | The test list in `17` passes, except the AI feedback items |
+| 22 | Essays: bring drafts in, send them out, and review links | `19`, `17` | The test list in `19` passes |
 
 ## Prompt template for Claude Code
 
@@ -113,7 +116,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `19-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `20-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 
