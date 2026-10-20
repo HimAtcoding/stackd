@@ -300,6 +300,22 @@ const draftDelete = await expectOk("a student can't delete another student's dra
 check("the draft delete reached no one else's row", draftDelete?.rows.length === 0, draftDelete?.rows);
 await expectError("anon can't read drafts", () => as("anon", null, "select * from essay_drafts"), /permission denied/);
 
+// The app saves with an upsert on (user, question, cycle), then reads the account's copy back on the next open
+const saveAsApp = (sub, body, words) =>
+  as("authenticated", sub, `insert into essay_drafts (user_id, prompt_key, cycle, body, word_count, chosen, done_at) values ($1, 'leadership', 'fall-2027', $2, $3, true, null)
+    on conflict (user_id, prompt_key, cycle) do update set body = excluded.body, word_count = excluded.word_count, chosen = excluded.chosen, done_at = excluded.done_at
+    returning updated_at`, [sub, body, words]);
+const firstSave = await expectOk("the app's upsert saves a new draft", () => saveAsApp(A, "First version.", 2));
+await db.query("select pg_sleep(0.01)");
+const secondSave = await expectOk("the same upsert updates it", () => saveAsApp(A, "Second, longer version.", 3));
+const reread = (await as("authenticated", A, "select body, word_count, chosen, updated_at from essay_drafts where prompt_key = 'leadership'")).rows;
+check("reading it back gives the latest save, once", reread.length === 1 && reread[0].body === "Second, longer version." && reread[0].word_count === 3 && reread[0].chosen === true, reread);
+check("each save moves updated_at forward", new Date(secondSave?.rows[0].updated_at) > new Date(firstSave?.rows[0].updated_at), [firstSave?.rows[0], secondSave?.rows[0]]);
+await expectError("the upsert can't reach another student's draft", () =>
+  as("authenticated", A, `insert into essay_drafts (user_id, prompt_key, cycle, body) values ($1, 'major', 'fall-2027', 'x')
+    on conflict (user_id, prompt_key, cycle) do update set body = excluded.body`, [B]), /row-level security/);
+check("…and B's draft is unchanged", (await db.query("select body from essay_drafts where id = $1", [draftB])).rows[0].body === "Their own words.");
+
 // Feedback: the function (service role) writes it; the student only reads their own
 const addFeedback = (sub, draft) =>
   as("service_role", null, "insert into essay_feedback (user_id, draft_id, model, input_words, result) values ($1, $2, 'test-model', 2, '{}'::jsonb) returning id", [sub, draft]);

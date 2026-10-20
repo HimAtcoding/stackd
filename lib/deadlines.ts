@@ -401,8 +401,8 @@ export function recordSource(d: Deadline): string {
 export type ChecklistView = {
   checklist: ChecklistRecord;
   deadline: Deadline;
-  // auto: checked because the plan says so ("From your plan"), not by a tap
-  steps: { step: ChecklistStep; done: boolean; auto: boolean }[];
+  // auto: checked by a signal, not a tap: "plan" ("From your plan") or "essays" ("From Essays")
+  steps: { step: ChecklistStep; done: boolean; auto: StepSignal | null }[];
   doneCount: number;
   // Every step checked and the signals agree, so the app can say the application is ready (18 → All-done wording)
   ready: boolean;
@@ -412,8 +412,15 @@ export type ChecklistView = {
 export const planHasMajor = (scope: Scope, system: string) =>
   Boolean(scope?.some((s) => (s.system === undefined || s.system?.toLowerCase() === system) && s.hasMajor));
 
-// The step the plan can check by itself
+export type StepSignal = "plan" | "essays";
+
+// The steps that can check themselves: from the plan, and from Essays at 4 of 4 done
 const PLAN_STEP = "pick-your-campuses-and-majors";
+const ESSAYS_STEP = "write-your-personal-insight-answers";
+const ESSAY_ANSWERS = 4;
+
+// The caption under a step a signal checked
+export const signalLabel = (signal: StepSignal) => (signal === "plan" ? "From your plan" : "From Essays");
 
 // "Pick your campuses and majors" → "pick-your-campuses-and-majors". Step icons and content are keyed by it.
 export const stepSlug = (title: string) =>
@@ -430,8 +437,10 @@ export function pickChecklist(
   view: DeadlineView,
   scope: Scope,
   stepDone: (id: string) => boolean,
-  // Steps the student unchecked although the plan checks them
+  // Steps the student unchecked although a signal checks them
   unchecked: (id: string) => boolean = () => false,
+  // Answers done in Essays, or null while Essays is off
+  essaysDone: number | null = null,
 ): ChecklistView | null {
   const candidates = view.upcoming
     .filter((d) => (scope ? true : d.audience === "uc"))
@@ -443,13 +452,17 @@ export function pickChecklist(
         .filter((s) => s.checklist_id === checklist.id)
         .sort((a, b) => a.position - b.position)
         .map((step) => {
-          const auto = fromPlan && stepSlug(step.title) === PLAN_STEP && !unchecked(step.id);
-          return { step, done: auto || stepDone(step.id), auto };
+          const slug = stepSlug(step.title);
+          const signal: StepSignal | null =
+            slug === PLAN_STEP && fromPlan ? "plan" : slug === ESSAYS_STEP && essaysDone !== null && essaysDone >= ESSAY_ANSWERS ? "essays" : null;
+          const auto = signal && !unchecked(step.id) ? signal : null;
+          return { step, done: Boolean(auto) || stepDone(step.id), auto };
         });
       if (own.length === 0) return [];
       const doneCount = own.filter((s) => s.done).length;
-      // The Essays signal (4 of 4) joins this once 17 ships
-      const ready = doneCount === own.length && fromPlan;
+      // With Essays on, a checklist with the writing step is ready only at 4 of 4 done there too
+      const essaysAgree = essaysDone === null || !own.some((s) => stepSlug(s.step.title) === ESSAYS_STEP) || essaysDone >= ESSAY_ANSWERS;
+      const ready = doneCount === own.length && fromPlan && essaysAgree;
       return [{ checklist, deadline, steps: own, doneCount, ready }];
     });
   const [first, second] = candidates;

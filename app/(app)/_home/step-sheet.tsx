@@ -4,8 +4,8 @@ import { CheckIcon } from "@phosphor-icons/react/ssr";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { LinkLine } from "@/components/ui/link-line";
 import { StepIconTile } from "@/components/ui/step-tile";
-import { stepSlug, type ChecklistView } from "@/lib/deadlines";
-import { unbuiltHref } from "@/lib/features";
+import { signalLabel, stepSlug, type ChecklistView } from "@/lib/deadlines";
+import { essaysHref } from "@/lib/features";
 import { stepNeeds } from "@/lib/step-content";
 import { stepLook } from "@/lib/step-icons";
 
@@ -16,8 +16,8 @@ function stepLink(c: ChecklistView, title: string): StepLink | null {
   const slug = stepSlug(title);
   if (slug === "pick-your-campuses-and-majors") return { href: "/settings/", label: "See your plan", detail: "Your schools" };
   if (slug === "write-your-personal-insight-answers") {
-    // Hidden while the essays flag is off
-    const href = unbuiltHref("essays");
+    // Only with Essays on, and only on UC's checklist: the answers are for UC applications (17 → Entry points)
+    const href = c.deadline.audience === "uc" ? essaysHref() : null;
     return href ? { href, label: "Write them in Stackd", detail: "Personal insight answers" } : null;
   }
   if (slug.startsWith("submit-by")) return { href: c.checklist.apply_url, label: c.checklist.apply_label };
@@ -68,7 +68,7 @@ function Content({
           <h2 id="step-sheet-title" tabIndex={-1} className="line-clamp-2 text-navy-900 type-title-2 focus:outline-none">
             {step.title}
           </h2>
-          {auto && <p className="mt-0.5 text-slate-600 type-caption">From your plan</p>}
+          {auto && <p className="mt-0.5 text-slate-600 type-caption">{signalLabel(auto)}</p>}
         </div>
       </div>
       <p className="mt-2 text-slate-700 type-body">{step.summary}</p>

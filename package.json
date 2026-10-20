@@ -18,6 +18,7 @@
     "test:import": "node scripts/import/test.mjs",
     "test:reminders": "tsx scripts/test-reminders.mts",
     "test:deadlines": "tsx scripts/test-deadline-sync.mts",
+    "test:essays": "tsx scripts/test-essays.mts",
     "test:oauth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-oauth.mjs",
     "apple:secret": "node scripts/make-apple-secret.mjs",
     "ios:assets": "node scripts/ios-assets.mjs",

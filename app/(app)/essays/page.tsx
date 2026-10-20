@@ -1,6 +1,14 @@
-import { UnbuiltRoute } from "@/components/unbuilt-route";
+import { Suspense } from "react";
+import { PageTransition } from "@/components/page-transition";
+import { EssaysRoute } from "./_essays/essays-screen";
 
-// Not built yet: the placeholder with its flag on, Home in the v1 release (lib/features.ts)
+// /essays/ (17): the four personal insight answers, pushed from Home's row or a step sheet's link
 export default function EssaysPage() {
-  return <UnbuiltRoute screen="essays" tab="essays" />;
+  return (
+    <PageTransition>
+      <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+        <EssaysRoute />
+      </Suspense>
+    </PageTransition>
+  );
 }

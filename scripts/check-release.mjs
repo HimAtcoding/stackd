@@ -1,6 +1,6 @@
 // Runs after `next build` (13 → Production cleanup). Fails the build when the release could show something v1 hides:
 // 1. a /dev/ page in out/;
-// 2. a link to a screen that isn't built, or to a built screen behind a flag (/deadlines/), written anywhere but
+// 2. a link to a screen that isn't built, or to a built screen behind a flag (/deadlines/, /essays/), written anywhere but
 //    lib/features.ts (links must come from its helpers, which give none while the flag is off);
 // 3. the placeholder screen used anywhere but behind that table (components/unbuilt-route.tsx).
 // The service role key check (scripts/check-service-key.mjs) runs after this one.
@@ -24,8 +24,8 @@ const devPages = walk(path.join(root, "out/dev"));
 if (devPages.length) problems.push(`out/dev/ is in the build (${devPages.length} files). /dev/ pages must only exist under next dev`);
 
 // 2 and 3. The app's own code: dev-only pages are excluded, since they never reach a build
-const UNBUILT = ["explore", "essays", "mentors", "events", "notifications", "requirement", "track-application"];
-const FLAGGED = { deadlines: "deadlinesHref()" };
+const UNBUILT = ["explore", "mentors", "events", "notifications", "requirement", "track-application"];
+const FLAGGED = { deadlines: "deadlinesHref()", essays: "essaysHref()" };
 const linkPattern = new RegExp(`["'\`]/(${[...UNBUILT, ...Object.keys(FLAGGED)].join("|")})(?=[/?"'\`])`, "g");
 const PLACEHOLDER_ALLOWED = new Set(["components/placeholder-screen.tsx", "components/unbuilt-route.tsx"]);
 

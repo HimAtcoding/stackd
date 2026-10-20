@@ -18,6 +18,7 @@ import { readSeedResult } from "@/lib/seed";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
 import { getHome, getTargetUniversity } from "./index";
+import { useEssaysDone } from "./essays";
 import { createMarkQueue, mergeFromAccount, type PushError } from "./mark-queue";
 import { readPlanState, usePlan, type Plan } from "./plan";
 
@@ -384,6 +385,8 @@ export function useDeadlines(scopeState: ScopeState): DeadlinesState {
   const steps = stepMarks.use();
   const unchecked = stepsUnchecked.use();
   const term = termChoice.use();
+  // Essays' "{done} of 4 done", for the writing step (18 → Steps that know their own status). Null while Essays is off.
+  const essaysDone = useEssaysDone(term.term);
   const loadedRecords = useSyncExternalStore(subscribeRecords, getRecords, () => LOADING);
   const scope = scopeState.status === "ok" ? scopeState.scope : undefined;
 
@@ -396,9 +399,9 @@ export function useDeadlines(scopeState: ScopeState): DeadlinesState {
     if (loadedRecords.status === "loading" || scope === undefined || !today) return { status: "loading" };
     const { deadlines, checklists, steps: allSteps } = loadedRecords.data;
     const view = buildView(deadlines, (id) => doneMarks[id]?.done_at ?? null, scope, term.term, today);
-    const checklist = pickChecklist(checklists, allSteps, view, scope, (id) => Boolean(steps[id]), (id) => unchecked.includes(id));
+    const checklist = pickChecklist(checklists, allSteps, view, scope, (id) => Boolean(steps[id]), (id) => unchecked.includes(id), essaysDone);
     return { status: "ok", now: today, scope, view, checklist, term, marks: doneMarks };
-  }, [loadedRecords, scopeState.status, scope, today, doneMarks, steps, unchecked, term]);
+  }, [loadedRecords, scopeState.status, scope, today, doneMarks, steps, unchecked, term, essaysDone]);
 }
 
 // The term on its own, for Settings' Transfer term row

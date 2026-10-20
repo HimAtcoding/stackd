@@ -70,7 +70,6 @@ export function AccountHome({ art }: { art: HomeArt }) {
             requirements: first
               ? { subtitle: first.name, href: universityHref(first.slug), transitionTypes: ["push"] }
               : { subtitle: "Set up your plan", href: onboardingUrl("college", { from: "home" }) },
-            essays: COMING_SOON,
             mentors: COMING_SOON,
             events: COMING_SOON,
           }),
