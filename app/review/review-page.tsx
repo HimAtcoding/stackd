@@ -157,7 +157,9 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
       }
       const text = sel.toString().trim();
       if (!text) return setSelection(null);
-      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      // Above the selection's first line, so a selection across lines doesn't put it over other words
+      const range = sel.getRangeAt(0);
+      const rect = range.getClientRects()[0] ?? range.getBoundingClientRect();
       const outer = box.getBoundingClientRect();
       setSelection({ text, top: rect.top - outer.top, left: Math.min(Math.max(rect.left - outer.left + rect.width / 2, 48), outer.width - 48) });
     }
