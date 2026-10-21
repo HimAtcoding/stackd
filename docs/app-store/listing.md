@@ -1,8 +1,10 @@
-# App Store listing (version 1.1)
+# App Store listing (version 1.2)
 
 Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat/ios-app-store-prep`, and **entered in App Store Connect the same day** (app record "Stackd: Transfer Planner", Apple ID `6822523006`, version 1.0 Prepare for Submission). Re-check the privacy answers whenever what the app collects changes (`docs/specs/12-legal-and-support.md`).
 
-**Updated 2026-10-18 for version 1.1** (`docs/specs/13-v1-launch.md → 1.1 submission`): the privacy answers, the reviewer notes, the screenshots, What's New and the checklist. The 1.1 changes still have to be entered in App Store Connect.
+**Updated 2026-10-18 for version 1.1** (`docs/specs/13-v1-launch.md → 1.1 submission`): the privacy answers, the reviewer notes, the screenshots, What's New and the checklist.
+
+**Updated 2026-10-21 for version 1.2** (Essays, specs 17 and 19, on branch `release/v1.2`): description, privacy answers, age rating, reviewer notes, screenshots and the checklist. 1.1 was never submitted. Version 1.0 was still Waiting for Review on 2026-10-21, and Shikhar chose to withdraw it and turn that same App Store version into 1.2 with build 1.2.0 (3). That makes 1.2 the app's first public release, so App Store Connect shows no What's New field (it's kept below for the record).
 
 ## Credits
 
@@ -20,7 +22,7 @@ Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat
 | Bundle ID | `app.stackd.transfer` |
 | SKU | `stackd-ios-1` |
 | Primary language | English (U.S.) |
-| Version | 1.1 (the binary is 1.1.0, build 2). 1.0 was 1.0.0, build 1 |
+| Version | 1.2 (the binary is 1.2.0, build 3). Earlier uploads: 1.0.0 (1) and 1.1.0 (2); never reuse those numbers |
 | Primary category | Education |
 | Secondary category | None |
 | Price | Free ($0.00 in all regions) |
@@ -39,7 +41,7 @@ Plan your California transfer
 **Promotional text** (optional, 170 max):
 
 ```
-See your next transfer deadline, check off your UC or Cal State application, and get a reminder before each date.
+Draft your four UC personal insight answers, see your next transfer deadline, and check off your UC or Cal State application.
 ```
 
 **Keywords** (99 of 100 characters; no brand names):
@@ -56,6 +58,9 @@ Stackd helps California community college students organize their transfer plan.
 Never miss a transfer deadline
 Home shows your next deadline with a countdown, and a checklist for your UC or Cal State application. The Deadlines screen lists every date for your transfer year, from the UC application to the FAFSA, each linked to its official source. Turn on reminders to get a heads-up before each one.
 
+Draft your UC personal insight answers
+Write all four of your UC personal insight answers in Stackd: the required one and the three you choose. Stackd counts your words against the 350-word limit, saves your drafts to your account, and shows when all four are done. Bring a draft in from a file or the clipboard, copy it out when it's ready, and send a private link to a counselor or teacher so they can comment, no account needed.
+
 Pick your community college, the universities you're aiming for, and your major. Stackd saves your plan to your account, so it's there on any device you sign in on, and opens the official transfer agreement for your path on ASSIST, the official source for California transfer agreements.
 
 What you can do:
@@ -63,18 +68,25 @@ What you can do:
 - Choose your college, the universities you're aiming for, and your major
 - See your plan on Home, and change it any time in Settings
 - Open the official agreement for your college, school, and major
+- Draft, count and finish your UC personal insight answers, and ask someone to review them
 - Delete your account and its data any time in Settings
 
 Stackd starts with a small set of colleges, universities, and majors and adds more as each one is checked. When your path isn't covered yet, Stackd points you to ASSIST.
 
-Stackd is an unofficial planning tool. It isn't affiliated with ASSIST, the University of California, the California State University, or any college, and it doesn't guarantee admission or that any course will transfer. Confirm your plan with a counselor.
+Stackd is an unofficial planning tool. It isn't affiliated with ASSIST, the University of California, the California State University, or any college, and it doesn't guarantee admission or that any course will transfer. Stackd doesn't submit applications and never writes your answers for you. Confirm your plan with a counselor.
 
 Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 ```
 
-Kept truthful on purpose: no course matches, no statewide coverage, no admission chances. Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
+Kept truthful on purpose: no course matches, no statewide coverage, no admission chances, no AI (`essayFeedback` is off in 1.2). Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
 
-**What's New in This Version** (1.1):
+**What's New in Version 1.2** (not shown by App Store Connect for a first release; kept for the record and for the next version):
+
+```
+Essays are here. Draft your four UC personal insight answers in Stackd, with a word counter for the 350-word limit, drafts saved to your account, and a check for each answer you finish. Bring a draft in from a file or your clipboard, copy or share it when it's ready, and send a private review link to a counselor or teacher. Home and Deadlines also have a refreshed look, with date tiles, official-source links, and a sheet for each application step.
+```
+
+**What's New in 1.1** (never submitted):
 
 ```
 Deadlines are here. Home now shows your next transfer deadline with a countdown, and a checklist for your UC or Cal State application. The new Deadlines screen lists every date for your transfer year, each with its official source. Turn on reminders to get a heads-up before each one.
@@ -89,7 +101,7 @@ Deadlines are here. Home now shows your next transfer deadline with a countdown,
 
 ## App Privacy (the "nutrition label")
 
-Checked against the code: the Supabase tables (`profiles`, `user_targets`, `saved_schools`, `user_requirement_status`, `saved_courses`, and from 1.1 `user_deadlines`, `user_checklist_steps` and `profiles.transfer_term`), `lib/auth`, and `package.json`. There's no analytics, advertising, crash-reporting or tracking SDK in the app. Re-checked for 1.1 on 2026-10-18 against `/privacy/` (updated October 18, 2026).
+Checked against the code: the Supabase tables (`profiles`, `user_targets`, `saved_schools`, `user_requirement_status`, `saved_courses`, from 1.1 `user_deadlines`, `user_checklist_steps` and `profiles.transfer_term`, and from 1.2 `essay_drafts`, `review_links` and `review_comments`), `lib/auth`, and `package.json`. There's no analytics, advertising, crash-reporting or tracking SDK in the app (1.2 adds only Capacitor's Clipboard and Share plugins and `mammoth`, which reads .docx files on the phone). Re-checked for 1.2 on 2026-10-21 against `/privacy/` (updated October 21, 2026).
 
 **Do you or your third-party partners collect data from this app?** Yes.
 
@@ -98,7 +110,9 @@ Checked against the code: the Supabase tables (`profiles`, `user_targets`, `save
 | Contact Info → Email Address | Yes (sign-up, or shared by Apple or Google) | Yes | No | App Functionality |
 | Contact Info → Name | Yes (first name only; typed, or shared by Apple or Google) | Yes | No | App Functionality |
 | Identifiers → User ID | Yes (the account ID, and the Apple or Google account ID behind a social sign-in) | Yes | No | App Functionality |
-| User Content → Other User Content | Yes (the plan: community college, target schools, majors, saved schools, progress. From 1.1, the deadline data: the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline) | Yes | No | App Functionality |
+| User Content → Other User Content | Yes (the plan: community college, target schools, majors, saved schools, progress. From 1.1, the deadline data: the transfer term, the deadlines and checklist steps marked done, and the reminder days chosen for each deadline. From 1.2, essay drafts, their word counts and done marks, review links' snapshots, and reviewers' comments on them) | Yes | No | App Functionality |
+
+Essays add no new data type either: drafts and review comments are user content stored with the student's account, used only to show them back, never used for tracking, and not sent to any AI (`essayFeedback` is off; spec 17's AI feedback isn't built). A file a student imports is read on the phone and only the text they keep is saved. A reviewer uses the website, not the app, and has no account.
 
 The deadline data adds no new data type: it's the student's own content in the same row, linked to their account, used for app functionality only, and not used for tracking. Reminders are local notifications that the iPhone schedules itself. Nothing is sent when one goes off, and the reminders switch and default days in Settings stay on the phone, so notifications need no data type of their own.
 
@@ -114,12 +128,12 @@ Apple's current questionnaire (the 4+ / 9+ / 13+ / 16+ / 18+ system). Answer **N
 
 | Question | Answer | Why |
 |---|---|---|
-| User-generated content shown to others, messaging, or chat | No | Each plan is visible only to its owner (row-level security) |
+| User-generated content shown to others, messaging, or chat | **Yes (1.2)** | A student can share one answer by a private review link, and the person with the link can comment. Nothing is public or browsable: only the student sees the comments. Moderation for guideline 1.2: the student can delete any comment and turn off any link; each comment has Report (emails joinstackd@gmail.com); the Terms forbid abusive comments and promise action within 24 hours; links end after 14 days; 60 comments a day per link. Plans and drafts stay visible only to their owner (row-level security) |
 | Unrestricted web access | No | Outside links (ASSIST, the policy pages' links) open in Safari; the only in-app browser is Google's sign-in page |
 | Advertising | No | |
 | Parental controls / age assurance | No | |
 
-Expected result: **4+**.
+Expected result: **4+** (1.0 and 1.1). With the 1.2 user-content answer App Store Connect may suggest a higher age; accept what it calculates, since the content is private sharing chosen by the student.
 
 ## Export compliance
 
@@ -145,39 +159,44 @@ Expected result: **4+**.
 | Contact email | joinstackd@gmail.com |
 | Contact phone | The account holder's (App Store Connect requires one) |
 
-The review account: first name "Taylor", email confirmed, plan Las Positas College → UC San Diego, Computer Science (B.S.). Nothing personal in it.
+The review account: first name "Taylor", email confirmed, plan Las Positas College → UC San Diego, Computer Science (B.S.). Nothing personal in it. Since 2026-10-21 it also has a made-up 102-word "Your major" draft, so Essays isn't empty for the reviewer.
 
-**Notes for the reviewer** (1.1). The first paragraph is spec 13's 1.1 note. The last two lines are kept from 1.0 because they still hold and reviewers check account deletion:
+**Notes for the reviewer** (1.2):
 
 ```
-Stackd is a transfer-planning app for California community college students. Sign in with the account above to see a saved plan. Home shows the next transfer deadlines and a checklist for the application. Deadlines lists every date with its official source. Reminders are local notifications, and the app asks for permission only when you tap Remind me.
+Stackd is a transfer-planning app for California community college students. Sign in with the account above to see a saved plan (Las Positas College to UC San Diego, Computer Science).
+
+Home shows the student's transfer route, the next deadline, and the UC application checklist. Deadlines lists every date with its official source. Reminders are local notifications, and the app asks for permission only when you tap Remind me.
+
+Essays: on Home, tap "Personal insight answers" (or open the UC checklist step "Write your personal insight answers" and tap "Write them in Stackd"). Choose questions, then open one to write. Drafts are saved to the account. The ... menu in the editor copies or shares the text, imports a .docx or .txt, or makes a private review link. The link opens a web page where a reviewer can comment without an account; only the student sees the comments, and can delete any comment, report it, or turn the link off. Stackd has no AI features and never writes text for the student.
 
 You can also create a new account with email (a 6-digit code is emailed), Sign in with Apple, or Continue with Google. A new account goes through a three-step setup: college, schools, major.
 
 Account deletion: Settings > Delete account > Delete account. It deletes the account and all of its data right away.
 ```
 
-## Screenshots
+## Screenshots (1.2)
 
-Captured on the Mac from the iOS Simulator or a real iPhone, never from the web build. iPhone only, so only iPhone sizes: 6.9-inch (1320 × 2868, e.g. iPhone 16 Pro Max simulator). App Store Connect scales them down for smaller iPhones.
+Captured on the Mac from the iOS Simulator or a real iPhone, never from the web build. iPhone only: 6.9-inch (1320 × 2868, e.g. the iPhone 16 Pro Max simulator). App Store Connect scales them down for smaller iPhones.
 
-Use the review account (no founder email on screen) and no debug or dev pages. The 1.1 set is a new one from the 1.1.0 (2) build; the 1.0 set showed tiles, the bell and the tab bar.
-1. Home with the plan, Up next and Get ready
-2. The Deadlines screen: "UC application is next", the cycle bar and the timeline
-3. A date sheet (the UC application)
-4. The reminders prompt, "Want a heads-up before deadlines?", the app's own sheet before iOS asks (tap Remind me while iOS hasn't asked yet)
-5. UC San Diego with the official agreement card
-6. Onboarding, choosing the schools (step 2)
-7. Welcome
+Use the review account (no founder email on screen) and no debug or dev pages. Take a new set from the 1.2.0 (3) build; the 1.0 set showed tiles, the bell and the tab bar, which no longer exist.
+1. Home with the route, Up next and Get ready, and the Personal insight answers row
+2. Essays: the indigo panel, Required and Choose 3
+3. The editor with the sample "Your major" draft and its counter
+4. The Deadlines screen with its date tiles
+5. A step sheet ("Write your personal insight answers")
+6. UC San Diego with the official agreement card
+7. Onboarding, choosing the schools (step 2)
 8. Settings
 
-## Before pressing Submit (1.1)
+## Before pressing Submit (1.2)
 
-- [ ] 1.0 is approved, released or withdrawn (only one version can be in review)
-- [ ] Build 1.1.0 (2) uploaded, processed, and tested in TestFlight
-- [ ] That build selected for version 1.1
-- [ ] Website redeployed from the same build, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 18, 2026"
-- [ ] App Privacy answers match the table above
-- [ ] What's New, the 1.1 reviewer notes and the new screenshots entered
-- [ ] Review account still signs in and still has its plan
+- [ ] Build 1.2.0 (3) uploaded from `release/v1.2`, processed, in TestFlight's Internal team, and tested on an iPhone
+- [ ] Version 1.0 removed from review (Shikhar's choice, 2026-10-21) and its version number changed to 1.2
+- [ ] Build 1.2.0 (3) selected for version 1.2 (not 1.0.0 (1) or 1.1.0 (2))
+- [ ] Website redeployed from the same release commit, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 21, 2026"
+- [ ] App Privacy answers match the table above; age rating re-answered (user content: Yes)
+- [ ] Description, promotional text, 1.2 reviewer notes and the new screenshots entered
+- [ ] Review account still signs in, still has its plan, and shows the sample draft
+- [ ] Release: automatically after approval
 - [ ] Add for Review, then Submit for Review
