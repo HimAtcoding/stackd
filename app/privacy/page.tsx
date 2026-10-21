@@ -4,8 +4,8 @@ import { PRIVACY_UPDATED } from "@/lib/about";
 
 export const metadata: Metadata = { title: "Stackd privacy policy" };
 
-// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-18 (v1.1 adds
-// the deadlines tables and profiles.transfer_term). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
+// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-21 (v1.1 adds
+// the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
     <DocPage title="Privacy policy" updated={PRIVACY_UPDATED}>
@@ -34,6 +34,11 @@ export default function PrivacyPage() {
             deadlines and application checklist steps you mark done, and the reminders you choose for each deadline.
           </li>
           <li>
+            <strong className="font-semibold text-navy-900">Your essay drafts:</strong> the personal insight answers you
+            write in Stackd, with their word counts, which questions you chose, and which answers you marked done. They&apos;re
+            saved to your account so you can keep writing on any device you sign in on.
+          </li>
+          <li>
             <strong className="font-semibold text-navy-900">Service logs:</strong> like most online services, our backend
             keeps standard logs of requests and sign-ins, including IP address and browser or device details, to keep
             accounts secure and the service running.
@@ -51,6 +56,7 @@ export default function PrivacyPage() {
           <li>To sign you in and keep your account secure.</li>
           <li>To save your plan and show it on every device you sign in on.</li>
           <li>To show your deadlines and checklist, and to set up the reminders you turn on.</li>
+          <li>To save your essay drafts and show which answers are done.</li>
           <li>To email you 6-digit codes that confirm your email or reset your password.</li>
           <li>To greet you by name in the app.</li>
           <li>To answer you when you contact support.</li>
@@ -73,7 +79,8 @@ export default function PrivacyPage() {
 
       <DocSection title="On your device">
         <P>
-          Stackd keeps a copy of your sign-in session, plan and deadlines on your phone or browser, so screens load quickly.
+          Stackd keeps a copy of your sign-in session, plan, deadlines and essay drafts on your phone or browser, so screens
+          load quickly and your writing is kept while you&apos;re offline.
           Signing out removes your account&apos;s copy from that device.
         </P>
         <P>
@@ -87,7 +94,7 @@ export default function PrivacyPage() {
       <DocSection title="How long we keep it">
         <P>
           We keep your information while you have an account. When you delete your account, your account, profile, plan,
-          saved schools, progress, deadline marks, and reminder choices are deleted right away. Copies in our providers&apos; routine backups and logs are
+          saved schools, progress, deadline marks, reminder choices, and essay drafts are deleted right away. Copies in our providers&apos; routine backups and logs are
           overwritten on their normal schedule.
         </P>
       </DocSection>
@@ -109,7 +116,7 @@ export default function PrivacyPage() {
       <DocSection title="Security">
         <P>
           Information travels over encrypted connections (HTTPS). Our database only lets each account read and change its
-          own plan and deadlines. No system is perfectly secure, so use a password you don&apos;t use anywhere else.
+          own plan, deadlines and essay drafts. No system is perfectly secure, so use a password you don&apos;t use anywhere else.
         </P>
       </DocSection>
 

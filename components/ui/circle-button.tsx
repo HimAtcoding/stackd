@@ -6,7 +6,8 @@ import { cn } from "@/lib/cn";
 type CircleButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   "aria-label": string;
   icon: ReactNode;
-  variant?: "surface" | "plus";
+  // done: filled --green-600 with a white icon, e.g. the editor's Mark done once the answer is done (17)
+  variant?: "surface" | "plus" | "done";
   "data-pressed"?: boolean;
   "data-focus"?: boolean;
 };
@@ -22,7 +23,9 @@ export function CircleButton({ icon, variant = "surface", className, ...props }:
         "pressed:duration-120 motion-safe:pressed:scale-[0.94]",
         variant === "plus"
           ? "bg-blue-600 text-white shadow-cta focus-ring:outline-offset-3"
-          : "bg-surface text-navy-900 shadow-float",
+          : variant === "done"
+            ? "bg-green-600 text-white shadow-float"
+            : "bg-surface text-navy-900 shadow-float",
         className,
       )}
     >

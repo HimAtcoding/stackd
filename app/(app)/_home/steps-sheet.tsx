@@ -5,7 +5,7 @@ import { LinkLine } from "@/components/ui/link-line";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { StepTile } from "@/components/ui/step-tile";
 import { cn } from "@/lib/cn";
-import { checklistSource, checklistTitle, shortDate, type ChecklistView } from "@/lib/deadlines";
+import { checklistSource, checklistTitle, shortDate, signalLabel, type ChecklistView } from "@/lib/deadlines";
 
 type StepsSheetProps = {
   open: boolean;
@@ -44,7 +44,7 @@ export function StepsSheet({ open, onClose, checklist: c, onToggle, onOpenStep, 
                 className="-my-2 min-w-0 flex-1 rounded-sm pb-2 pt-4 text-left transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120"
               >
                 <span className={cn("block type-row-title", done ? "text-slate-600" : "text-navy-900")}>{step.title}</span>
-                {auto && <span className="mt-0.5 block text-slate-600 type-caption">From your plan</span>}
+                {auto && <span className="mt-0.5 block text-slate-600 type-caption">{signalLabel(auto)}</span>}
                 <span className="mt-0.5 block text-slate-600 type-body">{step.summary}</span>
               </button>
             </li>

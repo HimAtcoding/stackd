@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-19 (Essays part 1, spec 17: the personal insight questions file, the essays tables and the importer, merged in PR #12; migration pushed, the 8 questions imported and verified). Before that, the same day: date tiles, link lines and step sheets, spec 18, merged in PR #11, and the color pass, spec 16, merged in PR #10; spec 18 added as build step 20. Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-19 (Essays part 2, spec 17: the Essays screen, the editor, saving and the entry points, behind the `essays` flag, on branch `essays-screens`; spec 19 added as build step 22). Before that, the same day: Essays part 1, the personal insight questions file, the essays tables and the importer, merged in PR #12; migration pushed, the 8 questions imported and verified. Before that, the same day: date tiles, link lines and step sheets, spec 18, merged in PR #11, and the color pass, spec 16, merged in PR #10; spec 18 added as build step 20. Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,56 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## Essays part 2: the screens (step 21, 2026-10-19)
+
+Spec `17-essays.md`, on branch `essays-screens`. No migrations. Everything is behind the `essays` flag, off in `lib/features.ts`, so the release build shows none of it. `essayFeedback` is added, also off, for part 3.
+
+- **Links:** `essaysHref()` in `lib/features.ts` gives the links, like `deadlinesHref()`. It's null while the flag is off and in demo mode, since the questions come from the database and need a signed-in account. `check-release` now treats `/essays/` as a flagged screen.
+- **No tab or tile:** spec 17 has no tab bar in v1.2, so the Essays tab and Home's Essays tile are gone. The ways in are Home's row and the step sheet's link.
+- **Essays screen** (`/essays/`, `app/(app)/essays/_essays/essays-screen.tsx`):
+  - The solid `--indigo-600` panel holds the title, "{done} of 4 done" and the 4-segment bar (done white, drafting 60%, empty 25%).
+  - Then the intro line, "Required" with the required question, and "Choose 3 ({n} chosen)" with the 7 others.
+  - Then the source line from the questions' `verified_at` ("checked Oct 19, 2026") and the "Read UC's exact wording" link line (18).
+  - The questions come from `piq_prompts` (verified rows only), for the student's term or else the newest cycle there is.
+- **Question row** (`question-row.tsx`):
+  - Optional rows have a choice circle as their own button. Unchosen circles dim to 0.4 with 3 chosen, and a fourth shows "You've chosen 3. Remove one first."
+  - Unchoosing a question with a draft asks first (`remove-sheet.tsx`); without one it's immediate.
+  - The required row shows the indigo `PencilLine` tile.
+  - Status: "Not started", "{n} words" (coral past 350), or a green check with "Done".
+- **Screen states:** "These are for UC applications." with no UC in the plan; the closed line after the UC application's due date (read from the deadlines data); loading; and "Couldn't load your answers" with Try again.
+- **Editor** (`/essays/edit/?q={key}`, `editor.tsx`):
+  - Top bar: back, the save state ("Saving…", "Saved", "Saved on this phone"), a `DotsThree` overflow circle, and a Mark done circle that fills green (`CircleButton` variant `done`). The overflow menu is empty until spec 19 (step 22) fills it, so the circle is disabled (0.4, `aria-disabled`) rather than a button that does nothing.
+  - The `--tint-indigo` strip has the short name, summary and "Read UC's exact wording". It collapses to the short name once typing starts, and comes back when the text is scrolled to the top or the name is tapped.
+  - A plain `body-lg` text field.
+  - The counter: amber from 330, coral past 350 with "{over} over".
+  - The screen sizes itself to the visible viewport, so the keyboard never covers the counter. No Get feedback bar while `essayFeedback` is off.
+- **Saving** (`lib/data/essays.ts`, `lib/essays.ts`):
+  - Typing saves 800 ms after it stops, and at once on leaving, blur, or the app going to the background.
+  - Drafts are kept on the phone (`stackd.essays`) and sent with the deadline marks' queue (`stackd.essaysQueue`, retried with backoff and on `online`), as an upsert on user, question and cycle. Both keys are cleared at sign-out.
+  - Opening Essays or the editor sends what's waiting, then reads the account's copy.
+  - A draft with unsent edits keeps them, unless another device saved a newer version since this phone last saw it. Then the newer save wins and the editor shows "Updated from your other device."
+- **Words** are counted by whitespace (spaces, tabs, line breaks); punctuation stays with its word.
+- **Entry points:**
+  - The step sheet's "Write them in Stackd" link (18), only on UC's checklist and with Essays on.
+  - Home's "Personal insight answers" row (`essays-row.tsx`, tier 2, `{done} of 4 done`), only with Essays on and a UC in the plan.
+- **Essays signal (18):** "Write your personal insight answers" checks itself at 4 of 4 done in Essays ("From Essays"), and "Your UC application is ready" needs that too while Essays is on. The `auto` flag on a step is now its source, `plan` or `essays`.
+
+**Tested 2026-10-19** (Windows, dev server with `essays` on through a temporary `lib/features.ts` edit; stand-in session; the questions served from the approved file; drafts mocked):
+- 40 browser checks, run at both 393 and 320 (2 of them for the overflow circle):
+  - the panel, bar and lists;
+  - the choose-3 limit and toast, and the remove confirm (Keep it and Remove);
+  - the strip, the counter at 212, 335 and 362;
+  - saving after 800 ms and not before, "Saved on this phone" offline, Mark done green;
+  - the conflict toast;
+  - Home's row (none for a CSU-only plan), the step sheet's link opening Essays, and 4 of 4 checking the step "From Essays".
+- New `npm run test:essays` (41 checks): word counting (spaces, line breaks, tabs, punctuation, dashes), the counter, choose 3 of 7, the bar, the merge rules, and saving a draft on the phone and reading it back after a reload.
+- `test:deadlines` has 6 new checks for the Essays signal. `test:db` has 6 new ones for the app's upsert: save, update, read back, and no reach into another student's draft.
+- With the flags back off: `test:import`, lint, `tsc` and `npm run build` pass.
+
+**Before Essays ships** (both done 2026-10-21, on this branch):
+- ~~The privacy page has to say drafts are saved to the account.~~ `/privacy/` (updated October 21, 2026) now lists essay drafts (the answers, word counts, chosen questions and done marks) as saved to the account, kept on the phone too for offline writing, cleared from the phone at sign-out, deleted with the account, and readable only by their owner. Nothing mentions AI: `essayFeedback` is off and no draft leaves Supabase.
+- **Essays word count.** UC doesn't publish how its 350-word box counts, and the box is only inside a signed-in UC application, which nobody on the team could open for this check. UC's public application pages (`apply.universityofcalifornia.edu/my-application/js/app.min2.js`, read 2026-10-21) only have a generic 150-word counter for another field, which splits on whitespace, periods and question marks; it isn't the personal insight box, so Stackd doesn't copy it. Stackd counts by whitespace, the way Word and Google Docs do, and no screen claims the count is UC's. `test:essays` now pins contractions, hyphenation, curly quotes, the no-break and thin spaces pasted text carries, mixed line endings, exactly 350 (amber, not over) and 351 (1 over); 50 checks. Still worth doing once someone has a UC application open: paste a 350-word answer and compare UC's count with Stackd's.
 
 ## Essays part 1: questions and tables (step 19, 2026-10-19)
 

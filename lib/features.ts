@@ -1,9 +1,14 @@
+import { DEMO_MODE } from "./flags";
+
 // What the app shows (docs/specs/13-v1-launch.md). The only place that decides it: development and production use the
 // same values, so `npm run dev` looks like the release. To work on something v1 hides, put NEXT_PUBLIC_FEATURES=all in
 // .env.local; production builds ignore it.
 
 const V1 = {
+  // Essays (17): the personal insight answers screen and editor. essayFeedback: its AI feedback, which can ship or
+  // be turned off on its own. Both off until v1.2.
   essays: false,
+  essayFeedback: false,
   mentors: false,
   events: false,
   explore: false,
@@ -36,7 +41,6 @@ export const FEATURES: Readonly<Record<Feature, boolean>> = allOn
 // otherwise), so a flag that's off takes its links away, and the route itself sends the student Home.
 const UNBUILT = {
   explore: { path: "/explore/", feature: "explore" },
-  essays: { path: "/essays/", feature: "essays" },
   mentors: { path: "/mentors/", feature: "mentors" },
   events: { path: "/events/", feature: "events" },
   notifications: { path: "/notifications/", feature: "notifications" },
@@ -56,6 +60,10 @@ export const unbuiltFeature = (screen: Unbuilt): Feature => UNBUILT[screen].feat
 
 // The Deadlines screen, or null while its flag is off. `query` starts with "?".
 export const deadlinesHref = (query = ""): string | null => (FEATURES.deadlines ? `/deadlines/${query}` : null);
+
+// The Essays screen, or a path under it ("edit/?q=major"), or null while its flag is off. Also null in demo mode:
+// the questions are read from the database, which needs a signed-in account.
+export const essaysHref = (path = ""): string | null => (FEATURES.essays && !DEMO_MODE ? `/essays/${path}` : null);
 
 // The University screen for a school. Without its tabs (v1) the URL has no &tab=.
 export const universityHref = (slug: string) => `/university/?slug=${slug}${FEATURES.universityTabs ? "&tab=requirements" : ""}`;

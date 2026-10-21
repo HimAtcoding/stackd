@@ -239,10 +239,10 @@ const ucSteps = [
   "Submit by Nov 30",
 ].map((title, i) => ({ id: `s${i + 1}`, checklist_id: "ucl", position: i + 1, title, summary: "" }) as ChecklistStep);
 const ucView: DeadlineView = { cycle: "fall-2027", upcoming: [fall[0]], finished: [], demo: false };
-const pick = (scope: Scope, marked: string[], unchecked: string[] = []) =>
-  pickChecklist([ucList], ucSteps, ucView, scope, (id) => marked.includes(id), (id) => unchecked.includes(id))!;
+const pick = (scope: Scope, marked: string[], unchecked: string[] = [], essaysDone: number | null = null) =>
+  pickChecklist([ucList], ucSteps, ucView, scope, (id) => marked.includes(id), (id) => unchecked.includes(id), essaysDone)!;
 const fromPlan = pick(ucsd, []);
-check("a plan with a UC and a major checks step 1, From your plan", fromPlan.steps[0].done && fromPlan.steps[0].auto && fromPlan.doneCount === 1);
+check("a plan with a UC and a major checks step 1, From your plan", fromPlan.steps[0].done && fromPlan.steps[0].auto === "plan" && fromPlan.doneCount === 1);
 check("no major: step 1 isn't checked", !pick(ucsdNoMajor, []).steps[0].done);
 const unchecked = pick(ucsd, [], ["s1"]);
 check("unchecking step 1 sticks with the plan", !unchecked.steps[0].done && !unchecked.steps[0].auto);
@@ -259,6 +259,25 @@ check(
   "…with the longer subtitle",
   checklistSubtitle(notReady) === "Submit it by Nov 30. Double-check your campuses and answers on UC's site.",
   checklistSubtitle(notReady),
+);
+
+// Essays (17) checks the writing step at 4 of 4 done, and "ready" needs it while Essays is on (18)
+const fromEssays = pick(ucsd, [], [], 4);
+check("Essays at 4 of 4 checks the writing step, From Essays", fromEssays.steps[2].done && fromEssays.steps[2].auto === "essays");
+check("Essays at 3 of 4 leaves it unchecked", !pick(ucsd, [], [], 3).steps[2].done);
+check("Essays off: the writing step waits for a tap", !pick(ucsd, [], [], null).steps[2].done);
+check("unchecking the writing step sticks with Essays at 4", !pick(ucsd, [], ["s3"], 4).steps[2].done);
+const tappedNotWritten = pick(ucsd, allSix, [], 2);
+check(
+  "all six tapped but Essays at 2 of 4: not ready",
+  !tappedNotWritten.ready && checklistTitle(tappedNotWritten) === "All 6 steps checked",
+  checklistTitle(tappedNotWritten),
+);
+const readyWithEssays = pick(ucsd, ["s2", "s4", "s5", "s6"], [], 4);
+check(
+  "the plan and Essays check their steps, the rest tapped: ready",
+  readyWithEssays.ready && checklistTitle(readyWithEssays) === "Your UC application is ready",
+  checklistTitle(readyWithEssays),
 );
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");

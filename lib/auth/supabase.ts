@@ -31,6 +31,9 @@ const PER_ACCOUNT_KEYS = [
   "stackd.term",
   "stackd.deadlinesQueue",
   "stackd.stepsUnchecked",
+  // Essay drafts and the ones not yet sent (lib/data/essays.ts)
+  "stackd.essays",
+  "stackd.essaysQueue",
   // Reminder switch, default days and the card's dismissal (lib/reminders)
   "stackd.reminders",
 ];

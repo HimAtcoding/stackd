@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { CompassIcon, FileTextIcon, HouseIcon, UsersThreeIcon } from "@phosphor-icons/react/ssr";
+import { CompassIcon, HouseIcon, UsersThreeIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
 import { unbuiltHref } from "@/lib/features";
 
 export type TabId = "home" | "explore" | "essays" | "mentors";
 
-// Only the tabs whose screens are switched on (lib/features.ts)
+// Only the tabs whose screens are switched on (lib/features.ts). Essays has no tab (17 → Entry points).
 const TABS = [
   { id: "home", label: "Home", href: "/", Icon: HouseIcon },
   { id: "explore", label: "Explore", href: unbuiltHref("explore"), Icon: CompassIcon },
-  { id: "essays", label: "Essays", href: unbuiltHref("essays"), Icon: FileTextIcon },
   { id: "mentors", label: "Mentors", href: unbuiltHref("mentors"), Icon: UsersThreeIcon },
 ].flatMap((t) => (t.href ? [{ ...t, href: t.href }] : []));
 

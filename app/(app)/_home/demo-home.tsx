@@ -42,7 +42,6 @@ export function DemoHome({ art }: { art: HomeArt }) {
             href: university ? universityHref(university.slug) : "/university/",
             transitionTypes: ["push"],
           },
-          essays: { subtitle: plural(counts.drafts ?? 0, "draft", "drafts") },
           mentors: {
             subtitle: plural(counts.newMentorMessages ?? 0, "new message", "new messages"),
             unread: (counts.newMentorMessages ?? 0) > 0,
