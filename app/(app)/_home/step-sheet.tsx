@@ -4,7 +4,7 @@ import { CheckIcon } from "@phosphor-icons/react/ssr";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { LinkLine } from "@/components/ui/link-line";
 import { StepIconTile } from "@/components/ui/step-tile";
-import { signalLabel, stepSlug, type ChecklistView } from "@/lib/deadlines";
+import { stepSlug, type ChecklistView } from "@/lib/deadlines";
 import { essaysHref } from "@/lib/features";
 import { stepNeeds } from "@/lib/step-content";
 import { stepLook } from "@/lib/step-icons";
@@ -28,31 +28,35 @@ type StepSheetProps = {
   open: boolean;
   onClose: () => void;
   checklist: ChecklistView;
+  // The line under the title (step-caption.ts): what checked it, or how far Essays is
+  caption: (entry: ChecklistView["steps"][number]) => string | null;
   // Kept while the sheet slides away, so it doesn't empty as it closes
   stepId: string | null;
   onToggle: (stepId: string, done: boolean) => void;
 };
 
 // One step in full: what it is, what you'll need, where to do it in Stackd, and Mark done (18 → Step sheets)
-export function StepSheet({ open, onClose, checklist: c, stepId, onToggle }: StepSheetProps) {
+export function StepSheet({ open, onClose, checklist: c, caption, stepId, onToggle }: StepSheetProps) {
   const at = c.steps.findIndex((s) => s.step.id === stepId);
   const entry = at >= 0 ? c.steps[at] : null;
 
   return (
     <BottomSheet open={open && entry !== null} onClose={onClose} labelledBy="step-sheet-title">
-      {entry && <Content c={c} entry={entry} position={at + 1} onToggle={onToggle} />}
+      {entry && <Content c={c} entry={entry} note={caption(entry)} position={at + 1} onToggle={onToggle} />}
     </BottomSheet>
   );
 }
 
 function Content({
   c,
-  entry: { step, done, auto },
+  entry: { step, done },
+  note,
   position,
   onToggle,
 }: {
   c: ChecklistView;
   entry: ChecklistView["steps"][number];
+  note: string | null;
   position: number;
   onToggle: (stepId: string, done: boolean) => void;
 }) {
@@ -68,7 +72,7 @@ function Content({
           <h2 id="step-sheet-title" tabIndex={-1} className="line-clamp-2 text-navy-900 type-title-2 focus:outline-none">
             {step.title}
           </h2>
-          {auto && <p className="mt-0.5 text-slate-600 type-caption">{signalLabel(auto)}</p>}
+          {note && <p className="mt-0.5 text-slate-600 tabular-nums type-caption">{note}</p>}
         </div>
       </div>
       <p className="mt-2 text-slate-700 type-body">{step.summary}</p>

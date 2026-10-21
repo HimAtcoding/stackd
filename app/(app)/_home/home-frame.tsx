@@ -11,7 +11,6 @@ import { HAS_TAB_BAR, TabBar } from "@/components/ui/tab-bar";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { useDeadlines, type ScopeState } from "@/lib/data/deadlines";
 import { FEATURES, unbuiltHref } from "@/lib/features";
-import { EssaysRow } from "./essays-row";
 import { GetReadyCard } from "./get-ready-card";
 import { UpNext } from "./up-next";
 
@@ -61,7 +60,6 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
   const deadlines = useDeadlines(scope);
   // No plan yet: the setup card is the one thing to do, so Get ready waits until there's a plan (14 → Get ready card)
   const showGetReady = FEATURES.getReady && !(scope.status === "ok" && scope.scope === null);
-  const planHasUc = scope.status === "ok" && Boolean(scope.scope?.some((s) => s.system === undefined || s.system?.toLowerCase() === "uc"));
   // Stand-in deadline rows are demo records, so the strip shows with them (00 → Demo strip)
   const demoDates =
     deadlines.status === "ok" &&
@@ -150,8 +148,6 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
 
             {FEATURES.upcoming && <UpNext state={deadlines} />}
             {showGetReady && <GetReadyCard state={deadlines} toastBottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />}
-            {/* Essays, only for a plan with a UC: the answers are for UC applications (17 → Entry points) */}
-            {planHasUc && <EssaysRow term={deadlines.status === "ok" ? deadlines.term.term : null} />}
 
             {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
             <UnofficialFooter className="mt-6 px-4" />

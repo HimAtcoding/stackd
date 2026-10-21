@@ -24,6 +24,10 @@ const ITEMS: { action: MoreAction; label: string; icon: ReactNode; needsText: bo
   { action: "import", label: "Import a file", icon: <FileArrowUpIcon weight="bold" size={22} />, needsText: false },
 ];
 
+// The menu has something the student can use now. The editor's DotsThree circle is disabled otherwise, so it's never
+// a button that opens nothing.
+export const hasMoreItems = (hasText: boolean) => ITEMS.some((item) => !item.needsText || hasText);
+
 // The editor's overflow menu (19 → Send a draft out): send this answer out, then bring text in
 export function MoreSheet({ open, title, hasText, onAction, onClose }: MoreSheetProps) {
   return (

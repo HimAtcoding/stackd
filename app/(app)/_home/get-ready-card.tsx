@@ -8,6 +8,7 @@ import { Toast } from "@/components/ui/toast";
 import { checklistCelebrated, claimChecklistReady } from "@/lib/celebration";
 import { markStep, type DeadlinesState } from "@/lib/data/deadlines";
 import { checklistSubtitle, checklistTitle } from "@/lib/deadlines";
+import { useStepCaption } from "./step-caption";
 import { StepSheet } from "./step-sheet";
 import { StepsSheet } from "./steps-sheet";
 
@@ -26,6 +27,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
   const [toast, setToast] = useState<{ key: number; stepId: string; ready?: boolean } | null>(null);
   // A step just checked on Home stays a moment, so the fill is seen before the next step comes up
   const [settling, setSettling] = useState<string[]>([]);
+  const caption = useStepCaption(state.status === "ok" ? state.checklist : null, state.status === "ok" ? state.term.term : null);
 
   if (state.status === "error") return null;
   if (state.status === "loading") {
@@ -78,19 +80,24 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
       {(!finished || settling.length > 0) && (
         <>
           <ul className="mx-4 mt-4 divide-y divide-border rounded-md border border-border bg-surface">
-            {next.map(({ step, done }) => (
-              <li key={step.id} className="flex min-h-14 items-center gap-2 px-4">
-                {/* The 36 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
-                <StepTile title={step.title} done={done} finale={finale && !done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
-                <button
-                  type="button"
-                  onClick={() => setStepSheet({ open: true, id: step.id })}
-                  className="min-h-11 min-w-0 flex-1 rounded-sm py-2.5 text-left text-navy-900 type-body-md pressed:text-slate-700"
-                >
-                  <span className="line-clamp-2">{step.title}</span>
-                </button>
-              </li>
-            ))}
+            {next.map((entry) => {
+              const { step, done } = entry;
+              const note = caption(entry);
+              return (
+                <li key={step.id} className="flex min-h-14 items-center gap-2 px-4">
+                  {/* The 36 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
+                  <StepTile title={step.title} done={done} finale={finale && !done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
+                  <button
+                    type="button"
+                    onClick={() => setStepSheet({ open: true, id: step.id })}
+                    className="min-h-11 min-w-0 flex-1 rounded-sm py-2.5 text-left text-navy-900 type-body-md pressed:text-slate-700"
+                  >
+                    <span className="line-clamp-2">{step.title}</span>
+                    {note && <span className="mt-0.5 block text-slate-600 tabular-nums type-caption">{note}</span>}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
           <div className="mt-2 flex justify-end px-6">
             <button
@@ -108,6 +115,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
         open={sheet}
         onClose={() => setSheet(false)}
         checklist={c}
+        caption={caption}
         finale={finale}
         onToggle={(id, done) => check(id, done, false)}
         onOpenStep={(id) => {
@@ -119,6 +127,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
         open={stepSheet.open}
         onClose={() => setStepSheet((s) => ({ ...s, open: false }))}
         checklist={c}
+        caption={caption}
         stepId={stepSheet.id}
         onToggle={(id, done) => check(id, done, false)}
       />

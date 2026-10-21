@@ -1,7 +1,7 @@
 // Bringing drafts in, sending them out, and review links (19-essay-import-share-review.md). No React and no storage
 // here; lib/data/reviews.ts and the screens use it.
 import { SITE_URL } from "./about";
-import { countWords, WORD_LIMIT } from "./essays";
+import { ANSWERS, countWords, WORD_LIMIT } from "./essays";
 import { shortDate } from "./deadlines";
 
 // A random secret, base64url: 32 bytes → 43 characters (a link's token), 24 → 32 (a reviewer's browser key)
@@ -63,6 +63,14 @@ export const quoteChanged = (quote: string | null, text: string) => Boolean(quot
 
 // "1 new comment", "3 new comments"
 export const newComments = (n: number) => `${n} new ${n === 1 ? "comment" : "comments"}`;
+
+// The caption under Get ready's writing step while Essays is on (17 → Entry points): unread reviewer comments first
+// (19), then "From Essays" once Essays has checked the step, otherwise how many answers are done
+export function essaysStepCaption({ done, unread, checkedByEssays }: { done: number; unread: number; checkedByEssays: boolean }) {
+  if (unread > 0) return newComments(unread);
+  if (checkedByEssays) return "From Essays";
+  return `${done} of ${ANSWERS} done`;
+}
 
 // Where a quote sits in the student's current text, to select it; null when it's gone
 export function findQuote(text: string, quote: string): { start: number; end: number } | null {

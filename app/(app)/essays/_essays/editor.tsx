@@ -20,7 +20,7 @@ import { essaysHref } from "@/lib/features";
 import { cleanImported, combineDraft, findQuote, reviewMessage } from "@/lib/review";
 import { copyText, readClipboard, readDraftFile, shareText } from "@/lib/share";
 import { ConfirmSheet } from "./confirm-sheet";
-import { MoreSheet, type MoreAction } from "./more-sheet";
+import { hasMoreItems, MoreSheet, type MoreAction } from "./more-sheet";
 import { ReviewSheet } from "./review-sheet";
 import { ReviewsSection } from "./reviews-section";
 
@@ -117,6 +117,7 @@ function Editor({ prompt, saved }: EditorProps) {
   const count = counter(countWords(text));
   const done = Boolean(saved?.done_at);
   const empty = !text.trim();
+  const menuItems = hasMoreItems(!empty);
 
   const say = (message: string) => setToast((t) => ({ key: (t?.key ?? 0) + 1, text: message }));
 
@@ -282,8 +283,17 @@ function Editor({ prompt, saved }: EditorProps) {
               {saveState ? SAVE_TEXT[saveState] : ""}
             </p>
             <div className="flex justify-end gap-2">
-              {/* The overflow menu (19): copy, share, ask for review, then paste and import */}
-              <CircleButton aria-label="More" aria-haspopup="dialog" icon={<DotsThreeIcon weight="bold" size={22} aria-hidden />} onClick={() => setMenuOpen(true)} />
+              {/* The overflow menu (19): copy, share, ask for review, then paste and import. Enabled only while it
+                  has something to use; otherwise dimmed and disabled, as before 19 filled it. */}
+              <CircleButton
+                aria-label="More"
+                aria-haspopup="dialog"
+                disabled={!menuItems}
+                aria-disabled={!menuItems || undefined}
+                icon={<DotsThreeIcon weight="bold" size={22} aria-hidden />}
+                onClick={() => setMenuOpen(true)}
+                className={cn(!menuItems && "opacity-40")}
+              />
               <CircleButton
                 aria-label="Mark done"
                 aria-pressed={done}

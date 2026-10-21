@@ -75,9 +75,10 @@ Left-aligned. Free text at x 24, lists at 16.
 
 ## Entry points
 
-- Home → Get ready → step "Write your personal insight answers": its row text opens `/essays/` (instead of the steps sheet) when `essays` is on. Its check tile stays as is.
-- Home: a new row under Get ready (tier 2 list row, 24 below the "See all" link): `PencilLine` tile (16 colors: indigo), "Personal insight answers", and on the right "{done} of 4 done" in `caption` `--slate-600`. Opens `/essays/`. Only for students whose plan includes a UC.
-- No tab bar in v1.2; these are the ways in.
+- Home → Get ready → step "Write your personal insight answers". Its row text opens the step sheet (18), whose "Write them in Stackd" link opens `/essays/`. Its check tile stays as is.
+- With `essays` on, that step shows Essays' progress under its title, in `caption` `--slate-600`: "{done} of 4 done", or "From Essays" once Essays has checked it (18), or "{n} new comments" while reviewers' comments are unread (19). The same caption shows under the step's title in the steps sheet and the step sheet.
+- The step is on UC's checklist only, so the progress and the link show only for students whose plan includes a UC.
+- No separate Essays row on Home: it would repeat the step. No tab bar in v1.2. The step and its sheet are the ways in.
 
 ## Essays screen (`/essays/`)
 
@@ -190,7 +191,7 @@ Deleting an account deletes all of these (extend `delete_my_account()`).
 
 | State | What shows |
 |---|---|
-| No UC in the plan | Essays still opens from the Get ready step; the Home row is hidden. Intro adds: "These are for UC applications." |
+| No UC in the plan | Get ready shows no writing step, so Home has no way in; an old link still opens Essays. Intro adds: "These are for UC applications." |
 | No drafts | All rows "Not started"; bar empty |
 | Loading lists (over 600 ms) | The loading component (00) in place of the lists |
 | Couldn't load | Inline error (00): "Couldn't load your answers" / "Check your connection, then try again." / "Try again" |
@@ -214,7 +215,7 @@ Ship the editor first behind `essays` with `essayFeedback` off if feedback isn't
 
 ## Test
 
-- Home with a UC plan shows "Personal insight answers, 0 of 4 done"; with a CSU-only plan it doesn't.
+- Home with a UC plan: Get ready's "Write your personal insight answers" shows "0 of 4 done" under its title, and the steps sheet shows it too; there's no separate Essays row. With a CSU-only plan there's no writing step.
 - Essays: "Your major" is under Required; 7 rows under "Choose 3 (0 chosen)". Choose 3: the rest dim; tapping a fourth shows the toast.
 - Unchoose a question with a draft: the confirm sheet; "Remove" keeps the draft and drops it from the 3.
 - Editor: type 212 words, leave, come back: the text is there, the row says "212 words". Airplane mode: "Saved on this phone"; back online: "Saved".
