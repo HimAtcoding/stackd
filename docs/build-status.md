@@ -1,6 +1,6 @@
 # Build status
 
-Last updated 2026-10-21 (v1.2 release prep on branch `release/v1.2`: Essays on, 1.2.0 build 3; spec 19 merged in PR #14 with its migration applied and the review function deployed; PR #13 merged after its two release blockers were done; see v1.2 release below). Before that 2026-10-19 (Essays part 2, spec 17: the Essays screen, the editor, saving and the entry points, behind the `essays` flag, on branch `essays-screens`; spec 19 added as build step 22). Before that, the same day: Essays part 1, the personal insight questions file, the essays tables and the importer, merged in PR #12; migration pushed, the 8 questions imported and verified. Before that, the same day: date tiles, link lines and step sheets, spec 18, merged in PR #11, and the color pass, spec 16, merged in PR #10; spec 18 added as build step 20. Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
+Last updated 2026-10-21 (Essays on Home: the separate Essays row removed, its progress moved under Get ready's writing step, on branch `essays-step-caption`). Before that, the same day: (v1.2 release prep on branch `release/v1.2`: Essays on, 1.2.0 build 3; spec 19 merged in PR #14 with its migration applied and the review function deployed; PR #13 merged after its two release blockers were done; see v1.2 release below). Before that 2026-10-19 (Essays part 2, spec 17: the Essays screen, the editor, saving and the entry points, behind the `essays` flag, on branch `essays-screens`; spec 19 added as build step 22). Before that, the same day: Essays part 1, the personal insight questions file, the essays tables and the importer, merged in PR #12; migration pushed, the 8 questions imported and verified. Before that, the same day: date tiles, link lines and step sheets, spec 18, merged in PR #11, and the color pass, spec 16, merged in PR #10; spec 18 added as build step 20. Before that, the same day: color pass, spec 16, on branch `color-pass`; specs 16 and 17 added as build steps 18 and 19. Before that 2026-10-18 (v1.1 internal TestFlight, Windows part: Ryan invited to App Store Connect, Stackd only; website redeployed from `ebdcc67`; the Mac build is left. Before that, v1.1 release prep on branch `v1-1-release`: deadline flags on, 1.1.0 build 2; Home and Deadlines design rev 2, spec 15, merged in PR #8; v1.1 copy fixes from the design review, merged in PR #7, and the UC application row corrected and verified again). Before that 2026-10-17 (open item 19 fixed: a reviewed way to reopen a verified row, merged in PR #6 and used to correct the FAFSA row; open item 18 fixed: checked dates show the right day; the fall 2027 dates checked, imported and verified, merged in PR #5; and step 16 follow-ups from the PR #3 review, merged in PR #4; all below). Before that 2026-10-16 (step 16, Abyan's part: deadlines tables, the first-dates import file, real data and reminders, merged in PR #3; and Ryan's part: deadlines on stand-in data, behind flags). Before that 2026-10-15 (step 14, v1 launch build; iOS build 2 waits for the Mac). Before that 2026-10-14 (version 1.0 submitted to App Review) and 2026-10-13 (iOS app and App Store prep). Before that 2026-10-12 (web sign-in return, 06 rev 3), 2026-10-10 (Apple and Google sign-in) and 2026-10-06 (step 13, Settings; Enter code from Settings). Build order steps 1–7 and 10–13 from `docs/specs/README.md` are done (8 and 9 wait, per the roadmap; 11–13 followed the plan in `docs/plans/steps-11-13.md`), and roadmap phase 3 is in progress (see Phase 3 below). It lists what exists, what's left, what's still undecided, and where the build differs from the specs.
 
 ## Phase 3: database, sign-in, import
 
@@ -502,6 +502,31 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## Essays on Home: one way in (2026-10-21)
+
+On branch `essays-step-caption`, after PR #13 and the v1.2 release prep merged.
+
+- **What changed:** Home showed the personal insight answers twice: Get ready's "Write your personal insight answers" step, and a separate "Personal insight answers" row under Get ready. The row is gone (`essays-row.tsx` removed).
+- **The step's caption:** with Essays on, the step shows Essays' progress under its title, in `caption` `--slate-600`, on Home, in the steps sheet and in the step sheet (`_home/step-caption.ts`, `essaysStepCaption` in `lib/review.ts`):
+  - "{n} new comments" while reviewers' comments are unread (it was on the row, 19);
+  - "From Essays" once Essays has checked the step;
+  - otherwise "{done} of 4 done".
+
+  Other steps keep "From your plan" when the plan checked them.
+- **Unchanged:** the step sheet's "Write them in Stackd" link.
+- **Specs:** 17's Entry points, its no-UC state and its test line, and 19's two mentions of the row, now describe the caption.
+- **Overflow:** the editor's `DotsThree` circle is enabled only while its menu has an item the student can use (`hasMoreItems` in `more-sheet.tsx`); otherwise it's dimmed and disabled. Since 19, Paste a draft and Import a file are always there, so today it's always enabled.
+- **Tested:**
+  - `test:essays`: 6 new checks for the caption.
+  - Browser, stand-in session, 393, 11 checks:
+    - the caption on Home, in the steps sheet and in the step sheet;
+    - no separate row;
+    - "From your plan" still on the plan step;
+    - "From Essays" once at 4 of 4;
+    - the overflow circle enabled, and opening its menu.
+  - `test:deadlines`, `test:db`, `test:import`, lint, `tsc` and `npm run build` pass.
+  - `31-home-essays-row.png` retaken.
 
 ## v1.2 release (2026-10-21)
 

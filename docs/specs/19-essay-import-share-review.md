@@ -73,7 +73,7 @@ The reviewer sees a **snapshot**: the text at the moment the link was made. The 
 | Comments | Under each link, newest first. Each: the quoted phrase (if any) in `caption` `--slate-600` with a 2 px `--indigo-600` left bar, then the comment `body` `--navy-900`, then "{reviewer name}, Oct 19" `caption` `--slate-600`. Tapping a quoted phrase selects it in the text. A `DotsThree` per comment: "Mark resolved" (dims it to 0.5, moves to a collapsed "Resolved ({n})"), "Delete comment" |
 | Empty | "No comments yet. They'll show here when your reviewer adds some." |
 
-Home's Essays row (17) shows "{n} new comments" instead of "{done} of 4 done" while there are unread comments.
+Get ready's "Write your personal insight answers" step (17 → Entry points) shows "{n} new comments" under its title instead of "{done} of 4 done" while there are unread comments.
 
 ### Reviewer side (web, no account)
 
@@ -151,7 +151,7 @@ Deleting the account deletes both (extend `delete_my_account()`). Deleting a dra
 - Download all answers with 2 drafts: one .txt with both, each with its short name and word count.
 - Ask for review with "Ms. Lee": the share sheet has the message and link; the Reviews section shows "Ms. Lee" with today and the end date.
 - Open the link signed out in another browser: the first name, the question, the text, no school or email. Select a phrase, comment as "Ms. Lee": it appears with the quote highlighted.
-- Back in the app: Home's row says "1 new comments"… (use "1 new comment" singular); the editor shows the comment with its quote; tapping the quote selects it in the text.
+- Back in the app: Get ready's writing step says "1 new comment" under its title; the editor shows the comment with its quote; tapping the quote selects it in the text.
 - Edit the draft, "Send latest version": the reviewer page shows the new text; a comment on removed text shows "This part has changed."
 - Turn off the link: the reviewer page shows the ended message on reload. A link older than 14 days does too.
 - 61st comment in a day on one link: refused with "This link has reached today's comment limit."

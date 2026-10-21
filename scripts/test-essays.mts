@@ -191,5 +191,14 @@ check("a reviewer key is 32 characters", /^[A-Za-z0-9_-]{32}$/.test(review.makeS
 check("the review link is on the public website", review.reviewUrl(token) === `https://joinstackd-chi.vercel.app/review/?t=${token}`);
 check("the share message carries the link", review.reviewMessage("https://x.test/r") === "Could you review my UC personal insight answer? https://x.test/r");
 
+// The caption under Get ready's writing step (17 → Entry points), which replaces Home's separate Essays row
+const stepNote = review.essaysStepCaption;
+check("step caption: how many answers are done", stepNote({ done: 1, unread: 0, checkedByEssays: false }) === "1 of 4 done");
+check("step caption: none done yet", stepNote({ done: 0, unread: 0, checkedByEssays: false }) === "0 of 4 done");
+check("step caption: From Essays once Essays checked it", stepNote({ done: 4, unread: 0, checkedByEssays: true }) === "From Essays");
+check("step caption: 4 of 4 but unchecked by the student stays a count", stepNote({ done: 4, unread: 0, checkedByEssays: false }) === "4 of 4 done");
+check("step caption: unread comments come first, singular", stepNote({ done: 2, unread: 1, checkedByEssays: false }) === "1 new comment");
+check("step caption: unread comments come first, plural, even when done", stepNote({ done: 4, unread: 3, checkedByEssays: true }) === "3 new comments");
+
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

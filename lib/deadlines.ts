@@ -422,6 +422,9 @@ const ESSAY_ANSWERS = 4;
 // The caption under a step a signal checked
 export const signalLabel = (signal: StepSignal) => (signal === "plan" ? "From your plan" : "From Essays");
 
+// The step Essays reports on ("Write your personal insight answers")
+export const isEssaysStep = (title: string) => stepSlug(title) === ESSAYS_STEP;
+
 // "Pick your campuses and majors" → "pick-your-campuses-and-majors". Step icons and content are keyed by it.
 export const stepSlug = (title: string) =>
   title
