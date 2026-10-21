@@ -183,6 +183,21 @@ function flush() {
   if (supabase && userId) sendQueue(supabase, userId).flush().catch(() => {});
 }
 
+// Sends what's waiting and reports whether this draft has reached the account (a review link shares the account's
+// copy, 19 → How it works)
+export async function draftSaved(cycle: string, promptKey: string): Promise<boolean> {
+  const supabase = getSupabase();
+  const userId = readSessionUser()?.id;
+  if (!supabase || !userId) return false;
+  const key = draftKey(cycle, promptKey);
+  // A send already on its way makes flush return at once, so look again for a few seconds
+  for (let i = 0; i < 10 && queue.get().includes(key); i++) {
+    await sendQueue(supabase, userId).flush().catch(() => {});
+    if (queue.get().includes(key)) await new Promise((r) => setTimeout(r, 300));
+  }
+  return !queue.get().includes(key);
+}
+
 // Back online: send what's waiting now, without waiting for the next retry
 if (typeof window !== "undefined") window.addEventListener("online", flush);
 

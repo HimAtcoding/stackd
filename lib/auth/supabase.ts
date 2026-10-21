@@ -7,6 +7,7 @@ import {
 } from "@supabase/supabase-js";
 import { authorizeWithApple, isNativeApp, openForCallback } from "@/lib/capacitor";
 import { clearPlan } from "@/lib/data/plan";
+import { clearReviews } from "@/lib/data/reviews";
 import { cancelReminders } from "@/lib/reminders/native";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearStackdStorage, removeStorage, writeStorage } from "@/lib/storage";
@@ -262,6 +263,7 @@ export const supabaseAuth: Auth = {
     await getSupabase()?.auth.signOut({ scope: "local" });
     PER_ACCOUNT_KEYS.forEach(removeStorage);
     clearPlan();
+    clearReviews();
   },
 
   deleteAccount: () =>
@@ -276,6 +278,7 @@ export const supabaseAuth: Auth = {
       await cancelReminders();
       await client().auth.signOut({ scope: "local" });
       clearPlan();
+      clearReviews();
       clearStackdStorage();
       return ok;
     }),

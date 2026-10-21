@@ -53,6 +53,25 @@ export default function TermsPage() {
         <P>We can suspend accounts that do.</P>
       </DocSection>
 
+      <DocSection title="Your answers and review comments">
+        <List>
+          <li>Your essay drafts are yours. Stackd saves them for you and doesn&apos;t claim them or show them to anyone you don&apos;t send a review link to.</li>
+          <li>
+            Write your answers yourself: UC asks that personal insight answers be your own words. Stackd never writes them for
+            you.
+          </li>
+          <li>
+            If you review someone&apos;s answer, comment on the writing. No harassment, hate, threats, sexual content, spam, or
+            anything else abusive. Stackd has no tolerance for it.
+          </li>
+          <li>
+            The student who shared the link can delete any comment and turn the link off. Report an abusive comment from its
+            menu, or email <SupportEmail />, and we&apos;ll act on it within 24 hours, including removing the content and
+            blocking the link.
+          </li>
+        </List>
+      </DocSection>
+
       <DocSection title="Other websites">
         <P>
           Stackd links to websites it doesn&apos;t run, like ASSIST and university sites. Their own terms and privacy policies
