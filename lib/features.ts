@@ -5,9 +5,9 @@ import { DEMO_MODE } from "./flags";
 // .env.local; production builds ignore it.
 
 const V1 = {
-  // Essays (17): the personal insight answers screen and editor. essayFeedback: its AI feedback, which can ship or
-  // be turned off on its own. Both off until v1.2.
-  essays: false,
+  // Essays (17, 19): the personal insight answers screen and editor, import, share and review links. On from v1.2.
+  // essayFeedback: its AI feedback, which can ship or be turned off on its own; off, it isn't built yet.
+  essays: true,
   essayFeedback: false,
   mentors: false,
   events: false,
