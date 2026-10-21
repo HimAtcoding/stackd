@@ -1,24 +1,26 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Art } from "@/components/art";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
-import { PrimaryButton } from "@/components/ui/primary-button";
-import { TextField } from "@/components/ui/text-field";
 import { TintedButton } from "@/components/ui/tinted-button";
+import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { cn } from "@/lib/cn";
-import { longDate, shortDate } from "@/lib/deadlines";
-import { highlightRuns, makeSecret, REVIEW_ERRORS, REVIEW_FAILED } from "@/lib/review";
+import { longDate } from "@/lib/deadlines";
+import { WORD_LIMIT } from "@/lib/essays";
+import { findQuote, highlightRuns, makeSecret, REVIEW_ERRORS, REVIEW_FAILED } from "@/lib/review";
 import { readStorage, writeStorage } from "@/lib/storage";
+import { CommentList, type Comment } from "./comment-list";
+import { CommentComposer, CommentSheet, type ComposerProps } from "./comment-sheet";
+import { PhraseSheet } from "./phrase-sheet";
 
-// The reviewer's side of a review link (19 → Reviewer side). Everything goes through the review Edge Function; this
-// page never reads the database. The reviewer's name and a random key for deleting their own comments are kept in
-// this browser only.
+// The reviewer's side of a review link (19 → Reviewer side), rebuilt text-first (20 → Reviewer page). Everything goes
+// through the review Edge Function; this page never reads the database. The reviewer's name and a random key for
+// deleting their own comments are kept in this browser only.
 
-type Comment = { id: string; reviewer_name: string; body: string; quote: string | null; created_at: string; mine: boolean; can_delete: boolean };
 type Live = {
   status: "live";
   first_name: string | null;
@@ -34,7 +36,10 @@ type PageState = { status: "loading" } | { status: "error" } | { status: "ended"
 const NAME_KEY = "stackd.reviewerName";
 const KEY_KEY = "stackd.reviewerKey";
 const QUOTE_MAX = 300;
-const COMMENT_MAX = 1000;
+// How long a tapped phrase or comment stays outlined
+const OUTLINE_MS = 1200;
+// The pinned bar's height on phones, without the safe area
+const BAR_HEIGHT = 60;
 
 function reviewerKey(): string {
   const saved = readStorage(KEY_KEY);
@@ -73,6 +78,37 @@ async function openPage(token: string): Promise<PageState> {
 
 const message = (code: string) => REVIEW_ERRORS[code] ?? REVIEW_FAILED;
 
+// 900 and wider: the comments move to a rail beside the text (20 → Wide)
+const WIDE = "(min-width: 900px)";
+function useWide() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(WIDE);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(WIDE).matches,
+    () => false,
+  );
+}
+
+// A value that clears itself after 1.2 s, for outlining what a tap points at
+function useMoment<T>(): [T | null, (value: T) => void] {
+  const [value, setValue] = useState<T | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+  return [
+    value,
+    (next: T) => {
+      if (timer.current) clearTimeout(timer.current);
+      setValue(next);
+      timer.current = setTimeout(() => setValue(null), OUTLINE_MS);
+    },
+  ];
+}
+
 export function ReviewPage() {
   const token = useSearchParams().get("t") ?? "";
   // A malformed link can't be live, so it shows the ended message without asking
@@ -94,6 +130,8 @@ export function ReviewPage() {
     };
   }, [wellFormed, token, attempt]);
 
+  if (state.status === "live") return <LiveReview page={state} token={token} onChange={setState} />;
+
   return (
     <main
       className="mx-auto min-h-dvh max-w-[688px] bg-sky-50"
@@ -109,7 +147,10 @@ export function ReviewPage() {
       )}
       {state.status === "error" && (
         <div className="mx-4 mt-8">
-          <InlineError title="Couldn't open this answer" body="Check your connection, then try again." action={
+          <InlineError
+            title="Couldn't open this answer"
+            body="Check your connection, then try again."
+            action={
               <TintedButton
                 onClick={() => {
                   setState({ status: "loading" });
@@ -118,7 +159,8 @@ export function ReviewPage() {
               >
                 Try again
               </TintedButton>
-            } />
+            }
+          />
         </div>
       )}
       {state.status === "ended" && (
@@ -127,26 +169,35 @@ export function ReviewPage() {
           <p className="mt-3 max-w-[480px] text-slate-700 type-body">This review link has ended. Ask the student for a new one.</p>
         </div>
       )}
-      {state.status === "live" && <LiveReview page={state} token={token} onChange={setState} />}
       <UnofficialFooter className="mt-12 px-4" />
     </main>
   );
 }
 
-type Draft = { quote: string | null; body: string };
+// The comment being written: on a phrase, or on the whole answer (quote null)
+type Draft = { quote: string | null; body: string; open: boolean };
 
 function LiveReview({ page, token, onChange }: { page: Live; token: string; onChange: (s: PageState) => void }) {
+  const wide = useWide();
   const textRef = useRef<HTMLDivElement>(null);
-  const [name, setName] = useState(() => readStorage(NAME_KEY) ?? "");
-  const [whole, setWhole] = useState("");
+  const [savedName, setSavedName] = useState(() => readStorage(NAME_KEY) ?? "");
+  const [name, setName] = useState(savedName);
+  const [askName, setAskName] = useState(!savedName);
   const [selection, setSelection] = useState<{ text: string; top: number; left: number } | null>(null);
+  // The selection when the bar's button was pressed or focused. Moving focus to it can clear the selection (Safari).
+  const [held, setHeld] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [phrase, setPhrase] = useState<{ quote: string; start: number; end: number; open: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
-  const [focused, setFocused] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ key: number; text: string } | null>(null);
+  const [outlinedSpan, outlineSpan] = useMoment<{ start: number; end: number }>();
+  const [outlinedComments, outlineComments] = useMoment<string[]>();
 
-  // A selection inside the answer offers "Comment" just above it
+  const say = (text: string) => setToast((t) => ({ key: (t?.key ?? 0) + 1, text }));
+
+  // A selection inside the answer offers "Comment" just above it, and turns the bar's button into Comment on selection
   useEffect(() => {
     function onSelect() {
       const sel = window.getSelection();
@@ -167,231 +218,306 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
     return () => document.removeEventListener("selectionchange", onSelect);
   }, []);
 
-  function startQuote() {
-    if (!selection) return;
-    const quote = selection.text.slice(0, QUOTE_MAX);
-    if (!page.snapshot.includes(quote)) return setError(REVIEW_ERRORS.review_bad_quote);
-    setDraft({ quote, body: "" });
+  function openComposer(quote: string | null) {
+    setDraft((d) => ({ quote, body: d && d.quote === quote ? d.body : "", open: true }));
+    setPhrase((p) => (p ? { ...p, open: false } : p));
     setError(null);
-    window.getSelection()?.removeAllRanges();
-    setSelection(null);
+    setNameError(null);
   }
 
-  async function add(quote: string | null, body: string, done: () => void) {
-    const trimmedName = name.trim();
-    if (!trimmedName || trimmedName.length > 60) return setNameError(REVIEW_ERRORS.review_bad_name);
-    if (!body.trim()) return setError(REVIEW_ERRORS.review_bad_comment);
+  function commentOnSelection(text: string) {
+    const quote = text.trim().slice(0, QUOTE_MAX);
+    if (!page.snapshot.includes(quote)) return say(REVIEW_ERRORS.review_bad_quote);
+    window.getSelection()?.removeAllRanges();
+    setSelection(null);
+    openComposer(quote);
+  }
+
+  function closeComposer() {
+    setDraft((d) => (d ? { ...d, open: false } : d));
+  }
+
+  async function add() {
+    if (!draft) return;
+    const trimmedName = (askName ? name : savedName).trim();
+    if (!trimmedName || trimmedName.length > 60) {
+      setAskName(true);
+      return setNameError(REVIEW_ERRORS.review_bad_name);
+    }
+    if (!draft.body.trim()) return setError(REVIEW_ERRORS.review_bad_comment);
     setNameError(null);
     setError(null);
     setBusy(true);
-    writeStorage(NAME_KEY, trimmedName);
-    const reply = await callReview({ action: "add", t: token, k: reviewerKey(), name: trimmedName, body: body.trim(), quote });
+    const reply = await callReview({ action: "add", t: token, k: reviewerKey(), name: trimmedName, body: draft.body.trim(), quote: draft.quote });
     setBusy(false);
     if (!reply.ok) {
       if (reply.error === "review_ended") return onChange({ status: "ended" });
       return setError(message(reply.error));
     }
+    writeStorage(NAME_KEY, trimmedName);
+    setSavedName(trimmedName);
+    setName(trimmedName);
+    setAskName(false);
     onChange({ ...page, comments: [...page.comments, reply.data as Comment] });
-    done();
+    setDraft((d) => (d ? { ...d, body: "", open: false } : d));
+    say("Comment added.");
   }
 
   async function remove(id: string) {
     const reply = await callReview({ action: "delete", t: token, k: reviewerKey(), id });
     if (!reply.ok) {
       if (reply.error === "review_ended") return onChange({ status: "ended" });
-      return setError(message(reply.error));
+      return say(message(reply.error));
     }
-    onChange({ ...page, comments: page.comments.filter((c) => c.id !== id) });
+    const comments = page.comments.filter((c) => c.id !== id);
+    onChange({ ...page, comments });
+    say("Comment deleted.");
+    // The phrase sheet closes once its phrase has no comments left
+    if (phrase && !commentsOn(comments, phrase).length) setPhrase({ ...phrase, open: false });
   }
 
-  const runs = highlightRuns(page.snapshot, page.comments.map((c) => c.quote ?? ""));
+  // Comments whose phrase overlaps a stretch of the text
+  function commentsOn(list: Comment[], at: { start: number; end: number }) {
+    return list.filter((c) => {
+      const span = c.quote ? findQuote(page.snapshot, c.quote) : null;
+      return span && span.start < at.end && at.start < span.end;
+    });
+  }
+
+  // Tapping a highlight: the phrase sheet on phones; on wide screens its comments are outlined in the rail
+  function openPhrase(quote: string, start: number, end: number) {
+    const on = commentsOn(page.comments, { start, end });
+    if (!wide) return setPhrase({ quote, start, end, open: true });
+    outlineComments(on.map((c) => c.id));
+    if (on[0]) document.getElementById(`rc-${on[0].id}`)?.scrollIntoView({ block: "nearest" });
+  }
+
+  // Tapping a comment's quote scrolls to its phrase and outlines it
+  function showPhrase(comment: Comment) {
+    const span = comment.quote ? findQuote(page.snapshot, comment.quote) : null;
+    if (!span) return;
+    outlineSpan(span);
+    const mark = [...(textRef.current?.querySelectorAll<HTMLElement>("mark[data-start]") ?? [])].find(
+      (m) => Number(m.dataset.start) < span.end && span.start < Number(m.dataset.end),
+    );
+    mark?.scrollIntoView({ block: "center" });
+  }
+
   const asker = page.first_name ?? "A student";
+  const runs = highlightRuns(page.snapshot, page.comments.map((c) => c.quote ?? ""));
+  let offset = 0;
+  const placed = runs.map((r) => {
+    const start = offset;
+    offset += r.text.length;
+    return { ...r, start, end: offset };
+  });
 
-  return (
-    <>
-      <div className="px-6 pt-8">
-        <h1 className="text-navy-900 type-title-1">Review request</h1>
-        <p className="mt-2 max-w-[480px] text-slate-700 type-body">{asker} asked you to review a UC personal insight answer.</p>
-      </div>
+  const composer: ComposerProps | null = draft && {
+    quote: draft.quote,
+    body: draft.body,
+    onBody: (body) => setDraft({ ...draft, body }),
+    savedName,
+    name,
+    onName: setName,
+    askName,
+    onChangeName: () => {
+      setName(savedName);
+      setAskName(true);
+    },
+    nameError,
+    error,
+    busy,
+    onAdd: add,
+  };
 
-      <section aria-labelledby="question" className="mx-4 mt-6 rounded-md border border-border bg-surface px-4 py-4">
-        <div className="flex items-baseline gap-3">
-          <h2 id="question" className="min-w-0 flex-1 text-navy-900 type-row-title">
-            {page.short_name}
-          </h2>
-          <span className="shrink-0 text-slate-600 tabular-nums type-caption">{page.words} words</span>
-        </div>
-        <p className="mt-1 text-slate-600 type-caption">{page.summary}</p>
-      </section>
-
-      <div className="relative mx-6 mt-6">
-        <div ref={textRef} className="whitespace-pre-wrap break-words border-l-2 border-indigo-600 pl-4 text-navy-900 type-body-lg">
-          {runs.map((r, i) =>
-            r.quote ? (
-              <mark
-                key={i}
-                tabIndex={0}
-                role="button"
-                aria-label={`Comments on "${r.quote}"`}
-                onClick={() => setFocused(r.quote)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setFocused(r.quote);
-                  }
-                }}
-                className={cn("rounded-[2px] bg-tint-indigo text-navy-900", focused === r.quote && "outline outline-2 outline-indigo-600")}
-              >
-                {r.text}
-              </mark>
-            ) : (
-              <span key={i}>{r.text}</span>
-            ),
-          )}
-        </div>
-        {selection && !draft && (
-          <button
-            type="button"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={startQuote}
-            className="absolute z-10 -translate-x-1/2 -translate-y-full rounded-full bg-indigo-600 px-4 py-2 text-white shadow-float type-label"
-            style={{ top: selection.top - 8, left: selection.left }}
-          >
-            Comment
-          </button>
-        )}
-      </div>
-
-      <div className="mt-4 px-6">
-        <p className="text-slate-600 type-caption">Select any part of the text to comment on it.</p>
-        {/* The same flow by keyboard: select with Shift + arrows, then this button */}
-        <button
-          type="button"
-          disabled={!selection}
-          onClick={startQuote}
-          className="-my-3 mt-1 py-3 text-blue-600 type-label pressed:underline focus-ring:underline disabled:text-slate-600 disabled:opacity-60"
-        >
-          Comment on selection
-        </button>
-      </div>
-
-      {draft && (
-        <section aria-labelledby="quote-title" className="mx-4 mt-4 rounded-md border border-border bg-surface px-4 py-4">
-          <h2 id="quote-title" className="text-navy-900 type-label">
-            Comment on this part
-          </h2>
-          <p className="mt-2 border-l-2 border-indigo-600 pl-3 text-slate-600 type-caption">&ldquo;{draft.quote}&rdquo;</p>
-          <CommentBox
-            id="quote-comment"
-            value={draft.body}
-            onChange={(body) => setDraft({ ...draft, body })}
-            placeholder="Your comment…"
-            autoFocus
-          />
-          <div className="mt-3 flex items-center gap-6">
-            <PrimaryButton loading={busy} onClick={() => add(draft.quote, draft.body, () => setDraft(null))} className="flex-1">
-              Add comment
-            </PrimaryButton>
-            <button type="button" onClick={() => setDraft(null)} className="-my-3 py-3 text-slate-600 type-link pressed:underline focus-ring:underline">
-              Cancel
-            </button>
-          </div>
-        </section>
-      )}
-
-      <section aria-label="Your comment" className="mt-8 px-6">
-        <TextField
-          id="reviewer-name"
-          label="Your name"
-          value={name}
-          maxLength={60}
-          autoComplete="name"
-          placeholder="Ms. Lee"
-          onChange={(e) => setName(e.target.value)}
-          error={nameError ?? undefined}
-        />
-        <CommentBox id="whole-comment" value={whole} onChange={setWhole} placeholder="Comment on the whole answer…" label="Comment on the whole answer" />
-        {error && (
-          <p role="alert" className="mt-2 text-coral-700 type-caption">
-            {error}
-          </p>
-        )}
-        <PrimaryButton loading={busy && !draft} onClick={() => add(null, whole, () => setWhole(""))} className="mt-4">
-          Add comment
-        </PrimaryButton>
-        <p className="mt-3 text-slate-600 type-caption">
-          By commenting you agree to Stackd&apos;s{" "}
-          <a href="/terms/" className="text-blue-600 underline">
-            Terms
-          </a>
-          . Keep it about the writing; abusive comments are removed.{" "}
-          <a href="/privacy/" className="text-blue-600 underline">
-            Privacy
-          </a>
-        </p>
-      </section>
-
-      {page.comments.length > 0 && (
-        <section aria-labelledby="comments-title" className="mt-10 px-6">
-          <h2 id="comments-title" className="text-navy-900 type-title-3">
-            Comments ({page.comments.length})
-          </h2>
-          <ul className="mt-4 space-y-5">
-            {page.comments.map((c) => (
-              <li key={c.id} className={cn("rounded-sm", focused && c.quote === focused && "bg-tint-indigo -mx-2 px-2 py-2")}>
-                {c.quote && <p className="border-l-2 border-indigo-600 pl-3 text-slate-600 type-caption">&ldquo;{c.quote}&rdquo;</p>}
-                <p className={cn("whitespace-pre-wrap break-words text-navy-900 type-body", c.quote && "mt-1")}>{c.body}</p>
-                <p className="mt-1 text-slate-600 type-caption">
-                  {c.reviewer_name}, {shortDate(c.created_at)}
-                  {c.can_delete && (
-                    <>
-                      {", "}
-                      <button type="button" onClick={() => remove(c.id)} className="-my-3 py-3 text-coral-700 type-caption pressed:underline focus-ring:underline">
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <p className="mt-10 max-w-[480px] px-6 text-slate-600 type-caption">
-        Only people with this link can see this answer. It ends on {longDate(page.expires_at)}.
-      </p>
-    </>
+  // The bar's one button: on the selection while there is one, otherwise on the whole answer. Never disabled.
+  const barButton = (
+    <button
+      type="button"
+      onPointerDown={() => setHeld(selection?.text ?? null)}
+      onFocus={() => setHeld(selection?.text ?? null)}
+      onBlur={() => setHeld(null)}
+      // Keeps the selection while the button is pressed with a mouse
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => {
+        const text = selection?.text ?? held;
+        setHeld(null);
+        if (text) commentOnSelection(text);
+        else openComposer(null);
+      }}
+      className="-my-3 py-3 text-left text-blue-600 type-label pressed:underline focus-ring:underline"
+    >
+      {selection || held ? "Comment on selection" : "Comment on the whole answer"}
+    </button>
   );
-}
 
-type CommentBoxProps = { id: string; value: string; onChange: (v: string) => void; placeholder: string; label?: string; autoFocus?: boolean };
-
-function CommentBox({ id, value, onChange, placeholder, label, autoFocus }: CommentBoxProps) {
-  return (
-    <div className="mt-4">
-      {label && (
-        <label htmlFor={id} className="block text-navy-900 type-headline">
-          {label}
-        </label>
+  const comments = (
+    <section aria-labelledby="comments-title">
+      <h2 id="comments-title" className="text-navy-900 type-title-3">
+        Comments ({page.comments.length})
+      </h2>
+      {page.comments.length === 0 ? (
+        <p className="mt-3 text-slate-600 type-body">No comments yet. Select a sentence to comment on it.</p>
+      ) : (
+        <div className="mt-3">
+          <CommentList comments={page.comments} snapshot={page.snapshot} outlined={outlinedComments ?? []} onQuote={showPhrase} onDelete={remove} />
+        </div>
       )}
-      <textarea
-        id={id}
-        value={value}
-        maxLength={COMMENT_MAX}
-        rows={3}
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(
-          "block w-full resize-y rounded-sm border border-field-border bg-surface px-4 py-3 text-navy-900 caret-blue-600 outline-none type-body-md placeholder:text-slate-600",
-          "field-focus:border-blue-600 field-focus:shadow-[inset_0_0_0_1px_var(--blue-600),0_0_0_4px_rgba(3,100,250,.15)]",
-          label && "mt-2",
-        )}
-      />
-      <p className="mt-1 text-right text-slate-600 tabular-nums type-caption">
-        {value.length} / {COMMENT_MAX}
+    </section>
+  );
+
+  const fineprint = (
+    <div className="mt-10 max-w-[480px] space-y-3 text-slate-600 type-caption">
+      <p>Only people with this link can see this answer. It ends on {longDate(page.expires_at)}.</p>
+      <p>
+        By commenting you agree to Stackd&apos;s{" "}
+        <a href="/terms/" className="text-blue-600 underline">
+          Terms
+        </a>
+        . Keep it about the writing; abusive comments are removed.{" "}
+        <a href="/privacy/" className="text-blue-600 underline">
+          Privacy
+        </a>
       </p>
     </div>
+  );
+
+  return (
+    <main
+      className="min-h-dvh bg-sky-50"
+      style={{
+        paddingTop: "calc(var(--safe-top) + 24px)",
+        paddingBottom: wide ? "calc(var(--safe-bottom) + 24px)" : `calc(var(--safe-bottom) + ${BAR_HEIGHT + 24}px)`,
+      }}
+    >
+      <div className="mx-auto flex max-w-[688px] items-start justify-center gap-12 min-[900px]:max-w-[1056px] min-[900px]:px-6">
+        <div className="w-full min-w-0 max-w-[688px] min-[900px]:max-w-[640px]">
+          <div className="px-6">
+            <Art id="wordmark" width={100} label="Stackd" preload />
+          </div>
+
+          <div className="px-6 pt-8">
+            <h1 className="text-navy-900 type-title-1">{asker} would like your feedback</h1>
+            <p className="mt-2 max-w-[520px] text-slate-700 type-body">On a UC personal insight answer. Select any sentence to comment on it.</p>
+          </div>
+
+          {/* The same band as the editor's strip, so the page looks like the app */}
+          <section aria-labelledby="question" className="mt-6 bg-tint-indigo px-6 py-4">
+            <div className="flex items-baseline gap-3">
+              <h2 id="question" className="min-w-0 flex-1 text-navy-900 type-title-3">
+                {page.short_name}
+              </h2>
+              <span className="shrink-0 text-slate-700 tabular-nums type-caption">
+                {page.words} of {WORD_LIMIT} words
+              </span>
+            </div>
+            <p className="mt-1 text-slate-700 type-body">{page.summary}</p>
+          </section>
+
+          <div className="relative mt-6 max-w-[640px] px-6">
+            <div ref={textRef} className="whitespace-pre-wrap break-words text-navy-900 type-body-lg [line-height:1.6]">
+              {placed.map((r, i) =>
+                r.quote ? (
+                  <mark
+                    key={i}
+                    data-start={r.start}
+                    data-end={r.end}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Comments on "${r.text}"`}
+                    onClick={() => openPhrase(r.text, r.start, r.end)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openPhrase(r.text, r.start, r.end);
+                      }
+                    }}
+                    className={cn(
+                      "scroll-my-24 rounded-[2px] bg-tint-indigo text-navy-900 underline decoration-indigo-600 decoration-2 underline-offset-[3px] [text-decoration-skip-ink:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]",
+                      "outline-2 outline-offset-2",
+                      outlinedSpan && outlinedSpan.start < r.end && r.start < outlinedSpan.end ? "outline outline-indigo-600" : "outline-transparent",
+                    )}
+                  >
+                    {r.text}
+                  </mark>
+                ) : (
+                  <span key={i}>{r.text}</span>
+                ),
+              )}
+            </div>
+            {selection && !draft?.open && (
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => commentOnSelection(selection.text)}
+                className="absolute z-10 -translate-x-1/2 -translate-y-full rounded-full bg-indigo-600 px-4 py-2 text-white shadow-float type-label"
+                style={{ top: selection.top - 8, left: selection.left + 24 }}
+              >
+                Comment
+              </button>
+            )}
+          </div>
+
+          {!wide && page.comments.length > 0 && <div className="mt-10 px-6">{comments}</div>}
+
+          <div className="px-6">{fineprint}</div>
+          <UnofficialFooter className="mt-12 px-4" />
+        </div>
+
+        {wide && (
+          // The rail: the composer on top while writing, the comments, and the bar's button as its last row
+          <aside
+            aria-label="Comments"
+            className="sticky top-6 flex max-h-[calc(100dvh-48px)] w-[320px] shrink-0 flex-col"
+          >
+            {composer && draft?.open && (
+              <section aria-labelledby="composer-title" className="mb-6 shrink-0 rounded-md border border-border bg-surface p-4">
+                <div className="flex items-baseline gap-3">
+                  <h2 id="composer-title" className="min-w-0 flex-1 text-navy-900 type-title-3">
+                    {draft.quote === null ? "Comment on the whole answer" : "Comment on this part"}
+                  </h2>
+                  <button type="button" onClick={closeComposer} className="-my-3 shrink-0 py-3 text-slate-600 type-label pressed:underline focus-ring:underline">
+                    Cancel
+                  </button>
+                </div>
+                <CommentComposer {...composer} />
+              </section>
+            )}
+            <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">{comments}</div>
+            <div className="flex h-[60px] shrink-0 items-center border-t border-border px-2">{barButton}</div>
+          </aside>
+        )}
+      </div>
+
+      {!wide && (
+        <>
+          {/* The pinned bar (20 → Pinned bar) */}
+          <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface" style={{ paddingBottom: "var(--safe-bottom)" }}>
+            <div className="mx-auto flex h-[59px] max-w-[688px] items-center px-4 py-2">{barButton}</div>
+          </div>
+          {composer && <CommentSheet open={Boolean(draft?.open)} onClose={closeComposer} {...composer} />}
+          {phrase && (
+            <PhraseSheet
+              open={phrase.open}
+              quote={phrase.quote}
+              comments={commentsOn(page.comments, phrase)}
+              onAdd={() => openComposer(phrase.quote)}
+              onDelete={remove}
+              onClose={() => setPhrase({ ...phrase, open: false })}
+            />
+          )}
+        </>
+      )}
+
+      {toast && (
+        <Toast
+          key={toast.key}
+          message={toast.text}
+          bottom={wide ? "calc(var(--safe-bottom) + 24px)" : `calc(var(--safe-bottom) + ${BAR_HEIGHT + 12}px)`}
+          onDone={() => setToast(null)}
+          overSheet
+        />
+      )}
+    </main>
   );
 }

@@ -99,6 +99,47 @@ export function highlightRuns(text: string, quotes: string[]): { text: string; q
   return runs;
 }
 
+// Where each quote sits in the text (its first match), in text order. Quotes not found are left out.
+export function quoteSpans(text: string, quotes: string[]): { quote: string; start: number; end: number }[] {
+  return quotes
+    .flatMap((quote) => {
+      const at = quote ? findQuote(text, quote) : null;
+      return at ? [{ quote, ...at }] : [];
+    })
+    .sort((a, b) => a.start - b.start);
+}
+
+// Whether a caret or selection (start to end) sits inside a phrase. A caret at either edge counts.
+export const insideSpan = (span: { start: number; end: number }, start: number, end: number) =>
+  span.start <= start && end <= span.end;
+
+// The reviewer's comments list (20 → Comments list): whole-answer comments first, then by where the quote appears in
+// the text. A quote no longer in the text goes last. Same place: oldest first.
+export function orderComments<T extends { quote: string | null; created_at: string }>(text: string, comments: T[]): T[] {
+  const place = (c: T) => (c.quote === null ? -1 : (findQuote(text, c.quote)?.start ?? Number.MAX_SAFE_INTEGER));
+  return [...comments].sort((a, b) => place(a) - place(b) || a.created_at.localeCompare(b.created_at));
+}
+
+type MarkLink<C> = { snapshot_body: string; comments: C[] };
+type MarkComment = { quote: string | null; resolved_at: string | null };
+
+// The comments marked in the student's draft (20 → Highlights): unresolved, with a quote that's still in both the
+// reviewer's version and the answer. Each comes with where its quote sits in the answer.
+export function draftHighlights<C extends MarkComment>(text: string, links: MarkLink<C>[]): { comment: C; start: number; end: number }[] {
+  return links
+    .flatMap((link) =>
+      link.comments.flatMap((comment) => {
+        if (!comment.quote || comment.resolved_at || quoteChanged(comment.quote, link.snapshot_body)) return [];
+        const at = findQuote(text, comment.quote);
+        return at ? [{ comment, ...at }] : [];
+      }),
+    )
+    .sort((a, b) => a.start - b.start);
+}
+
+// "Ms. Lee", or "Ms. Lee and 1 more" when a phrase has several comments (20 → Comment bar)
+export const commentNames = (newest: string, count: number) => (count > 1 ? `${newest} and ${count - 1} more` : newest);
+
 // What the review function's error codes mean on the page (19 → Reviewer side)
 export const REVIEW_ERRORS: Record<string, string> = {
   review_ended: "This review link has ended. Ask the student for a new one.",

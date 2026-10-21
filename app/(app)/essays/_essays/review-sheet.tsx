@@ -36,7 +36,7 @@ export function ReviewSheet({ open, busy, error, onCreate, onClose }: ReviewShee
         onChange={(e) => setName(e.target.value)}
         error={error ?? undefined}
       />
-      <PrimaryButton onClick={() => onCreate(name)} loading={busy} className="mt-6">
+      <PrimaryButton onClick={() => onCreate(name)} loading={busy} chevron={false} className="mt-6">
         Create link
       </PrimaryButton>
       <p className="mt-3 text-center text-slate-600 type-caption">

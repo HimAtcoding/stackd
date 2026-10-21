@@ -113,6 +113,7 @@ export default function ComponentsPage() {
         <State name="Focus"><PrimaryButton data-focus>Get started</PrimaryButton></State>
         <State name="Disabled"><PrimaryButton disabled>Get started</PrimaryButton></State>
         <State name="Loading"><PrimaryButton loading>Sign in</PrimaryButton></State>
+        <State name="No chevron (stays on this screen)"><PrimaryButton chevron={false}>Add comment</PrimaryButton></State>
       </Section>
 
       <Section title="Tinted button">

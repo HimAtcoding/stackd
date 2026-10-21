@@ -15,12 +15,14 @@ type ReviewsSectionProps = {
   links: ReviewLink[];
   // The editor's text now, to tell whether a link's snapshot is behind and whether a quote is still there
   text: string;
+  // The comment See comment points at, tinted for a moment (20 → Comment bar)
+  flash: string | null;
   onSelectQuote: (quote: string) => void;
   onToast: (text: string) => void;
 };
 
 // The Reviews section under the answer (19 → Student side): each link, newest first, with its comments
-export function ReviewsSection({ links, text, onSelectQuote, onToast }: ReviewsSectionProps) {
+export function ReviewsSection({ links, text, flash, onSelectQuote, onToast }: ReviewsSectionProps) {
   // Comments that were unread when they showed here, for the "{n} new" pill; showing them marks them read
   const [fresh, setFresh] = useState<Set<string>>(() => new Set());
   const unreadKey = links.flatMap((l) => l.comments.filter((c) => !c.read_at).map((c) => c.id)).join(",");
@@ -98,18 +100,26 @@ export function ReviewsSection({ links, text, onSelectQuote, onToast }: ReviewsS
               {link.comments.length === 0 ? (
                 <p className="mt-3 text-slate-600 type-body">No comments yet. They&apos;ll show here when your reviewer adds some.</p>
               ) : (
-                <ul className="mt-3 space-y-4">
+                <ul className="mt-1">
                   {open.map((c) => (
-                    <Comment key={c.id} comment={c} snapshot={link.snapshot_body} text={text} onSelectQuote={onSelectQuote} onMenu={() => setMenu({ comment: c, open: true })} />
+                    <Comment
+                      key={c.id}
+                      comment={c}
+                      snapshot={link.snapshot_body}
+                      text={text}
+                      flash={flash === c.id}
+                      onSelectQuote={onSelectQuote}
+                      onMenu={() => setMenu({ comment: c, open: true })}
+                    />
                   ))}
                 </ul>
               )}
               {resolved.length > 0 && (
                 <details className="mt-4">
                   <summary className="-my-3 cursor-pointer py-3 text-slate-600 type-label">Resolved ({resolved.length})</summary>
-                  <ul className="mt-3 space-y-4 opacity-50">
+                  <ul className="mt-1 opacity-50">
                     {resolved.map((c) => (
-                      <Comment key={c.id} comment={c} snapshot={link.snapshot_body} text={text} onSelectQuote={onSelectQuote} onMenu={() => setMenu({ comment: c, open: true })} />
+                      <Comment key={c.id} comment={c} snapshot={link.snapshot_body} text={text} flash={false} onSelectQuote={onSelectQuote} onMenu={() => setMenu({ comment: c, open: true })} />
                     ))}
                   </ul>
                 </details>
@@ -182,15 +192,18 @@ function MenuButton({ children, onClick, danger }: { children: string; onClick: 
   );
 }
 
-type CommentProps = { comment: ReviewComment; snapshot: string; text: string; onSelectQuote: (q: string) => void; onMenu: () => void };
+type CommentProps = { comment: ReviewComment; snapshot: string; text: string; flash: boolean; onSelectQuote: (q: string) => void; onMenu: () => void };
 
 // A quoted phrase with a 2 indigo bar, the comment, then who and when (19 → Comments)
-function Comment({ comment, snapshot, text, onSelectQuote, onMenu }: CommentProps) {
+function Comment({ comment, snapshot, text, flash, onSelectQuote, onMenu }: CommentProps) {
   const { quote } = comment;
   // Changed when the reviewer's version moved on (Send latest version) or the student has edited it away since
   const gone = quote ? quoteChanged(quote, snapshot) || quoteChanged(quote, text) : false;
   return (
-    <li className="flex gap-2">
+    <li
+      id={`comment-${comment.id}`}
+      className={cn("-mx-3 flex gap-2 rounded-sm px-3 py-2 motion-safe:transition-colors motion-safe:duration-200", flash ? "bg-tint-indigo" : "bg-transparent")}
+    >
       <div className="min-w-0 flex-1">
         {quote &&
           (gone ? (

@@ -26,7 +26,7 @@ export function RemindersAsk({ open, onAllow, onClose }: RemindersAskProps) {
           Stackd reminds you a week before and the day before each date you&apos;re tracking. You can change this anytime in Settings.
         </p>
       </div>
-      <PrimaryButton onClick={onAllow} className="mt-6">
+      <PrimaryButton onClick={onAllow} chevron={false} className="mt-6">
         Turn on reminders
       </PrimaryButton>
       <div className="mt-3 flex justify-center">

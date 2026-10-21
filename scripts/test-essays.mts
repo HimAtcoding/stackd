@@ -184,6 +184,38 @@ check("highlights: quotes marked, the rest plain, overlaps merged", JSON.stringi
   { text: "I ", quote: null }, { text: "led the club", quote: "led the club" }, { text: " and the ", quote: null },
   { text: "club grew", quote: "club grew" }, { text: ".", quote: null },
 ]), runs);
+
+// Highlights in the draft, the comment bar and the reviewer's list (20 → 4 and 5)
+const spans = review.quoteSpans("I led the club and the club grew.", ["club grew", "led the club", "missing", ""]);
+check("quote spans: in text order, missing and empty quotes left out", JSON.stringify(spans) === JSON.stringify([
+  { quote: "led the club", start: 2, end: 14 }, { quote: "club grew", start: 23, end: 32 },
+]), spans);
+const phrase = { start: 2, end: 14 };
+check("caret inside a phrase", review.insideSpan(phrase, 6, 6));
+check("caret at either edge of a phrase counts", review.insideSpan(phrase, 2, 2) && review.insideSpan(phrase, 14, 14));
+check("caret just outside a phrase doesn't", !review.insideSpan(phrase, 1, 1) && !review.insideSpan(phrase, 15, 15));
+check("a selection inside a phrase counts, one running past it doesn't", review.insideSpan(phrase, 3, 10) && !review.insideSpan(phrase, 3, 16));
+const draftText = "When I took my first CS class, I didn't expect to stay up debugging.";
+const c = (id: string, quote: string | null, resolved_at: string | null = null) => ({ id, quote, resolved_at });
+const marks = review.draftHighlights(draftText, [
+  { snapshot_body: draftText, comments: [c("late", "stay up debugging"), c("whole", null), c("done", "first CS class", "2026-10-21T10:00:00Z")] },
+  { snapshot_body: "An older version.", comments: [c("old", "When I took")] },
+  { snapshot_body: `${draftText} More.`, comments: [c("early", "first CS class"), c("gone", "More.")] },
+]);
+check("draft highlights: unresolved quotes still in both versions, in text order", marks.map((m) => m.comment.id).join() === "early,late", marks);
+check("draft highlights: where each sits in the answer", marks[1].start === draftText.indexOf("stay up debugging") && marks[1].end === draftText.length - 1);
+const listed = review.orderComments(draftText, [
+  { id: "b", quote: "stay up debugging", created_at: "2026-10-21T10:00:00Z" },
+  { id: "gone", quote: "not here", created_at: "2026-10-21T08:00:00Z" },
+  { id: "a", quote: "first CS class", created_at: "2026-10-21T11:00:00Z" },
+  { id: "w2", quote: null, created_at: "2026-10-21T12:00:00Z" },
+  { id: "w1", quote: null, created_at: "2026-10-21T09:00:00Z" },
+  { id: "b0", quote: "stay up debugging", created_at: "2026-10-21T07:00:00Z" },
+]);
+check("reviewer list: whole answer first, then text order, changed quotes last", listed.map((x) => x.id).join() === "w1,w2,a,b0,b,gone", listed.map((x) => x.id));
+check("comment bar name: one reviewer", review.commentNames("Ms. Lee", 1) === "Ms. Lee");
+check("comment bar name: several comments", review.commentNames("Ms. Lee", 2) === "Ms. Lee and 1 more" && review.commentNames("Ms. Lee", 4) === "Ms. Lee and 3 more");
+
 const token = review.makeSecret(32);
 check("a link token is 43 base64url characters", /^[A-Za-z0-9_-]{43}$/.test(token), token);
 check("tokens don't repeat", review.makeSecret(32) !== token);
