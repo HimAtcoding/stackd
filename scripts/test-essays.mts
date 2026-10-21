@@ -21,7 +21,7 @@ function check(name: string, ok: boolean, detail?: unknown) {
   console.log(ok ? "ok   " : "FAIL ", name, ok ? "" : JSON.stringify(detail));
 }
 
-// Word counting: by whitespace, like UC's form
+// Word counting: by whitespace, like Word and Google Docs (UC's own box isn't published; lib/essays.ts)
 check("no text is 0 words", countWords("") === 0 && countWords("   \n\t ") === 0);
 check("single spaces", countWords("I took my first CS class") === 6, countWords("I took my first CS class"));
 check("runs of spaces count once", countWords("one   two    three") === 3);
@@ -31,6 +31,15 @@ check("leading and trailing space doesn't count", countWords("  hello world  \n"
 check("punctuation stays with its word", countWords("Hello, world. It's well-known: yes!") === 5, countWords("Hello, world. It's well-known: yes!"));
 check("a dash between spaces is a word of its own", countWords("I tried — and failed") === 5);
 check("numbers and slashes are words", countWords("3.8 GPA in 2/3 terms") === 5);
+check("contractions are one word", countWords("I didn't know we'd win") === 5);
+check("hyphenated words are one word", countWords("a first-generation, low-income student") === 4);
+check("curly quotes from a pasted doc", countWords("“Why not?” she asked") === 4);
+// Text pasted from Google Docs, Word or a web page can carry these instead of plain spaces
+check("no-break, thin and ideographic spaces separate words", countWords("one two three　four") === 4);
+check("a pasted paragraph with mixed line endings", countWords("When I took\r\nmy first class,\r\n\r\nI was  lost.\n") === 9);
+const words = (n: number) => Array.from({ length: n }, (_, i) => `word${i}`).join(" ");
+check("exactly 350 words is at the limit, not over", countWords(words(350)) === 350 && counter(350).tone === "near");
+check("351 words is 1 over", countWords(words(351) + "\n") === 351 && counter(351).text === "351 / 350, 1 over");
 
 // The counter (17 → Counter)
 check("212 words: plain", JSON.stringify(counter(212)) === JSON.stringify({ text: "212 / 350", tone: "normal" }), counter(212));

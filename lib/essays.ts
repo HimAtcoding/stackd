@@ -38,8 +38,10 @@ export const ANSWERS = 4;
 // "fall-2027/major": one draft per question per cycle
 export const draftKey = (cycle: string, key: string) => `${cycle}/${key}`;
 
-// Words split by any run of spaces, tabs or line breaks, the way UC's form counts them. Punctuation stays part of
-// its word ("well-known," is one), and a dash standing between spaces counts as a word of its own.
+// Words split by any run of whitespace (spaces, tabs, line breaks, and the no-break and thin spaces pasted text
+// brings), the way Word and Google Docs count. Punctuation stays part of its word ("well-known," is one), and a dash
+// standing between spaces counts as a word of its own. UC's 350-word box is behind an applicant login and its rule
+// isn't published, so this isn't claimed to match it (build-status → Essays word count).
 export function countWords(text: string): number {
   const trimmed = text.trim();
   return trimmed ? trimmed.split(/\s+/).length : 0;

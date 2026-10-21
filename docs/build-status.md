@@ -549,7 +549,9 @@ Spec `17-essays.md`, on branch `essays-screens`. No migrations. Everything is be
 - `test:deadlines` has 6 new checks for the Essays signal. `test:db` has 6 new ones for the app's upsert: save, update, read back, and no reach into another student's draft.
 - With the flags back off: `test:import`, lint, `tsc` and `npm run build` pass.
 
-**Before Essays ships:** the privacy page has to say drafts are saved to the account (17 → Privacy and App Store). Word counting should be compared with UC's own form once someone can open it.
+**Before Essays ships** (both done 2026-10-21, on this branch):
+- ~~The privacy page has to say drafts are saved to the account.~~ `/privacy/` (updated October 21, 2026) now lists essay drafts (the answers, word counts, chosen questions and done marks) as saved to the account, kept on the phone too for offline writing, cleared from the phone at sign-out, deleted with the account, and readable only by their owner. Nothing mentions AI: `essayFeedback` is off and no draft leaves Supabase.
+- **Essays word count.** UC doesn't publish how its 350-word box counts, and the box is only inside a signed-in UC application, which nobody on the team could open for this check. UC's public application pages (`apply.universityofcalifornia.edu/my-application/js/app.min2.js`, read 2026-10-21) only have a generic 150-word counter for another field, which splits on whitespace, periods and question marks; it isn't the personal insight box, so Stackd doesn't copy it. Stackd counts by whitespace, the way Word and Google Docs do, and no screen claims the count is UC's. `test:essays` now pins contractions, hyphenation, curly quotes, the no-break and thin spaces pasted text carries, mixed line endings, exactly 350 (amber, not over) and 351 (1 over); 50 checks. Still worth doing once someone has a UC application open: paste a 350-word answer and compare UC's count with Stackd's.
 
 ## Essays part 1: questions and tables (step 19, 2026-10-19)
 
