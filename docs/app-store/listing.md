@@ -192,11 +192,12 @@ Use the review account (no founder email on screen) and no debug or dev pages. T
 ## Before pressing Submit (1.2)
 
 - [ ] Build 1.2.0 (3) uploaded from `release/v1.2`, processed, in TestFlight's Internal team, and tested on an iPhone
-- [ ] Version 1.0 removed from review (Shikhar's choice, 2026-10-21) and its version number changed to 1.2
+- [x] Version 1.0 removed from review (Shikhar's choice, 2026-10-21) and its version number changed to 1.2
 - [ ] Build 1.2.0 (3) selected for version 1.2 (not 1.0.0 (1) or 1.1.0 (2))
-- [ ] Website redeployed from the same release commit, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 21, 2026"
-- [ ] App Privacy answers match the table above; age rating re-answered (user content: Yes)
-- [ ] Description, promotional text, 1.2 reviewer notes and the new screenshots entered
+- [x] Website redeployed from the same release commit, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 21, 2026"
+- [x] App Privacy answers match the table above; age rating re-answered (user content: Yes)
+- [x] Description, promotional text and 1.2 reviewer notes entered (2026-10-21)
+- [ ] New screenshots from the 1.2.0 (3) build entered
 - [ ] Review account still signs in, still has its plan, and shows the sample draft
-- [ ] Release: automatically after approval
+- [x] Release: automatically after approval
 - [ ] Add for Review, then Submit for Review
