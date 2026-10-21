@@ -5,7 +5,7 @@ import { PRIVACY_UPDATED } from "@/lib/about";
 export const metadata: Metadata = { title: "Stackd privacy policy" };
 
 // /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-21 (v1.1 adds
-// the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
+// the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
     <DocPage title="Privacy policy" updated={PRIVACY_UPDATED}>
@@ -36,7 +36,19 @@ export default function PrivacyPage() {
           <li>
             <strong className="font-semibold text-navy-900">Your essay drafts:</strong> the personal insight answers you
             write in Stackd, with their word counts, which questions you chose, and which answers you marked done. They&apos;re
-            saved to your account so you can keep writing on any device you sign in on.
+            saved to your account so you can keep writing on any device you sign in on. A file you import is read on your
+            phone; only the text you keep is saved.
+          </li>
+          <li>
+            <strong className="font-semibold text-navy-900">Review links:</strong> if you ask someone to review an answer,
+            we save a copy of that answer as it was when you made the link (or last sent the latest version), the name you
+            gave the reviewer, and the link&apos;s dates. The link itself isn&apos;t stored, only a scrambled form of it.
+          </li>
+          <li>
+            <strong className="font-semibold text-navy-900">Reviewers&apos; comments:</strong> anyone who opens a review link
+            can read that copy of the answer and your first name, and leave comments under a name they type. We save the
+            comments, that name, and the phrase each one is about, with your account. A reviewer doesn&apos;t need an account,
+            and never sees your school or email.
           </li>
           <li>
             <strong className="font-semibold text-navy-900">Service logs:</strong> like most online services, our backend
@@ -57,6 +69,7 @@ export default function PrivacyPage() {
           <li>To save your plan and show it on every device you sign in on.</li>
           <li>To show your deadlines and checklist, and to set up the reminders you turn on.</li>
           <li>To save your essay drafts and show which answers are done.</li>
+          <li>To show a reviewer the answer you shared, and show you their comments.</li>
           <li>To email you 6-digit codes that confirm your email or reset your password.</li>
           <li>To greet you by name in the app.</li>
           <li>To answer you when you contact support.</li>
@@ -80,7 +93,8 @@ export default function PrivacyPage() {
       <DocSection title="On your device">
         <P>
           Stackd keeps a copy of your sign-in session, plan, deadlines and essay drafts on your phone or browser, so screens
-          load quickly and your writing is kept while you&apos;re offline.
+          load quickly and your writing is kept while you&apos;re offline. A reviewer&apos;s browser remembers the name they
+          type and a random key that lets them delete their own comment for 15 minutes.
           Signing out removes your account&apos;s copy from that device.
         </P>
         <P>
@@ -93,8 +107,10 @@ export default function PrivacyPage() {
 
       <DocSection title="How long we keep it">
         <P>
-          We keep your information while you have an account. When you delete your account, your account, profile, plan,
-          saved schools, progress, deadline marks, reminder choices, and essay drafts are deleted right away. Copies in our providers&apos; routine backups and logs are
+          We keep your information while you have an account. A review link stops working after 14 days, or as soon as you
+          turn it off; its comments stay with you until you delete them or the answer. When you delete your account, your
+          account, profile, plan, saved schools, progress, deadline marks, reminder choices, essay drafts, review links, and
+          the comments on them are deleted right away. Copies in our providers&apos; routine backups and logs are
           overwritten on their normal schedule.
         </P>
       </DocSection>
@@ -109,14 +125,17 @@ export default function PrivacyPage() {
       <DocSection title="Your choices">
         <P>
           You can change your plan any time in Settings, and turn deadline reminders off there or in your iPhone&apos;s
-          settings. To get a copy of your information, or to correct or delete it, email <SupportEmail />.
+          settings. In an answer&apos;s Reviews section you can turn off any review link and delete any comment; if a
+          comment is abusive, use Report on it or email us. A reviewer who wants a comment removed can ask the student, or
+          email us. To get a copy of your information, or to correct or delete it, email <SupportEmail />.
         </P>
       </DocSection>
 
       <DocSection title="Security">
         <P>
           Information travels over encrypted connections (HTTPS). Our database only lets each account read and change its
-          own plan, deadlines and essay drafts. No system is perfectly secure, so use a password you don&apos;t use anywhere else.
+          own plan, deadlines, essay drafts and review links. Reviewers reach a shared answer only through the link, and only
+          while it&apos;s on. No system is perfectly secure, so use a password you don&apos;t use anywhere else.
         </P>
       </DocSection>
 

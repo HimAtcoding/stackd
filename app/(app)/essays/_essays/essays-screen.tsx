@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DownloadSimpleIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { InlineError } from "@/components/ui/inline-error";
 import { LinkLine } from "@/components/ui/link-line";
@@ -16,6 +17,8 @@ import { cn } from "@/lib/cn";
 import { checkedDate, cycleLabel, shortDate } from "@/lib/deadlines";
 import { ANSWERS, CHOOSE, choose, chosenKeys, draftKey, progress, splitPrompts, WORD_LIMIT, type Prompt, type Segment } from "@/lib/essays";
 import { essaysHref } from "@/lib/features";
+import { ANSWERS_FILE_NAME, answersFile } from "@/lib/review";
+import { shareTextFile } from "@/lib/share";
 import { QuestionRow } from "./question-row";
 import { RemoveSheet } from "./remove-sheet";
 
@@ -79,6 +82,17 @@ function EssaysScreen() {
     const href = essaysHref(`edit/?q=${p.key}`);
     if (href) router.push(href, { transitionTypes: ["push"] });
   };
+
+  // Download all answers (19 → Send a draft out): the required and chosen questions that have text, in UC's order
+  const answers = ok
+    ? [...required, ...optional.filter((p) => ok.drafts[draftKey(p.cycle, p.key)]?.chosen)]
+        .map((p) => ({ short_name: p.short_name, body: ok.drafts[draftKey(p.cycle, p.key)]?.body ?? "" }))
+        .filter((a) => a.body.trim())
+    : [];
+  async function download() {
+    const outcome = await shareTextFile(ANSWERS_FILE_NAME, answersFile(answers));
+    if (outcome === "failed") setToast((t) => ({ key: (t?.key ?? 0) + 1, text: "Couldn't make the file. Try Copy text in each answer instead." }));
+  }
 
   function toggle(p: Prompt) {
     if (!ok) return;
@@ -161,6 +175,15 @@ function EssaysScreen() {
                 );
               })}
             </ul>
+
+            {answers.length > 0 && (
+              <div className="mt-4 px-6">
+                <button type="button" onClick={download} className="-my-3 inline-flex items-center gap-1.5 py-3 text-blue-600 type-label pressed:underline focus-ring:underline">
+                  <DownloadSimpleIcon weight="bold" size={18} aria-hidden />
+                  Download all answers
+                </button>
+              </div>
+            )}
 
             {ok.prompts.length > 0 && (
               <>

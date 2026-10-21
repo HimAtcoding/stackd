@@ -152,5 +152,44 @@ check("marking done keeps the text", afterDone.done_at === "2026-10-19T13:00:00Z
 storage.set("stackd.auth", JSON.stringify({ user: { id: "99999999-2222-4333-8444-555555555555" } }));
 check("another account on this phone doesn't see them", Object.keys(accountStore<Record<string, Draft>>(essays.DRAFTS_KEY, {}).get()).length === 0);
 
+// Bringing drafts in, sending them out, review links (19)
+const review = await import("../lib/review");
+check("pasted text: Windows line endings made plain", review.cleanImported("one\r\ntwo\rthree") === "one\ntwo\nthree");
+check("3 or more line breaks collapse to 2", review.cleanImported("para one\n\n\n\npara two") === "para one\n\npara two");
+check("spaces at line ends are trimmed", review.cleanImported("line one   \nline two\t \n") === "line one\nline two");
+check("quotes and dashes stay as typed", review.cleanImported("“Why” — she said") === "“Why” — she said");
+check("blank lines around the text are dropped", review.cleanImported("\n\n  Hello\n\n") === "  Hello");
+check("Replace swaps the text", review.combineDraft("old words", "new words", "replace") === "new words");
+check("Add to the end adds after a blank line", review.combineDraft("old words  \n", "new words", "append") === "old words\n\nnew words");
+check("Add to the end on an empty answer is just the text", review.combineDraft("  ", "new words", "append") === "new words");
+const file = review.answersFile([
+  { short_name: "Your major", body: "I took CS 1A." },
+  { short_name: "Leadership", body: "   " },
+  { short_name: "A challenge", body: "One." },
+]);
+check("Download all answers: each answer with its name and word count, empty ones left out", file === "Your major\n\nI took CS 1A.\n\n(4 words)\n\n\nA challenge\n\nOne.\n\n(1 word)", file);
+check("an answer over 350 says so in the file", review.answersFile([{ short_name: "Q", body: words(352) }]).endsWith("(352 words, 2 over 350)"));
+const at = new Date("2026-10-20T12:00:00-07:00");
+check("link dates while live", review.linkDates({ created_at: "2026-10-19T10:00:00-07:00", expires_at: "2026-11-02T10:00:00-08:00", revoked_at: null }, at) === "Created Oct 19, ends Nov 2");
+check("link dates once turned off", review.linkDates({ created_at: "2026-10-19T10:00:00-07:00", expires_at: "2026-11-02T10:00:00-08:00", revoked_at: "2026-10-20T09:00:00-07:00" }, at) === "Created Oct 19, turned off Oct 20");
+check("a turned-off link isn't live", !review.linkLive({ expires_at: "2026-11-02T10:00:00-08:00", revoked_at: "2026-10-20T09:00:00-07:00" }, at));
+check("an ended link isn't live", !review.linkLive({ expires_at: "2026-10-20T11:00:00-07:00", revoked_at: null }, at));
+check("one new comment, singular", review.newComments(1) === "1 new comment" && review.newComments(3) === "3 new comments");
+check("a quote still in the text hasn't changed", !review.quoteChanged("first CS class", "My first CS class was hard."));
+check("a quote edited away has changed", review.quoteChanged("first CS class", "My first class was hard."));
+check("no quote never changes", !review.quoteChanged(null, "anything"));
+check("finding a quote to select it", JSON.stringify(review.findQuote("abc def ghi", "def")) === JSON.stringify({ start: 4, end: 7 }) && review.findQuote("abc", "x") === null);
+const runs = review.highlightRuns("I led the club and the club grew.", ["led the club", "club grew", "missing"]);
+check("highlights: quotes marked, the rest plain, overlaps merged", JSON.stringify(runs) === JSON.stringify([
+  { text: "I ", quote: null }, { text: "led the club", quote: "led the club" }, { text: " and the ", quote: null },
+  { text: "club grew", quote: "club grew" }, { text: ".", quote: null },
+]), runs);
+const token = review.makeSecret(32);
+check("a link token is 43 base64url characters", /^[A-Za-z0-9_-]{43}$/.test(token), token);
+check("tokens don't repeat", review.makeSecret(32) !== token);
+check("a reviewer key is 32 characters", /^[A-Za-z0-9_-]{32}$/.test(review.makeSecret(24)));
+check("the review link is on the public website", review.reviewUrl(token) === `https://joinstackd-chi.vercel.app/review/?t=${token}`);
+check("the share message carries the link", review.reviewMessage("https://x.test/r") === "Could you review my UC personal insight answer? https://x.test/r");
+
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
