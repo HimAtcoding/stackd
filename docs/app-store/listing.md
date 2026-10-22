@@ -191,12 +191,12 @@ Use the review account (no founder email on screen) and no debug or dev pages. T
 
 ## Before pressing Submit (1.2)
 
-- [ ] Build 1.2.0 (3) uploaded from `release/v1.2`, processed, in TestFlight's Internal team, and tested on an iPhone
-- [ ] Version 1.0 removed from review (Shikhar's choice, 2026-10-21) and its version number changed to 1.2
-- [ ] Build 1.2.0 (3) selected for version 1.2 (not 1.0.0 (1) or 1.1.0 (2))
-- [ ] Website redeployed from the same release commit, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 21, 2026"
-- [ ] App Privacy answers match the table above; age rating re-answered (user content: Yes)
-- [ ] Description, promotional text, 1.2 reviewer notes and the new screenshots entered
-- [ ] Review account still signs in, still has its plan, and shows the sample draft
-- [ ] Release: automatically after approval
-- [ ] Add for Review, then Submit for Review
+- [x] Build 1.2.0 (3) uploaded from `release/v1.2` (2026-10-22), processed, in TestFlight's Internal team. Tested in the 6.9-inch simulator; not yet on a real iPhone (none connected to the Mac)
+- [x] Version 1.0 removed from review (Shikhar's choice, 2026-10-21) and its version number changed to 1.2
+- [x] Build 1.2.0 (3) selected for version 1.2 (not 1.0.0 (1) or 1.1.0 (2)). A submission sent 2026-10-22 01:19 UTC still had 1.0.0 (1) attached; it was canceled and resubmitted with build 3
+- [x] Website redeployed from the same release commit, so https://joinstackd-chi.vercel.app/privacy/ says "Updated October 21, 2026"
+- [x] App Privacy answers match the table above; age rating re-answered (user content: Yes) (saved by Shikhar 2026-10-21)
+- [x] Description, promotional text, 1.2 reviewer notes and the new screenshots entered (screenshots 1–7; Settings left out because the review account's email shows even when scrolled)
+- [x] Review account still signs in, still has its plan, and shows the sample draft
+- [x] Release: automatically after approval
+- [x] Add for Review, then Submit for Review (2026-10-22 07:45 UTC, Waiting for Review)
