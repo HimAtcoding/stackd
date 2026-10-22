@@ -19,7 +19,7 @@ export function RemoveSheet({ open, name, onRemove, onClose }: RemoveSheetProps)
         Remove {name} from your 3?
       </h2>
       <p className="mt-2 text-slate-600 type-body">Your draft stays saved.</p>
-      <PrimaryButton onClick={onRemove} className="mt-6">
+      <PrimaryButton onClick={onRemove} chevron={false} className="mt-6">
         Remove
       </PrimaryButton>
       <div className="mt-3 flex justify-center">

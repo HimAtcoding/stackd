@@ -25,7 +25,7 @@ export function ConfirmSheet({ open, id, title, body, confirm, onConfirm, altern
         {title}
       </h2>
       <p className="mt-2 text-slate-600 type-body">{body}</p>
-      <PrimaryButton onClick={onConfirm} loading={busy} className="mt-6">
+      <PrimaryButton onClick={onConfirm} loading={busy} chevron={false} className="mt-6">
         {confirm}
       </PrimaryButton>
       {alternative && (

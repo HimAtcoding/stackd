@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { ArrowSquareOutIcon, CheckIcon, ClipboardTextIcon, DotsThreeIcon, FileArrowUpIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { CircleButton } from "@/components/ui/circle-button";
@@ -17,9 +18,11 @@ import { createReviewLink, useDraftReviews } from "@/lib/data/reviews";
 import { cn } from "@/lib/cn";
 import { counter, countWords, draftKey, type Prompt } from "@/lib/essays";
 import { essaysHref } from "@/lib/features";
-import { cleanImported, combineDraft, findQuote, reviewMessage } from "@/lib/review";
+import { cleanImported, combineDraft, commentNames, draftHighlights, findQuote, insideSpan, reviewMessage } from "@/lib/review";
 import { copyText, readClipboard, readDraftFile, shareText } from "@/lib/share";
+import { CommentBar } from "./comment-bar";
 import { ConfirmSheet } from "./confirm-sheet";
+import { DraftMirror, FIELD_TEXT } from "./draft-mirror";
 import { hasMoreItems, MoreSheet, type MoreAction } from "./more-sheet";
 import { ReviewSheet } from "./review-sheet";
 import { ReviewsSection } from "./reviews-section";
@@ -29,6 +32,8 @@ const SAVE_AFTER_MS = 800;
 
 const SAVE_TEXT: Record<NonNullable<SaveState>, string> = { saving: "Saving…", saved: "Saved", offline: "Saved on this phone" };
 
+// How long See comment tints the comment in Reviews (20 → Comment bar)
+const FLASH_MS = 1200;
 // The editor exists only with Essays on; otherwise the address goes Home
 export function EditorRoute() {
   if (!essaysHref()) return <GoHome />;
@@ -111,9 +116,25 @@ function Editor({ prompt, saved }: EditorProps) {
   const field = useRef<HTMLTextAreaElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const mirror = useRef<HTMLDivElement>(null);
   const saveState = useSaveState(key, typing);
   const links = useDraftReviews(key);
   const height = useViewportHeight();
+  const reduceMotion = useReducedMotion();
+
+  // The caret or selection in the answer while it has focus, for the comment bar (20 → Comment bar). Typing hides
+  // the bar until the caret is somewhere typing didn't put it.
+  const [caret, setCaret] = useState<{ start: number; end: number } | null>(null);
+  const [quiet, setQuiet] = useState(false);
+  const typedAt = useRef<number | null>(null);
+  // A press on the bar has started, so the field losing focus shouldn't hide it
+  const pressingBar = useRef(false);
+  // The comment See comment tinted in Reviews
+  const [flash, setFlash] = useState<string | null>(null);
+
+  const highlights = useMemo(() => draftHighlights(text, links), [text, links]);
+  const here = caret && !quiet ? highlights.filter((h) => insideSpan(h, caret.start, caret.end)) : [];
+  const newest = here.reduce<(typeof here)[number] | null>((n, h) => (!n || h.comment.created_at > n.comment.created_at ? h : n), null);
   const count = counter(countWords(text));
   const done = Boolean(saved?.done_at);
   const empty = !text.trim();
@@ -178,8 +199,71 @@ function Editor({ prompt, saved }: EditorProps) {
     el.style.height = `${el.scrollHeight}px`;
   }, [text, height, links.length]);
 
+  // The bar takes room from the bottom of the writing area; if that covers the phrase, scroll it back into view
+  const barShown = Boolean(newest);
+  useLayoutEffect(() => {
+    const box = scroller.current;
+    if (!barShown || !box || !newest) return;
+    const mark = [...(mirror.current?.querySelectorAll<HTMLElement>("mark[data-start]") ?? [])].find((m) => {
+      const start = Number(m.dataset.start);
+      return start < newest.end && start + (m.textContent?.length ?? 0) > newest.start;
+    });
+    if (!mark) return;
+    const covered = mark.getBoundingClientRect().bottom + 8 - box.getBoundingClientRect().bottom;
+    if (covered > 0) box.scrollTop += covered;
+    // Only when the bar opens, not on every caret move inside it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [barShown]);
+
+  // The tint from See comment fades after 1.2 s; under reduced motion it stays until the next tap
+  useEffect(() => {
+    if (!flash) return;
+    if (!reduceMotion) {
+      const t = setTimeout(() => setFlash(null), FLASH_MS);
+      return () => clearTimeout(t);
+    }
+    const clear = () => setFlash(null);
+    document.addEventListener("pointerdown", clear, { once: true });
+    return () => document.removeEventListener("pointerdown", clear);
+  }, [flash, reduceMotion]);
+
+  // Follows the caret, including selections made from code (tapping a quote in Reviews)
+  useEffect(() => {
+    function read() {
+      const el = field.current;
+      if (!el || document.activeElement !== el) return;
+      const { selectionStart: start, selectionEnd: end } = el;
+      if (!(start === end && start === typedAt.current)) {
+        typedAt.current = null;
+        setQuiet(false);
+      }
+      setCaret((c) => (c && c.start === start && c.end === end ? c : { start, end }));
+    }
+    const el = field.current;
+    document.addEventListener("selectionchange", read);
+    el?.addEventListener("selectionchange", read);
+    el?.addEventListener("focus", read);
+    return () => {
+      document.removeEventListener("selectionchange", read);
+      el?.removeEventListener("selectionchange", read);
+      el?.removeEventListener("focus", read);
+    };
+  }, []);
+
+  // See comment: closes the keyboard, scrolls Reviews to the newest comment on the phrase and tints it
+  function seeComment() {
+    if (!newest) return;
+    const id = newest.comment.id;
+    pressingBar.current = false;
+    setCaret(null);
+    field.current?.blur();
+    setFlash(id);
+    document.getElementById(`comment-${id}`)?.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
   function onType(value: string) {
     setText(value);
+    setQuiet(true);
     setCollapsed(true);
     setTyping(true);
     setBringError(null);
@@ -346,18 +430,41 @@ function Editor({ prompt, saved }: EditorProps) {
             if (e.currentTarget.scrollTop === 0) setCollapsed(false);
           }}
         >
+          <DraftMirror ref={mirror} text={text} marks={highlights} />
           <textarea
             ref={field}
             value={text}
-            onChange={(e) => onType(e.target.value)}
-            onBlur={() => commitRef.current()}
+            onChange={(e) => {
+              typedAt.current = e.target.selectionEnd;
+              onType(e.target.value);
+            }}
+            onBlur={() => {
+              commitRef.current();
+              if (!pressingBar.current) setCaret(null);
+              else {
+                // Focus left for the bar: the next press anywhere else, with the field still unfocused, hides it
+                document.addEventListener(
+                  "pointerdown",
+                  (e) => {
+                    if (!(e.target as Element | null)?.closest("[data-comment-bar]") && document.activeElement !== field.current) setCaret(null);
+                  },
+                  { once: true },
+                );
+              }
+              pressingBar.current = false;
+            }}
+            onScroll={(e) => {
+              // The field grows to fit, so this shouldn't happen; if the browser scrolls it anyway, the mirror follows
+              if (mirror.current) mirror.current.style.transform = `translateY(${-e.currentTarget.scrollTop}px)`;
+            }}
             placeholder="Start writing. It saves as you go."
             autoCapitalize="sentences"
             spellCheck
             aria-label={`Your answer: ${prompt.short_name}`}
             aria-describedby="word-count"
             className={cn(
-              "block w-full resize-none overflow-hidden bg-transparent px-6 py-4 text-navy-900 type-body-lg placeholder:text-slate-600 focus:outline-none",
+              "relative block w-full resize-none appearance-none overflow-hidden bg-transparent text-navy-900 placeholder:text-slate-600 focus:outline-none",
+              FIELD_TEXT,
               links.length ? "min-h-[50%]" : "min-h-full",
             )}
           />
@@ -387,10 +494,20 @@ function Editor({ prompt, saved }: EditorProps) {
           )}
           {links.length > 0 && (
             <div className="pb-6">
-              <ReviewsSection links={links} text={text} onSelectQuote={selectQuote} onToast={say} />
+              <ReviewsSection links={links} text={text} flash={flash} onSelectQuote={selectQuote} onToast={say} />
             </div>
           )}
         </div>
+        {newest && (
+          <CommentBar
+            name={commentNames(newest.comment.reviewer_name, here.length)}
+            body={newest.comment.body}
+            onSeeComment={seeComment}
+            onPress={() => {
+              pressingBar.current = true;
+            }}
+          />
+        )}
         <p
           id="word-count"
           className={cn(

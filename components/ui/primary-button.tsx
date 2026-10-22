@@ -7,11 +7,13 @@ import { Spinner } from "./spinner";
 
 type PrimaryButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
+  // The trailing chevron shows only when the button goes to another screen (20 → Small fixes)
+  chevron?: boolean;
   "data-pressed"?: boolean;
   "data-focus"?: boolean;
 };
 
-export function PrimaryButton({ children, loading, disabled, className, onClick, ...props }: PrimaryButtonProps) {
+export function PrimaryButton({ children, loading, chevron = true, disabled, className, onClick, ...props }: PrimaryButtonProps) {
   return (
     <button
       type="button"
@@ -36,12 +38,14 @@ export function PrimaryButton({ children, loading, disabled, className, onClick,
       )}
     >
       <span className={cn("transition-opacity duration-120", loading && "opacity-0")}>{children}</span>
-      <CaretRightIcon
-        weight="bold"
-        size={20}
-        aria-hidden
-        className={cn("absolute right-6 top-1/2 -translate-y-1/2 transition-opacity duration-120", loading && "opacity-0")}
-      />
+      {chevron && (
+        <CaretRightIcon
+          weight="bold"
+          size={20}
+          aria-hidden
+          className={cn("absolute right-6 top-1/2 -translate-y-1/2 transition-opacity duration-120", loading && "opacity-0")}
+        />
+      )}
       {loading && <Spinner className="absolute left-1/2 top-1/2 -mt-2.5 -ml-2.5" />}
     </button>
   );

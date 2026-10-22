@@ -11,6 +11,7 @@
     "predev": "npm run prepare-assets",
     "prebuild": "npm run prepare-assets",
     "postbuild": "node scripts/fix-export-segments.mjs && node scripts/prune-export-art.mjs && node scripts/check-release.mjs && node scripts/check-service-key.mjs",
+    "test": "npm run -s test:essays && npm run -s test:deadlines && npm run -s test:reminders && npm run -s test:oauth",
     "test:db": "node scripts/test-migrations.mjs",
     "import": "node scripts/import/run.mjs",
     "import:verify": "node scripts/import/verify.mjs",
