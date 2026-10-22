@@ -582,6 +582,13 @@ npm run ios:open                  # App target: Version 1.2.0, Build 3, Team 4JN
 ```
 Xcode resolves two new Swift packages (Capacitor Clipboard and Share) on first open. Run on an iPhone: sign in, Essays, paste, import a .docx from Files, copy, share, Ask for review. Then Any iOS Device (arm64) → Product → Archive → Validate App → Distribute App → App Store Connect → Upload. When 1.2.0 (3) finishes processing, add it to TestFlight's Internal team and install it from TestFlight. App Store Connect (remove 1.0 from review, version 1.2, metadata from `docs/app-store/listing.md`, build 3, submit) can be done from any computer.
 
+**Mac part, done 2026-10-22:**
+- **Built** from `release/v1.2` at `10b01ec` on the Intel Mac (macOS 26.7.1, Xcode 26.5). `npm run ios:prepare` passed (build, check-release, check-service-key, cap sync). The archive is 1.2.0 (3), `app.stackd.transfer`, Apple Distribution (4JNCSTKTHQ), Sign in with Apple entitlement, Essays on, no service role key.
+- **Uploaded** 2026-10-22 00:32 PDT with `altool` (validation: no errors; delivery `8831cc2b`). Processed VALID by 00:36, export compliance "no non-exempt encryption", In Beta Testing in TestFlight's Internal team.
+- **Simulator QA** (Stackd 17 Pro Max, 6.9-inch, review account): Home (route, Up next, Get ready, Personal insight answers row), Essays, the editor with the "Your major" draft (102 / 350), the ... menu (Copy text, Share…, Ask for review, Paste a draft, Import a file), Share… opens the iOS share sheet, Deadlines, the "Write your personal insight answers" step sheet, UC San Diego, onboarding step 2 from Settings (not saved), Settings footer "Stackd 1.2.0" with the four names. Not checked: Paste and Import on a real iPhone (none connected).
+- **Screenshots:** 7 at 1320 × 2868 (Home, Essays, editor, Deadlines, step sheet, UC San Diego, onboarding step 2) replaced the 1.0 set for iPhone 6.9". Settings was left out because the review account's email shows on it. Copies are in `~/Desktop/stackd-1.2-screenshots/` on the Mac.
+- **Submission:** a submission sent 2026-10-22 01:19 UTC still had build 1.0.0 (1) attached. It was canceled, build 1.2.0 (3) selected, and 1.2 submitted again at **2026-10-22 07:45 UTC** (submission `5ebf2eeb`). Status: **Waiting for Review**, released automatically after approval.
+
 ## Essays part 2: the screens (step 21, 2026-10-19)
 
 Spec `17-essays.md`, on branch `essays-screens`. No migrations. Everything is behind the `essays` flag, off in `lib/features.ts`, so the release build shows none of it. `essayFeedback` is added, also off, for part 3.
