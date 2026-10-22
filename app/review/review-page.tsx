@@ -493,7 +493,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
         <>
           {/* The pinned bar (20 → Pinned bar) */}
           <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface" style={{ paddingBottom: "var(--safe-bottom)" }}>
-            <div className="mx-auto flex h-[59px] max-w-[688px] items-center px-4 py-2">{barButton}</div>
+            <div className="mx-auto flex h-[59px] max-w-[688px] items-center px-6 py-2">{barButton}</div>
           </div>
           {composer && <CommentSheet open={Boolean(draft?.open)} onClose={closeComposer} {...composer} />}
           {phrase && (
