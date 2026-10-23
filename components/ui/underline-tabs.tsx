@@ -12,10 +12,13 @@ type UnderlineTabsProps = {
   "aria-label": string;
   // Fixed column width (04 uses 140). Without it the columns share the row equally (03).
   columnWidth?: number;
+  // Each tab as wide as its indicator (label + 28), grouped on the left (the editor's Answer and Notes, 20)
+  fit?: boolean;
+  className?: string;
 };
 
 // Indicator: 3 px bar on the divider, label width + 28, slides and resizes over 200 ms.
-export function UnderlineTabs({ tabs, value, onChange, columnWidth, ...rest }: UnderlineTabsProps) {
+export function UnderlineTabs({ tabs, value, onChange, columnWidth, fit, className, ...rest }: UnderlineTabsProps) {
   const rowRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef(new Map<string, HTMLSpanElement>());
   const [bar, setBar] = useState<{ left: number; width: number } | null>(null);
@@ -32,8 +35,10 @@ export function UnderlineTabs({ tabs, value, onChange, columnWidth, ...rest }: U
     measure();
     const observer = new ResizeObserver(measure);
     if (rowRef.current) observer.observe(rowRef.current);
+    // A label that changes width ("Notes" → "Notes (2)") moves the bar too
+    labelRefs.current.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [value]);
+  }, [value, tabs.length]);
 
   function onKeyDown(e: KeyboardEvent) {
     const i = tabs.findIndex((t) => t.id === value);
@@ -46,7 +51,7 @@ export function UnderlineTabs({ tabs, value, onChange, columnWidth, ...rest }: U
   }
 
   return (
-    <div ref={rowRef} role="tablist" {...rest} onKeyDown={onKeyDown} className="relative flex h-11 border-b border-border">
+    <div ref={rowRef} role="tablist" {...rest} onKeyDown={onKeyDown} className={cn("relative flex h-11 border-b border-border", className)}>
       {tabs.map((tab) => {
         const selected = tab.id === value;
         return (
@@ -58,7 +63,11 @@ export function UnderlineTabs({ tabs, value, onChange, columnWidth, ...rest }: U
             aria-selected={selected}
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
-            className={cn("flex h-full items-center justify-center type-segment", !columnWidth && "flex-1", selected ? "text-blue-600" : "text-navy-900")}
+            className={cn(
+              "flex h-full items-center justify-center type-segment",
+              fit ? "px-3.5" : !columnWidth && "flex-1",
+              selected ? "text-blue-600" : "text-navy-900",
+            )}
             style={columnWidth ? { width: columnWidth } : undefined}
           >
             <span

@@ -5,7 +5,8 @@ import { cn } from "@/lib/cn";
 
 type CompactButtonProps = {
   children: ReactNode;
-  icon: ReactNode;
+  // Optional: Finish review on the reviewer page has none (20 → 6)
+  icon?: ReactNode;
   onClick: () => void;
   // solid: the compact solid button. text: the text button, no fill or border (16 → Additions to 00).
   variant: "solid" | "text";

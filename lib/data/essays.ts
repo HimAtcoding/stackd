@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { accountStore } from "@/lib/account-store";
-import { countWords, draftKey, mergeDrafts, pickPromptCycle, progress, type AccountDraft, type Draft, type Prompt } from "@/lib/essays";
+import { countWords, draftKey, draftNotes, mergeDrafts, pickPromptCycle, progress, type AccountDraft, type Draft, type Prompt } from "@/lib/essays";
+import type { Note } from "@/lib/notes";
 import { essaysHref } from "@/lib/features";
 import { readSessionUser } from "@/lib/profile";
 import { readStorage, writeStorage } from "@/lib/storage";
@@ -128,7 +129,7 @@ let sending: { userId: string; queue: ReturnType<typeof createMarkQueue> } | nul
 
 // What a send compares to tell whether the draft changed while it was on its way. saved_at isn't in it: the send
 // itself sets it.
-const content = (d: Draft | undefined) => JSON.stringify(d ? [d.body, d.word_count, d.chosen, d.done_at] : null);
+const content = (d: Draft | undefined) => JSON.stringify(d ? [d.body, d.word_count, d.chosen, d.done_at, draftNotes(d)] : null);
 
 function sendQueue(supabase: SupabaseClient, userId: string) {
   if (sending?.userId === userId) return sending.queue;
@@ -165,7 +166,16 @@ async function push(supabase: SupabaseClient, userId: string, key: string) {
   const { data, error } = await supabase
     .from("essay_drafts")
     .upsert(
-      { user_id: userId, prompt_key: promptKey, cycle, body: draft.body, word_count: draft.word_count, chosen: draft.chosen, done_at: draft.done_at },
+      {
+        user_id: userId,
+        prompt_key: promptKey,
+        cycle,
+        body: draft.body,
+        notes: draftNotes(draft),
+        word_count: draft.word_count,
+        chosen: draft.chosen,
+        done_at: draft.done_at,
+      },
       { onConflict: "user_id,prompt_key,cycle" },
     )
     .select("updated_at")
@@ -221,7 +231,7 @@ export function onDraftsReplaced(listener: (keys: string[]) => void) {
 async function pullDrafts(supabase: SupabaseClient, userId: string) {
   await sendQueue(supabase, userId).flush();
   const readFrom = editCount;
-  const { data, error } = await supabase.from("essay_drafts").select("prompt_key, cycle, body, word_count, chosen, done_at, updated_at");
+  const { data, error } = await supabase.from("essay_drafts").select("prompt_key, cycle, body, notes, word_count, chosen, done_at, updated_at");
   if (error || readSessionUser()?.id !== userId) return;
   const pending = (key: string) => queue.get().includes(key) || (lastEdit.get(key) ?? 0) > readFrom;
   const merged = mergeDrafts(drafts.get(), data as AccountDraft[], pending);
@@ -230,14 +240,16 @@ async function pullDrafts(supabase: SupabaseClient, userId: string) {
   if (merged.replaced.length) replacedListeners.forEach((l) => l(merged.replaced));
 }
 
-// Saves a change to one draft on this device and queues it for the account. The editor debounces typing.
-export function saveDraft(cycle: string, promptKey: string, change: Partial<Pick<Draft, "body" | "chosen" | "done_at">>) {
+// Saves a change to one draft on this device and queues it for the account. The editor debounces typing. Notes go
+// the same way as the answer; the word count still comes from the answer only (20 → Notes).
+export function saveDraft(cycle: string, promptKey: string, change: Partial<Pick<Draft, "body" | "chosen" | "done_at">> & { notes?: Note[] }) {
   const key = draftKey(cycle, promptKey);
   drafts.set((prev) => {
     const before = prev[key];
     const body = change.body ?? before?.body ?? "";
     const next: Draft = {
       body,
+      notes: change.notes ?? draftNotes(before),
       word_count: countWords(body),
       chosen: change.chosen ?? before?.chosen ?? false,
       done_at: change.done_at !== undefined ? change.done_at : (before?.done_at ?? null),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent } from "react";
 import { useReducedMotion } from "motion/react";
 import { ArrowSquareOutIcon, CheckIcon, ClipboardTextIcon, DotsThreeIcon, FileArrowUpIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
@@ -11,21 +11,28 @@ import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { Toast } from "@/components/ui/toast";
+import { UnderlineTabs } from "@/components/ui/underline-tabs";
 import { GoHome } from "@/components/unbuilt-route";
 import { useTerm } from "@/lib/data/deadlines";
 import { onDraftsReplaced, retryEssays, saveDraft, useEssays, useSaveState, type SaveState } from "@/lib/data/essays";
 import { createReviewLink, useDraftReviews } from "@/lib/data/reviews";
 import { cn } from "@/lib/cn";
-import { counter, countWords, draftKey, type Prompt } from "@/lib/essays";
+import { counter, countWords, draftKey, draftNotes, type Draft, type Prompt } from "@/lib/essays";
 import { essaysHref } from "@/lib/features";
+import { addToAnswer, canAddNote, makeNote, nextStarter, removeNote, restoreNote, sameNotes, starterIds, type Note } from "@/lib/notes";
+import { startersFor } from "@/lib/piq-starters";
 import { cleanImported, combineDraft, commentNames, draftHighlights, findQuote, insideSpan, reviewMessage } from "@/lib/review";
 import { copyText, readClipboard, readDraftFile, shareText } from "@/lib/share";
 import { CommentBar } from "./comment-bar";
 import { ConfirmSheet } from "./confirm-sheet";
 import { DraftMirror, FIELD_TEXT } from "./draft-mirror";
 import { hasMoreItems, MoreSheet, type MoreAction } from "./more-sheet";
+import { NoteMenu } from "./note-menu";
+import { NotesTab } from "./notes-tab";
 import { ReviewSheet } from "./review-sheet";
 import { ReviewsSection } from "./reviews-section";
+import { StarterCard } from "./starter-card";
+import { StartersSheet } from "./starters-sheet";
 
 // Typing is saved this long after it stops, and at once on leaving (17 → Saving)
 const SAVE_AFTER_MS = 800;
@@ -93,10 +100,12 @@ function EditorScreen() {
   return <Editor key={prompt.key} prompt={prompt} saved={state.drafts[draftKey(prompt.cycle, prompt.key)]} />;
 }
 
-type EditorProps = { prompt: Prompt; saved: { body: string; done_at: string | null } | undefined };
+type EditorProps = { prompt: Prompt; saved: Draft | undefined };
 
 // Text waiting for the student to say Replace or Add to the end (19 → Bring a draft in)
 type Incoming = { text: string; open: boolean };
+
+type Tab = "answer" | "notes";
 
 // The writing screen (17 → Editor): save state, the overflow menu and Mark done on top, the question in a light strip,
 // the answer as plain text, the Reviews section under it (19), and the word count above the bottom edge.
@@ -105,7 +114,7 @@ function Editor({ prompt, saved }: EditorProps) {
   const [text, setText] = useState(saved?.body ?? "");
   const [typing, setTyping] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [toast, setToast] = useState<{ key: number; text: string } | null>(null);
+  const [toast, setToast] = useState<{ key: number; text: string; action?: { label: string; onClick: () => void } } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [incoming, setIncoming] = useState<Incoming | null>(null);
   const [bringError, setBringError] = useState<string | null>(null);
@@ -132,6 +141,29 @@ function Editor({ prompt, saved }: EditorProps) {
   // The comment See comment tinted in Reviews
   const [flash, setFlash] = useState<string | null>(null);
 
+  // Answer and Notes (20 → 1, 3). Notes save like the answer: 800 ms after typing stops, and on leaving.
+  const [tab, setTab] = useState<Tab>("answer");
+  const [notes, setNotes] = useState<Note[]>(() => draftNotes(saved));
+  const pendingNotes = useRef<Note[] | null>(null);
+  // The notes as they are now, for Undo, which runs from a toast made earlier
+  const notesNow = useRef(notes);
+  useEffect(() => {
+    notesNow.current = notes;
+  }, [notes]);
+  const [focusNote, setFocusNote] = useState<string | null>(null);
+  const clearFocusNote = useCallback(() => setFocusNote(null), []);
+  const [noteMenu, setNoteMenu] = useState<{ note: Note; open: boolean } | null>(null);
+  const [startersOpen, setStartersOpen] = useState(false);
+  // Each tab keeps its own scroll position
+  const tabScroll = useRef<Record<Tab, number>>({ answer: 0, notes: 0 });
+
+  // The starter card (20 → 2): hidden while the answer field (or the Paste and Import buttons under it) has focus
+  const starters = useMemo(() => startersFor(prompt.key), [prompt.key]);
+  const [cardFrom, setCardFrom] = useState(0);
+  const [calm, setCalm] = useState(false);
+  const bringInBox = useRef<HTMLDivElement>(null);
+  const pressingBringIn = useRef(false);
+
   const highlights = useMemo(() => draftHighlights(text, links), [text, links]);
   const here = caret && !quiet ? highlights.filter((h) => insideSpan(h, caret.start, caret.end)) : [];
   const newest = here.reduce<(typeof here)[number] | null>((n, h) => (!n || h.comment.created_at > n.comment.created_at ? h : n), null);
@@ -139,26 +171,42 @@ function Editor({ prompt, saved }: EditorProps) {
   const done = Boolean(saved?.done_at);
   const empty = !text.trim();
   const menuItems = hasMoreItems(!empty);
+  const card = nextStarter(starters, notes, cardFrom);
+  const showStart = tab === "answer" && empty && !calm && starters.length > 0;
 
-  const say = (message: string) => setToast((t) => ({ key: (t?.key ?? 0) + 1, text: message }));
+  const say = (message: string, action?: { label: string; onClick: () => void }) =>
+    setToast((t) => ({ key: (t?.key ?? 0) + 1, text: message, action }));
 
   // The saved text changed underneath (the account's copy arrived, or another device's newer save): show it, unless
-  // the student is in the middle of typing, whose words are newer and get saved next
+  // the student is in the middle of typing, whose words are newer and get saved next. Notes the same way.
   const savedBody = saved?.body ?? "";
   const [shown, setShown] = useState(savedBody);
   if (savedBody !== shown) {
     setShown(savedBody);
     if (!typing) setText(savedBody);
   }
+  const savedNotes = draftNotes(saved);
+  const [shownNotes, setShownNotes] = useState(savedNotes);
+  if (!sameNotes(savedNotes, shownNotes)) {
+    setShownNotes(savedNotes);
+    if (!typing) setNotes(savedNotes);
+  }
 
-  // Saves what's typed now. Also runs on leaving the screen and when the app goes to the background.
+  // Saves what's typed now, answer and notes together. Also runs on leaving the screen and when the app goes to the
+  // background.
   const commitRef = useRef(() => {});
   useEffect(() => {
     commitRef.current = () => {
       if (timer.current) clearTimeout(timer.current);
       timer.current = null;
-      if (pending.current !== null) saveDraft(prompt.cycle, prompt.key, { body: pending.current });
+      if (pending.current !== null || pendingNotes.current !== null) {
+        saveDraft(prompt.cycle, prompt.key, {
+          ...(pending.current !== null && { body: pending.current }),
+          ...(pendingNotes.current !== null && { notes: pendingNotes.current }),
+        });
+      }
       pending.current = null;
+      pendingNotes.current = null;
       setTyping(false);
     };
   });
@@ -185,6 +233,7 @@ function Editor({ prompt, saved }: EditorProps) {
         if (timer.current) clearTimeout(timer.current);
         timer.current = null;
         pending.current = null;
+        pendingNotes.current = null;
         setTyping(false);
         say("Updated from your other device.");
       }),
@@ -270,6 +319,82 @@ function Editor({ prompt, saved }: EditorProps) {
     pending.current = value;
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => commitRef.current(), SAVE_AFTER_MS);
+  }
+
+  // Notes change: typing waits for the 800 ms pause like the answer; adding and deleting save at once
+  function changeNotes(next: Note[], typed: boolean) {
+    setNotes(next);
+    pendingNotes.current = next;
+    if (!typed) return commitRef.current();
+    setCollapsed(true);
+    setTyping(true);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => commitRef.current(), SAVE_AFTER_MS);
+  }
+
+  function switchTab(next: Tab) {
+    if (next === tab) return;
+    const box = scroller.current;
+    if (box) tabScroll.current[tab] = box.scrollTop;
+    setTab(next);
+    requestAnimationFrame(() => {
+      if (scroller.current) scroller.current.scrollTop = tabScroll.current[next];
+    });
+  }
+
+  // Adds a note (a starter question, or your own with null), shows Notes and puts the cursor in it
+  function addNote(starter: string | null) {
+    if (!canAddNote(notes)) return;
+    const note = makeNote(starter);
+    changeNotes([...notes, note], false);
+    setFocusNote(note.id);
+    switchTab("notes");
+  }
+
+  function noteToAnswer() {
+    const note = noteMenu?.note;
+    setNoteMenu((m) => (m ? { ...m, open: false } : m));
+    if (!note?.body.trim()) return;
+    commitRef.current();
+    const next = addToAnswer(text, note.body);
+    setText(next);
+    saveDraft(prompt.cycle, prompt.key, { body: next });
+    switchTab("answer");
+    say("Added to your answer.");
+  }
+
+  function deleteNote() {
+    const note = noteMenu?.note;
+    setNoteMenu((m) => (m ? { ...m, open: false } : m));
+    if (!note) return;
+    commitRef.current();
+    const { notes: next, removed } = removeNote(notes, note.id);
+    if (!removed) return;
+    changeNotes(next, false);
+    say("Note deleted.", {
+      label: "Undo",
+      onClick: () => {
+        setToast(null);
+        commitRef.current();
+        changeNotes(restoreNote(notesNow.current, removed), false);
+      },
+    });
+  }
+
+  // Focus left the answer field. Pressing Paste or Import under it keeps the card hidden, so they don't move under
+  // the finger; the next press anywhere else brings the card back.
+  function onFieldBlur(e: FocusEvent<HTMLTextAreaElement>) {
+    const toBringIn = pressingBringIn.current || Boolean(e.relatedTarget && bringInBox.current?.contains(e.relatedTarget as Node));
+    pressingBringIn.current = false;
+    if (!toBringIn) return setCalm(false);
+    document.addEventListener(
+      "pointerdown",
+      (ev) => {
+        const target = ev.target as Node | null;
+        if (!bringInBox.current?.contains(target) && target !== field.current) setCalm(false);
+      },
+      { once: true },
+    );
   }
 
   function toggleDone() {
@@ -359,7 +484,7 @@ function Editor({ prompt, saved }: EditorProps) {
     <div className="fixed inset-x-0 top-0 flex flex-col bg-surface" style={{ height: height ?? "100dvh" }}>
       {/* The light strip (17 → Editor): a writing screen, not a progress screen, so no solid panel */}
       <div className="bg-tint-indigo">
-        <div className="mx-auto max-w-[480px] pb-4" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
+        <div className="mx-auto max-w-[480px]" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
           {/* Equal side columns keep the save state centered between Back and the two buttons on the right */}
           <div className="grid grid-cols-[96px_1fr_96px] items-center gap-2 px-4">
             <BackButton fallback={essaysHref() ?? "/"} slideBack />
@@ -418,6 +543,19 @@ function Editor({ prompt, saved }: EditorProps) {
               </div>
             </Expand>
           </div>
+          {/* Answer and Notes (20 → 1), still on the strip and kept when it collapses. The first label lines up with
+              the strip's text at 24. */}
+          <UnderlineTabs
+            aria-label="Answer or notes"
+            fit
+            className="mt-2 px-[10px]"
+            tabs={[
+              { id: "answer", label: "Answer" },
+              { id: "notes", label: notes.length ? `Notes (${notes.length})` : "Notes" },
+            ]}
+            value={tab}
+            onChange={(id) => switchTab(id as Tab)}
+          />
         </div>
       </div>
 
@@ -430,7 +568,8 @@ function Editor({ prompt, saved }: EditorProps) {
             if (e.currentTarget.scrollTop === 0) setCollapsed(false);
           }}
         >
-          <DraftMirror ref={mirror} text={text} marks={highlights} />
+          {tab === "answer" && <DraftMirror ref={mirror} text={text} marks={highlights} />}
+          {/* Stays mounted on the Notes tab (hidden), so its caret listeners and size keep working */}
           <textarea
             ref={field}
             value={text}
@@ -438,7 +577,9 @@ function Editor({ prompt, saved }: EditorProps) {
               typedAt.current = e.target.selectionEnd;
               onType(e.target.value);
             }}
-            onBlur={() => {
+            onFocus={() => setCalm(true)}
+            onBlur={(e) => {
+              onFieldBlur(e);
               commitRef.current();
               if (!pressingBar.current) setCaret(null);
               else {
@@ -466,39 +607,80 @@ function Editor({ prompt, saved }: EditorProps) {
               "relative block w-full resize-none appearance-none overflow-hidden bg-transparent text-navy-900 placeholder:text-slate-600 focus:outline-none",
               FIELD_TEXT,
               links.length ? "min-h-[50%]" : "min-h-full",
+              tab !== "answer" && "hidden",
             )}
           />
-          {empty && (
-            // 16 under the placeholder's line (19 → Bring a draft in)
-            <div className="absolute left-6 right-6 top-[56px]">
-              <div className="flex gap-6">
-                <button type="button" onClick={paste} className="-my-3 inline-flex items-center gap-1.5 py-3 text-blue-600 type-label pressed:underline focus-ring:underline">
-                  <ClipboardTextIcon weight="bold" size={18} aria-hidden />
-                  Paste a draft
-                </button>
-                <button
-                  type="button"
-                  onClick={() => fileInput.current?.click()}
-                  className="-my-3 inline-flex items-center gap-1.5 py-3 text-blue-600 type-label pressed:underline focus-ring:underline"
-                >
-                  <FileArrowUpIcon weight="bold" size={18} aria-hidden />
-                  Import a file
-                </button>
+          {tab === "answer" && empty && (
+            // 16 under the placeholder's line, inset 16 for the card and 24 for text (20 → 2, 19 → Bring a draft in)
+            <div className="absolute inset-x-4 top-[56px] pb-6">
+              {showStart &&
+                (card !== null ? (
+                  <StarterCard
+                    starter={starters[card]}
+                    total={starters.length}
+                    onTryAnother={() => setCardFrom(card + 1)}
+                    onAnswer={() => addNote(starters[card].id)}
+                  />
+                ) : (
+                  <p className="px-2 text-slate-700 type-body">
+                    Your notes are ready. Start your answer above, or use Add to my answer on a note.
+                  </p>
+                ))}
+              <div
+                ref={bringInBox}
+                onPointerDown={() => {
+                  pressingBringIn.current = true;
+                }}
+                onBlur={(e) => {
+                  // Keyboard focus moving on past Paste and Import brings the card back
+                  const to = e.relatedTarget as Node | null;
+                  if (!bringInBox.current?.contains(to) && to !== field.current) setCalm(false);
+                }}
+                className={cn("px-2", showStart && "mt-6")}
+              >
+                {showStart && <h2 className="mb-3 text-navy-900 type-headline">Already have a draft?</h2>}
+                <div className="flex gap-6">
+                  <button type="button" onClick={paste} className="-my-3 inline-flex items-center gap-1.5 py-3 text-blue-600 type-label pressed:underline focus-ring:underline">
+                    <ClipboardTextIcon weight="bold" size={18} aria-hidden />
+                    Paste a draft
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fileInput.current?.click()}
+                    className="-my-3 inline-flex items-center gap-1.5 py-3 text-blue-600 type-label pressed:underline focus-ring:underline"
+                  >
+                    <FileArrowUpIcon weight="bold" size={18} aria-hidden />
+                    Import a file
+                  </button>
+                </div>
+                {bringError && (
+                  <p role="alert" className="mt-4 max-w-[320px] text-coral-700 type-caption">
+                    {bringError}
+                  </p>
+                )}
               </div>
-              {bringError && (
-                <p role="alert" className="mt-4 max-w-[320px] text-coral-700 type-caption">
-                  {bringError}
-                </p>
-              )}
             </div>
           )}
-          {links.length > 0 && (
+          {tab === "answer" && links.length > 0 && (
             <div className="pb-6">
               <ReviewsSection links={links} text={text} flash={flash} onSelectQuote={selectQuote} onToast={say} />
             </div>
           )}
+          {tab === "notes" && (
+            <div role="tabpanel" aria-label="Notes">
+              <NotesTab
+                notes={notes}
+                focusId={focusNote}
+                onFocused={clearFocusNote}
+                onType={(id, body) => changeNotes(notes.map((n) => (n.id === id ? { ...n, body } : n)), true)}
+                onMenu={(note) => setNoteMenu({ note, open: true })}
+                onAddStarter={() => setStartersOpen(true)}
+                onAddOwn={() => addNote(null)}
+              />
+            </div>
+          )}
         </div>
-        {newest && (
+        {tab === "answer" && newest && (
           <CommentBar
             name={commentNames(newest.comment.reviewer_name, here.length)}
             body={newest.comment.body}
@@ -508,8 +690,10 @@ function Editor({ prompt, saved }: EditorProps) {
             }}
           />
         )}
+        {/* Notes have no limit to count against, so the counter shows on the Answer tab only */}
         <p
           id="word-count"
+          hidden={tab !== "answer"}
           className={cn(
             "px-6 pt-2 text-right tabular-nums type-label",
             count.tone === "over" ? "text-coral-700" : count.tone === "near" ? "text-amber-700" : "text-slate-600",
@@ -536,6 +720,25 @@ function Editor({ prompt, saved }: EditorProps) {
         onClose={() => setIncoming((i) => (i ? { ...i, open: false } : i))}
       />
 
+      <NoteMenu
+        open={Boolean(noteMenu?.open)}
+        note={noteMenu?.note ?? null}
+        onAddToAnswer={noteToAnswer}
+        onDelete={deleteNote}
+        onClose={() => setNoteMenu((m) => (m ? { ...m, open: false } : m))}
+      />
+
+      <StartersSheet
+        open={startersOpen}
+        starters={starters}
+        used={starterIds(notes)}
+        onPick={(id) => {
+          setStartersOpen(false);
+          addNote(id);
+        }}
+        onClose={() => setStartersOpen(false)}
+      />
+
       <ReviewSheet
         open={review.open}
         busy={review.busy}
@@ -544,7 +747,7 @@ function Editor({ prompt, saved }: EditorProps) {
         onClose={() => setReview((r) => ({ ...r, open: false }))}
       />
 
-      {toast && <Toast key={toast.key} message={toast.text} bottom="calc(var(--safe-bottom) + 48px)" onDone={() => setToast(null)} overSheet />}
+      {toast && <Toast key={toast.key} message={toast.text} action={toast.action} bottom="calc(var(--safe-bottom) + 48px)" onDone={() => setToast(null)} overSheet />}
     </div>
   );
 }

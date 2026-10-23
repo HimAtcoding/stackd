@@ -6,6 +6,7 @@ import {
   counter,
   countWords,
   draftKey,
+  draftNotes,
   mergeDrafts,
   pickPromptCycle,
   progress,
@@ -14,6 +15,7 @@ import {
   type Draft,
   type Prompt,
 } from "../lib/essays";
+import type { Note } from "../lib/notes";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -149,6 +151,19 @@ check("both are queued for the account, once each", JSON.stringify(queued) === J
 essays.saveDraft("fall-2027", "major", { done_at: "2026-10-19T13:00:00Z" });
 const afterDone = accountStore<Record<string, Draft>>(essays.DRAFTS_KEY, {}).get()[key("major")];
 check("marking done keeps the text", afterDone.done_at === "2026-10-19T13:00:00Z" && afterDone.word_count === 10, afterDone);
+
+// Notes save with the draft and the same queue; the word count follows the answer only (20 → Notes)
+const fortyWords = Array.from({ length: 40 }, (_, i) => `note${i}`).join(" ");
+essays.saveDraft("fall-2027", "major", { notes: [{ id: "n1", starter: "major-1", body: fortyWords }] });
+const withNotes = accountStore<Record<string, Draft>>(essays.DRAFTS_KEY, {}).get()[key("major")];
+check("notes are saved with the draft after a reload", withNotes.notes?.length === 1 && withNotes.notes[0].body === fortyWords, withNotes.notes);
+check("40 words in a note don't change the word count", withNotes.word_count === 10, withNotes.word_count);
+check("saving notes keeps the answer and the done mark", withNotes.body.startsWith("When I took") && withNotes.done_at === "2026-10-19T13:00:00Z");
+essays.saveDraft("fall-2027", "major", { body: "A new first line." });
+check("saving the answer keeps the notes", accountStore<Record<string, Draft>>(essays.DRAFTS_KEY, {}).get()[key("major")].notes?.length === 1);
+check("a draft with only notes is still Not started", rowStatus({ ...draft({ body: "" }), notes: [{ id: "n", starter: null, body: fortyWords }] }).kind === "empty");
+const notesQueued = accountStore<string[]>(essays.ESSAYS_QUEUE_KEY, []).get();
+check("notes go through the same queue, once per draft", notesQueued.filter((k) => k === key("major")).length === 1, notesQueued);
 storage.set("stackd.auth", JSON.stringify({ user: { id: "99999999-2222-4333-8444-555555555555" } }));
 check("another account on this phone doesn't see them", Object.keys(accountStore<Record<string, Draft>>(essays.DRAFTS_KEY, {}).get()).length === 0);
 
@@ -231,6 +246,42 @@ check("step caption: From Essays once Essays checked it", stepNote({ done: 4, un
 check("step caption: 4 of 4 but unchecked by the student stays a count", stepNote({ done: 4, unread: 0, checkedByEssays: false }) === "4 of 4 done");
 check("step caption: unread comments come first, singular", stepNote({ done: 2, unread: 1, checkedByEssays: false }) === "1 new comment");
 check("step caption: unread comments come first, plural, even when done", stepNote({ done: 4, unread: 3, checkedByEssays: true }) === "3 new comments");
+
+// Starter questions and notes (20 → 2, 3)
+const { PIQ_STARTERS, startersFor } = await import("../lib/piq-starters");
+const notesLib = await import("../lib/notes");
+const QUESTIONS = ["major", "leadership", "creativity", "talent", "opportunity", "challenge", "community", "beyond"];
+check("4 starters for each of the 8 questions", QUESTIONS.every((q) => startersFor(q).length === 4) && Object.keys(PIQ_STARTERS).length === 32);
+check("starter keys are {prompt_key}-{n}, in order", startersFor("major").map((s) => s.id).join() === "major-1,major-2,major-3,major-4");
+check("every starter is a question", Object.values(PIQ_STARTERS).every((t) => /[?.]$/.test(t) && t.includes("?")), Object.values(PIQ_STARTERS).filter((t) => !t.includes("?")));
+check("a question with no starters has none", startersFor("no-such").length === 0);
+const st = startersFor("major");
+const n = (starter: string | null, body = ""): Note => ({ id: `id-${starter ?? Math.random()}`, starter, body });
+check("the card starts on the first starter", notesLib.nextStarter(st, [], 0) === 0);
+check("Try another moves to the next", notesLib.nextStarter(st, [], 1) === 1);
+check("after the 4th it wraps to the 1st", notesLib.nextStarter(st, [], 4) === 0);
+check("a starter already in Notes is skipped", notesLib.nextStarter(st, [n("major-2")], 1) === 2);
+check("skipping wraps too", notesLib.nextStarter(st, [n("major-4"), n("major-1")], 3) === 1);
+check("all four in Notes: no card", notesLib.nextStarter(st, ["major-1", "major-2", "major-3", "major-4"].map((s) => n(s)), 0) === null);
+check("your own notes don't use up starters", notesLib.nextStarter(st, [n(null), n(null)], 0) === 0);
+check("Add to my answer into an empty answer: the note as is", notesLib.addToAnswer("  \n", " My note. ") === "My note.");
+check("Add to my answer after text: a blank line between", notesLib.addToAnswer("First part.\n", "My note.") === "First part.\n\nMy note.");
+const trio = [n("major-1", "a"), n("major-2", "b"), n(null, "c")];
+const del = notesLib.removeNote(trio, trio[1].id);
+check("Delete note removes it", del.notes.length === 2 && !del.notes.some((x) => x.id === trio[1].id));
+check("Undo puts it back in the same place", del.removed !== null && notesLib.restoreNote(del.notes, del.removed).map((x) => x.body).join() === "a,b,c");
+check("Undo twice doesn't duplicate it", del.removed !== null && notesLib.restoreNote(notesLib.restoreNote(del.notes, del.removed), del.removed).length === 3);
+const twelve = Array.from({ length: 12 }, (_, i) => n(null, String(i)));
+check("12 notes is the limit", !notesLib.canAddNote(twelve) && notesLib.canAddNote(twelve.slice(1)));
+check("a saved copy is cleaned: bad items dropped, over 12 cut, bodies capped", notesLib.cleanNotes([...twelve, { id: 1 }, null]).length === 12 &&
+  notesLib.cleanNotes([{ id: "x", starter: null, body: "y".repeat(3000) }])[0].body.length === notesLib.NOTE_MAX && notesLib.cleanNotes("nope").length === 0);
+check("a copy saved before notes existed has none", draftNotes(draft({ body: "x" })).length === 0);
+const withNote = { ...draft({ body: "Same." }), notes: [n(null, "mine")] };
+const accountRow = (notes: unknown): AccountDraft => ({ prompt_key: "a", cycle: "fall-2027", body: "Same.", notes, word_count: 1, chosen: false, done_at: null, updated_at: "2026-10-22T12:00:00Z" });
+let merged = mergeDrafts({ [key("a")]: { ...withNote, saved_at: "2026-10-22T10:00:00Z", edited_at: "2026-10-22T11:00:00Z" } }, [accountRow([n(null, "theirs")])], () => true);
+check("notes saved newer on another device replace these, and the editor is told", merged.drafts[key("a")].notes?.[0].body === "theirs" && merged.replaced.includes(key("a")), merged);
+merged = mergeDrafts({}, [accountRow([n("a-1", "from the account")])], () => false);
+check("the account's notes come down with the draft", merged.drafts[key("a")].notes?.[0].body === "from the account");
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
