@@ -31,6 +31,8 @@ export type ReviewLink = {
   created_at: string;
   expires_at: string;
   revoked_at: string | null;
+  // When the reviewer tapped Finish review (20 → 6); cleared by Send latest version
+  finished_at: string | null;
   comments: ReviewComment[];
 };
 
@@ -47,7 +49,7 @@ const subscribe = (onChange: () => void) => {
 };
 const getState = () => state;
 
-const LINK_COLUMNS = "id, draft_id, reviewer_label, snapshot_body, snapshot_at, created_at, expires_at, revoked_at";
+const LINK_COLUMNS = "id, draft_id, reviewer_label, snapshot_body, snapshot_at, created_at, expires_at, revoked_at, finished_at";
 const COMMENT_COLUMNS = "id, link_id, reviewer_name, body, quote, created_at, resolved_at, read_at";
 
 let loading: Promise<void> | null = null;

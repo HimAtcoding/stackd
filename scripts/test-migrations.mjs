@@ -316,6 +316,23 @@ await expectError("the upsert can't reach another student's draft", () =>
     on conflict (user_id, prompt_key, cycle) do update set body = excluded.body`, [B]), /row-level security/);
 check("…and B's draft is unchanged", (await db.query("select body from essay_drafts where id = $1", [draftB])).rows[0].body === "Their own words.");
 
+// Notes (20 → 3): saved with the draft, owner only, at most 12 and 30,000 characters
+const NOTE_TEXT = "I took CS 1A because my cousin did.";
+const notesOf = (n, body = "x") => JSON.stringify(Array.from({ length: n }, (_, i) => ({ id: `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`, starter: i ? null : "major-1", body })));
+const saveNotes = (sub, draft, notes) => as("authenticated", sub, "update essay_drafts set notes = $2::jsonb where id = $1 returning id", [draft, notes]);
+check("a draft starts with no notes", (await db.query("select notes from essay_drafts where id = $1", [draftB])).rows[0].notes.length === 0);
+await expectRows("a student saves notes on their draft", () => saveNotes(A, draftA, notesOf(2, NOTE_TEXT)), 1);
+const ownNotes = (await as("authenticated", A, "select notes from essay_drafts where id = $1", [draftA])).rows[0]?.notes;
+check("the student reads their notes back", ownNotes?.length === 2 && ownNotes[0].starter === "major-1" && ownNotes[0].body === NOTE_TEXT, ownNotes);
+await expectRows("another student can't read them", () => as("authenticated", B, "select notes from essay_drafts where id = $1", [draftA]), 0);
+await expectRows("another student can't change them", () => saveNotes(B, draftA, "[]"), 0);
+await expectError("13 notes are refused", () => saveNotes(A, draftA, notesOf(13)), /essay_drafts_notes_check/);
+await expectRows("12 notes are accepted", () => saveNotes(A, draftA, notesOf(12)), 1);
+await expectError("notes over 30,000 characters are refused", () => saveNotes(A, draftA, notesOf(2, "n".repeat(15000))), /essay_drafts_notes_check/);
+await expectError("notes must be a list", () => saveNotes(A, draftA, JSON.stringify({ body: "x" })), /essay_drafts_notes_check/);
+await expectRows("notes can be saved back to a short list", () => saveNotes(A, draftA, notesOf(2, NOTE_TEXT)), 1);
+check("notes don't change the draft's word count", (await db.query("select word_count from essay_drafts where id = $1", [draftA])).rows[0].word_count === 2);
+
 // Feedback: the function (service role) writes it; the student only reads their own
 const addFeedback = (sub, draft) =>
   as("service_role", null, "insert into essay_feedback (user_id, draft_id, model, input_words, result) values ($1, $2, 'test-model', 2, '{}'::jsonb) returning id", [sub, draft]);
@@ -403,12 +420,30 @@ await expectOk("the student resolves a comment", () => as("authenticated", A, "s
 await expectError("another student can't resolve or delete it", () => as("authenticated", B, "select set_review_comment($1, 'delete')", [other.id]), /no such comment/);
 await expectOk("the student deletes a comment", () => as("authenticated", A, "select set_review_comment($1, 'delete')", [other.id]));
 check("the student's delete hides it from the reviewer too", !(await open(TOKEN)).comments.some((c) => c.id === other.id));
+check("a review link never carries the student's notes", !JSON.stringify(await open(TOKEN)).includes(NOTE_TEXT));
+
+// Finish review (20 → 6): through the review function only; set once; the link must be live
+const finish = (token, key = KEY) => as("service_role", null, "select review_finish($1, $2) as r", [token, key]).then((x) => x.rows[0].r);
+const finishedOf = async (id) => (await as("authenticated", A, "select finished_at from review_links where id = $1", [id])).rows[0]?.finished_at;
+check("a link starts not finished", (await open(TOKEN)).finished_at === null);
+await expectError("a student can't call review_finish", () => as("authenticated", A, "select review_finish($1, $2)", [TOKEN, KEY]), /permission denied/);
+await expectError("neither can anon", () => as("anon", null, "select review_finish($1, $2)", [TOKEN, KEY]), /permission denied/);
+const finished = await expectOk("a reviewer finishes the review", () => finish(TOKEN));
+check("review_finish returns the page, with finished_at", finished?.status === "live" && finished.finished_at && Array.isArray(finished.comments) && finished.snapshot === "Draft text.", finished);
+const firstFinish = await finishedOf(linkA.id);
+check("the student sees finished_at on their link", firstFinish instanceof Date, firstFinish);
+await db.query("select pg_sleep(0.01)");
+await finish(TOKEN);
+check("finishing again doesn't change finished_at", (await finishedOf(linkA.id))?.getTime() === firstFinish?.getTime());
 
 // Send latest version, the daily limit, turning off and ending
 await as("authenticated", A, "update essay_drafts set body = 'A new draft text.', word_count = 4 where id = $1", [draftA]);
 check("the reviewer keeps the old snapshot until the student sends it", (await open(TOKEN)).snapshot === "Draft text.");
 await expectOk("the student sends the latest version", () => as("authenticated", A, "select refresh_review_snapshot($1)", [linkA.id]));
 check("the reviewer sees the new text", (await open(TOKEN)).snapshot === "A new draft text.");
+check("sending the latest version clears Finished", (await finishedOf(linkA.id)) === null && (await open(TOKEN)).finished_at === null);
+await finish(TOKEN);
+check("…and the reviewer can finish again", (await finishedOf(linkA.id)) instanceof Date);
 await expectError("another student can't refresh it", () => as("authenticated", B, "select refresh_review_snapshot($1)", [linkA.id]), /no such link/);
 await db.query(`insert into review_comments (link_id, reviewer_name, body, reviewer_key_hash) select $1, 'Bot', 'x', $2 from generate_series(1, 56)`, [linkA.id, "0".repeat(64)]);
 // Deleted comments count toward the day's 60 too
@@ -418,9 +453,12 @@ await expectError("another student can't turn the link off", () => as("authentic
 await expectOk("the student turns the link off", () => as("authenticated", A, "select revoke_review_link($1)", [linkA.id]));
 check("a turned-off link has ended", (await open(TOKEN)).status === "ended");
 await expectError("nobody can comment on it", () => comment(TOKEN, "Ms. Lee", "Late."), /review_ended/);
+await expectError("a turned-off link can't be finished", () => finish(TOKEN), /review_ended/);
 await expectRows("its comments stay with the student", () => as("authenticated", A, "select id from review_comments where deleted_at is null"), 58);
 await db.query("update review_links set expires_at = now() - interval '1 second' where id = $1", [linkB.id]);
 check("a link past its 14 days has ended", (await open(TOKEN_B)).status === "ended");
+await expectError("an ended link can't be finished", () => finish(TOKEN_B), /review_ended/);
+check("…and stays not finished", (await db.query("select finished_at from review_links where id = $1", [linkB.id])).rows[0].finished_at === null);
 await expectError("an ended link can't be refreshed", () => as("authenticated", B, "select refresh_review_snapshot($1)", [linkB.id]), /link has ended/);
 const linkB2 = (await createLink(B, "major", "c".repeat(43))).rows[0].r;
 await as("service_role", null, "select review_add_comment($1, $2, 'Ms. Lee', 'Nice.', null)", ["c".repeat(43), KEY]);

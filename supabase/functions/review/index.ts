@@ -64,6 +64,10 @@ Deno.serve(async (req) => {
     case "delete":
       result = await rpc("review_delete_comment", { p_token: token, p_reviewer_key: key, p_comment: str(input.id, 64) });
       break;
+    // Finish review (20 → 6): returns the page as review_open does
+    case "finish":
+      result = await rpc("review_finish", { p_token: token, p_reviewer_key: key });
+      break;
     default:
       return reply(400, { error: "review_bad_request" });
   }

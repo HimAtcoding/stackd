@@ -5,7 +5,8 @@ import { PRIVACY_UPDATED } from "@/lib/about";
 export const metadata: Metadata = { title: "Stackd privacy policy" };
 
 // /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-21 (v1.1 adds
-// the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
+// the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments; v1.3 adds
+// essay_drafts.notes and review_links.finished_at). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
     <DocPage title="Privacy policy" updated={PRIVACY_UPDATED}>
@@ -38,6 +39,11 @@ export default function PrivacyPage() {
             write in Stackd, with their word counts, which questions you chose, and which answers you marked done. They&apos;re
             saved to your account so you can keep writing on any device you sign in on. A file you import is read on your
             phone; only the text you keep is saved.
+          </li>
+          <li>
+            <strong className="font-semibold text-navy-900">Your notes:</strong> notes you write beside an answer are saved
+            with that draft and stay private to you. They aren&apos;t part of the answer, so they&apos;re never shared through a
+            review link, copied, shared or downloaded with it, and they&apos;re deleted with the draft or your account.
           </li>
           <li>
             <strong className="font-semibold text-navy-900">Review links:</strong> if you ask someone to review an answer,
@@ -109,7 +115,7 @@ export default function PrivacyPage() {
         <P>
           We keep your information while you have an account. A review link stops working after 14 days, or as soon as you
           turn it off; its comments stay with you until you delete them or the answer. When you delete your account, your
-          account, profile, plan, saved schools, progress, deadline marks, reminder choices, essay drafts, review links, and
+          account, profile, plan, saved schools, progress, deadline marks, reminder choices, essay drafts and notes, review links, and
           the comments on them are deleted right away. Copies in our providers&apos; routine backups and logs are
           overwritten on their normal schedule.
         </P>

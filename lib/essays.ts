@@ -1,6 +1,8 @@
 // Essays (17-essays.md): the personal insight questions, the student's drafts, and the words the screens show.
 // No React and no storage here; lib/data/essays.ts feeds it.
 
+import { cleanNotes, sameNotes, type Note } from "./notes";
+
 // A row of piq_prompts. UC's exact wording lives on source_url; these are in Stackd's words.
 export type Prompt = {
   key: string;
@@ -17,6 +19,8 @@ export type Prompt = {
 // The student's answer to one question, as this device holds it
 export type Draft = {
   body: string;
+  // Notes beside the answer (20 → Notes). A copy saved before notes existed has none.
+  notes?: Note[];
   word_count: number;
   chosen: boolean;
   done_at: string | null;
@@ -34,6 +38,9 @@ export const FEEDBACK_MIN_WORDS = 50;
 // UC: one required question plus 3 of the others
 export const CHOOSE = 3;
 export const ANSWERS = 4;
+
+// A draft's notes; none for a copy saved before notes existed
+export const draftNotes = (d: Draft | undefined): Note[] => cleanNotes(d?.notes);
 
 // "fall-2027/major": one draft per question per cycle
 export const draftKey = (cycle: string, key: string) => `${cycle}/${key}`;
@@ -114,6 +121,7 @@ export type AccountDraft = {
   prompt_key: string;
   cycle: string;
   body: string;
+  notes?: unknown;
   word_count: number;
   chosen: boolean;
   done_at: string | null;
@@ -122,6 +130,7 @@ export type AccountDraft = {
 
 const fromAccount = (r: AccountDraft): Draft => ({
   body: r.body,
+  notes: cleanNotes(r.notes),
   word_count: r.word_count,
   chosen: r.chosen,
   done_at: r.done_at,
@@ -153,7 +162,7 @@ export function mergeDrafts(
     const changedElsewhere = mine.saved_at === null || Date.parse(row.updated_at) > Date.parse(mine.saved_at);
     if (changedElsewhere && Date.parse(row.updated_at) > Date.parse(mine.edited_at)) {
       drafts[key] = fromAccount(row);
-      if (row.body !== mine.body) replaced.push(key);
+      if (row.body !== mine.body || !sameNotes(cleanNotes(row.notes), draftNotes(mine))) replaced.push(key);
       dropped.push(key);
     } else {
       drafts[key] = mine;

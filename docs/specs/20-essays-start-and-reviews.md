@@ -239,6 +239,8 @@ Gives the reviewer a clear way to end and tells the student the feedback is comp
 
 Finishing again does nothing. After the link is turned off or ends, the ended page shows as now.
 
+Send latest version clears Finished; the reviewer can finish again.
+
 ## 7. Small fixes
 
 | Fix | Where |

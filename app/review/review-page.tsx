@@ -2,7 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { CheckIcon } from "@phosphor-icons/react/ssr";
+import { ConfirmSheet } from "@/app/(app)/essays/_essays/confirm-sheet";
 import { Art } from "@/components/art";
+import { CompactButton } from "@/components/ui/compact-button";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
@@ -29,6 +32,8 @@ type Live = {
   snapshot: string;
   words: number;
   expires_at: string;
+  // Set by Finish review (20 → 6); Send latest version clears it
+  finished_at: string | null;
   comments: Comment[];
 };
 type PageState = { status: "loading" } | { status: "error" } | { status: "ended" } | Live;
@@ -192,6 +197,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
   const [error, setError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ key: number; text: string } | null>(null);
+  const [finishing, setFinishing] = useState<{ open: boolean; busy: boolean }>({ open: false, busy: false });
   const [outlinedSpan, outlineSpan] = useMoment<{ start: number; end: number }>();
   const [outlinedComments, outlineComments] = useMoment<string[]>();
 
@@ -276,6 +282,20 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
     if (phrase && !commentsOn(comments, phrase).length) setPhrase({ ...phrase, open: false });
   }
 
+  // Finish review: tells the student the feedback is complete. Finishing again changes nothing on the server.
+  async function finish() {
+    setFinishing({ open: true, busy: true });
+    const reply = await callReview({ action: "finish", t: token, k: reviewerKey() });
+    setFinishing({ open: false, busy: false });
+    if (!reply.ok) {
+      if (reply.error === "review_ended") return onChange({ status: "ended" });
+      return say(message(reply.error));
+    }
+    const next = reply.data as Live;
+    onChange({ ...page, finished_at: next.finished_at ?? new Date().toISOString() });
+    say(`Thanks. ${page.first_name ?? "The student"} can see you're done.`);
+  }
+
   // Comments whose phrase overlaps a stretch of the text
   function commentsOn(list: Comment[], at: { start: number; end: number }) {
     return list.filter((c) => {
@@ -345,11 +365,25 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
         if (text) commentOnSelection(text);
         else openComposer(null);
       }}
-      className="-my-3 py-3 text-left text-blue-600 type-label pressed:underline focus-ring:underline"
+      className="-my-3 min-w-0 py-3 text-left text-blue-600 type-label pressed:underline focus-ring:underline"
     >
       {selection || held ? "Comment on selection" : "Comment on the whole answer"}
     </button>
   );
+
+  // The bar's right side (20 → 6): Finish review after this browser's first comment, then Finished
+  const finishSlot = page.finished_at ? (
+    <span className="inline-flex shrink-0 items-center gap-1.5 text-navy-900 type-label">
+      <CheckIcon weight="bold" size={16} aria-hidden className="text-green-600" />
+      Finished
+    </span>
+  ) : page.comments.some((c) => c.mine) ? (
+    <span className="shrink-0">
+      <CompactButton variant="solid" onClick={() => setFinishing({ open: true, busy: false })}>
+        Finish review
+      </CompactButton>
+    </span>
+  ) : null;
 
   const comments = (
     <section aria-labelledby="comments-title">
@@ -484,7 +518,10 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
               </section>
             )}
             <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">{comments}</div>
-            <div className="flex h-[60px] shrink-0 items-center border-t border-border px-2">{barButton}</div>
+            <div className="flex h-[60px] shrink-0 items-center justify-between gap-3 border-t border-border px-2">
+              {barButton}
+              {finishSlot}
+            </div>
           </aside>
         )}
       </div>
@@ -493,7 +530,10 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
         <>
           {/* The pinned bar (20 → Pinned bar) */}
           <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface" style={{ paddingBottom: "var(--safe-bottom)" }}>
-            <div className="mx-auto flex h-[59px] max-w-[688px] items-center px-6 py-2">{barButton}</div>
+            <div className="mx-auto flex h-[59px] max-w-[688px] items-center justify-between gap-3 px-6 py-2">
+              {barButton}
+              {finishSlot}
+            </div>
           </div>
           {composer && <CommentSheet open={Boolean(draft?.open)} onClose={closeComposer} {...composer} />}
           {phrase && (
@@ -508,6 +548,17 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
           )}
         </>
       )}
+
+      <ConfirmSheet
+        open={finishing.open}
+        id="finish-title"
+        title={`Let ${page.first_name ?? "the student"} know you're done?`}
+        body="You can still add comments afterward."
+        confirm="Finish review"
+        busy={finishing.busy}
+        onConfirm={finish}
+        onClose={() => setFinishing({ open: false, busy: false })}
+      />
 
       {toast && (
         <Toast

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DotsThreeIcon } from "@phosphor-icons/react/ssr";
+import { CheckCircleIcon, DotsThreeIcon } from "@phosphor-icons/react/ssr";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Pill } from "@/components/ui/pill";
 import { SUPPORT_EMAIL } from "@/lib/about";
@@ -75,6 +75,12 @@ export function ReviewsSection({ links, text, flash, onSelectQuote, onToast }: R
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-navy-900 type-row-title">{link.reviewer_label ?? "Shared link"}</p>
                   <p className="text-slate-600 type-caption">{linkDates(link)}</p>
+                  {link.finished_at && (
+                    <p className="mt-1 flex items-center gap-1.5 text-navy-900 type-caption">
+                      <CheckCircleIcon weight="fill" size={16} aria-hidden className="shrink-0 text-green-600" />
+                      Finished reviewing {shortDate(link.finished_at)}
+                    </p>
+                  )}
                 </div>
                 {live && (
                   <button
