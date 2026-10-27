@@ -1,6 +1,6 @@
 # App Store review status: Stackd 1.2.0 (3)
 
-Last checked 2026-10-26 19:00 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
+Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
 
 | | |
 | --- | --- |
@@ -8,11 +8,11 @@ Last checked 2026-10-26 19:00 PDT. No credentials in this file; the review accou
 | Version | 1.2.0 |
 | Build | 3 (uploaded 2026-10-22 00:34 PDT, built from `release/v1.2` at `10b01ec`) |
 | Submitted | 2026-10-22 00:45 PDT (07:45 UTC), submission `5ebf2eeb-33a3-42df-8ffa-e9989c98c89c` |
-| Production review status | **Waiting for Review** (checked 2026-10-26 18:10 and 18:25 PDT) |
+| Production review status | **Waiting for Review** (checked 2026-10-26 18:10 and 18:25 PDT, and 2026-10-27 09:38 PDT via the App Store Connect API) |
 | Release | Automatically release this version (already selected; not changed) |
 | Expedite request | **Accepted.** Sent 2026-10-26 18:15 PDT (01:15 UTC Oct 27) from developer.apple.com/contact/app-store/?topic=expedite. Apple's confirmation page: "We'll expedite review for Stackd: Transfer Planner." It also says a rejection during this review goes straight back to the expedited queue on resubmit, so no second expedite is needed. No case number on the page. |
 | Earlier contact | 2026-10-26 09:42 PDT email to appreview@apple.com asking for status; 09:44 PDT Apple Developer Program Support case **103009343600** (type not recorded). |
-| TestFlight external | Group **Stackd Transfer Beta** created (0 testers). Build 3 is a normal build (not Internal Only; external state `READY_FOR_BETA_SUBMISSION`). Submitting it to Beta App Review failed three times with `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (request id `f958ae89-cc6e-4627-8c4c-a594dbb09d19`). Every beta field is filled, so this is Apple's side. 18:35 PDT: build 3 added to the group directly (204), then the submission failed again with the same 422 (request id `8a13b2e5-89d1-4dd6-9aff-6f607cbd4181`). The group now holds build 3; it's still not submitted for Beta App Review. 18:55 PDT: third 422 (request id `21dcdcd9-8287-4a93-8b38-16a4331384f3`). Developer Support case **103009774048** opened 18:58 PDT (Distribution → TestFlight, email) with all three request ids. |
+| TestFlight external | Group **Stackd Transfer Beta** created (0 testers). Build 3 is a normal build (not Internal Only; external state `READY_FOR_BETA_SUBMISSION`). Submitting it to Beta App Review failed three times with `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (request id `f958ae89-cc6e-4627-8c4c-a594dbb09d19`). Every beta field is filled, so this is Apple's side. 18:35 PDT: build 3 added to the group directly (204), then the submission failed again with the same 422 (request id `8a13b2e5-89d1-4dd6-9aff-6f607cbd4181`). The group now holds build 3; it's still not submitted for Beta App Review. 18:55 PDT: third 422 (request id `21dcdcd9-8287-4a93-8b38-16a4331384f3`). Developer Support case **103009774048** opened 18:58 PDT (Distribution → TestFlight, email) with all three request ids. 2026-10-27 09:40 PDT: one more try failed with the same 422 (error id `41a7449f-ded7-4f4b-8aff-59a34297e49f`, x-request-id `RUBTAPV4S5VFESGRSPME5NSAXA`). |
 | Public beta link | **https://testflight.apple.com/join/vR4cYTTp** (created 2026-10-26 18:53 PDT, Open to Anyone, limit 500, not posted anywhere). Nobody can install from it until Beta App Review approves build 3. |
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Next status inquiry | **2026-10-29**, only if still Waiting for Review (calendar reminder set for 9:00 AM PDT) |
@@ -26,6 +26,18 @@ Checked about 2026-10-27 PDT from a Mac session with Gmail and public URLs only.
 - **Public beta link:** https://testflight.apple.com/join/vR4cYTTp shows "Not Found", as expected while Beta App Review hasn't approved build 3.
 - **Not done (needs App Store Connect in a signed-in browser):** reading the live App Review status and messages, and the single **Submit for Review** retry in TestFlight → Stackd Transfer Beta.
 - **Oct 29 inquiry:** not sent; it's only Oct 27.
+
+## 2026-10-27 09:40 PDT check (Mac, App Store Connect API)
+
+The App Store Connect API key on the Mac (`~/.stackd-asc/` helpers, CalcBlast's key) works, so this check read the live states. The earlier Oct 27 note above, which said no API access, was wrong about that. All reads; the only write was the single Beta App Review submission below.
+
+- **App Store:** version 1.2 (`dec15ce1`) `WAITING_FOR_REVIEW` with build 1.2.0 (3) (`8831cc2b`, VALID, not expired). Submission `5ebf2eeb` `WAITING_FOR_REVIEW`, submitted 2026-10-22 07:45:27 UTC; the two older submissions are COMPLETE. Screenshots (7 in the 6.7" set), review details and demo account are unchanged. Not live: iTunes lookup returns 0 results and apps.apple.com/us/app/id6822523006 returns 404.
+- **App Review messages:** none in Gmail (inbox, all mail, spam, trash) since Oct 26. Nothing was sent to App Review.
+- **TestFlight:** build 3 internal state `IN_BETA_TESTING`, external state `READY_FOR_BETA_SUBMISSION`, no Beta App Review submission exists. Group Stackd Transfer Beta (`9f7a7422`) holds build 3, public link on, limit 500. Every beta field is filled: en-US beta description, feedback email, privacy URL, review contact and notes, What to Test, export compliance (`usesNonExemptEncryption: false`). The beta license agreement text is blank, which is optional because Apple's standard agreement applies.
+- **Beta App Review retry (once):** `POST /v1/betaAppReviewSubmissions` for build 3 at 16:40:38 UTC → `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (error id `41a7449f-ded7-4f4b-8aff-59a34297e49f`, x-request-id `RUBTAPV4S5VFESGRSPME5NSAXA`). Not retried.
+- **Public beta link:** https://testflight.apple.com/join/vR4cYTTp still returns 404 "Not Found", as expected.
+- **Support case 103009774048:** only the automatic acknowledgement (2026-10-26 18:57 PDT); no reply from support yet, so there was nothing to answer.
+- **Oct 29 inquiry:** not sent; it's Oct 27.
 
 ## What was checked
 
