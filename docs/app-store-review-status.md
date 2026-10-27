@@ -1,6 +1,6 @@
 # App Store review status: Stackd 1.2.0 (3)
 
-Last checked 2026-10-26 18:25 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
+Last checked 2026-10-26 19:00 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
 
 | | |
 | --- | --- |
@@ -12,8 +12,8 @@ Last checked 2026-10-26 18:25 PDT. No credentials in this file; the review accou
 | Release | Automatically release this version (already selected; not changed) |
 | Expedite request | **Accepted.** Sent 2026-10-26 18:15 PDT (01:15 UTC Oct 27) from developer.apple.com/contact/app-store/?topic=expedite. Apple's confirmation page: "We'll expedite review for Stackd: Transfer Planner." It also says a rejection during this review goes straight back to the expedited queue on resubmit, so no second expedite is needed. No case number on the page. |
 | Earlier contact | 2026-10-26 09:42 PDT email to appreview@apple.com asking for status; 09:44 PDT Apple Developer Program Support case **103009343600** (type not recorded). |
-| TestFlight external | Group **Stackd Transfer Beta** created (0 testers). Build 3 is a normal build (not Internal Only; external state `READY_FOR_BETA_SUBMISSION`). Submitting it to Beta App Review failed three times with `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (request id `f958ae89-cc6e-4627-8c4c-a594dbb09d19`). Every beta field is filled, so this is Apple's side. 18:35 PDT: build 3 added to the group directly (204), then the submission failed again with the same 422 (request id `8a13b2e5-89d1-4dd6-9aff-6f607cbd4181`). The group now holds build 3; it's still not submitted for Beta App Review. |
-| Public beta link | Not available (needs Beta App Review approval first) |
+| TestFlight external | Group **Stackd Transfer Beta** created (0 testers). Build 3 is a normal build (not Internal Only; external state `READY_FOR_BETA_SUBMISSION`). Submitting it to Beta App Review failed three times with `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (request id `f958ae89-cc6e-4627-8c4c-a594dbb09d19`). Every beta field is filled, so this is Apple's side. 18:35 PDT: build 3 added to the group directly (204), then the submission failed again with the same 422 (request id `8a13b2e5-89d1-4dd6-9aff-6f607cbd4181`). The group now holds build 3; it's still not submitted for Beta App Review. 18:55 PDT: third 422 (request id `21dcdcd9-8287-4a93-8b38-16a4331384f3`). Developer Support case **103009774048** opened 18:58 PDT (Distribution → TestFlight, email) with all three request ids. |
+| Public beta link | **https://testflight.apple.com/join/vR4cYTTp** (created 2026-10-26 18:53 PDT, Open to Anyone, limit 500, not posted anywhere). Nobody can install from it until Beta App Review approves build 3. |
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Next status inquiry | **2026-10-29**, only if still Waiting for Review (calendar reminder set for 9:00 AM PDT) |
 
