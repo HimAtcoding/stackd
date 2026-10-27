@@ -503,6 +503,15 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
 
+## v1.3 internal TestFlight (2026-10-27)
+
+Internal TestFlight only, for the team. Not attached to an App Store version and not submitted anywhere; 1.2.0 (3) stays in App Review untouched (still Waiting for Review after the upload).
+
+- **Built** on the Intel Mac (Xcode 26.5) from `release/v1.3`: `main` at `f4b758c` plus the version bump (1.3.0, build 4). It has everything since build 3: Essays on Home progress (#16), Essays reviews PR A (#17) and Essays start PR B (#20). Flags unchanged from 1.2 (essays on, essayFeedback and explore off).
+- **Backend checked first** (PR B's After merge, steps 1 and 2): `review_finish` exists in `vzsogzgcivpcmxqxepfr` (anon gets permission denied, not function not found), so `20261022120000_notes_finish` is applied; the deployed `review` function answers `finish` (a bad token gives `review_ended`, an unknown action `review_bad_request`). Both changes are additive, so 1.2.0 (3) keeps working.
+- **Checks:** `npm ci`, `npm run lint`, `tsc --noEmit`, `npm test`, `npm run test:db`, `npm run test:import`, `npm run ios:prepare` (check-release, check-service-key, cap sync) all pass. Archive signed Apple Distribution (4JNCSTKTHQ), profile "Stackd App Store 2026-10", Sign in with Apple, `get-task-allow` false. Not run on a simulator or an iPhone.
+- **Uploaded** 2026-10-27 09:57 PDT with `altool` (validation: no errors; delivery `7f58e776`). Processed VALID by 10:01, export compliance "no non-exempt encryption", In Beta Testing in TestFlight's Internal team (the group gets every build automatically). Not added to Stackd Transfer Beta. Ryan emailed to install it.
+
 ## Essays start, PR B (step 24, 2026-10-22)
 
 Spec `20-essays-start-and-reviews.md`, parts 1, 2, 3 and 6, plus its Data section and the privacy paragraph from 7, on branch `essays-start-b`. **The migration isn't pushed and the function isn't deployed.** The app sends `notes` with every draft save from this version on, so the order matters (After merge).
