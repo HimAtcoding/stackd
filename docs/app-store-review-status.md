@@ -53,6 +53,8 @@ The owner asked for the inquiry to go out now. Re-checked first: still `WAITING_
 
 ## Rules until Apple decides
 
+- **After Apple approves 1.2.0 (3), then redeploy the website** (Vercel project `joinstackd`) from `main` so the reviewer page gets Finish review for 1.3.0 (4) on internal TestFlight. Shikhar's call on 2026-10-27: not before approval, because Apple may open the review page while reviewing 1.2.
+
 - Don't cancel, remove, resubmit or change 1.2.0 (3), its screenshots or its metadata.
 - Don't send another expedite request; Apple already accepted one.
 - Don't upload a new build unless App Review rejects 1.2.0 (3) and a code change is actually needed (that needs the Mac).
