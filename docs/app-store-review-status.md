@@ -15,7 +15,7 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 | TestFlight external | Group **Stackd Transfer Beta** created (0 testers). Build 3 is a normal build (not Internal Only; external state `READY_FOR_BETA_SUBMISSION`). Submitting it to Beta App Review failed three times with `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (request id `f958ae89-cc6e-4627-8c4c-a594dbb09d19`). Every beta field is filled, so this is Apple's side. 18:35 PDT: build 3 added to the group directly (204), then the submission failed again with the same 422 (request id `8a13b2e5-89d1-4dd6-9aff-6f607cbd4181`). The group now holds build 3; it's still not submitted for Beta App Review. 18:55 PDT: third 422 (request id `21dcdcd9-8287-4a93-8b38-16a4331384f3`). Developer Support case **103009774048** opened 18:58 PDT (Distribution → TestFlight, email) with all three request ids. 2026-10-27 09:40 PDT: one more try failed with the same 422 (error id `41a7449f-ded7-4f4b-8aff-59a34297e49f`, x-request-id `RUBTAPV4S5VFESGRSPME5NSAXA`). |
 | Public beta link | **https://testflight.apple.com/join/vR4cYTTp** (created 2026-10-26 18:53 PDT, Open to Anyone, limit 500, not posted anywhere). Nobody can install from it until Beta App Review approves build 3. |
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
-| Next status inquiry | **2026-10-29**, only if still Waiting for Review (calendar reminder set for 9:00 AM PDT) |
+| Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
 
 ## 2026-10-27 follow-up (Mac, no App Store Connect access)
 
@@ -37,7 +37,11 @@ The App Store Connect API key on the Mac (`~/.stackd-asc/` helpers, CalcBlast's 
 - **Beta App Review retry (once):** `POST /v1/betaAppReviewSubmissions` for build 3 at 16:40:38 UTC → `422 ENTITY_UNPROCESSABLE` "There was an error processing your request. Please try again later." (error id `41a7449f-ded7-4f4b-8aff-59a34297e49f`, x-request-id `RUBTAPV4S5VFESGRSPME5NSAXA`). Not retried.
 - **Public beta link:** https://testflight.apple.com/join/vR4cYTTp still returns 404 "Not Found", as expected.
 - **Support case 103009774048:** only the automatic acknowledgement (2026-10-26 18:57 PDT); no reply from support yet, so there was nothing to answer.
-- **Oct 29 inquiry:** not sent; it's Oct 27.
+- **Oct 29 inquiry:** sent early, see below.
+
+## 2026-10-27 ~09:50 PDT: status inquiry sent
+
+The owner asked for the inquiry to go out now. Re-checked first: still `WAITING_FOR_REVIEW`, no new Apple mail. Sent the prepared text once as a Gmail reply to appreview@apple.com in the Oct 26 thread (contact form and App Store Connect reply both need a signed-in browser). Gmail message id `1a17e3e6c58de404`. No further messages to Apple about review status.
 
 ## What was checked
 
@@ -54,9 +58,9 @@ The App Store Connect API key on the Mac (`~/.stackd-asc/` helpers, CalcBlast's 
 - Don't upload a new build unless App Review rejects 1.2.0 (3) and a code change is actually needed (that needs the Mac).
 - Beta App Review: try **Submit for Review** again later from TestFlight → Stackd Transfer Beta → Add Builds → 1.2.0 (3). If it keeps failing with the same 422, open a Developer Support case with the request id above. Once Apple approves the beta, create a public link (Open to Anyone, limit 500) and share it by hand.
 
-## October 29 status inquiry (prepared, not sent)
+## Status inquiry (SENT 2026-10-27, don't resend)
 
-Send once, through developer.apple.com/contact/app-store/ (or a reply in App Store Connect → App Review), only if 1.2.0 (3) is still Waiting for Review on 2026-10-29.
+Sent once by email reply to appreview@apple.com on 2026-10-27. Text as sent:
 
 > **App Review status inquiry: Stackd 1.2.0 (3)**
 >
