@@ -17,6 +17,16 @@ Last checked 2026-10-26 19:00 PDT. No credentials in this file; the review accou
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Next status inquiry | **2026-10-29**, only if still Waiting for Review (calendar reminder set for 9:00 AM PDT) |
 
+## 2026-10-27 follow-up (Mac, no App Store Connect access)
+
+Checked about 2026-10-27 PDT from a Mac session with Gmail and public URLs only. No App Store Connect sign-in or API key was available, so the live App Review and TestFlight states were **not** re-read and nothing was submitted, sent or changed in App Store Connect.
+
+- **Gmail (inbox, all mail, spam) since Oct 26:** no App Review, TestFlight or App Store Connect status mail for Stackd. The only Apple Developer mail is the automatic acknowledgement for case **103009774048** (2026-10-26 18:57 PDT: "We've received your support request… Your case ID is 103009774048"). Support hasn't replied yet. Other hits: the case 103009343600 acknowledgement (09:44 PDT Oct 26) and the 09:42 PDT email to appreview@apple.com (no reply). Spam has nothing from Apple.
+- **Public App Store:** `itunes.apple.com/lookup?id=6822523006` returns 0 results and `apps.apple.com/us/app/id6822523006` returns 404, so 1.2.0 isn't live yet.
+- **Public beta link:** https://testflight.apple.com/join/vR4cYTTp shows "Not Found", as expected while Beta App Review hasn't approved build 3.
+- **Not done (needs App Store Connect in a signed-in browser):** reading the live App Review status and messages, and the single **Submit for Review** retry in TestFlight → Stackd Transfer Beta.
+- **Oct 29 inquiry:** not sent; it's only Oct 27.
+
 ## What was checked
 
 - **App Review:** one submission in flight (1.2.0 (3), Waiting for Review); the two earlier ones are Removed. No messages from App Review and no Unresolved Issues. Nothing in Gmail (inbox or spam) from App Review about Stackd.
