@@ -28,6 +28,7 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `18-list-link-steps.md` | Date tiles in the Deadlines list, plain link lines for outside links, step sheets with what each step needs, and honest all-done wording. Replaces the matching parts of `15` and `16` |
 | `19-essay-import-share-review.md` | v1.2 Essays additions: paste or import a draft, copy, share or download answers, and private review links with comments from a reviewer who needs no account. Part of `17`'s `essays` flag |
 | `20-essays-start-and-reviews.md` | v1.3 Essays: starter questions on an empty answer, private notes beside the draft, reviewer comments highlighted in the draft, the reviewer page rebuilt text-first, and Finish review. Replaces 19's reviewer-page layout |
+| `21-explore.md` | v1.4 Explore: the Explore tab, a major page with UC Transfer Pathway and Cal State transfer-degree requirements the student can mark, "Counts for both", campuses, sources, the data tables and import, and the standing Mobbin rule |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
@@ -82,6 +83,8 @@ Each step depends on the one before it.
 | 22 | Essays: bring drafts in, send them out, and review links | `19`, `17` | The test list in `19` passes |
 | 23 | Essays reviews, PR A: highlights and the comment bar in the draft, the reviewer page rebuilt, the chevron rule | `20`, `19` | The test items in `20` for parts 4, 5 and 7 pass at 393, 320 and 1280 wide |
 | 24 | Essays start, PR B: Answer and Notes tabs, the starter card, notes, Finish review, and the migration | `20`, `17`, `19` | The rest of the test list in `20` passes, and `test:db` passes |
+| 25 | Explore data, PR A: the migration, the import and review report, every California community college, Cal State and UC as a school, the Computer Science data file with TODOs, the `docs/16` terms record | `21`, `05`, `12` | `test:db` and `test:import` pass; after Ryan's check and import, Computer Science is verified |
+| 26 | Explore screens, PR B: the Explore tab, the major page, the requirement sheet, How we check this, the university page link | `21`, `16`, `18` | The test list in `21` passes at 393 and 320 wide |
 
 ## Prompt template for Claude Code
 
@@ -98,8 +101,9 @@ Before writing code, tell me: what you're building, which files you'll create or
 what demo data it needs, and how you'll test it against the spec's Test section.
 Wait for my OK.
 
-Then pull the Mobbin references listed in the spec and compare them against the spec.
-Report any differences as a list. Do not change the design based on them.
+Then pull the Mobbin references listed in the spec, search Mobbin for two more per screen
+(iOS first), and compare them all against the spec. Report any differences as a list with
+links. Do not change the design based on them (21 → Mobbin, as a standing rule).
 
 When done, give me screenshots at 393 × 852 and 320 × 568, and list anything
 in the spec you couldn't match exactly and why.
@@ -119,7 +123,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `21-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `22-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 

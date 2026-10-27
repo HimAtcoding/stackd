@@ -45,6 +45,7 @@ The run frames show the character drifts off-model when each pose is generated s
 | `husky-celebrate-rig` | The same pose, split so parts can move. See the layer list below. Either a Rive `.riv` file (preferred) or a layered PSD/Figma file with each layer exported as its own PNG on a shared canvas | 05 Celebration | 196 × 286 canvas | `.riv`, or PNGs at 588 × 858 **each on the full canvas**, so they stack without positioning | Need | Rig |
 | `husky-run` | 6-frame run loop, on-model. Details below | Loading (00) | 72 × 72 | 6 PNGs at 216 × 216, or one strip 1296 × 216, or a `run` state in the Rive file | Have: 8 AI frames that don't cycle (see 05). Fallback exported | Demo (fallback OK), final Later |
 | `husky-run-calm` | The same run without sweat drops | Loading | as above | as above | Need | Later (decide first, see 05) |
+| `husky-looking` | Holding a folded map in one paw and a magnifier in the other, curious smile, hoodie with "S", backpack. Two exports: a bust with the **bottom edge cut straight** across the chest (the Explore panel cuts it), and the full pose | 21 Explore: the "Your major" panel (112 wide), no search results and no major (140 wide) | bust 112 × ~120, full 140 × ~167 | Bust PNG 336 × 334 and full PNG 420 × 491, transparent | Have (Oct 26, 2026): `public/art/husky/husky-looking.png` and `husky-looking-full.png`, cropped tight with the bust's straight edge at the bottom | v1.4 |
 
 ### `husky-celebrate-rig` layers
 
@@ -79,7 +80,7 @@ Mark each pivot point on a guide layer, or name it in the Rive bones.
 
 | ID | Pose | For |
 |---|---|---|
-| `husky-looking` | Holding a map or magnifier | Empty states: no results, nothing saved yet |
+| `husky-looking` | Moved up to section 2 for 21 Explore | |
 | `husky-puzzled` | Head tilt, one ear down | Errors, "we don't cover this college yet" |
 | `husky-wave-full` | Waving, full body | Rive idle state |
 

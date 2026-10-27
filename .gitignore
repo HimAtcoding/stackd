@@ -21,3 +21,6 @@ next-env.d.ts
 *.p8
 AuthKey_*
 apple-client-secret*
+
+# Mobbin reference screenshots: for looking at while building, never published (21 → Mobbin)
+/docs/refs/
