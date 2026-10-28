@@ -1,6 +1,6 @@
 # App Store review status: Stackd 1.2.0 (3)
 
-Last checked 2026-10-28 02:00 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
+Last checked 2026-10-28 02:25 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
 
 | | |
 | --- | --- |
@@ -16,6 +16,17 @@ Last checked 2026-10-28 02:00 PDT. No credentials in this file; the review accou
 | Public beta link | **https://testflight.apple.com/join/vR4cYTTp** (created 2026-10-26 18:53 PDT, Open to Anyone, limit 500, not posted anywhere). Nobody can install from it until Beta App Review approves build 3. |
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
+
+## 2026-10-28 02:10–02:25 PDT (Mac, new API key)
+
+New App Store Connect API key **Stackd Mac** (Key ID `4G6H3BCY2Q`, App Manager), stored at `~/.appstoreconnect/private_keys/` on Shikhars-MacBook-Pro-2; helper `~/.stackd-asc/asc.mjs`.
+
+- **App Store:** 1.2 still `WAITING_FOR_REVIEW` (API, 02:10 PDT).
+- **Beta App Review retry (once):** `POST /v1/betaAppReviewSubmissions` for build 3 at 02:11 PDT → same `422 ENTITY_UNPROCESSABLE` "Please try again later." (error id `c84c00dd-ebe4-416c-9be6-7fa688518618`, x-request-id `OCYS66EUCXXTCIO3EEN6HR6XCY`). Not retried. Waiting on case 103009774048.
+- **New icon build: 1.3.0 (5)** from branch `icon/husky-logo` (release/v1.3 + new husky icon from `Stackd Logo.jpg`, build number 5). Uploaded 02:15 PDT as **TestFlight internal only** (`testFlightInternalTestingOnly`), processed `VALID` 02:19, build id `99f5becb`. Internal team (all builds) has it; external state `NOT_APPLICABLE`, so it can't go to Stackd Transfer Beta or the App Store version. What to Test set.
+- **Signing on this Mac:** new iOS Distribution certificate `GKLV6UR7SV` (expires 2027-10-28; private key in the login keychain and `~/.stackd-asc/signing/`) and profile "Stackd App Store (Mac 2026-10-28)". The earlier automatic-signing attempt also created development cert `57NK2229A5` (unused). Existing certificates were not touched.
+- **Tester abykashif@gmail.com:** not added. Adding an internal tester needs a Users and Access invite with a role; Shikhar does that step (Developer role, Stackd only), then adds them to Internal team.
+- **Build 1.2.0 (3) and the 1.2 submission:** untouched.
 
 ## 2026-10-28 ~02:00 PDT check (Mac, App Store Connect in Chrome)
 
