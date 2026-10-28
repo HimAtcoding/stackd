@@ -1,6 +1,6 @@
 # App Store review status: Stackd 1.2.0 (3)
 
-Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
+Last checked 2026-10-28 02:00 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
 
 | | |
 | --- | --- |
@@ -16,6 +16,18 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 | Public beta link | **https://testflight.apple.com/join/vR4cYTTp** (created 2026-10-26 18:53 PDT, Open to Anyone, limit 500, not posted anywhere). Nobody can install from it until Beta App Review approves build 3. |
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
+
+## 2026-10-28 ~02:00 PDT check (Mac, App Store Connect in Chrome)
+
+Read-only except for opening and cancelling the Add Builds dialog. Nothing was submitted, sent, removed or changed.
+
+- **App Store:** iOS 1.2 **Waiting for Review**. App Review page lists submission Thu Oct 22 12:45 AM (API user) Waiting for Review; Oct 21 and Oct 14 submissions Removed. **No messages from App Review.** Not live: iTunes lookup 0 results, apps.apple.com 404.
+- **Gmail since Oct 26 (all mail + spam):** no App Review, TestFlight or support replies. Only the case 103009774048 auto-acknowledgement.
+- **TestFlight, Stackd Transfer Beta:** 0 testers, 1 build: 1.2.0 (3) **Ready to Submit** (expires in 84 days). Public link on, 0 of 500. The web UI has no Submit for Review action for a build already in the group; Add Builds only offers 1.3.0 (4). Cancelled without adding anything. Getting a web submit for build 3 would mean removing it from the group first, which we don't do. Next retry should be the API (`POST /v1/betaAppReviewSubmissions`) from the Mac with `~/.stackd-asc/`, or follow support's answer.
+- **Internal TestFlight:** 1.3.0 (4) Ready to Submit, Internal team only (uploaded 2026-10-27 09:58). Keep it out of the external group and the App Store version.
+- **Public beta link:** https://testflight.apple.com/join/vR4cYTTp still Not Found.
+- **Support case 103009774048:** no reply yet.
+- **Status inquiry:** already sent 2026-10-27; not resent.
 
 ## 2026-10-27 follow-up (Mac, no App Store Connect access)
 
