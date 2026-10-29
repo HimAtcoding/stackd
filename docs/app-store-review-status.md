@@ -18,6 +18,19 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 | Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
 
 
+## 2026-10-29 (Mac): build 1.3.0 (6) uploaded and attached to 1.3
+
+Nothing submitted. 1.3 stays Prepare for Submission; build 6 is not in Stackd Transfer Beta or Beta App Review.
+
+- **Built** from `release/v1.3-branding` at `302d99c` on the Mac (Xcode 27.1). `npm ci`, lint, `tsc --noEmit`, `npm test` (279 checks), `npm run test:db` (221) and `npm run ios:prepare` pass; no code changes.
+- **Signing fix:** the archive is built unsigned (`CODE_SIGNING_ALLOWED=NO`, as for build 5), and the first export of build 6 had **no Sign in with Apple entitlement**, because an unsigned archive carries no entitlements into export. Build 5 was made the same way, so it most likely lacks it too (internal only; Sign in with Apple may fail on it). For build 6 the archived app was signed with the iPhone Distribution cert and `App.entitlements` (plus application-identifier, team ID, `get-task-allow` false) before export. No certificate, profile or key changed.
+- **IPA checked:** 1.3.0 (6), `app.stackd.transfer`, iPhone Distribution: Shikhar Sisodia (4JNCSTKTHQ), `com.apple.developer.applesignin` Default, `get-task-allow` false, `ITSAppUsesNonExemptEncryption` false, `codesign --verify --deep --strict` OK. Export method app-store-connect, `testFlightInternalTestingOnly` **false**.
+- **Icon:** Assets.car has AppIcon (1024 phone rendition, Opaque). The app's 120 px rendition matches `assets/branding/Stackd-AppIcon-1024.png` (mean difference 0.00/255; 94.8 against the old husky-on-blue icon), alpha 255 everywhere.
+- **Uploaded** 2026-10-29 11:42 PDT with `altool` and the Stackd Mac API key (validation: no errors). Delivery / build ID `0566a26b-90c2-4c7a-baa6-2325fdd7d067`. App Store Connect upload date 11:45 PDT; **VALID** by 11:46, `usesNonExemptEncryption` false (no compliance question). TestFlight: internal `IN_BETA_TESTING`, external `READY_FOR_BETA_SUBMISSION` (so not internal-only). What to Test (en-US): "New app icon, Essays Answer and Notes tabs, starter card, private notes, reviewer highlights and Finish review. Please check the home-screen icon and Settings > Privacy."
+- **Attached** to version 1.3 (`682bfa5d`) at 11:48 PDT (`PATCH appStoreVersions/…/relationships/build`, 204). Read back: build 6, VALID. What's New, promotional text, description (ends "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila."), keywords, URLs, copyright and release type (after approval) are identical before and after.
+- **Simulator** 11:49–11:56 PDT, Release build of the same `out/` on iPhone 18 Pro Max (driven with a scratch XCUITest, nothing added to the repo): home-screen icon is the new husky; Welcome, Sign up and Sign in load; Privacy (from Sign up and from Settings) shows "Updated October 28, 2026" and Who runs Stackd; Settings shows "Stackd 1.3.0" and all four names. Signed in with a fresh test account (`shikhar35sisodia35+stackdqa1029@gmail.com`, email code), never the review account; the account was deleted from Settings afterward (app returned to Welcome; not re-checked in the database).
+- **Next (Shikhar):** Add for Review / Submit for Review on 1.3, and adding build 6 to Stackd Transfer Beta, both wait for his go-ahead. PR #21 not merged.
+
 ## 2026-10-28 evening (Windows): 1.2 is live
 
 - **1.2 released:** iTunes lookup shows version 1.2, released 2026-10-28 17:48 UTC (10:48 PDT), seller Shikhar Sisodia. App Store Connect shows "1.2 Ready for Distribution".
