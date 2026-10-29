@@ -17,6 +17,14 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 | Website fallback | https://joinstackd-chi.vercel.app works: Google sign-in, Home, Deadlines, the UC checklist and Essays all load; `/privacy/`, `/terms/`, `/support/` return 200 |
 | Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
 
+
+## 2026-10-28 evening (Windows): 1.2 is live
+
+- **1.2 released:** iTunes lookup shows version 1.2, released 2026-10-28 17:48 UTC (10:48 PDT), seller Shikhar Sisodia. App Store Connect shows "1.2 Ready for Distribution".
+- **Website redeployed** from `release/v1.3-branding` (9c61d8b), as planned for after approval: preview checked, then production `joinstackd-b4iq045e0`, aliased to joinstackd-chi.vercel.app. All public routes 200; `/privacy/` "Updated October 28, 2026" with Who runs Stackd; new favicon; `/review/` has Finish review.
+- **App Privacy** read in App Store Connect: Other User Content, Email Address, User ID, Name; Privacy Policy URL https://joinstackd-chi.vercel.app/privacy/. Unchanged.
+- **Version 1.3 created** (Prepare for Submission): What's New and promotional text entered and saved (read back after reload); description with the four-name credit, copyright and review notes carried over; release Automatically, all users, keep rating. **No build attached** (1.3.0 (6) isn't uploaded yet) and nothing submitted.
+
 ## 2026-10-27 follow-up (Mac, no App Store Connect access)
 
 Checked about 2026-10-27 PDT from a Mac session with Gmail and public URLs only. No App Store Connect sign-in or API key was available, so the live App Review and TestFlight states were **not** re-read and nothing was submitted, sent or changed in App Store Connect.

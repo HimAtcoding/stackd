@@ -1,5 +1,7 @@
 # Branding, privacy and seller name (2026-10-28)
 
+**Status 2026-10-28 evening:** 1.2 is live (released 10:48 PDT). Website redeployed with this branch; App Privacy checked (unchanged); version 1.3 created in App Store Connect with What's New and promotional text, waiting for build 1.3.0 (6) from the Mac. Section 3 steps 1 to 4 are done except selecting the build.
+
 Work for the next App Store release, 1.3.0 (6), on branch `release/v1.3-branding` (from `release/v1.3`). Nothing here was submitted, published, transferred or changed in App Store Connect. Version 1.2 with build 1.2.0 (3) is still Waiting for Review and was not touched.
 
 ## 1. App icon
