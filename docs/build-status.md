@@ -288,7 +288,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - `npm run test:oauth` has 13 more checks (31 in all): the app's callback URL, lookalike schemes and paths refused, cancel and expiry through it, and the nonce and its hash.
 
 **Icon and launch screen** (`npm run ios:assets`, `scripts/ios-assets.mjs`):
-- App icon 1024 × 1024, no alpha: the husky head from `husky-welcome.png` on `--sky-200`, framed like the temporary web icons and cut from the source art (so it's a 1.2× resize, not the 512 icon doubled), stopping before the yellow burst marks. Still the temporary icon until `app-icon` art exists (art-assets).
+- App icon 1024 × 1024, no alpha: the husky head from `husky-welcome.png` on `--sky-200`, framed like the temporary web icons and cut from the source art (so it's a 1.2× resize, not the 512 icon doubled), stopping before the yellow burst marks. Still the temporary icon until `app-icon` art exists (art-assets). Replaced 2026-10-28 by the approved logo (`assets/branding/Stackd-AppIcon-1024.png`, see v1.3 branding above).
 - Launch image: the wordmark on `--sky-50`.
 
 **Public pages and credits:**
@@ -502,6 +502,16 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **Home with no plan:** no Get ready card. The setup card is the one thing to do until the plan names a school (`home-frame.tsx`, spec 14).
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
+
+## v1.3 branding, privacy and build 6 (2026-10-28)
+
+Branch `release/v1.3-branding` from `release/v1.3`, for the next App Store version. Nothing submitted or deployed; 1.2.0 (3) stays in App Review untouched. Full notes: `docs/app-store/branding-privacy-seller.md`.
+
+- **App icon:** the approved logo is the source, `assets/branding/Stackd-AppIcon-1024.png` (resized once from the founders' 1254 JPEG, kept as `Stackd-Logo-original.jpg`). `npm run ios:assets` now makes every icon from it, resize only: the iOS 1024 icon, `app/apple-icon.png`, the three PWA icons, and `app/favicon.ico` (16/32/48, RGBA PNG frames; it was still the default Next.js triangle). Before, the script still cut the old husky, so running it would have undone build 5's icon. Launch image unchanged.
+- **Privacy:** audited against migrations, the review function, `lib/`, every fetch and SDK. Added **Who runs Stackd** (the four developers, Apple lists Shikhar as seller because it's his individual account, contact email); `PRIVACY_UPDATED` October 28, 2026. App Privacy answers unchanged. Privacy URL stays on joinstackd-chi.vercel.app (`usestackd.app/privacy` is 404 and that site isn't in this repo or Shikhar's Vercel).
+- **Build 1.3.0 (6):** `CURRENT_PROJECT_VERSION` 6 (5 was internal-only and can't be attached to an App Store version). Same app code as build 5.
+- **Checks on Windows:** `npm run lint`, `tsc --noEmit`, `npm test`, `npm run build` (check-release, check-service-key) pass. The first build failed on the favicon (Next needs RGBA frames in ICO); fixed in the script. Local `/privacy/` checked in Chrome. **Not done:** iOS Release archive and on-device icon check (needs the Mac).
+- **Seller:** only an Organization membership for a registered entity changes it. Two paths (convert this team, or transfer just Stackd) are written up; both are blocked on forming an entity and a D-U-N-S Number, and a transfer also needs a released version and nothing in review.
 
 ## v1.3 internal TestFlight (2026-10-27)
 
@@ -1063,7 +1073,7 @@ Also in place:
 - **Saved schools.** `lib/saved.ts`, `stackd.saved` as a list of slugs.
 - **Session.** Every route in the `app/(app)` group needs `stackd.session`. Without it, the student goes to `/welcome` if Welcome hasn't been seen, otherwise to `/sign-in`.
 
-Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `husky-home.png` (1341 × 1173, no burst marks painted in, not winking; the art is the source of truth), `burst-dashes.svg` (drawn in the repo: three round-capped strokes, `#FDC940`, width 4 at 28 × 28, fanned like the marks in `husky-wave`), `campus-1` … `campus-4.png` (1579 × 996, the same proportions as art-assets' 1179 × 744), `logo-apple.svg` and `logo-google.svg`. Temporary app icons (`public/icons/`, `app/apple-icon.png`) are cut from `husky-welcome`'s head on `--sky-200`. The two husky run-loop frames are used by the loading component.
+Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `husky-home.png` (1341 × 1173, no burst marks painted in, not winking; the art is the source of truth), `burst-dashes.svg` (drawn in the repo: three round-capped strokes, `#FDC940`, width 4 at 28 × 28, fanned like the marks in `husky-wave`), `campus-1` … `campus-4.png` (1579 × 996, the same proportions as art-assets' 1179 × 744), `logo-apple.svg` and `logo-google.svg`. The app icons (`public/icons/`, `app/apple-icon.png`, `app/favicon.ico`, the iOS icon) are resized from `assets/branding/Stackd-AppIcon-1024.png` by `npm run ios:assets`. The two husky run-loop frames are used by the loading component.
 
 Still placeholders or missing: `app-icon` (temporary icons above until it exists), `home-clouds` (background decoration, so it draws nothing when missing).
 

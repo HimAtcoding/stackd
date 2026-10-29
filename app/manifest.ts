@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 // Installable PWA: Add to Home Screen opens full screen, without browser bars.
-// The icons are temporary, cut from husky-welcome until the real app-icon exists (art-assets).
+// The icons are the app icon (assets/branding/Stackd-AppIcon-1024.png), made by npm run ios:assets.
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
