@@ -24,6 +24,8 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 - **Website redeployed** from `release/v1.3-branding` (9c61d8b), as planned for after approval: preview checked, then production `joinstackd-b4iq045e0`, aliased to joinstackd-chi.vercel.app. All public routes 200; `/privacy/` "Updated October 28, 2026" with Who runs Stackd; new favicon; `/review/` has Finish review.
 - **App Privacy** read in App Store Connect: Other User Content, Email Address, User ID, Name; Privacy Policy URL https://joinstackd-chi.vercel.app/privacy/. Unchanged.
 - **Version 1.3 created** (Prepare for Submission): What's New and promotional text entered and saved (read back after reload); description with the four-name credit, copyright and review notes carried over; release Automatically, all users, keep rating. **No build attached** (1.3.0 (6) isn't uploaded yet) and nothing submitted.
+- **Housekeeping:** the 2026-10-29 9 AM "Check Stackd App Review status" calendar reminder was deleted (1.2 is live; the inquiry already went out). `npx cap sync ios` on Windows copies the new `out/` into the app bundle cleanly (new favicon and privacy text in `ios/App/App/public`). A Gmail draft to the team asking them to confirm the Who runs Stackd wording is waiting in Shikhar's drafts, not sent.
+- **Can't be done from Windows:** archive and upload of 1.3.0 (6). The Mac didn't answer on the network and has no SSH, and a GitHub Actions macOS build would need repo secrets, which need admin on HimAtcoding/stackd (Shikhar has write).
 
 ## 2026-10-27 follow-up (Mac, no App Store Connect access)
 
