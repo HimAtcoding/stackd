@@ -1,6 +1,6 @@
 # App Store review status: Stackd 1.2.0 (3)
 
-Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
+Last checked 2026-10-28 02:25 PDT. No credentials in this file; the review account lives in `~/.stackd-secrets/` and in App Store Connect.
 
 | | |
 | --- | --- |
@@ -20,7 +20,7 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 
 ## 2026-10-29 (Mac): build 1.3.0 (6) uploaded, attached and submitted
 
-1.3 is Waiting for Review. Build 6 is not in Stackd Transfer Beta or Beta App Review.
+1.3 is Waiting for Review. Build 6 is in Stackd Transfer Beta; Beta App Review still refuses it (Apple-side 422).
 
 - **Built** from `release/v1.3-branding` at `302d99c` on the Mac (Xcode 27.1). `npm ci`, lint, `tsc --noEmit`, `npm test` (279 checks), `npm run test:db` (221) and `npm run ios:prepare` pass; no code changes.
 - **Signing fix:** the archive is built unsigned (`CODE_SIGNING_ALLOWED=NO`, as for build 5), and the first export of build 6 had **no Sign in with Apple entitlement**, because an unsigned archive carries no entitlements into export. Build 5 was made the same way, so it most likely lacks it too (internal only; Sign in with Apple may fail on it). For build 6 the archived app was signed with the iPhone Distribution cert and `App.entitlements` (plus application-identifier, team ID, `get-task-allow` false) before export. No certificate, profile or key changed.
@@ -30,7 +30,9 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 - **Attached** to version 1.3 (`682bfa5d`) at 11:48 PDT (`PATCH appStoreVersions/…/relationships/build`, 204). Read back: build 6, VALID. What's New, promotional text, description (ends "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila."), keywords, URLs, copyright and release type (after approval) are identical before and after.
 - **Simulator** 11:49–11:56 PDT, Release build of the same `out/` on iPhone 18 Pro Max (driven with a scratch XCUITest, nothing added to the repo): home-screen icon is the new husky; Welcome, Sign up and Sign in load; Privacy (from Sign up and from Settings) shows "Updated October 28, 2026" and Who runs Stackd; Settings shows "Stackd 1.3.0" and all four names. Signed in with a fresh test account (`shikhar35sisodia35+stackdqa1029@gmail.com`, email code), never the review account; the account was deleted from Settings afterward (app returned to Welcome). Confirmed gone 2026-10-29: Supabase Auth `POST /auth/v1/otp` with `create_user: false` for that email returns 422 "Signups not allowed for otp" (no such user).
 - **Submitted for review** 2026-10-29 18:42 PDT (2026-10-30 01:42 UTC), on Shikhar's go-ahead: review submission `078ab27f-ea09-4fe9-9ccb-91287c78c925` with version 1.3 (`682bfa5d`), build 1.3.0 (6). Read back: version 1.3 `WAITING_FOR_REVIEW`, build 6, release Automatically after approval. Review details (contact, demo account required) carried over from 1.2, unchanged.
-- **Still waiting for Shikhar:** adding build 6 to Stackd Transfer Beta / Beta App Review, and merging PR #21.
+- **Icon in App Store Connect:** the App Store icon Apple extracted from build 6 (1024, no alpha) and the TestFlight icon match `assets/branding/Stackd-AppIcon-1024.png` exactly (mean difference 0.00/255). The App Store listing switches to it when 1.3 is released.
+- **Stackd Transfer Beta** (on Shikhar's go-ahead): build 6 added to the group 2026-10-29 18:44 PDT (204). Beta App Review submission for build 6 failed twice with the same `422 ENTITY_UNPROCESSABLE` "Please try again later." as build 3 since Oct 26 (error ids `cf674efa-4105-4ff9-a3f8-20799741d7ae`, `19714bd9-eaa8-49fc-903f-7ea5b7501a28`). Build 6 external state `READY_FOR_BETA_SUBMISSION`; Developer Support case 103009774048 still open. The public link stays unusable until a build passes Beta App Review.
+- **PR #21** merged into main on Shikhar's go-ahead (conflict in this file only: both sides added dated sections; all kept).
 
 ## 2026-10-28 evening (Windows): 1.2 is live
 
@@ -40,6 +42,29 @@ Last checked 2026-10-27 09:45 PDT. No credentials in this file; the review accou
 - **Version 1.3 created** (Prepare for Submission): What's New and promotional text entered and saved (read back after reload); description with the four-name credit, copyright and review notes carried over; release Automatically, all users, keep rating. **No build attached** (1.3.0 (6) isn't uploaded yet) and nothing submitted.
 - **Housekeeping:** the 2026-10-29 9 AM "Check Stackd App Review status" calendar reminder was deleted (1.2 is live; the inquiry already went out). `npx cap sync ios` on Windows copies the new `out/` into the app bundle cleanly (new favicon and privacy text in `ios/App/App/public`). A Gmail draft to the team asking them to confirm the Who runs Stackd wording is waiting in Shikhar's drafts, not sent.
 - **Can't be done from Windows:** archive and upload of 1.3.0 (6). The Mac didn't answer on the network and has no SSH, and a GitHub Actions macOS build would need repo secrets, which need admin on HimAtcoding/stackd (Shikhar has write).
+
+## 2026-10-28 02:10–02:25 PDT (Mac, new API key)
+
+New App Store Connect API key **Stackd Mac** (Key ID `4G6H3BCY2Q`, App Manager), stored at `~/.appstoreconnect/private_keys/` on Shikhars-MacBook-Pro-2; helper `~/.stackd-asc/asc.mjs`.
+
+- **App Store:** 1.2 still `WAITING_FOR_REVIEW` (API, 02:10 PDT).
+- **Beta App Review retry (once):** `POST /v1/betaAppReviewSubmissions` for build 3 at 02:11 PDT → same `422 ENTITY_UNPROCESSABLE` "Please try again later." (error id `c84c00dd-ebe4-416c-9be6-7fa688518618`, x-request-id `OCYS66EUCXXTCIO3EEN6HR6XCY`). Not retried. Waiting on case 103009774048.
+- **New icon build: 1.3.0 (5)** from branch `icon/husky-logo` (release/v1.3 + new husky icon from `Stackd Logo.jpg`, build number 5). Uploaded 02:15 PDT as **TestFlight internal only** (`testFlightInternalTestingOnly`), processed `VALID` 02:19, build id `99f5becb`. Internal team (all builds) has it; external state `NOT_APPLICABLE`, so it can't go to Stackd Transfer Beta or the App Store version. What to Test set.
+- **Signing on this Mac:** new iOS Distribution certificate `GKLV6UR7SV` (expires 2027-10-28; private key in the login keychain and `~/.stackd-asc/signing/`) and profile "Stackd App Store (Mac 2026-10-28)". The earlier automatic-signing attempt also created development cert `57NK2229A5` (unused). Existing certificates were not touched.
+- **Tester abykashif@gmail.com:** not added. Adding an internal tester needs a Users and Access invite with a role; Shikhar does that step (Developer role, Stackd only), then adds them to Internal team.
+- **Build 1.2.0 (3) and the 1.2 submission:** untouched.
+
+## 2026-10-28 ~02:00 PDT check (Mac, App Store Connect in Chrome)
+
+Read-only except for opening and cancelling the Add Builds dialog. Nothing was submitted, sent, removed or changed.
+
+- **App Store:** iOS 1.2 **Waiting for Review**. App Review page lists submission Thu Oct 22 12:45 AM (API user) Waiting for Review; Oct 21 and Oct 14 submissions Removed. **No messages from App Review.** Not live: iTunes lookup 0 results, apps.apple.com 404.
+- **Gmail since Oct 26 (all mail + spam):** no App Review, TestFlight or support replies. Only the case 103009774048 auto-acknowledgement.
+- **TestFlight, Stackd Transfer Beta:** 0 testers, 1 build: 1.2.0 (3) **Ready to Submit** (expires in 84 days). Public link on, 0 of 500. The web UI has no Submit for Review action for a build already in the group; Add Builds only offers 1.3.0 (4). Cancelled without adding anything. Getting a web submit for build 3 would mean removing it from the group first, which we don't do. Next retry should be the API (`POST /v1/betaAppReviewSubmissions`) from the Mac with `~/.stackd-asc/`, or follow support's answer.
+- **Internal TestFlight:** 1.3.0 (4) Ready to Submit, Internal team only (uploaded 2026-10-27 09:58). Keep it out of the external group and the App Store version.
+- **Public beta link:** https://testflight.apple.com/join/vR4cYTTp still Not Found.
+- **Support case 103009774048:** no reply yet.
+- **Status inquiry:** already sent 2026-10-27; not resent.
 
 ## 2026-10-27 follow-up (Mac, no App Store Connect access)
 
@@ -76,6 +101,8 @@ The owner asked for the inquiry to go out now. Re-checked first: still `WAITING_
 - **What to Test** on build 3: "Please test sign-in, your transfer plan, application deadlines and reminders, the UC application checklist, and Personal Insight draft saving. Please report any crashes, incorrect dates, or problems saving your work."
 
 ## Rules until Apple decides
+
+- **After Apple approves 1.2.0 (3), then redeploy the website** (Vercel project `joinstackd`) from `main` so the reviewer page gets Finish review for 1.3.0 (4) on internal TestFlight. Shikhar's call on 2026-10-27: not before approval, because Apple may open the review page while reviewing 1.2.
 
 - Don't cancel, remove, resubmit or change 1.2.0 (3), its screenshots or its metadata.
 - Don't send another expedite request; Apple already accepted one.
