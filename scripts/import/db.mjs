@@ -8,8 +8,8 @@ function readEnv(name) {
   return env.match(new RegExp(`^${name}=(.*)$`, "m"))?.[1]?.trim().replace(/^["']|["']$/g, "") || null;
 }
 
-// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql, 20261016120100_deadlines_import.sql
-// and 20261019120000_essays.sql
+// Calls the database functions in supabase/migrations/20261005130000_import_functions.sql, 20261016120100_deadlines_import.sql,
+// 20261019120000_essays.sql and 20261026120000_explore.sql
 export function supabaseDatabase() {
   const url = readEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = readEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -53,7 +53,21 @@ export function supabaseDatabase() {
       if (prompts.error) throw new Error(prompts.error.message);
       return { piq_prompts: prompts.data };
     },
-    // supabase/migrations/20261017120000_reopen_verified.sql and 20261019120000_essays.sql
+    importExplore: (payload, sourceFile, dryRun) => call("import_explore_batch", { payload, source_file: sourceFile, dry_run: dryRun }),
+    // Pathways, their requirements and campuses as stored, for the review report
+    async exploreRowsFor(payload) {
+      const slugs = [...new Set(payload.pathways.map((p) => p.slug))];
+      const pathways = await client.from("pathways").select("*").in("slug", slugs);
+      if (pathways.error) throw new Error(pathways.error.message);
+      const ids = pathways.data.map((p) => p.id);
+      const reqs = await client.from("pathway_requirements").select("*").in("pathway_id", ids);
+      const campuses = await client.from("pathway_campuses").select("*").in("pathway_id", ids);
+      if (reqs.error || campuses.error) throw new Error((reqs.error ?? campuses.error).message);
+      const inst = await client.from("institutions").select("id, slug").in("id", [...new Set(campuses.data.map((c) => c.institution_id))]);
+      if (inst.error) throw new Error(inst.error.message);
+      return { pathways: pathways.data, pathway_requirements: reqs.data, pathway_campuses: campuses.data, institutions: inst.data };
+    },
+    // supabase/migrations/20261017120000_reopen_verified.sql, 20261019120000_essays.sql and 20261026120000_explore.sql
     reopenRow: (id, by, reason, dryRun) => call("reopen_verified_row", { p_id: id, p_by: by, p_reason: reason, p_dry_run: dryRun }),
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });

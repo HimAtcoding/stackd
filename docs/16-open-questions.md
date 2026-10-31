@@ -20,6 +20,19 @@ These were open and are now settled. Everything below this section is the origin
 | Out-of-state transfer data | **A later phase, not the MVP.** Build an ASSIST-like database for states without one, starting with states that publish public statewide transfer systems. Every source's terms get checked before import, and only permitted data goes in, with provenance | No national ASSIST exists, so this is a real gap, but each source has its own terms and the first users are California students | `15` |
 | Screens after launch | **Essays, Mentors, Student life, the celebration animation** wait until after launch | Not in the MVP workflow | `09`, `15` |
 | Screens before launch | **Onboarding, Explore (search), requirement detail, university Overview tab** | They complete the core workflow | `15` |
+| UC Transfer Pathways and TMC templates (Oct 26 2026) | **Allowed, as below.** Explore (spec 21) states course facts in Stackd's own words, links to the source on every screen, and copies only identifiers (C-ID numbers, template numbers) exactly. UC Admissions confirmed this approach on Oct 26, 2026 | Path (1) of "In-app course requirements" above. The record is the table under "What the terms allow" | `21` |
+
+## What the terms allow (course data track, step A)
+
+Checked Oct 26, 2026. Not legal advice; this is what the pages say and how Stackd stays inside it.
+
+| Source | What it says | What Stackd does |
+|---|---|---|
+| UC Admissions site ([terms of use](https://admission.universityofcalifornia.edu/terms-of-use.html)) | Content belongs to the Regents. Copyrighted material isn't reposted without permission. No general reuse grant | States the **facts** (course types, sequence lengths, which campus majors a pathway covers) **in Stackd's own words**, never UC's text, with the source and a link to the pathway page on every screen. **UC Admissions confirmed this approach on Oct 26, 2026**, in reply to Ryan's email describing it. Keep that reply; if UC ever asks for a change, the change wins |
+| CCC Chancellor's Office TMC templates (public PDFs on cccco.edu) | Published for colleges building transfer degrees. No separate terms on the template | Records the template number, revision and C-ID numbers exactly (they're identifiers), names requirements in Stackd's words, and links to the template |
+| ASSIST | No outside data access yet (Oct 5, 2026, above) | Unchanged: no ASSIST data in the app. "Find it at your college" links to ASSIST |
+
+**UC's confirmation (Oct 26, 2026).** Ryan emailed UC Admissions describing exactly this: Transfer Pathway course expectations summarized in Stackd's own words, a link back to each pathway page with the date checked, no UC text reproduced, and no UC name or logo used to suggest endorsement. UC replied that it's fine. The reply itself stays in the Stackd inbox.
 
 ## The ten that matter most
 

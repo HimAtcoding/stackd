@@ -469,6 +469,104 @@ const draftB2 = (await addDraft(B, "major", "Their own words.")).rows[0].id;
 await createLink(B, "major", "d".repeat(43));
 await addFeedback(B, draftB2);
 
+// Explore (21): pathways, their requirements and campuses are written only by the import, and reach the app only once
+// every row behind that major is verified
+const ucUni = (await as("service_role", null, `insert into institutions (slug, name, institution_type, system, source_name, source_url, academic_year, retrieved_at)
+  values ('example-uc', 'Example UC', 'university', 'UC', ${prov}) returning id`)).rows[0].id;
+const ucPathway = `insert into pathways (slug, kind, name, source_name, source_url, academic_year, retrieved_at)
+  values ('test-major', 'uc_pathway', 'Test major', ${prov}) returning id`;
+const tmcPathway = (slug, code) => `insert into pathways (slug, kind, name, code, revision, degree_name, major_units, total_units, source_name, source_url, academic_year, retrieved_at)
+  values ('${slug}', 'tmc', 'Test major', ${code === null ? "null" : `'${code}'`}, '1', 'Test degree for transfer', 6, 60, ${prov}) returning id`;
+await expectError("anon can't add a pathway", () => as("anon", null, ucPathway), /permission denied/);
+await expectError("a student can't add a pathway", () => as("authenticated", A, ucPathway), /permission denied/);
+const ucPath = (await expectOk("service role adds a UC pathway", () => as("service_role", null, ucPathway)))?.rows[0].id;
+const tmcPath = (await expectOk("service role adds a TMC", () => as("service_role", null, tmcPathway("test-major", "9999"))))?.rows[0].id;
+await expectError("one pathway per major and kind", () => as("service_role", null, ucPathway), /duplicate key/);
+await expectError("a TMC needs its template number", () => as("service_role", null, tmcPathway("other-major", null)), /check/);
+await expectError("a UC pathway has no template number", () =>
+  as("service_role", null, `insert into pathways (slug, kind, name, code, source_name, source_url, academic_year, retrieved_at)
+    values ('other-major', 'uc_pathway', 'X', '1', ${prov})`), /check/);
+await expectError("effective_term looks like fall-2027", () =>
+  as("service_role", null, `insert into pathways (slug, kind, name, effective_term, source_name, source_url, academic_year, retrieved_at)
+    values ('other-major', 'uc_pathway', 'X', 'fall 2027', ${prov})`), /check/);
+
+const pathwayRow = (pathway, code, sort, topic, cId, options) => as("service_role", null,
+  `insert into pathway_requirements (pathway_id, code, sort, topic, name, description, how_many, units, c_id, options, source_name, source_url, academic_year, retrieved_at)
+   values ($1, $2, $3, $4, 'Test course', 'A made-up course.', 'One course', 3, $5, $6::jsonb, ${prov}) returning id`,
+  [pathway, code, sort, topic, cId, JSON.stringify(options)]);
+const ucReq = (await expectOk("a UC requirement names a course type only", () => pathwayRow(ucPath, "first", 1, "test-topic", [], [])))?.rows[0].id;
+await expectOk("a TMC requirement names its C-ID", () => pathwayRow(tmcPath, "first", 1, "test-topic", ["TEST 101"], []));
+await expectOk("a pick-one requirement lists options", () =>
+  pathwayRow(tmcPath, "second", 2, "other-topic", [], [{ label: "Either", c_id: ["TEST 102", "TEST 103"], units: 3 }, { label: "Or", c_id: ["TEST 900S"], units: 3 }]));
+await expectError("C-ID numbers are written like COMP 122", () => pathwayRow(tmcPath, "bad-c-id", 3, "t3", ["comp 122"], []), /c_id_check/);
+await expectError("an option takes label, c_id and units only", () =>
+  pathwayRow(tmcPath, "bad-option", 3, "t3", [], [{ label: "X", c_id: ["TEST 104"], units: 3, note: "UC's words" }]), /options_check/);
+await expectError("an option needs a C-ID", () => pathwayRow(tmcPath, "no-c-id", 3, "t3", [], [{ label: "X", c_id: [], units: 3 }]), /options_check/);
+await expectError("a requirement has c_id or options, not both", () =>
+  pathwayRow(tmcPath, "both", 3, "t3", ["TEST 105"], [{ label: "X", c_id: ["TEST 106"], units: 3 }]), /check/);
+await expectError("a topic appears once per pathway", () => pathwayRow(tmcPath, "same-topic", 3, "test-topic", ["TEST 107"], []), /duplicate key/);
+
+const campus = (pathway, inst) => as("service_role", null,
+  `insert into pathway_campuses (pathway_id, institution_id, major_names, source_name, source_url, academic_year, retrieved_at)
+   values ($1, $2, array['Test major, B.S.'], ${prov}) returning id`, [pathway, inst]);
+await expectError("campuses belong to the UC pathway", () => campus(tmcPath, ucUni), /UC pathway, not a TMC/);
+await expectError("a pathway campus must be a UC campus", () => campus(ucPath, instId), /must be a UC campus/);
+await expectOk("a UC campus on the UC pathway", () => campus(ucPath, ucUni));
+
+const visible = async (role, sub) => {
+  const n = async (t) => (await as(role, sub, `select id from ${t}`)).rows.length;
+  return [await n("pathways"), await n("pathway_requirements"), await n("pathway_campuses")].join(",");
+};
+check("nothing shows while the major is unverified", (await visible("anon", null)) === "0,0,0", await visible("anon", null));
+const verifyAll = (t, where = "true") =>
+  as("service_role", null, `update ${t} set verification_status = 'verified', verified_at = now() where ${where} and verification_status <> 'verified'`);
+await verifyAll("pathways");
+await verifyAll("pathway_campuses");
+await verifyAll("pathway_requirements", "code <> 'second'");
+check("one unverified requirement hides the whole major", (await visible("anon", null)) === "0,0,0", await visible("anon", null));
+await verifyAll("pathway_requirements");
+check("a fully verified major shows to anon", (await visible("anon", null)) === "2,3,1", await visible("anon", null));
+check("…and to signed-in students", (await visible("authenticated", A)) === "2,3,1", await visible("authenticated", A));
+await as("service_role", null, `insert into pathways (slug, kind, name, verification_status, verified_at, source_name, source_url, academic_year, retrieved_at)
+  values ('empty-major', 'uc_pathway', 'Empty', 'verified', now(), ${prov})`);
+check("a verified pathway with no requirements stays hidden", (await as("anon", null, "select id from pathways where slug = 'empty-major'")).rows.length === 0);
+await expectError("a student can't change a pathway", () => as("authenticated", A, "update pathways set name = 'x'"), /permission denied/);
+await expectError("a verified requirement can't be changed by an import", () =>
+  as("service_role", null, "update pathway_requirements set name = 'Changed' where id = $1", [ucReq]), /refusing to update verified/);
+await expectError("a verified requirement can't be deleted", () =>
+  as("service_role", null, "delete from pathway_requirements where id = $1", [ucReq]), /refusing to delete verified/);
+const reopened = await expectOk("the service role reopens one requirement", () =>
+  as("service_role", null, "select reopen_verified_row($1, 'tester', 'wording', false) as r", [ucReq]));
+check("the reopen names the row", reopened?.rows[0].r.table === "pathway_requirements" && /test-major uc_pathway first/.test(reopened?.rows[0].r.record), reopened?.rows[0].r);
+check("reopening one row hides the whole major again", (await visible("anon", null)) === "0,0,0", await visible("anon", null));
+await verifyAll("pathway_requirements");
+await expectError("students can't reopen rows", () => as("authenticated", A, "select reopen_verified_row($1, 'x', 'y', false)", [ucReq]), /permission denied/);
+
+// Reopen now also covers the planning tables, so a verified major can take its explore_slug
+await as("service_role", null, "update majors set verification_status = 'verified', verified_at = now() where id = $1", [majorId]);
+await expectError("a verified major can't take an explore_slug by hand", () =>
+  as("service_role", null, "update majors set explore_slug = 'test-major' where id = $1", [majorId]), /refusing to update verified/);
+const majorReopen = await expectOk("the service role reopens a verified major", () =>
+  as("service_role", null, "select reopen_verified_row($1, 'tester', 'adding explore_slug', false) as r", [majorId]));
+check("the reopen names the major", majorReopen?.rows[0].r.table === "majors", majorReopen?.rows[0].r);
+await expectOk("then explore_slug can be set", () => as("service_role", null, "update majors set explore_slug = 'test-major' where id = $1", [majorId]));
+await expectError("explore_slug is a slug", () => as("service_role", null, "update majors set explore_slug = 'Test Major' where id = $1", [majorId]), /check/);
+
+// Topic status: owner only, one row per course type
+await expectOk("a student marks a course type done", () =>
+  as("authenticated", A, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs1', 'done')", [A]));
+await expectError("one status per course type", () =>
+  as("authenticated", A, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs1', 'in_progress')", [A]), /duplicate key/);
+await expectOk("a student changes it", () => as("authenticated", A, "update user_topic_status set status = 'in_progress' where topic = 'cs1'"));
+await expectError("a student can't mark one for someone else", () =>
+  as("authenticated", A, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs2', 'done')", [B]), /row-level security/);
+await expectError("anon can't read topic statuses", () => as("anon", null, "select * from user_topic_status"), /permission denied/);
+await expectOk("another student marks their own", () =>
+  as("authenticated", B, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs1', 'done')", [B]));
+await expectRows("a student sees only their own", () => as("authenticated", B, "select * from user_topic_status"), 1);
+await expectError("status is not_started, in_progress or done", () =>
+  as("authenticated", B, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs2', 'maybe')", [B]), /invalid input value/);
+
 // Deleting an account: only the caller's, with every per-student row
 const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
@@ -477,7 +575,7 @@ await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major
 await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
 const PER_STUDENT = [
   "profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps",
-  "essay_drafts", "essay_feedback",
+  "essay_drafts", "essay_feedback", "user_topic_status",
 ];
 const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
   PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));

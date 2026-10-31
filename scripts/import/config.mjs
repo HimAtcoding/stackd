@@ -10,3 +10,6 @@ export const REQUEST_GAP_MS = 5000;
 
 // The ASSIST agreement links a planning file may hold. Links only: nothing from the agreement itself is imported.
 export const AGREEMENT_HOSTS = ["assist.org"];
+
+// Where an Explore file's sources live (21): UC Admissions for a UC Transfer Pathway, the Chancellor's Office for a TMC
+export const EXPLORE_HOSTS = { uc_pathway: ["admission.universityofcalifornia.edu"], tmc: ["cccco.edu"] };

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pacificWall } from "./deadlines.mjs";
 
-// cycle and confirm_on are for deadlines and essays files; a planning report leaves them blank
+// cycle and confirm_on are for deadlines and essays files (cycle is an Explore pathway's effective term); a planning report leaves them blank
 export const REPORT_COLUMNS = [
   "table", "id", "record", "academic_year", "cycle", "source_name", "source_url", "confirm_on", "retrieved_at", "verification_status", "updated_at",
   "checked_by", "checked_at",
@@ -83,7 +83,68 @@ export function essayReportRows(payload, confirmOn, stored) {
   return finish(rows);
 }
 
-export function writeReport(rows, { name, status, counts, dir = "data/review" }) {
+// The Explore file's pathways, requirements and campuses as the database now holds them. The record column has what
+// the reviewer checks against the pathway page or the template: names, C-ID numbers, units and campus majors.
+export function exploreReportRows(payload, stored) {
+  const pathwayOf = new Map(stored.pathways.map((p) => [p.id, p]));
+  const instSlug = new Map(stored.institutions.map((i) => [i.id, i.slug]));
+  const label = (p) => (p.kind === "tmc" ? `TMC #${p.code}` : "UC pathway");
+  const units = (n) => (n === null || n === undefined ? "" : `, ${Number(n)} units`);
+  const rows = [];
+  for (const r of payload.pathways) {
+    const s = stored.pathways.find((p) => p.slug === r.slug && p.kind === r.kind);
+    if (!s) continue;
+    const tmc = s.kind === "tmc" ? ` rev. ${s.revision}: ${s.degree_name}, ${Number(s.major_units)} units in the major, ${Number(s.total_units)} in the degree` : "";
+    rows.push({ table: "pathways", ...s, cycle: s.effective_term ?? "", record: `${s.slug}, ${label(s)}: ${s.name}${tmc}` });
+  }
+  for (const r of payload.pathway_requirements) {
+    const s = stored.pathway_requirements.find((q) => pathwayOf.get(q.pathway_id)?.slug === r.pathway && pathwayOf.get(q.pathway_id)?.kind === r.kind && q.code === r.code);
+    if (!s) continue;
+    const p = pathwayOf.get(s.pathway_id);
+    const ids = s.c_id.length ? ` [${s.c_id.join(" + ")}]` : "";
+    const options = s.options.length ? ` Options: ${s.options.map((o) => `${o.label} [${o.c_id.join(" + ")}]${units(o.units)}`).join("; ")}.` : "";
+    rows.push({
+      table: "pathway_requirements", ...s, cycle: p.effective_term ?? "",
+      record: `${p.slug}, ${label(p)} ${s.sort}. ${s.name} (topic ${s.topic}; ${s.how_many}${units(s.units)})${ids}: ${s.description}${options}`,
+    });
+  }
+  for (const r of payload.pathway_campuses) {
+    const s = stored.pathway_campuses.find((c) => pathwayOf.get(c.pathway_id)?.slug === r.pathway && pathwayOf.get(c.pathway_id)?.kind === r.kind && instSlug.get(c.institution_id) === r.institution);
+    if (!s) continue;
+    const p = pathwayOf.get(s.pathway_id);
+    rows.push({ table: "pathway_campuses", ...s, cycle: p.effective_term ?? "", record: `${p.slug}, ${label(p)} at ${r.institution}: ${s.major_names.join("; ")}` });
+  }
+  return finish(rows);
+}
+
+// One table per major: each topic with its UC row and its Cal State row on one line, so every "Counts for both" pair
+// is checked on purpose
+export function topicSections(payload) {
+  return [...new Set(payload.pathways.map((p) => p.slug))].map((slug) => {
+    const reqs = payload.pathway_requirements.filter((r) => r.pathway === slug).sort((a, b) => a.sort - b.sort);
+    const uc = reqs.filter((r) => r.kind === "uc_pathway");
+    const tmc = reqs.filter((r) => r.kind === "tmc");
+    const topics = [...new Set([...uc, ...tmc].map((r) => r.topic))];
+    const cell = (r) => (r ? `${r.sort}. ${r.name}${r.c_id?.length ? ` [${r.c_id.join(" + ")}]` : ""}${r.options?.length ? ` [${r.options.length} options]` : ""}` : "");
+    const both = topics.filter((t) => uc.some((r) => r.topic === t) && tmc.some((r) => r.topic === t));
+    return [
+      `## Counts for both: ${slug}`,
+      "",
+      `${both.length} of ${uc.length} UC course types also count for Cal State. A topic on both sides shows "Counts for both" in the app, so check that each pair below is really the same course.`,
+      "",
+      "| topic | UC pathway | Cal State (TMC) | counts for both |",
+      "| --- | --- | --- | --- |",
+      ...topics.map((t) => {
+        const u = uc.find((r) => r.topic === t);
+        const c = tmc.find((r) => r.topic === t);
+        return `| ${mdCell(t)} | ${mdCell(cell(u))} | ${mdCell(cell(c))} | ${u && c ? "yes" : "no"} |`;
+      }),
+      "",
+    ].join("\n");
+  });
+}
+
+export function writeReport(rows, { name, status, counts, dir = "data/review", sections = [] }) {
   fs.mkdirSync(dir, { recursive: true });
   // Never overwrite an earlier report: milliseconds in the name, and a counter if that's still taken
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 23);
@@ -101,6 +162,7 @@ export function writeReport(rows, { name, status, counts, dir = "data/review" })
     `| ${SHOWN_COLUMNS.map(() => "---").join(" | ")} |`,
     ...rows.map((r) => `| ${SHOWN_COLUMNS.map((c) => mdCell(r[c])).join(" | ")} |`),
     "",
+    ...sections,
   ].join("\n");
   fs.writeFileSync(`${base}.md`, md);
   return base;
