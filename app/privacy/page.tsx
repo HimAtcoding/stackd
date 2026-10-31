@@ -4,7 +4,7 @@ import { PRIVACY_UPDATED } from "@/lib/about";
 
 export const metadata: Metadata = { title: "Stackd privacy policy" };
 
-// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-21 (v1.1 adds
+// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-28 (v1.1 adds
 // the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments; v1.3 adds
 // essay_drafts.notes and review_links.finished_at). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
@@ -14,6 +14,15 @@ export default function PrivacyPage() {
         Stackd is a free transfer-planning app for California community college students. This policy says what Stackd
         keeps about you, why, who helps us run it, and how to delete it.
       </P>
+
+      <DocSection title="Who runs Stackd">
+        <P>
+          Stackd is made and run by its developers, Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila
+          (&quot;we&quot; in this policy). We decide what Stackd collects and how it&apos;s used. On the App Store, Stackd is
+          published from Shikhar Sisodia&apos;s individual Apple developer account, so Apple lists him as the seller. To
+          reach us about your information, email <SupportEmail />.
+        </P>
+      </DocSection>
 
       <DocSection title="What we collect">
         <List>

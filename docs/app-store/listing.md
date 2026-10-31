@@ -4,13 +4,15 @@ Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat
 
 **Updated 2026-10-18 for version 1.1** (`docs/specs/13-v1-launch.md → 1.1 submission`): the privacy answers, the reviewer notes, the screenshots, What's New and the checklist.
 
+**Updated 2026-10-28 for version 1.3** (branch `release/v1.3-branding`, build 1.3.0 (6)): new app icon, privacy policy section Who runs Stackd, What's New 1.3, and the seller paths. Details and the App Store Connect steps: `docs/app-store/branding-privacy-seller.md`. App Privacy answers unchanged.
+
 **Updated 2026-10-21 for version 1.2** (Essays, specs 17 and 19, on branch `release/v1.2`): description, privacy answers, age rating, reviewer notes, screenshots and the checklist. 1.1 was never submitted. Version 1.0 was still Waiting for Review on 2026-10-21, and Shikhar chose to withdraw it and turn that same App Store version into 1.2 with build 1.2.0 (3). That makes 1.2 the app's first public release, so App Store Connect shows no What's New field (it's kept below for the record).
 
 ## Credits
 
 - **Public developer credit, exact words:** "Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila." (all four of the team, decided 2026-10-13). It's at the end of the description, in Settings' footer, and on every public page (`lib/about.ts`).
 - **Copyright (legal ownership), as the founders answered on 2026-10-12:** `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila`. App Store Connect adds the © itself. The credit and the copyright both name all four.
-- **Seller / developer name:** set by the Apple Developer account, not editable here. Team `4JNCSTKTHQ` is an **Individual** membership (Shikhar's), so the store shows the account holder's legal name. Apple doesn't allow the team's four names as the seller on an individual membership. A shared seller name needs an Organization membership for a registered legal entity (with a D-U-N-S number). Apple can convert the existing team and keep the Team ID, so Sign in with Apple keeps working.
+- **Seller / developer name:** set by the Apple Developer account, not editable here. Team `4JNCSTKTHQ` is an **Individual** membership (Shikhar's), so the store shows the account holder's legal name. Apple doesn't allow the team's four names as the seller on an individual membership. A shared seller name needs an Organization membership for a registered legal entity (with a D-U-N-S number). Apple can convert the existing team and keep the Team ID, so Sign in with Apple keeps working, but that changes the seller on every app in the team. The other route is transferring only Stackd to a new Organization account. Both need a registered entity first; steps in `docs/app-store/branding-privacy-seller.md` → 4.
 
 ## App record
 
@@ -80,6 +82,12 @@ Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 
 Kept truthful on purpose: no course matches, no statewide coverage, no admission chances, no AI (`essayFeedback` is off in 1.2). Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
 
+**What's New in Version 1.3:**
+
+```
+A new look: Stackd has a new app icon. Essays get Answer and Notes tabs, with private notes beside each answer and a starter card to help you begin. Reviewers' comments now highlight the phrase they're about, and a reviewer can mark their review finished.
+```
+
 **What's New in Version 1.2** (not shown by App Store Connect for a first release; kept for the record and for the next version):
 
 ```
@@ -95,7 +103,7 @@ Deadlines are here. Home now shows your next transfer deadline with a countdown,
 | Field | Value |
 |---|---|
 | Support URL | https://joinstackd-chi.vercel.app/support/ |
-| Marketing URL | Leave empty |
+| Marketing URL | https://www.usestackd.app/ (set in App Store Connect; a separate site, not built from this repo) |
 | Privacy Policy URL | https://joinstackd-chi.vercel.app/privacy/ |
 | Copyright | `2026 Ryan Saleh, Shikhar Sisodia, Abyan Kashif, Antonio Avila` |
 

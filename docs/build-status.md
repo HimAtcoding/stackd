@@ -288,7 +288,7 @@ Branch `feat/ios-app-store-prep`, done on Windows. Nothing here has been compile
 - `npm run test:oauth` has 13 more checks (31 in all): the app's callback URL, lookalike schemes and paths refused, cancel and expiry through it, and the nonce and its hash.
 
 **Icon and launch screen** (`npm run ios:assets`, `scripts/ios-assets.mjs`):
-- App icon 1024 × 1024, no alpha: the husky head from `husky-welcome.png` on `--sky-200`, framed like the temporary web icons and cut from the source art (so it's a 1.2× resize, not the 512 icon doubled), stopping before the yellow burst marks. Still the temporary icon until `app-icon` art exists (art-assets).
+- App icon 1024 × 1024, no alpha: the husky head from `husky-welcome.png` on `--sky-200`, framed like the temporary web icons and cut from the source art (so it's a 1.2× resize, not the 512 icon doubled), stopping before the yellow burst marks. Still the temporary icon until `app-icon` art exists (art-assets). Replaced 2026-10-28 by the approved logo (`assets/branding/Stackd-AppIcon-1024.png`, see v1.3 branding above).
 - Launch image: the wordmark on `--sky-50`.
 
 **Public pages and credits:**
@@ -535,6 +535,29 @@ Spec `21-explore.md`, Data section and PR A, on branch `explore-data-a`. **The m
 3. Check and import `california-institutions.json`, verify from the review CSV
 4. Check and import `computer-science-majors.json` (after step 3, which adds the schools), verify
 5. Check `computer-science.json`, delete its todos, fill `retrieved_at`, import, verify
+
+## v1.3 branding, privacy and build 6 (2026-10-28)
+
+Branch `release/v1.3-branding` from `release/v1.3`, for the next App Store version. Nothing submitted or deployed; 1.2.0 (3) stays in App Review untouched. Full notes: `docs/app-store/branding-privacy-seller.md`.
+
+- **App icon:** the approved logo is the source, `assets/branding/Stackd-AppIcon-1024.png` (resized once from the founders' 1254 JPEG, kept as `Stackd-Logo-original.jpg`). `npm run ios:assets` now makes every icon from it, resize only: the iOS 1024 icon, `app/apple-icon.png`, the three PWA icons, and `app/favicon.ico` (16/32/48, RGBA PNG frames; it was still the default Next.js triangle). Before, the script still cut the old husky, so running it would have undone build 5's icon. Launch image unchanged.
+- **Privacy:** audited against migrations, the review function, `lib/`, every fetch and SDK. Added **Who runs Stackd** (the four developers, Apple lists Shikhar as seller because it's his individual account, contact email); `PRIVACY_UPDATED` October 28, 2026. App Privacy answers unchanged. Privacy URL stays on joinstackd-chi.vercel.app (`usestackd.app/privacy` is 404 and that site isn't in this repo or Shikhar's Vercel).
+- **Build 1.3.0 (6):** `CURRENT_PROJECT_VERSION` 6 (5 was internal-only and can't be attached to an App Store version). Same app code as build 5.
+- **Checks on Windows:** `npm run lint`, `tsc --noEmit`, `npm test`, `npm run build` (check-release, check-service-key) pass. The first build failed on the favicon (Next needs RGBA frames in ICO); fixed in the script. Local `/privacy/` checked in Chrome. **Not done:** iOS Release archive and on-device icon check (needs the Mac).
+- **Seller:** only an Organization membership for a registered entity changes it. Two paths (convert this team, or transfer just Stackd) are written up; both are blocked on forming an entity and a D-U-N-S Number, and a transfer also needs a released version and nothing in review.
+
+- **Mac, 2026-10-29:** checks pass again on the Mac (lint, `tsc`, `npm test`, `test:db`, `ios:prepare`). Release archive 1.3.0 (6), signed iPhone Distribution with the Sign in with Apple entitlement (the unsigned-archive recipe from build 5 drops entitlements, so the archived app is signed with `App.entitlements` before export; build 5 likely lacks it). Exported app-store-connect, not internal-only; uploaded 11:42 PDT, delivery `0566a26b-90c2-4c7a-baa6-2325fdd7d067`, VALID, What to Test set, attached to App Store version 1.3 (metadata unchanged). Icon in the binary matches the approved source exactly, no alpha. Simulator (Release): new home-screen icon, Settings "Stackd 1.3.0" with the four names, Privacy "Updated October 28, 2026" with Who runs Stackd, sign-in screens load. Submitted for review 18:42 PDT (submission `078ab27f`); 1.3 is Waiting for Review. Details in `docs/app-store-review-status.md`.
+
+## v1.3 internal TestFlight (2026-10-27)
+
+Internal TestFlight only, for the team. Not attached to an App Store version and not submitted anywhere; 1.2.0 (3) stays in App Review untouched (still Waiting for Review after the upload).
+
+- **Built** on the Intel Mac (Xcode 26.5) from `release/v1.3`: `main` at `f4b758c` plus the version bump (1.3.0, build 4). It has everything since build 3: Essays on Home progress (#16), Essays reviews PR A (#17) and Essays start PR B (#20). Flags unchanged from 1.2 (essays on, essayFeedback and explore off).
+- **Backend checked first** (PR B's After merge, steps 1 and 2): `review_finish` exists in `vzsogzgcivpcmxqxepfr` (anon gets permission denied, not function not found), so `20261022120000_notes_finish` is applied; the deployed `review` function answers `finish` (a bad token gives `review_ended`, an unknown action `review_bad_request`). Both changes are additive, so 1.2.0 (3) keeps working.
+- **Checks:** `npm ci`, `npm run lint`, `tsc --noEmit`, `npm test`, `npm run test:db`, `npm run test:import`, `npm run ios:prepare` (check-release, check-service-key, cap sync) all pass. Archive signed Apple Distribution (4JNCSTKTHQ), profile "Stackd App Store 2026-10", Sign in with Apple, `get-task-allow` false. Not run on a simulator or an iPhone.
+- **Uploaded** 2026-10-27 09:57 PDT with `altool` (validation: no errors; delivery `7f58e776`). Processed VALID by 10:01, export compliance "no non-exempt encryption", In Beta Testing in TestFlight's Internal team (the group gets every build automatically). Not added to Stackd Transfer Beta. Ryan emailed to install it.
+- **Simulator test** 2026-10-27 10:10–10:22 PDT (same `out/` as the upload, Debug build on Stackd 17 Pro Max, signed in as the screenshot account, never the review account): Settings shows "Stackd 1.3.0" and all four names; Home, Deadlines and Essays load; Home's writing step shows "0 of 4 done". Editor for Your major: Answer and Notes tabs, the starter card, Try another (1 → 2 of 4), Answer in notes (opens Notes (1), "Saved"), typing a note, a reload keeping it, and the note in `essay_drafts.notes` with `starter: major-2` and word count 0. Add to my answer (answer 10 / 350), Delete note with the "Note deleted. / Undo" toast, and Undo putting it back. Test answer and notes removed afterward (`notes: []`, 0 words). Not tested: Finish review, Paste, Import, review links, a real iPhone.
+- **Website not redeployed** (PR B After merge step 3): the live `/review/` page on joinstackd-chi.vercel.app has no "Finish review", so reviewers on links from 1.3 can't finish yet. Redeploying changes the page Apple may open while reviewing 1.2.0 (3), so it waits for Shikhar's go-ahead.
 
 ## Essays start, PR B (step 24, 2026-10-22)
 
@@ -1085,7 +1108,7 @@ Also in place:
 - **Saved schools.** `lib/saved.ts`, `stackd.saved` as a list of slugs.
 - **Session.** Every route in the `app/(app)` group needs `stackd.session`. Without it, the student goes to `/welcome` if Welcome hasn't been seen, otherwise to `/sign-in`.
 
-Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `husky-home.png` (1341 × 1173, no burst marks painted in, not winking; the art is the source of truth), `burst-dashes.svg` (drawn in the repo: three round-capped strokes, `#FDC940`, width 4 at 28 × 28, fanned like the marks in `husky-wave`), `campus-1` … `campus-4.png` (1579 × 996, the same proportions as art-assets' 1179 × 744), `logo-apple.svg` and `logo-google.svg`. Temporary app icons (`public/icons/`, `app/apple-icon.png`) are cut from `husky-welcome`'s head on `--sky-200`. The two husky run-loop frames are used by the loading component.
+Art in use: `wordmark.png` (trimmed), `welcome-scene.png`, `welcome-books.png` (cropped to the stack, 1219 × 836), `husky-welcome.png`, `husky-wave.png`, `husky-forgot.png`, `husky-home.png` (1341 × 1173, no burst marks painted in, not winking; the art is the source of truth), `burst-dashes.svg` (drawn in the repo: three round-capped strokes, `#FDC940`, width 4 at 28 × 28, fanned like the marks in `husky-wave`), `campus-1` … `campus-4.png` (1579 × 996, the same proportions as art-assets' 1179 × 744), `logo-apple.svg` and `logo-google.svg`. The app icons (`public/icons/`, `app/apple-icon.png`, `app/favicon.ico`, the iOS icon) are resized from `assets/branding/Stackd-AppIcon-1024.png` by `npm run ios:assets`. The two husky run-loop frames are used by the loading component.
 
 Still placeholders or missing: `app-icon` (temporary icons above until it exists), `home-clouds` (background decoration, so it draws nothing when missing).
 

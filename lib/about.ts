@@ -10,5 +10,5 @@ export const SITE_URL = "https://joinstackd-chi.vercel.app";
 export const SUPPORT_EMAIL = "joinstackd@gmail.com";
 
 // When Privacy and Terms last changed. Change each with its own text.
-export const PRIVACY_UPDATED = "October 22, 2026";
+export const PRIVACY_UPDATED = "October 28, 2026";
 export const TERMS_UPDATED = "October 21, 2026";
