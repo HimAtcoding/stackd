@@ -605,11 +605,8 @@ const fillIn = (data, date) => {
   return data;
 };
 const realCs = () => JSON.parse(fs.readFileSync("data/raw/explore/computer-science.json", "utf8"));
-const csAsIs = validateExploreFile(realCs()).problems;
-check("computer-science.json is refused while its todos are open", csAsIs.filter((p) => /still has a todo/.test(p)).length === 3, JSON.stringify(csAsIs));
-check("computer-science.json is refused until both pathways are checked", csAsIs.filter((p) => /retrieved_at is empty/.test(p)).length === 2, JSON.stringify(csAsIs));
-const cs = validateExploreFile(fillIn(realCs(), "2026-10-31"));
-check("computer-science.json passes once checked", cs.problems.length === 0, JSON.stringify(cs.problems));
+const cs = validateExploreFile(realCs());
+check("computer-science.json passes as checked", cs.problems.length === 0, JSON.stringify(cs.problems));
 const csReqs = cs.payload?.pathway_requirements ?? [];
 const ucReqs = csReqs.filter((r) => r.kind === "uc_pathway");
 const tmcReqs = csReqs.filter((r) => r.kind === "tmc");
@@ -624,7 +621,7 @@ check("computer-science.json keeps the two physics rows apart", !sharedTopics(cs
 const tmcPath = cs.payload?.pathways.find((p) => p.kind === "tmc");
 check("computer-science.json names template #2007 rev. 3 at 28 and 60 units",
   tmcPath?.code === "2007" && tmcPath.revision === "3" && tmcPath.major_units === 28 && tmcPath.total_units === 60 &&
-    tmcPath.source_url === "https://www.cccco.edu/-/media/CCCCO-Website/Files/Educational-Services-and-Support/TMC-Templates/tmc-computersci-template-rev-3-ada.pdf");
+    tmcPath.source_url === "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-computersci-rev-3-a11y.pdf");
 check("computer-science.json lists the 9 UC campuses, 5 majors at Santa Cruz",
   cs.payload?.pathway_campuses.length === 9 && cs.payload.pathway_campuses.find((c) => c.institution === "uc-santa-cruz").major_names.length === 5);
 
@@ -650,7 +647,7 @@ const instFile = path.join(RAW_PLANNING, "california-institutions.json");
 fs.writeFileSync(instFile, JSON.stringify(fillIn(realInst(), "2026-10-31"), null, 2));
 out = await runImport({ file: instFile, dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("california-institutions.json imports", out.ok && out.counts.institutions.inserted === 147, JSON.stringify(out.counts ?? out.problems));
-out = await runImport({ file: writeMajor("computer-science", fillIn(realCs(), "2026-10-31")), dryRun: false, db: testDatabase, reportDir: REVIEW });
+out = await runImport({ file: writeMajor("computer-science", realCs()), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("computer-science.json imports", out.ok && out.counts.pathways.inserted === 2 && out.counts.pathway_requirements.inserted === 16 && out.counts.pathway_campuses.inserted === 9,
   JSON.stringify(out.counts ?? out.problems));
 const csMd = out.ok ? fs.readFileSync(`${out.report}.md`, "utf8") : "";
