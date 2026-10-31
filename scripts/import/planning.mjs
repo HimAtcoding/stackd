@@ -11,7 +11,7 @@ const FIELDS = {
   },
   majors: {
     required: ["institution", "slug", "name", "source_name", "source_url", "academic_year", "retrieved_at"],
-    optional: ["degree_type"],
+    optional: ["degree_type", "explore_slug"],
   },
   agreement_links: {
     required: ["sending", "receiving", "major", "academic_year", "source_name", "source_url", "retrieved_at"],
@@ -23,7 +23,7 @@ const SLUG = /^[a-z0-9-]+$/;
 // Capitals only, so ordinary words can't trip it; matches inside names like PASTE_ASSIST_LINK too
 const PLACEHOLDER = /TODO|PASTE|TBD/;
 
-function academicYearProblem(value) {
+export function academicYearProblem(value) {
   const m = /^(\d{4})-(\d{2})$/.exec(value);
   if (!m) return "must look like 2026-27";
   if ((Number(m[1]) + 1) % 100 !== Number(m[2])) return "must be two years in a row, like 2026-27";
@@ -72,7 +72,10 @@ export function validatePlanningFile(file) {
         if (key === "verification_status" || key === "verified_at") say(where, `${key} can't be set by an import; rows start unverified and are verified with verify.mjs`);
         else if (![...required, ...optional].includes(key)) say(where, `${key} isn't a field this table takes`);
       }
-      for (const key of required) if (row[key] === undefined || row[key] === null || String(row[key]).trim() === "") say(where, `${key} is missing`);
+      for (const key of required) {
+        if (key === "retrieved_at" && row[key] === "") say(where, "retrieved_at is empty: check this row against its source_url, then fill in the date you checked it (like 2026-10-31)");
+        else if (row[key] === undefined || row[key] === null || String(row[key]).trim() === "") say(where, `${key} is missing`);
+      }
       for (const [key, value] of Object.entries(row)) {
         if (typeof value !== "string") say(where, `${key} must be text`);
         else if (PLACEHOLDER.test(value)) say(where, `${key} still has a placeholder ("${value}")`);
@@ -81,7 +84,7 @@ export function validatePlanningFile(file) {
         const p = academicYearProblem(row.academic_year);
         if (p) say(where, `academic_year ${p}`);
       }
-      if (typeof row.retrieved_at === "string" && !PLACEHOLDER.test(row.retrieved_at)) {
+      if (typeof row.retrieved_at === "string" && row.retrieved_at && !PLACEHOLDER.test(row.retrieved_at)) {
         const t = Date.parse(row.retrieved_at);
         if (!/^\d{4}-\d{2}-\d{2}/.test(row.retrieved_at) || Number.isNaN(t)) say(where, "retrieved_at must be a date like 2026-10-05");
         else if (t > Date.now() + 86_400_000) say(where, "retrieved_at is in the future");
@@ -94,7 +97,7 @@ export function validatePlanningFile(file) {
         const p = httpsProblem(row.website);
         if (p) say(where, `website ${p}`);
       }
-      for (const key of ["slug", "institution", "sending", "receiving", "major"]) {
+      for (const key of ["slug", "institution", "sending", "receiving", "major", "explore_slug"]) {
         if (typeof row[key] === "string" && !PLACEHOLDER.test(row[key]) && !SLUG.test(row[key])) say(where, `${key} must be lowercase letters, numbers and dashes`);
       }
       payload[table].push(row);

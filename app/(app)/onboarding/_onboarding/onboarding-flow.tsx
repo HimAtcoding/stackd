@@ -21,6 +21,7 @@ import { DEMO_MODE } from "@/lib/flags";
 import { setFlash } from "@/lib/flash";
 import { degreeLabel } from "@/lib/format";
 import { onboardingUrl, type OnboardingFrom, type OnboardingStep } from "@/lib/onboarding";
+import { matchesSearch } from "@/lib/search";
 import { useLoaded } from "@/lib/use-loaded";
 
 const STEPS: OnboardingStep[] = ["college", "schools", "major"];
@@ -52,13 +53,6 @@ const COPY: Record<OnboardingStep, { question: string; helper: string; search: s
 };
 
 type School = { id: string; name: string };
-
-// Matches the name and the city, ignoring case and spaces
-const squash = (text: string) => text.toLowerCase().replace(/\s+/g, "");
-const matches = (query: string, ...fields: (string | null)[]) => {
-  const q = squash(query);
-  return !q || fields.some((f) => f && squash(f).includes(q));
-};
 
 const subscribeMotion = (onChange: () => void) => {
   const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -242,7 +236,7 @@ export function OnboardingFlow() {
       </div>
     );
   } else if (step === "college" && colleges.status === "ok") {
-    const rows = colleges.data.filter((c) => matches(query, c.name, c.city));
+    const rows = colleges.data.filter((c) => matchesSearch(query, c.name, c.city));
     lists = (
       <>
         {rows.length === 0 && noMatch}
@@ -252,11 +246,11 @@ export function OnboardingFlow() {
           ))}
           <ChoiceRow role="radio" checked={college === NOT_LISTED} name="My college isn't listed" readOnly={saving} onSelect={() => choose(() => setCollege(NOT_LISTED))} />
         </ChoiceList>
-        {college === NOT_LISTED && note("We're starting with a few colleges and adding more. You can still save schools and deadlines.")}
+        {college === NOT_LISTED && note("Stackd covers California community colleges. If yours is missing, email joinstackd@gmail.com.")}
       </>
     );
   } else if (step === "schools" && universities.status === "ok") {
-    const rows = universities.data.filter((u) => matches(query, u.name, u.city));
+    const rows = universities.data.filter((u) => matchesSearch(query, u.name, u.city));
     lists = (
       <>
         {rows.length === 0 ? (
@@ -282,7 +276,7 @@ export function OnboardingFlow() {
   } else if (step === "major" && majorList.status === "ok") {
     const several = schools.length > 1;
     lists = schools.map((school, i) => {
-      const rows = majorList.data.filter((m) => m.institutionId === school.id && matches(query, m.name));
+      const rows = majorList.data.filter((m) => m.institutionId === school.id && matchesSearch(query, m.name));
       return (
         <section key={school.id} data-school={school.id}>
           {several && <h2 className={`mx-6 text-navy-900 type-title-3 ${i === 0 ? "mt-5" : "mt-6"}`}>{school.name}</h2>}

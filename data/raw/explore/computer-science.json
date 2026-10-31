@@ -1,0 +1,208 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Computer Science for Explore (spec 21), batch 1. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Computer Science Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: Template #2007, Rev. 3: 10/14/16, the PDF in source_url. The same course list is in the current Cal-GETC ADT submission form (https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/computerscirevform.docx), which shows the major as 28-29 units because one option is 5 units; major_units is the template's minimum, 28. The templates page (Templates For Approved Transfer Model Curriculum on cccco.edu) labels both files 'Rev 1: 10/14/2016', but the files themselves say Rev. 3. Topics: cs1, cs2, comp-org, discrete and calculus-single appear in both pathways (Counts for both, 5 of 9). Physics is kept apart: UC asks for a year (physics-year), the TMC for the first course (physics-mechanics). Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/computer-science.json --dry-run",
+  "slug": "computer-science",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Computer science",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/computer-science.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 9 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "intro-programming",
+          "sort": 1,
+          "topic": "cs1",
+          "name": "Intro to programming (CS 1)",
+          "description": "Your first programming course. Some campuses prefer a particular language, so look at the campus sites before you pick a section.",
+          "how_many": "One course"
+        },
+        {
+          "code": "data-structures",
+          "sort": 2,
+          "topic": "cs2",
+          "name": "Data structures (CS 2)",
+          "description": "The programming course after CS 1, on ways to store and organize data in a program.",
+          "how_many": "One course"
+        },
+        {
+          "code": "computer-organization",
+          "sort": 3,
+          "topic": "comp-org",
+          "name": "Computer organization",
+          "description": "How a computer runs a program underneath, including writing assembly language.",
+          "how_many": "One course"
+        },
+        {
+          "code": "calculus",
+          "sort": 4,
+          "topic": "calculus-single",
+          "name": "Calculus, a full year",
+          "description": "Single-variable calculus for science and engineering majors. Finish the whole year-long sequence, not just the first course.",
+          "how_many": "A year-long sequence"
+        },
+        {
+          "code": "multivariable-calculus",
+          "sort": 5,
+          "topic": "calculus-multi",
+          "name": "Multivariable calculus",
+          "description": "Calculus with more than one variable, taken after the single-variable sequence.",
+          "how_many": "One course"
+        },
+        {
+          "code": "discrete-math",
+          "sort": 6,
+          "topic": "discrete",
+          "name": "Discrete math",
+          "description": "Logic, proofs and counting: the math that much of computer science is built on.",
+          "how_many": "One course"
+        },
+        {
+          "code": "linear-algebra",
+          "sort": 7,
+          "topic": "linear-algebra",
+          "name": "Linear algebra",
+          "description": "Vectors, matrices and systems of linear equations.",
+          "how_many": "One course"
+        },
+        {
+          "code": "differential-equations",
+          "sort": 8,
+          "topic": "diff-eq",
+          "name": "Differential equations",
+          "description": "Equations that describe how things change, usually taken after calculus.",
+          "how_many": "One course"
+        },
+        {
+          "code": "physics",
+          "sort": 9,
+          "topic": "physics-year",
+          "name": "Physics with calculus, a full year",
+          "description": "The year-long physics sequence for science and engineering majors, with labs. It has to cover mechanics and electricity and magnetism. Cal State's transfer degree asks for the first course of this sequence too.",
+          "how_many": "A year-long sequence with labs"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Computer Science, B.A."] },
+        { "institution": "uc-davis", "major_names": ["Computer Science, B.S."] },
+        { "institution": "uc-irvine", "major_names": ["Computer Science, B.S."] },
+        { "institution": "uc-los-angeles", "major_names": ["Computer Science, B.S."] },
+        { "institution": "uc-merced", "major_names": ["Computer Science and Engineering, B.S."] },
+        { "institution": "uc-riverside", "major_names": ["Computer Science, B.S."] },
+        { "institution": "uc-san-diego", "major_names": ["Computer Science, B.S."] },
+        { "institution": "uc-santa-barbara", "major_names": ["Computer Science, B.S."] },
+        {
+          "institution": "uc-santa-cruz",
+          "major_names": [
+            "Computer Science, B.A. and B.S.",
+            "Computer Engineering, B.S.",
+            "Robotics Engineering, B.S.",
+            "Computer Science: Computer Game Design, B.S.",
+            "Network and Digital Technology, B.A."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Computer science",
+      "code": "2007",
+      "revision": "3",
+      "degree_name": "Associate in Science in Computer Science for Transfer",
+      "major_units": 28,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/Files/Educational-Services-and-Support/TMC-Templates/tmc-computersci-template-rev-3-ada.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Rev. 3 (10/14/16) is still the newest Computer Science template; the templates page labels it Rev 1. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "comp-122",
+          "sort": 1,
+          "topic": "cs1",
+          "name": "Intro to programming (CS 1)",
+          "description": "Your first programming course: solving problems by writing, testing and fixing programs.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMP 122"]
+        },
+        {
+          "code": "comp-132",
+          "sort": 2,
+          "topic": "cs2",
+          "name": "Data structures (CS 2)",
+          "description": "The programming course after CS 1, on ways to store and organize data in a program.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMP 132"]
+        },
+        {
+          "code": "comp-142",
+          "sort": 3,
+          "topic": "comp-org",
+          "name": "Computer organization",
+          "description": "How a computer is built and runs a program underneath.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMP 142"]
+        },
+        {
+          "code": "comp-152",
+          "sort": 4,
+          "topic": "discrete",
+          "name": "Discrete math",
+          "description": "Logic, proofs and counting: the math that much of computer science is built on.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMP 152"]
+        },
+        {
+          "code": "calculus",
+          "sort": 5,
+          "topic": "calculus-single",
+          "name": "Calculus, a full year",
+          "description": "Single-variable calculus for science and engineering majors. Your college offers one of these sequences; take both courses, or the whole sequence.",
+          "how_many": "One of 3 options",
+          "units": 8,
+          "options": [
+            { "label": "Calculus I and II, early transcendentals", "c_id": ["MATH 210", "MATH 220"], "units": 8 },
+            { "label": "Calculus I and II, late transcendentals", "c_id": ["MATH 211", "MATH 221"], "units": 8 },
+            { "label": "The whole calculus sequence, numbered as one", "c_id": ["MATH 900S"], "units": 8 }
+          ]
+        },
+        {
+          "code": "phys-205",
+          "sort": 6,
+          "topic": "physics-mechanics",
+          "name": "Physics with calculus, first course",
+          "description": "The first course of the physics sequence for science and engineering majors.",
+          "how_many": "One course",
+          "units": 4,
+          "c_id": ["PHYS 205"]
+        },
+        {
+          "code": "science",
+          "sort": 7,
+          "topic": "science-second",
+          "name": "One more science course",
+          "description": "Pick one: the second physics course, a biology course or a chemistry course for science majors.",
+          "how_many": "One of 4 options",
+          "units": 4,
+          "todo": "The PDF's text shows BIOL 140 with no course title next to it; the IGETC form (tmc-computersci-rev-3-a11y.pdf) and the Cal-GETC form call it Organismal Biology (4). Confirm on the PDF itself.",
+          "options": [
+            { "label": "Physics with calculus, second course", "c_id": ["PHYS 210"], "units": 4 },
+            { "label": "Cell and molecular biology", "c_id": ["BIOL 190"], "units": 4 },
+            { "label": "Organismal biology", "c_id": ["BIOL 140"], "units": 4 },
+            { "label": "General chemistry I with lab", "c_id": ["CHEM 110"], "units": 5 }
+          ]
+        }
+      ]
+    }
+  ]
+}

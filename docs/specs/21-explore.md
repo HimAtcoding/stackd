@@ -9,7 +9,7 @@ Students come to Stackd to find out what to take. Today the app answers that wit
 1. **UC Transfer Pathways.** For 27 majors, UC lists the course types that prepare a student for that major at every UC campus that offers it (for Computer Science: intro programming, data structures, computer organization, a year of calculus, multivariable calculus, discrete math, linear algebra, differential equations, a year of physics). Each pathway also lists which campus majors it applies to.
 2. **Transfer Model Curriculum (TMC).** The statewide template behind each Associate Degree for Transfer. Completing the degree gives priority admission to the Cal State system, though not to a particular campus or major. Each requirement is named by its C-ID number, which colleges print next to matching courses in their catalogs.
 
-Most of the courses overlap: for Computer Science, 6 of the 9 UC course types also appear in the Cal State template. "Take these first, they count for both" is the most useful sentence a first-year CS student can hear, and nothing else gives it to them in one place.
+Most of the courses overlap: for Computer Science, 5 of the 9 UC course types also appear in the Cal State template (physics is kept apart: UC asks for a year, the Cal State template for the first course). "Take these first, they count for both" is the most useful sentence a first-year CS student can hear, and nothing else gives it to them in one place.
 
 ## What the terms allow (course data track, step A)
 
@@ -99,7 +99,7 @@ Add to `art-assets.md`: `husky-looking` moves from "for later" to "Need, v1.4", 
 │ Your major                                   │  label white 90%
 │ Computer Science                             │  title-1 white
 │ ▮▮▮▮▯▯▯▯▯   4 of 9 done for UC               │  bar + label white
-│ 6 also count for Cal State.        [husky]   │  body white 90%
+│ 5 also count for Cal State.        [husky]   │  body white 90%
 └──────────────────────────────────────────────┘
 
 All majors                                       title-3
@@ -248,8 +248,8 @@ Every academic table uses the same provenance columns and `protect_verified` tri
 
 | Table | Columns (beyond provenance) | Notes |
 |---|---|---|
-| `pathways` | `id`, `slug` (computer-science), `kind` (`uc_pathway` or `tmc`), `name` (our words), `code` (TMC number, null for UC), `revision`, `degree_name` (for TMC: "Associate in Science in Computer Science for Transfer"), `major_units`, `total_units`, `effective_term` (null or "fall 2027") | `unique (slug, kind)`. Explore's majors are the distinct slugs |
-| `pathway_requirements` | `id`, `pathway_id`, `code` (stable within the pathway), `sort`, `topic` (shared key across pathways, e.g. `cs1`, `calculus-single`), `name`, `description`, `how_many`, `units`, `options` (jsonb list of `{ label, c_id: [..], units }`, empty for one-course rows) | `unique (pathway_id, code)`. `c_id` values match `^[A-Z]{2,5} \d{3}[A-Z]?$` |
+| `pathways` | `id`, `slug` (computer-science), `kind` (`uc_pathway` or `tmc`), `name` (our words), `code` (TMC number, null for UC), `revision`, `degree_name` (for TMC: "Associate in Science in Computer Science for Transfer"), `major_units`, `total_units`, `effective_term` (null or `fall-2027`, the same format as `cycle` elsewhere) | `unique (slug, kind)`. Explore's majors are the distinct slugs |
+| `pathway_requirements` | `id`, `pathway_id`, `code` (stable within the pathway), `sort`, `topic` (shared key across pathways, e.g. `cs1`, `calculus-single`), `name`, `description`, `how_many`, `units`, `c_id text[]` (a one-course TMC row's C-ID numbers; empty for UC rows and pick-one rows), `options` (jsonb list of `{ label, c_id: [..], units }`, empty for one-course rows) | `unique (pathway_id, code)`; `sort` and `topic` unique within the pathway. A row has `c_id` or `options`, not both. `c_id` values match `^[A-Z]{2,5} \d{3}[A-Z]?$` |
 | `pathway_campuses` | `id`, `pathway_id`, `institution_id`, `major_names text[]` | UC pathways only. Needs the 9 UC campuses in `institutions` (names, city, website: added through the planning import) |
 | `majors.explore_slug` | New nullable column | Links a plan's major (UC San Diego Computer Science B.S.) to Explore's `computer-science` |
 | `user_topic_status` | `user_id`, `topic`, `status progress_status`, `updated_at`; primary key `(user_id, topic)` | Owner-only row-level security like the other per-student tables; deleted by `delete_my_account()` |
@@ -263,7 +263,8 @@ Public read (anon and authenticated) on the three academic tables, verified rows
 - `data/raw/explore/computer-science.json`: the UC pathway, the TMC, their requirements and the 9 campus rows. Claude Code drafts it **in Stackd's own words** from the UC pathway page and the current TMC template, with `retrieved_at` empty and `TODO` where a person must confirm.
 - Ryan checks every row against the two sources, fills `retrieved_at`, and runs the import as with deadlines and essays: `npm run import -- data/raw/explore/computer-science.json --dry-run`, the real import, the review CSV's `checked_by` and `checked_at`, then `npm run import:verify`.
 - The review report adds one table per major: each `topic` with its UC row and its Cal State row next to each other, so the "Counts for both" pairs are checked on purpose.
-- **Version check:** the TMC template used must be the current one on cccco.edu (Computer Science is template #2007; confirm the latest revision before import, since Cal-GETC changed GE in 2025).
+- **Version check:** the TMC template used must be the current one on cccco.edu (Computer Science is template #2007; confirm the latest revision before import, since Cal-GETC changed GE in 2025). As drafted (PR A): Rev. 3 (10/14/16), with `source_url` the template PDF, https://www.cccco.edu/-/media/CCCCO-Website/Files/Educational-Services-and-Support/TMC-Templates/tmc-computersci-template-rev-3-ada.pdf. The current Cal-GETC ADT form lists the same courses ("28-29" units because one option is 5; `major_units` is 28, shown as "at least 28 units in the major"). The templates page labels the files "Rev 1: 10/14/2016"; the files say Rev. 3.
+- **Physics topics:** UC's year of physics is `physics-year`; the TMC's PHYS 205 row is `physics-mechanics`. They don't count for both. The UC row's description says Cal State's degree asks for the first course of the sequence too.
 
 **Batches.**
 
@@ -275,7 +276,7 @@ Public read (anon and authenticated) on the three academic tables, verified rows
 
 Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **every** community college at once: there's no per-college requirement data to add. What stays per college is only which local course matches each requirement, and that's still ASSIST's job ("Find these at your college").
 
-**School lists and sources.** `data/raw/planning/california-institutions.json`: the community colleges from the CCC Chancellor's Office college directory (116 colleges as of Oct 2026), Cal State from calstate.edu's campus list (22 universities; Cal Maritime is integrating into Cal Poly San Luis Obispo in fall 2026, so follow how calstate.edu lists it on the day of the check), and the 9 UC campuses from universityofcalifornia.edu. Each row has its source URL; Ryan spot-checks 10 community colleges plus every UC and Cal State row before verifying. Explore lists only majors with data, so adding schools never adds empty majors.
+**School lists and sources.** `data/raw/planning/california-institutions.json`: the community colleges from the CCC Chancellor's Office college directory (116 colleges as of Oct 2026), Cal State from calstate.edu's campus list (22 universities; Cal Maritime is integrating into Cal Poly San Luis Obispo in fall 2026, so follow how calstate.edu lists it on the day of the check), and the 9 UC campuses from universityofcalifornia.edu. Each row has its source URL; Ryan spot-checks 10 community colleges plus every UC and Cal State row before verifying. `data/raw/planning/computer-science-majors.json` adds a Computer Science major at every UC campus in the pathway (its campus majors) and every Cal State campus (from the campus catalogs), each with `explore_slug` `computer-science`, so onboarding's major step has a real major at each. Explore lists only majors with data, so adding schools never adds empty majors.
 
 ## Building it
 
@@ -286,10 +287,10 @@ Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **e
 
 ## Test
 
-- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "6 also count for Cal State.", the husky (or `husky-wave`) at the bottom right; then "All majors" with Computer science, "UC and Cal State".
+- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "5 also count for Cal State.", the husky (or `husky-wave`) at the bottom right; then "All majors" with Computer science, "UC and Cal State".
 - Plan without a major: no panel; the "Pick your major" ask opens Settings → Your plan.
 - Search "cs": Computer science only, panel hidden. Search "nursing": the husky, "No majors match "nursing" yet.", and the ASSIST link line.
-- Open Computer science: UC tab, 9 rows in the pathway's order, 6 with "Counts for both", the agreement link line names Las Positas and 2026-27, 9 campus rows with UC San Diego starred at the top, the source block with the checked date and Report a problem.
+- Open Computer science: UC tab, 9 rows in the pathway's order, 5 with "Counts for both" (not physics), the agreement link line names Las Positas and 2026-27, 9 campus rows with UC San Diego starred at the top, the source block with the checked date and Report a problem.
 - Tap the calculus tile: green with a check, the burst, "1 of 9 done", toast with Undo. Switch to Cal State: the calculus row (MATH 210 …) shows done too.
 - Open the Data structures sheet, set Taking now: the tile turns sky with an hourglass; the count reads "1 of 9 done, 1 taking now"; on Explore the panel's bar shows one yellow segment.
 - Cal State tab: COMP 122, 132, 142, 152 in monospace in the sheets; the calculus row says "One of 3 options" and its sheet lists the three with C-ID numbers and units; "What this degree does" and the unit totals; the source block names template #2007 and its revision.
@@ -298,7 +299,7 @@ Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **e
 - University page → Requirements for UC San Diego: "See what to take for Computer Science" opens the major page.
 - `/about/data/` opens from the footer, from Settings → About, and on the website.
 - At 320 wide: no husky on the panel, rows wrap to 2 lines, campus major names wrap.
-- Onboarding and Settings: typing "diablo" in the college picker finds Diablo Valley College among 116; typing "cal poly" in the school picker finds both Cal Poly campuses. The list scrolls smoothly at 320 wide.
+- Onboarding and Settings: typing "diablo" in the college picker finds Diablo Valley College among 116; typing "cal poly" in the school picker finds the 3 Cal Poly campuses (Humboldt, Pomona, San Luis Obispo), since calstate.edu now lists Cal Poly Humboldt by that name. The list scrolls smoothly at 320 wide.
 - A student at a college other than Las Positas sees the Computer Science UC tab with "Find these at your college" / "assist.org" (no agreement link for their pair yet).
 - Reduced motion: no burst; colors still change.
 

@@ -76,7 +76,7 @@ Height 44, at safe-area top + 8, padding 0 16. Background is the page's.
 | 2 | Where do you want to transfer? | Pick one or more schools. You can change this later. | Search schools |
 | 3 | What's your major? | Pick the major you plan to transfer into. | Search majors |
 
-Search filters the list as the student types (this is filtering, not validation, so it's live). It matches the name and the city, ignoring case and spaces. No matches: the list container is replaced by a `body` `--slate-600` line at x 24: `No {colleges / schools / majors} match "{text}".` The "isn't listed" row (below) always stays visible, even when nothing matches.
+Search filters the list as the student types (this is filtering, not validation, so it's live). It matches the name and the city, ignoring case, spaces, accents and punctuation ("canada" finds Cañada, "mt san antonio" finds Mt. San Antonio), and a name's initials ("dvc", "lpc", "ccsf"). Shared with every picker in `lib/search.ts` (spec 21, PR A). No matches: the list container is replaced by a `body` `--slate-600` line at x 24: `No {colleges / schools / majors} match "{text}".` The "isn't listed" row (below) always stays visible, even when nothing matches.
 
 ## Choice list
 
@@ -98,7 +98,7 @@ Semantics: step 1 and each school's list on step 3 are single choice (`role="rad
 
 | Step | Row | Chosen means |
 |---|---|---|
-| 1 | My college isn't listed | No home college saved. A note appears 12 below the list: `caption` `--slate-600`, x 24, max 320: "We're starting with a few colleges and adding more. You can still save schools and deadlines." |
+| 1 | My college isn't listed | No home college saved. A note appears 12 below the list: `caption` `--slate-600`, x 24, max 320: "Stackd covers California community colleges. If yours is missing, email joinstackd@gmail.com." (changed in spec 21, PR A, now that every community college is listed). The row stays for students outside California |
 | 2 | (none) | A student must pick at least one school, or Skip |
 | 3 | Not listed yet | That target saves with no major. Same note pattern: "We'll add more majors. Your school is still saved." |
 

@@ -1,8 +1,9 @@
-// Sets one verified deadline, checklist, checklist step or personal insight question back to unverified, so a corrected
-// file can be imported and checked again (docs/date-check.md → Fixing a verified row). Logs who did it and why. A dry run unless --apply.
+// Sets one verified academic row (a deadline, checklist or step, personal insight question, institution, major, agreement
+// link, or Explore pathway, requirement or campus) back to unverified, so a corrected file can be imported and checked
+// again (docs/date-check.md → Fixing a verified row). Logs who did it and why. A dry run unless --apply.
 //   node scripts/import/reopen.mjs --id <row id> --by "<name>" --reason "<text>" [--apply]
-// The row is hidden from students from the moment it's reopened until it's verified again; a reopened date also
-// hides its checklist and steps.
+// A reopened deadline, question or Explore row is hidden from students until it's verified again; a reopened date also
+// hides its checklist and steps, and any reopened Explore row hides that whole major.
 import { pathToFileURL } from "node:url";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -41,6 +42,8 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     process.exit(1);
   }
   const row = `${outcome.table} ${outcome.id} (${outcome.record}), verified ${outcome.verified_at}`;
+  // Schools, majors and agreement links stay readable while unverified; the rest are hidden
+  const hidden = !["institutions", "majors", "agreement_links"].includes(outcome.table);
   if (outcome.status === "dry_run") console.log(`dry run   would reopen ${row}\n          Nothing changed. Run again with --apply to reopen it.`);
-  else console.log(`reopened  ${row}\n          Hidden from students until it's imported and verified again.`);
+  else console.log(`reopened  ${row}\n          ${hidden ? "Hidden from students" : "Unverified"} until it's imported and verified again.`);
 }

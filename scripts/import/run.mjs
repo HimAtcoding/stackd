@@ -2,6 +2,7 @@
 //   data/raw/planning/<file>.json   institutions, majors and official agreement links
 //   data/raw/deadlines/<file>.json  deadlines and application checklists (14)
 //   data/raw/essays/<file>.json     UC personal insight questions (17)
+//   data/raw/explore/<major>.json   one major's UC Transfer Pathway and TMC, with requirements and campuses (21)
 //   node scripts/import/run.mjs data/raw/<folder>/<file>.json [--dry-run]
 // Stages (docs/12): raw (the file, kept untouched, with its hash) → parse → validate → upsert → review report.
 // Validation problems stop the run before the database is touched. The upsert is one transaction: all or nothing.
@@ -11,8 +12,9 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateDeadlinesFile } from "./deadlines.mjs";
 import { validateEssaysFile } from "./essays.mjs";
+import { validateExploreFile } from "./explore.mjs";
 import { validatePlanningFile } from "./planning.mjs";
-import { deadlineReportRows, essayReportRows, reportRows, writeReport } from "./report.mjs";
+import { deadlineReportRows, essayReportRows, exploreReportRows, reportRows, topicSections, writeReport } from "./report.mjs";
 
 const KINDS = {
   planning: {
@@ -33,11 +35,19 @@ const KINDS = {
     importBatch: (db, ...args) => db.importEssays(...args),
     report: async (db, payload, confirmOn) => essayReportRows(payload, confirmOn, await db.essayRowsFor(payload)),
   },
+  explore: {
+    validate: validateExploreFile,
+    counted: (p) => `${p.pathways.length} pathways, ${p.pathway_requirements.length} requirements, ${p.pathway_campuses.length} campus rows`,
+    importBatch: (db, ...args) => db.importExplore(...args),
+    report: async (db, payload) => exploreReportRows(payload, await db.exploreRowsFor(payload)),
+    sections: topicSections,
+  },
 };
 
 export function kindOf(rel) {
   if (rel.startsWith("data/raw/deadlines/")) return "deadlines";
   if (rel.startsWith("data/raw/essays/")) return "essays";
+  if (rel.startsWith("data/raw/explore/")) return "explore";
   return "planning";
 }
 
@@ -73,7 +83,8 @@ export async function runImport({ file, dryRun, db, reportDir }) {
 
   if (result.status === "dry_run") return { ok: true, ...result };
   const rows = await kind.report(db, payload, confirmOn);
-  const report = writeReport(rows, { name: path.basename(file, ".json"), status: result.status, counts: result.counts, dir: reportDir });
+  const sections = kind.sections?.(payload) ?? [];
+  const report = writeReport(rows, { name: path.basename(file, ".json"), status: result.status, counts: result.counts, dir: reportDir, sections });
   console.log(`report    ${report}.md and .csv`);
   return { ok: true, ...result, report };
 }
@@ -83,7 +94,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith("--"));
   if (!file) {
-    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines|essays>/<file>.json [--dry-run]");
+    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines|essays|explore>/<file>.json [--dry-run]");
     process.exit(2);
   }
   const { supabaseDatabase } = await import("./db.mjs");
