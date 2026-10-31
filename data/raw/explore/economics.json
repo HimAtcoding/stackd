@@ -1,0 +1,165 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Economics for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Economics Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1018, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): macroeconomics, microeconomics. Calculus is kept apart: UC asks for a year (calculus-year), the template for one course (econ-calculus), and that course can be business calculus. Statistics is Cal State only on this file, because UC doesn't list it as a course expectation for economics. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/economics.json --dry-run",
+  "slug": "economics",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Economics",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 3 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "microeconomics",
+          "sort": 1,
+          "topic": "microeconomics",
+          "name": "Microeconomics",
+          "description": "How people and businesses make choices about prices and money.",
+          "how_many": "One course"
+        },
+        {
+          "code": "macroeconomics",
+          "sort": 2,
+          "topic": "macroeconomics",
+          "name": "Macroeconomics",
+          "description": "How a whole economy works: growth, jobs, inflation and policy.",
+          "how_many": "One course"
+        },
+        {
+          "code": "calculus",
+          "sort": 3,
+          "topic": "calculus-year",
+          "name": "Calculus, a full year",
+          "description": "A year-long single-variable calculus sequence. The STEM version leaves you the most choices later, including for grad school. Cal State's degree asks for one calculus course. UC doesn't expect statistics before transfer, though some campuses require it later.",
+          "how_many": "A year-long sequence"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-davis", "major_names": ["Economics, A.B."] },
+        { "institution": "uc-irvine", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-los-angeles", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-merced", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-riverside", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-san-diego", "major_names": ["Economics, B.A."] },
+        { "institution": "uc-santa-barbara", "major_names": ["Economics, B.A."] },
+        {
+          "institution": "uc-santa-cruz",
+          "major_names": [
+            "Business Management Economics, B.A.",
+            "Economics, B.A.",
+            "Economics/Mathematics, B.A.",
+            "Global Economics, B.A."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Economics",
+      "code": "1018",
+      "revision": "2",
+      "degree_name": "Associate in Arts in Economics for Transfer",
+      "major_units": 18,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/wp-content/uploads/2023/11/Economics.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Rev. 2 (01/15/2020) is still the newest Economics template. This PDF is the IGETC form; the Cal-GETC form (Economics-Form.docx) has the same courses, except its List A leaves out MATH 900S. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "econ-202",
+          "sort": 1,
+          "topic": "macroeconomics",
+          "name": "Macroeconomics",
+          "description": "How a whole economy works: growth, jobs, inflation and policy.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ECON 202"]
+        },
+        {
+          "code": "econ-201",
+          "sort": 2,
+          "topic": "microeconomics",
+          "name": "Microeconomics",
+          "description": "How people and businesses make choices about prices and money.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ECON 201"]
+        },
+        {
+          "code": "math-110",
+          "sort": 3,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["MATH 110"]
+        },
+        {
+          "code": "calculus",
+          "sort": 4,
+          "topic": "econ-calculus",
+          "name": "One calculus course",
+          "description": "Business calculus, or the first course of calculus for STEM majors. UC asks for a full year, so the STEM version is the better choice if you're aiming for both. If you use the sequence numbered as one, you take the whole sequence.",
+          "how_many": "One of 4 options",
+          "units": 3,
+          "options": [
+            { "label": "Business calculus", "c_id": ["MATH 140"], "units": 3 },
+            { "label": "Calculus I, early transcendentals", "c_id": ["MATH 210"], "units": 4 },
+            { "label": "Calculus I, late transcendentals", "c_id": ["MATH 211"], "units": 4 },
+            { "label": "The whole calculus sequence, numbered as one", "c_id": ["MATH 900S"], "units": 8 }
+          ]
+        },
+        {
+          "code": "list-a",
+          "sort": 5,
+          "topic": "econ-list-a",
+          "name": "One more math or business course",
+          "description": "One of these, or any course that counts as lower-division preparation for economics at a Cal State, which has no C-ID number.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. The PDF lists MATH 900S here; the Cal-GETC form doesn't.",
+          "options": [
+            { "label": "Finite math", "c_id": ["MATH 130"], "units": 3 },
+            { "label": "Calculus II, early transcendentals", "c_id": ["MATH 220"], "units": 4 },
+            { "label": "Calculus II, late transcendentals", "c_id": ["MATH 221"], "units": 4 },
+            { "label": "The whole calculus sequence, numbered as one", "c_id": ["MATH 900S"], "units": 8 },
+            { "label": "Financial accounting", "c_id": ["ACCT 110"], "units": 3 },
+            { "label": "Managerial accounting", "c_id": ["ACCT 120"], "units": 3 },
+            { "label": "Business information systems", "c_id": ["BUS 140"], "units": 3 },
+            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-b",
+          "sort": 6,
+          "topic": "econ-list-b",
+          "name": "One elective",
+          "description": "One of these or anything from the list above you haven't used. It can also be a lower-division economics elective, or an intro social science course that fills the general education social science area. Those two have no C-ID number.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "options": [
+            { "label": "Multivariable calculus", "c_id": ["MATH 230"], "units": 4 },
+            { "label": "Linear algebra", "c_id": ["MATH 250"], "units": 3 },
+            { "label": "Finite math", "c_id": ["MATH 130"], "units": 3 },
+            { "label": "Calculus II, early transcendentals", "c_id": ["MATH 220"], "units": 4 },
+            { "label": "Calculus II, late transcendentals", "c_id": ["MATH 221"], "units": 4 },
+            { "label": "Financial accounting", "c_id": ["ACCT 110"], "units": 3 },
+            { "label": "Managerial accounting", "c_id": ["ACCT 120"], "units": 3 },
+            { "label": "Business information systems", "c_id": ["BUS 140"], "units": 3 },
+            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Sociology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Sociology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1003, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): sociology-intro, social-problems, statistics. All 3 of UC's courses are in the template. Statistics is shared with one question for the checker, on that row's todo. The electives are Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/sociology.json --dry-run",
+  "slug": "sociology",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Sociology",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/sociology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 3 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "intro-sociology",
+          "sort": 1,
+          "topic": "sociology-intro",
+          "name": "Intro to sociology",
+          "description": "How groups, institutions and society shape people's lives.",
+          "how_many": "One course"
+        },
+        {
+          "code": "social-problems",
+          "sort": 2,
+          "topic": "social-problems",
+          "name": "Social problems",
+          "description": "The second intro course, on issues like poverty, crime and inequality. Some colleges use another name for it.",
+          "how_many": "One course"
+        },
+        {
+          "code": "statistics",
+          "sort": 3,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "A statistics course for sociology majors.",
+          "how_many": "One course"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-davis", "major_names": ["Sociology, A.B."] },
+        { "institution": "uc-irvine", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-los-angeles", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-merced", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-riverside", "major_names": ["Sociology, B.A. and B.S."] },
+        { "institution": "uc-san-diego", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-santa-barbara", "major_names": ["Sociology, B.A."] },
+        { "institution": "uc-santa-cruz", "major_names": ["Sociology, B.A."] }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Sociology",
+      "code": "1003",
+      "revision": "4",
+      "degree_name": "Associate in Arts in Sociology for Transfer",
+      "major_units": 18,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/wp-content/uploads/2023/11/tmcsociologytemplatea11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Rev. 4 (11/15/21) is still the newest Sociology template. This PDF is the IGETC form; the Cal-GETC form (sociology-form.docx) has the same C-ID numbers. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "soci-110",
+          "sort": 1,
+          "topic": "sociology-intro",
+          "name": "Intro to sociology",
+          "description": "How groups, institutions and society shape people's lives.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["SOCI 110"]
+        },
+        {
+          "code": "soci-115",
+          "sort": 2,
+          "topic": "social-problems",
+          "name": "Social problems",
+          "description": "The second intro course, on issues like poverty, crime and inequality.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["SOCI 115"]
+        },
+        {
+          "code": "statistics",
+          "sort": 3,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "Statistics in sociology or intro statistics. A behavioral or social science statistics course also works; that one has no C-ID number.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. This topic is shared with UC's statistics for sociology majors: confirm you agree that any of these choices is the same course.",
+          "options": [
+            { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
+            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-a-1",
+          "sort": 4,
+          "topic": "sociology-list-a-1",
+          "name": "Sociology elective, first of 2",
+          "description": "One of these. It can also be a behavioral or social science research methods course, or a sociology course that counts as preparation for the major at a Cal State or UC. Those two have no C-ID number.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. The template's note at the end calls research methods a required core course, but the table puts it in List A: confirm.",
+          "options": [
+            { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
+            { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
+            { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
+            { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-a-2",
+          "sort": 5,
+          "topic": "sociology-list-a-2",
+          "name": "Sociology elective, second of 2",
+          "description": "A second course from the same list, different from the first.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "options": [
+            { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
+            { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
+            { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
+            { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-b",
+          "sort": 6,
+          "topic": "sociology-list-b",
+          "name": "One more course",
+          "description": "Any course from the list above you haven't used, any transferable sociology course, a course in any subject that prepares you for the major, or any intro social science course. The last three have no C-ID number.",
+          "how_many": "One course, several options",
+          "units": 3,
+          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "options": [
+            { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
+            { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
+            { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
+            { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}
