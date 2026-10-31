@@ -518,13 +518,14 @@ Spec `21-explore.md`, Data section and PR A, on branch `explore-data-a`. **The m
   - `data/raw/planning/california-institutions.json`: 116 community colleges (the Chancellor's Office listing minus its 2 noncredit schools), the 22 Cal State universities on calstate.edu (no Cal Maritime card; it's part of Cal Poly San Luis Obispo now) and the 9 UC campuses. `las-positas` and `uc-san-diego` copied unchanged from the first slice. The other 145 rows have `retrieved_at` empty. Fixes to the listing are in the file's `notes`.
   - `data/raw/explore/computer-science.json`: the UC pathway (9 course types, 9 campus rows) and TMC #2007 Rev. 3 (7 requirements, 28 units), in Stackd's own words, with 3 `todo`s and `retrieved_at` empty. 5 of 9 UC course types count for both; physics is split into `physics-year` and `physics-mechanics` (Ryan's call).
   - `las-positas-ucsd-cs.json`: UC San Diego's Computer Science gets `explore_slug: "computer-science"`.
+  - `data/raw/planning/computer-science-majors.json`: 35 majors, all with `explore_slug: "computer-science"` and `retrieved_at` empty, so a student at any of these schools can pick a real major. 13 UC (every campus major the pathway page lists, Santa Cruz's "B.A. and B.S." as two rows; UC San Diego's stays in the first slice) and 22 Cal State (each campus's Computer Science B.S. from its own catalog; none offers a B.A., and none lacks the degree). calstate.edu's degree search showed a human-verification page to the automated browser, so the campus catalogs are the source. 7 links point at an older catalog edition (listed in the file's notes) for Ryan to swap while checking.
 - **Pickers** (`lib/search.ts`, used by onboarding, which Settings reuses): ignores accents and punctuation and matches a name's initials ("dvc", "lpc", "ccsf"). The "My college isn't listed" note now reads "Stackd covers California community colleges. If yours is missing, email joinstackd@gmail.com." Spec 10 updated to match.
 - **`docs/16`:** the "What the terms allow" table, with UC Admissions' confirmation on Oct 26, 2026.
 - **Tested** (nothing reached the project):
   - `test:db`, 44 new checks (265 in all): write access, the pathway and requirement rules, the UC-campus trigger, verified-only reads per whole major, reopen hiding the major, reopening a verified major to add `explore_slug`, `user_topic_status` owner-only, and account deletion.
-  - `test:import`, 62 new checks (176 in all): a made-up major through dry run, apply, unchanged, verify, a change to a verified row, a dropped verified row, reopen, removal, a non-UC campus, 17 kinds of bad file and the topic table. Then the two real files: refused as drafted, passing once filled in a temporary copy, the counts and C-ID numbers, the first-slice rows unchanged, and both imported into the in-memory database.
+  - `test:import`, 74 new checks (188 in all): a made-up major through dry run, apply, unchanged, verify, a change to a verified row, a dropped verified row, reopen, removal, a non-UC campus, 17 kinds of bad file and the topic table. Then the two real files: refused as drafted, passing once filled in a temporary copy, the counts and C-ID numbers, the first-slice rows unchanged, and both imported into the in-memory database. The majors file: refused as drafted, each UC row matching the pathway's campus majors, imported, verified from its review report, and onboarding's major-step query showing Computer Science B.S. at UC Davis and San José State.
   - `test:search` (now in `npm test`), 19 checks on the real school list.
-  - Stand-in browser run (made-up session, REST mocked with the 147 rows), Chromium at 320 × 568: all 116 colleges render and scroll with no sideways scroll, the searches above, the new note, and "cal poly" finding 3 schools.
+  - Stand-in browser run (made-up session, REST mocked with the 147 rows and the 35 majors), Chromium at 320 × 568: all 116 colleges render and scroll with no sideways scroll, the searches above, the new note, "cal poly" finding 3 schools, and the major step listing Computer Science B.S. for UC Davis and San José State.
   - `npm test`, `test:db`, `test:import`, `lint` and `build` pass.
 - **Differs from the spec:** the added `c_id` column; `effective_term` as `fall-2027`; "Counts for both" is 5 of 9, not 6; "cal poly" finds 3 campuses. Spec 21 updated to match.
 
@@ -532,7 +533,8 @@ Spec `21-explore.md`, Data section and PR A, on branch `explore-data-a`. **The m
 1. `npx supabase db push` (lists `20261026120000_explore.sql`)
 2. If UC San Diego's Computer Science major is verified, reopen it first (`npm run import:reopen -- --id <major id> --by "<name>" --reason "add explore_slug"`, then again with `--apply`), and import `las-positas-ucsd-cs.json`
 3. Check and import `california-institutions.json`, verify from the review CSV
-4. Check `computer-science.json`, delete its todos, fill `retrieved_at`, import, verify
+4. Check and import `computer-science-majors.json` (after step 3, which adds the schools), verify
+5. Check `computer-science.json`, delete its todos, fill `retrieved_at`, import, verify
 
 ## Essays start, PR B (step 24, 2026-10-22)
 

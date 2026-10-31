@@ -601,7 +601,7 @@ const fillIn = (data, date) => {
     }
   };
   strip(data);
-  for (const row of data.pathways ?? data.institutions) if (row.retrieved_at === "") row.retrieved_at = date;
+  for (const row of [...(data.pathways ?? []), ...(data.institutions ?? []), ...(data.majors ?? [])]) if (row.retrieved_at === "") row.retrieved_at = date;
   return data;
 };
 const realCs = () => JSON.parse(fs.readFileSync("data/raw/explore/computer-science.json", "utf8"));
@@ -655,6 +655,50 @@ check("computer-science.json imports", out.ok && out.counts.pathways.inserted ==
   JSON.stringify(out.counts ?? out.problems));
 const csMd = out.ok ? fs.readFileSync(`${out.report}.md`, "utf8") : "";
 check("its review report shows 5 of 9 counting for both", csMd.includes("5 of 9 UC course types also count for Cal State"), csMd.slice(csMd.indexOf("## Counts")));
+
+// The Computer Science majors at every UC campus in the pathway and every Cal State campus that offers the degree,
+// so a student anywhere can pick a real major in onboarding
+const realMajors = () => JSON.parse(fs.readFileSync("data/raw/planning/computer-science-majors.json", "utf8"));
+const majorsAsIs = validatePlanningFile(realMajors()).problems;
+check("computer-science-majors.json is refused until every row is checked",
+  majorsAsIs.length === realMajors().majors.length && majorsAsIs.every((p) => /retrieved_at is empty/.test(p)), `${majorsAsIs.length}: ${majorsAsIs[0]}`);
+const csMajors = realMajors().majors;
+check("every major links to Explore's computer-science", csMajors.every((m) => m.explore_slug === "computer-science"));
+check("UC San Diego's major isn't added twice (the first slice has it)", !csMajors.some((m) => m.institution === "uc-san-diego"));
+const schoolSystem = new Map(realInst().institutions.map((i) => [i.slug, i.system]));
+check("every row names a UC or Cal State school in california-institutions.json", csMajors.every((m) => ["UC", "CSU"].includes(schoolSystem.get(m.institution))));
+// "Computer Science" + "BS" is "Computer Science, B.S." on the pathway page; Santa Cruz lists its B.A. and B.S. on one line
+const dotted = (d) => `${d.split("").join(".")}.`;
+const campusMajors = new Map((cs.payload?.pathway_campuses ?? []).map((c) => [c.institution, c.major_names]));
+const ucMajors = csMajors.filter((m) => schoolSystem.get(m.institution) === "UC");
+check("each UC major is one the pathway lists at that campus",
+  ucMajors.every((m) => (campusMajors.get(m.institution) ?? []).some((n) => n === `${m.name}, ${dotted(m.degree_type)}` || (n.startsWith(`${m.name}, `) && n.includes(dotted(m.degree_type))))),
+  ucMajors.map((m) => `${m.institution}: ${m.name} ${m.degree_type}`));
+check("every pathway campus has a major (UC San Diego's from the first slice)",
+  [...campusMajors.keys()].every((slug) => slug === "uc-san-diego" || ucMajors.some((m) => m.institution === slug)));
+check("Cal State rows are Computer Science bachelor's degrees from the campus catalog",
+  csMajors.filter((m) => schoolSystem.get(m.institution) === "CSU").every((m) => m.name === "Computer Science" && ["BS", "BA"].includes(m.degree_type) && new URL(m.source_url).protocol === "https:"));
+
+const majorsFile = path.join(RAW_PLANNING, "computer-science-majors.json");
+fs.writeFileSync(majorsFile, JSON.stringify(fillIn(realMajors(), "2026-10-31"), null, 2));
+out = await runImport({ file: majorsFile, dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("computer-science-majors.json imports", out.ok && out.counts.majors.inserted === csMajors.length, JSON.stringify(out.counts ?? out.problems));
+const majorsReport = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("its review report lists every major with its source", majorsReport.length === csMajors.length && majorsReport.every((r) => r.table === "majors" && r.source_url.startsWith("https://")),
+  `${majorsReport.length} rows`);
+v = out.ok ? await verifyReport(`${out.report}.csv`) : { ok: false };
+check("the majors are verified from the report", v.ok && v.verified === csMajors.length, JSON.stringify(v));
+
+// Onboarding's major step: getMajors (lib/data/catalog.ts) as a signed-in student, for the schools picked in step 2
+const majorStep = async (slug) =>
+  (await asRole(db, "authenticated", "00000000-0000-0000-0000-00000000000a",
+    `select m.name, m.degree_type, m.verification_status from majors m join institutions i on i.id = m.institution_id
+     where i.slug = $1 and m.is_demo = false order by m.name`, [slug])).rows;
+for (const slug of ["uc-davis", "san-jose-state"]) {
+  const rows = await majorStep(slug);
+  check(`onboarding's major step shows Computer Science at ${slug}`,
+    rows.some((m) => m.name === "Computer Science" && m.degree_type === "BS" && m.verification_status === "verified"), rows);
+}
 
 fs.rmSync(RAW, { recursive: true, force: true });
 fs.rmSync(RAW_EXPLORE, { recursive: true, force: true });
