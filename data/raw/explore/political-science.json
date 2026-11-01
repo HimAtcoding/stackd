@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Political science for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Political Science Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1009, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): polisci-core-1, polisci-core-2, polisci-core-3. The 3 core rows are shared: UC and the template ask for 3 of the same 4 courses, so each pick counts on both sides. Choosing 3 of 4 is written as 3 rows because a TMC row's units must match its smallest option, and a row needs one status. The other rows are Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/political-science.json --dry-run",
+  "notes": "Political science for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Political Science Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1009, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): polisci-core-1, polisci-core-2, polisci-core-3. The 3 core rows are shared: UC and the template ask for 3 of the same 4 courses, so each pick counts on both sides. Choosing 3 of 4 is written as 3 rows because a TMC row's units must match its smallest option, and a row needs one status. The other rows are Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/political-science.json --dry-run",
   "slug": "political-science",
   "pathways": [
     {
@@ -115,44 +115,10 @@
           "sort": 4,
           "topic": "polisci-list-a-1",
           "name": "Political science elective, first of 2",
-          "description": "The core course you didn't pick, one of these, or any Cal State transferable political science course. Count only one of research methods, intro statistics, or statistics in sociology.",
-          "how_many": "One course, several options",
+          "description": "Pick one, not one of your 3 core courses. Count only one of research methods, intro statistics, or statistics in sociology.",
+          "how_many": "One of 10 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
-          "options": [
-            { "label": "Intro to political science", "c_id": ["POLS 150"], "units": 3 },
-            { "label": "Political science research methods", "c_id": ["POLS 160"], "units": 3 },
-            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
-            { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
-            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 }
-          ]
-        },
-        {
-          "code": "list-a-2",
-          "sort": 5,
-          "topic": "polisci-list-a-2",
-          "name": "Political science elective, second of 2",
-          "description": "A second course from the same list, different from the first.",
-          "how_many": "One course, several options",
-          "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
-          "options": [
-            { "label": "Intro to political science", "c_id": ["POLS 150"], "units": 3 },
-            { "label": "Political science research methods", "c_id": ["POLS 160"], "units": 3 },
-            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
-            { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
-            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 }
-          ]
-        },
-        {
-          "code": "list-b",
-          "sort": 6,
-          "topic": "polisci-list-b",
-          "name": "One more course",
-          "description": "Any course from the lists above you haven't used, any Cal State transferable political science course, a course that prepares you for the major at a Cal State, or an intro social science course that fills the general education social science area. The last three have no C-ID number.",
-          "how_many": "One course, several options",
-          "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "American government and politics", "c_id": ["POLS 110"], "units": 3 },
             { "label": "Political theory and thought", "c_id": ["POLS 120"], "units": 3 },
@@ -162,7 +128,62 @@
             { "label": "Political science research methods", "c_id": ["POLS 160"], "units": 3 },
             { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
             { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
-            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 }
+            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 },
+            { "label": "Any Cal State transferable political science course", "c_id": [], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-a-2",
+          "sort": 5,
+          "topic": "polisci-list-a-2",
+          "name": "Political science elective, second of 2",
+          "description": "A second course from the same list, different from the first.",
+          "how_many": "One of 10 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "American government and politics", "c_id": ["POLS 110"], "units": 3 },
+            { "label": "Political theory and thought", "c_id": ["POLS 120"], "units": 3 },
+            { "label": "Comparative government and politics", "c_id": ["POLS 130"], "units": 3 },
+            { "label": "International relations", "c_id": ["POLS 140"], "units": 3 },
+            { "label": "Intro to political science", "c_id": ["POLS 150"], "units": 3 },
+            { "label": "Political science research methods", "c_id": ["POLS 160"], "units": 3 },
+            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
+            { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
+            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 },
+            { "label": "Any Cal State transferable political science course", "c_id": [], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-b",
+          "sort": 6,
+          "topic": "polisci-list-b",
+          "name": "One more course",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 12 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "American government and politics", "c_id": ["POLS 110"], "units": 3 },
+            { "label": "Political theory and thought", "c_id": ["POLS 120"], "units": 3 },
+            { "label": "Comparative government and politics", "c_id": ["POLS 130"], "units": 3 },
+            { "label": "International relations", "c_id": ["POLS 140"], "units": 3 },
+            { "label": "Intro to political science", "c_id": ["POLS 150"], "units": 3 },
+            { "label": "Political science research methods", "c_id": ["POLS 160"], "units": 3 },
+            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
+            { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
+            { "label": "Politics of race and gender", "c_id": ["POLS 170"], "units": 3 },
+            { "label": "Any Cal State transferable political science course", "c_id": [], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for political science at a Cal State",
+              "c_id": [],
+              "units": 3
+            },
+            {
+              "label": "Any Cal State transferable intro social science course that fills the general education social science area",
+              "c_id": [],
+              "units": 3
+            }
           ]
         }
       ]

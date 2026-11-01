@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Psychology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Psychology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1002, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): statistics, psych-intro. UC's biology (the first course of the STEM series) isn't shared with the template's biology-based list, which accepts non-majors biology. Research methods is Cal State only. Calculus, the extra science and the social science courses are UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/psychology.json --dry-run",
+  "notes": "Psychology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Psychology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1002, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): statistics, psych-intro. UC's biology (the first course of the STEM series) isn't shared with the template's biology-based list, which accepts non-majors biology. Research methods is Cal State only. Calculus, the extra science and the social science courses are UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/psychology.json --dry-run",
   "slug": "psychology",
   "pathways": [
     {
@@ -125,12 +125,14 @@
           "sort": 4,
           "topic": "psych-list-a",
           "name": "One biology-based course",
-          "description": "Intro to biological psychology, or an intro to biology or human biology course of 3 to 4 units. The two biology courses have no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one. The template allows 3 or 4 units for the two biology courses.",
+          "how_many": "One of 3 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
-            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 }
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 }
           ]
         },
         {
@@ -138,12 +140,19 @@
           "sort": 5,
           "topic": "psych-list-b",
           "name": "One more course for the major",
-          "description": "Any course from the biology-based list you haven't used, or any course that counts as lower-division preparation for psychology at a Cal State.",
-          "how_many": "One course, several options",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 4 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
-            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 }
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for psychology at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -151,12 +160,25 @@
           "sort": 6,
           "topic": "psych-list-c",
           "name": "One elective",
-          "description": "Any course from the two lists above you haven't used, any Cal State transferable psychology course, or another course that prepares you for the major, in or outside psychology.",
-          "how_many": "One course, several options",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 6 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
-            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 }
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for psychology at a Cal State",
+              "c_id": [],
+              "units": 3
+            },
+            { "label": "Any Cal State transferable psychology course", "c_id": [], "units": 3 },
+            {
+              "label": "Any course, in or outside psychology, that prepares you for the major at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         }
       ]

@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Biological sciences for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Biological Sciences Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #2014, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): biology-sequence, chemistry-general. UC's calculus (a full year) and the template's calculus (the first course) are kept apart, like the physics split in Computer Science: calculus-single and calculus-first. The UC row says Cal State's degree asks for only the first course. Organic chemistry is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/biological-sciences.json --dry-run",
+  "notes": "Biological sciences for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Biological Sciences Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #2014, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): biology-sequence, chemistry-general. UC's calculus (a full year) and the template's calculus (the first course) are kept apart, like the physics split in Computer Science: calculus-single and calculus-first. The UC row says Cal State's degree asks for only the first course. Organic chemistry is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/biological-sciences.json --dry-run",
   "slug": "biological-sciences",
   "pathways": [
     {
@@ -204,11 +204,15 @@
           "sort": 3,
           "topic": "calculus-first",
           "name": "Calculus, first course",
-          "description": "The first calculus course: MATH 210 or MATH 211, or a 3-unit calculus course for life and social sciences, which has no C-ID number. If your degree has room, it can also include one more course that counts toward the major at a Cal State. UC asks for the full year of calculus.",
-          "how_many": "One course",
+          "description": "Pick one. If your degree has room, it can also include one more course that counts toward the major at a Cal State. UC asks for the full year of calculus.",
+          "how_many": "One of 3 options",
           "units": 3,
-          "todo": "These are choices, not both courses. The importer needs a pick-one row's units to match its smallest listed option, and the 3-unit calculus has no C-ID number, so this row uses c_id to keep the major at 21. The optional 0-4 unit List A has no row, because a row needs at least 1 unit; it's in this description. Confirm against the PDF.",
-          "c_id": ["MATH 210", "MATH 211"]
+          "todo": "The calculus for life and social sciences option has no C-ID number. The optional 0-4 unit List A has no row, because a row needs at least 1 unit; it's in this description. Confirm both against the PDF.",
+          "options": [
+            { "label": "Calculus I, early transcendentals", "c_id": ["MATH 210"], "units": 4 },
+            { "label": "Calculus I, late transcendentals", "c_id": ["MATH 211"], "units": 4 },
+            { "label": "Calculus for life and social sciences", "c_id": [], "units": 3 }
+          ]
         }
       ]
     }

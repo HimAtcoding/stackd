@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Communication for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Communication Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1001, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): none. No topic is shared. UC's overlap with this template sits inside choices: public speaking is one of UC's pick-3 and required here; intro to psychology and intro to sociology are in UC's pick-3 and in List B here. A shared status would claim more than either row says, so the descriptions point at each other. UC's intro to communication studies covers more than any single row here. Statistics is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/communication.json --dry-run",
+  "notes": "Communication for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Communication Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1001, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): none. No topic is shared. UC's overlap with this template sits inside choices: public speaking is one of UC's pick-3 and required here; intro to psychology and intro to sociology are in UC's pick-3 and in List B here. A shared status would claim more than either row says, so the descriptions point at each other. UC's intro to communication studies covers more than any single row here. Statistics is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/communication.json --dry-run",
   "slug": "communication",
   "pathways": [
     {
@@ -93,10 +93,10 @@
           "sort": 3,
           "topic": "comm-list-a-1",
           "name": "Communication elective, first of 3",
-          "description": "One of these. It can also be communication and new media, or any course that prepares you for the major at a Cal State. Those two have no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one.",
+          "how_many": "One of 10 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. The template lists forensics at 1 unit, 3 units at most. A row's units must match its smallest option, so the option shows 3: confirm.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF. The template lists forensics at 1 unit, 3 units at most. A row's units must match its smallest option, so the option shows 3: confirm.",
           "options": [
             { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
             { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
@@ -104,8 +104,14 @@
             { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
             { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
             { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
             { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
-            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 }
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -114,9 +120,9 @@
           "topic": "comm-list-a-2",
           "name": "Communication elective, second of 3",
           "description": "A second course from the same list, different from the first.",
-          "how_many": "One course, several options",
+          "how_many": "One of 10 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
             { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
@@ -124,8 +130,14 @@
             { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
             { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
             { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
             { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
-            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 }
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -134,9 +146,9 @@
           "topic": "comm-list-a-3",
           "name": "Communication elective, third of 3",
           "description": "A third course from the same list, different from the first two.",
-          "how_many": "One course, several options",
+          "how_many": "One of 10 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
             { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
@@ -144,8 +156,14 @@
             { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
             { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
             { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
             { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
-            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 }
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -153,10 +171,10 @@
           "sort": 6,
           "topic": "comm-list-b",
           "name": "One more course",
-          "description": "Anything from the list above you haven't used, or one of these. It can also be intro to journalism or any Cal State transferable communication studies course, which have no C-ID number. Intro to psychology and intro to sociology also count toward UC's pathway.",
-          "how_many": "One course, several options",
+          "description": "Pick one you haven't used. Intro to psychology and intro to sociology also count toward UC's pathway.",
+          "how_many": "One of 19 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Survey of human communication", "c_id": ["COMM 115"], "units": 3 },
             { "label": "Intro to cultural anthropology", "c_id": ["ANTH 120"], "units": 3 },
@@ -165,14 +183,22 @@
             { "label": "Intro to literature", "c_id": ["ENGL 120"], "units": 3 },
             { "label": "Argumentative writing and critical thinking", "c_id": ["ENGL 105"], "units": 3 },
             { "label": "Intro to reporting and newswriting", "c_id": ["JOUR 110"], "units": 3 },
+            { "label": "Intro to journalism", "c_id": [], "units": 3 },
+            { "label": "Any Cal State transferable communication studies course", "c_id": [], "units": 3 },
             { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
             { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
             { "label": "Forensics (speech and debate), up to 3 units in all", "c_id": ["COMM 160B"], "units": 3 },
             { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
             { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
             { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
             { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
-            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 }
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         }
       ]

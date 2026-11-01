@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Sociology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Sociology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1003, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): sociology-intro, social-problems, statistics. All 3 of UC's courses are in the template. Statistics is shared with one question for the checker, on that row's todo. The electives are Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/sociology.json --dry-run",
+  "notes": "Sociology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Sociology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1003, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): sociology-intro, social-problems, statistics. All 3 of UC's courses are in the template. Statistics is shared with one question for the checker, on that row's todo. The electives are Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/sociology.json --dry-run",
   "slug": "sociology",
   "pathways": [
     {
@@ -90,13 +90,14 @@
           "sort": 3,
           "topic": "statistics",
           "name": "Statistics",
-          "description": "Statistics in sociology or intro statistics. A behavioral or social science statistics course also works; that one has no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one.",
+          "how_many": "One of 3 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. This topic is shared with UC's statistics for sociology majors: confirm you agree that any of these choices is the same course.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF. This topic is shared with UC's statistics for sociology majors: confirm you agree that any of these choices is the same course.",
           "options": [
             { "label": "Statistics in sociology", "c_id": ["SOCI 125"], "units": 3 },
-            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 }
+            { "label": "Intro statistics", "c_id": ["MATH 110"], "units": 3 },
+            { "label": "Behavioral or social science statistics", "c_id": [], "units": 3 }
           ]
         },
         {
@@ -104,17 +105,23 @@
           "sort": 4,
           "topic": "sociology-list-a-1",
           "name": "Sociology elective, first of 2",
-          "description": "One of these. It can also be a behavioral or social science research methods course, or a sociology course that counts as preparation for the major at a Cal State or UC. Those two have no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one.",
+          "how_many": "One of 8 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. The template's note at the end calls research methods a required core course, but the table puts it in List A: confirm.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF. The template's note at the end calls research methods a required core course, but the table puts it in List A: confirm.",
           "options": [
             { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Research methods for behavioral or social science", "c_id": [], "units": 3 },
             { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
             { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
             { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
             { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
-            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 },
+            {
+              "label": "Any sociology course that counts as preparation for the major at a Cal State or UC",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -123,16 +130,22 @@
           "topic": "sociology-list-a-2",
           "name": "Sociology elective, second of 2",
           "description": "A second course from the same list, different from the first.",
-          "how_many": "One course, several options",
+          "how_many": "One of 8 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Research methods for behavioral or social science", "c_id": [], "units": 3 },
             { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
             { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
             { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
             { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
-            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 },
+            {
+              "label": "Any sociology course that counts as preparation for the major at a Cal State or UC",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -140,17 +153,26 @@
           "sort": 6,
           "topic": "sociology-list-b",
           "name": "One more course",
-          "description": "Any course from the list above you haven't used, any transferable sociology course, a course in any subject that prepares you for the major, or any intro social science course. The last three have no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 11 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Research methods", "c_id": ["SOCI 120"], "units": 3 },
+            { "label": "Research methods for behavioral or social science", "c_id": [], "units": 3 },
             { "label": "Marriage and family", "c_id": ["SOCI 130"], "units": 3 },
             { "label": "Gender", "c_id": ["SOCI 140"], "units": 3 },
             { "label": "Race and ethnicity", "c_id": ["SOCI 150"], "units": 3 },
             { "label": "Crime", "c_id": ["SOCI 160"], "units": 3 },
-            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 }
+            { "label": "Social psychology", "c_id": ["PSY 170"], "units": 3 },
+            {
+              "label": "Any sociology course that counts as preparation for the major at a Cal State or UC",
+              "c_id": [],
+              "units": 3
+            },
+            { "label": "Any sociology course that transfers to Cal State and UC", "c_id": [], "units": 3 },
+            { "label": "A course in any subject that prepares you for the major at a Cal State and UC", "c_id": [], "units": 3 },
+            { "label": "Any intro social science course", "c_id": [], "units": 3 }
           ]
         }
       ]

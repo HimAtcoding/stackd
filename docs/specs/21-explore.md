@@ -213,7 +213,7 @@ Your status                                      headline
 |---|---|
 | Header | Status tile at 40 (same states), 12 gap, name `title-2` |
 | What it is | `body` `--slate-700`, 8 below: Stackd's plain description (from the data file, our words) |
-| Options (Cal State rows with alternatives) | "Pick one" `headline`, then each option as a line: its name in `body` and its C-ID numbers in monospace `caption` `--slate-600`, with its units |
+| Options (Cal State rows with alternatives) | "Pick one" `headline`, then each option as a line: its name in `body` and its C-ID numbers, if it has any, in monospace `caption` `--slate-600`, with its units |
 | Counts for both | Only when the topic is in both pathways. On the UC sheet it names the Cal State C-ID numbers; on the Cal State sheet it names the UC course type |
 | Your status | The segmented control (00), three segments, 44 tall. Changing it saves at once and updates the row, the bar and the Explore panel. "Done" plays the burst on the sheet's tile |
 | Link line | As on the page (2). The Cal State sheet uses the catalog sentence instead |
@@ -249,7 +249,7 @@ Every academic table uses the same provenance columns and `protect_verified` tri
 | Table | Columns (beyond provenance) | Notes |
 |---|---|---|
 | `pathways` | `id`, `slug` (computer-science), `kind` (`uc_pathway` or `tmc`), `name` (our words), `code` (TMC number, null for UC), `revision`, `degree_name` (for TMC: "Associate in Science in Computer Science for Transfer"), `major_units`, `total_units`, `effective_term` (null or `fall-2027`, the same format as `cycle` elsewhere) | `unique (slug, kind)`. Explore's majors are the distinct slugs |
-| `pathway_requirements` | `id`, `pathway_id`, `code` (stable within the pathway), `sort`, `topic` (shared key across pathways, e.g. `cs1`, `calculus-single`), `name`, `description`, `how_many`, `units`, `c_id text[]` (a one-course TMC row's C-ID numbers; empty for UC rows and pick-one rows), `options` (jsonb list of `{ label, c_id: [..], units }`, empty for one-course rows) | `unique (pathway_id, code)`; `sort` and `topic` unique within the pathway. A row has `c_id` or `options`, not both. `c_id` values match `^[A-Z]{2,5} \d{3}[A-Z]?$` |
+| `pathway_requirements` | `id`, `pathway_id`, `code` (stable within the pathway), `sort`, `topic` (shared key across pathways, e.g. `cs1`, `calculus-single`), `name`, `description`, `how_many`, `units`, `c_id text[]` (a one-course TMC row's C-ID numbers; empty for UC rows and pick-one rows), `options` (jsonb list of `{ label, c_id: [..], units }`, empty for one-course rows) | `unique (pathway_id, code)`; `sort` and `topic` unique within the pathway. A row has `c_id` or `options`, not both. `c_id` values match `^[A-Z]{2,5} \d{3}[A-Z]?$`. An option's `c_id` can be empty, for a template choice with no C-ID number; it still has a label and units |
 | `pathway_campuses` | `id`, `pathway_id`, `institution_id`, `major_names text[]` | UC pathways only. Needs the 9 UC campuses in `institutions` (names, city, website: added through the planning import) |
 | `majors.explore_slug` | New nullable column | Links a plan's major (UC San Diego Computer Science B.S.) to Explore's `computer-science` |
 | `user_topic_status` | `user_id`, `topic`, `status progress_status`, `updated_at`; primary key `(user_id, topic)` | Owner-only row-level security like the other per-student tables; deleted by `delete_my_account()` |

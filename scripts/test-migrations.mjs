@@ -496,12 +496,16 @@ const pathwayRow = (pathway, code, sort, topic, cId, options) => as("service_rol
   [pathway, code, sort, topic, cId, JSON.stringify(options)]);
 const ucReq = (await expectOk("a UC requirement names a course type only", () => pathwayRow(ucPath, "first", 1, "test-topic", [], [])))?.rows[0].id;
 await expectOk("a TMC requirement names its C-ID", () => pathwayRow(tmcPath, "first", 1, "test-topic", ["TEST 101"], []));
-await expectOk("a pick-one requirement lists options", () =>
-  pathwayRow(tmcPath, "second", 2, "other-topic", [], [{ label: "Either", c_id: ["TEST 102", "TEST 103"], units: 3 }, { label: "Or", c_id: ["TEST 900S"], units: 3 }]));
+await expectOk("a pick-one requirement lists options, with or without a C-ID", () =>
+  pathwayRow(tmcPath, "second", 2, "other-topic", [], [{ label: "Either", c_id: ["TEST 102", "TEST 103"], units: 3 }, { label: "Or", c_id: ["TEST 900S"], units: 3 }, { label: "Any course for the major", c_id: [], units: 3 }]));
 await expectError("C-ID numbers are written like COMP 122", () => pathwayRow(tmcPath, "bad-c-id", 3, "t3", ["comp 122"], []), /c_id_check/);
 await expectError("an option takes label, c_id and units only", () =>
   pathwayRow(tmcPath, "bad-option", 3, "t3", [], [{ label: "X", c_id: ["TEST 104"], units: 3, note: "UC's words" }]), /options_check/);
-await expectError("an option needs a C-ID", () => pathwayRow(tmcPath, "no-c-id", 3, "t3", [], [{ label: "X", c_id: [], units: 3 }]), /options_check/);
+await expectError("an option's C-ID is written like COMP 122", () => pathwayRow(tmcPath, "bad-option-id", 3, "t3", [], [{ label: "X", c_id: ["comp 122"], units: 3 }]), /options_check/);
+await expectError("one bad C-ID among good ones is refused", () => pathwayRow(tmcPath, "mixed-id", 3, "t3", [], [{ label: "X", c_id: ["TEST 104", "comp 122"], units: 3 }]), /options_check/);
+await expectError("an option with no C-ID still needs a label", () => pathwayRow(tmcPath, "no-label", 3, "t3", [], [{ label: " ", c_id: [], units: 3 }]), /options_check/);
+await expectError("an option with no C-ID still needs units", () => pathwayRow(tmcPath, "no-units", 3, "t3", [], [{ label: "X", c_id: [] }]), /options_check/);
+await expectError("an option's c_id is a list", () => pathwayRow(tmcPath, "no-list", 3, "t3", [], [{ label: "X", units: 3 }]), /options_check/);
 await expectError("a requirement has c_id or options, not both", () =>
   pathwayRow(tmcPath, "both", 3, "t3", ["TEST 105"], [{ label: "X", c_id: ["TEST 106"], units: 3 }]), /check/);
 await expectError("a topic appears once per pathway", () => pathwayRow(tmcPath, "same-topic", 3, "test-topic", ["TEST 107"], []), /duplicate key/);

@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Economics for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Economics Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1018, the PDF in source_url. A pick-one row lists the template's choices that have a C-ID number; choices with no C-ID number are in its description, because an option must have one. Topics in both pathways (Counts for both): macroeconomics, microeconomics. Calculus is kept apart: UC asks for a year (calculus-year), the template for one course (econ-calculus), and that course can be business calculus. Statistics is Cal State only on this file, because UC doesn't list it as a course expectation for economics. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/economics.json --dry-run",
+  "notes": "Economics for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Economics Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1018, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): macroeconomics, microeconomics. Calculus is kept apart: UC asks for a year (calculus-year), the template for one course (econ-calculus), and that course can be business calculus. Statistics is Cal State only on this file, because UC doesn't list it as a course expectation for economics. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/economics.json --dry-run",
   "slug": "economics",
   "pathways": [
     {
@@ -123,10 +123,10 @@
           "sort": 5,
           "topic": "econ-list-a",
           "name": "One more math or business course",
-          "description": "One of these, or any course that counts as lower-division preparation for economics at a Cal State, which has no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one.",
+          "how_many": "One of 9 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF. The PDF lists MATH 900S here; the Cal-GETC form doesn't.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF. The PDF lists MATH 900S here; the Cal-GETC form doesn't.",
           "options": [
             { "label": "Finite math", "c_id": ["MATH 130"], "units": 3 },
             { "label": "Calculus II, early transcendentals", "c_id": ["MATH 220"], "units": 4 },
@@ -135,7 +135,12 @@
             { "label": "Financial accounting", "c_id": ["ACCT 110"], "units": 3 },
             { "label": "Managerial accounting", "c_id": ["ACCT 120"], "units": 3 },
             { "label": "Business information systems", "c_id": ["BUS 140"], "units": 3 },
-            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 }
+            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for economics at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
           ]
         },
         {
@@ -143,20 +148,32 @@
           "sort": 6,
           "topic": "econ-list-b",
           "name": "One elective",
-          "description": "One of these or anything from the list above you haven't used. It can also be a lower-division economics elective, or an intro social science course that fills the general education social science area. Those two have no C-ID number.",
-          "how_many": "One course, several options",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 13 options",
           "units": 3,
-          "todo": "The template also allows choices with no C-ID number, so they're in the description, not the options. Confirm the wording against the PDF.",
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
           "options": [
             { "label": "Multivariable calculus", "c_id": ["MATH 230"], "units": 4 },
             { "label": "Linear algebra", "c_id": ["MATH 250"], "units": 3 },
             { "label": "Finite math", "c_id": ["MATH 130"], "units": 3 },
             { "label": "Calculus II, early transcendentals", "c_id": ["MATH 220"], "units": 4 },
             { "label": "Calculus II, late transcendentals", "c_id": ["MATH 221"], "units": 4 },
+            { "label": "The whole calculus sequence, numbered as one", "c_id": ["MATH 900S"], "units": 8 },
             { "label": "Financial accounting", "c_id": ["ACCT 110"], "units": 3 },
             { "label": "Managerial accounting", "c_id": ["ACCT 120"], "units": 3 },
             { "label": "Business information systems", "c_id": ["BUS 140"], "units": 3 },
-            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 }
+            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for economics at a Cal State",
+              "c_id": [],
+              "units": 3
+            },
+            { "label": "Any lower-division economics elective", "c_id": [], "units": 3 },
+            {
+              "label": "Any intro social science course that fills the general education social science area",
+              "c_id": [],
+              "units": 3
+            }
           ]
         }
       ]
