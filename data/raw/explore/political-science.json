@@ -5,7 +5,7 @@
   "pathways": [
     {
       "kind": "uc_pathway",
-      "name": "Political science",
+      "name": "Political Science",
       "effective_term": null,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/political-science.html",
@@ -52,7 +52,7 @@
     },
     {
       "kind": "tmc",
-      "name": "Political science",
+      "name": "Political Science",
       "code": "1009",
       "revision": "6",
       "degree_name": "Associate in Arts in Political Science for Transfer",
