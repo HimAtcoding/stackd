@@ -60,7 +60,7 @@
       "total_units": 60,
       "effective_term": null,
       "source_name": "California Community Colleges Chancellor's Office",
-      "source_url": "https://www.cccco.edu/wp-content/uploads/2023/11/poli-sci-form-a11y.pdf",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/poli-sci-form.pdf",
       "academic_year": "2026-27",
       "retrieved_at": "",
       "todo": "On the day you check, confirm on cccco.edu that Rev. 6 (09/01/22) is still the newest Political Science template. source_url is the Cal-GETC PDF, which says to select 3 core courses; the IGETC PDF of the same revision (tmc-poli-sci-templatea11y.pdf) has the same C-ID numbers. Then check each C-ID number and unit count against the PDF.",

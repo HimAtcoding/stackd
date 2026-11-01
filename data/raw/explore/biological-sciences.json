@@ -161,7 +161,7 @@
       "total_units": 60,
       "effective_term": null,
       "source_name": "California Community Colleges Chancellor's Office",
-      "source_url": "https://www.cccco.edu/wp-content/uploads/2026/02/biology20adtsubmissionform-a11y-updated.pdf",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/form/biology20adtsubmissionforma11y.pdf",
       "academic_year": "2026-27",
       "retrieved_at": "",
       "todo": "On the day you check, confirm on cccco.edu that Biology 2.0 (ADT Submission Form #2014, released 02/01/2026, Cal-GETC) is still the newest; it has no Rev. number, so revision is 2.0. The older Rev. 2 (05/18/2015) asked for a year of physics; this one doesn't. Confirm the degree name: the PDF's line is cut off by the college name field. The major is 21-30 units; major_units is the minimum, 21.",

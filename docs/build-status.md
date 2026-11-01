@@ -510,6 +510,7 @@ Spec `21-explore.md`, Batches, on branch `explore-batch-2a`. **Nothing is import
 - **Migration** `supabase/migrations/20261031120000_explore_option_no_c_id.sql`: a TMC option may have an empty `c_id`, because every template has choices with no C-ID number. It still needs a label and units, and any number it gives must be well formed. The validator, `test:db` and `test:import` match, and the review report shows "no C-ID" for those options.
 - **Cal State majors are incomplete.** The rows come from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campus catalogs showed a human-verification check to the automated lookup, so they weren't checked. `docs/checks/batch-2a-csu-majors.md` is the blank sheet for a person to fill in.
 - **Format:** "select two" lists are one row per pick, because a row's units must match its smallest option.
+- **Sources:** each TMC `source_url` is the `/-/media/...` PDF link cccco.edu's ADT Submission Forms page shows, without `?la=en&hash=`, like Computer Science's.
 - **One `explore_slug` per major:** UC Santa Cruz's Business Management Economics is in two pathways. Its majors row is in the business administration file, and both pathways list it in their campus rows.
 
 **After merge** (Ryan, in this order):

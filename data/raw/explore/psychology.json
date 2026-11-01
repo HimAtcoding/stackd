@@ -82,7 +82,7 @@
       "total_units": 60,
       "effective_term": null,
       "source_name": "California Community Colleges Chancellor's Office",
-      "source_url": "https://www.cccco.edu/wp-content/uploads/2023/11/tmc-psychology-templatea11y.pdf",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-psychology-templatea11y.pdf",
       "academic_year": "2026-27",
       "retrieved_at": "",
       "todo": "On the day you check, confirm on cccco.edu that Rev. 3 (09/01/14) is still the newest Psychology template. This PDF is the IGETC form; the Cal-GETC form (psychology-form.docx) has the same courses but shows the major as 18-24 units. major_units is the PDF's 18. Then check each C-ID number and unit count against the PDF.",

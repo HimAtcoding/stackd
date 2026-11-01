@@ -76,7 +76,7 @@
       "total_units": 60,
       "effective_term": null,
       "source_name": "California Community Colleges Chancellor's Office",
-      "source_url": "https://www.cccco.edu/wp-content/uploads/2025/03/calgetcmathematics_2.0_form-a11y.pdf",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/calgetcmathematics20forma11y.pdf",
       "academic_year": "2026-27",
       "retrieved_at": "",
       "todo": "On the day you check, confirm on cccco.edu that Mathematics 2.0, Rev. 5 (02/01/25) is still the newest template; the older Rev. 4 (09/01/14) is still on the page. The major is 20-22 units; major_units is the minimum, 20. Then check each C-ID number and unit count against the PDF.",
