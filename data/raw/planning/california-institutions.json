@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Every California public college and university as a school (spec 21 → Data, batch 1). Names, city, website and system only. Community colleges: the Chancellor's Office alphabetical listing (118 entries) minus its 2 noncredit continuing-education schools (North Orange Continuing Education, San Diego College of Continuing Education) = 116, including Calbright. Changes from that listing: names written in normal case instead of capitals (DEANZA → De Anza, MIRACOSTA → MiraCosta); websites given https:// and lower case (www.ClovisCollege.edu → https://www.cloviscollege.edu); Laney's website is printed www.laneyedu, entered as https://www.laney.edu; Lake Tahoe's city So. Lake Tahoe → South Lake Tahoe; Calbright has no address, so no city. Cities are the listing's mailing-address city (Clovis Community College's is Fresno). Cal State: the 22 university cards on calstate.edu/attend/campuses, with their short names and website links (http links entered as https). Cal Maritime has no card (it is now part of Cal Poly San Luis Obispo) and isn't listed. UC: the 9 undergraduate campuses on universityofcalifornia.edu (UCSF has no undergraduates). las-positas and uc-san-diego are copied unchanged from las-positas-ucsd-cs.json so the import reports them unchanged. Spot-check 10 community colleges and every Cal State and UC row against the source_url, fill in retrieved_at with the date you checked, then run: npm run import -- data/raw/planning/california-institutions.json --dry-run",
+  "notes": "Every California public college and university as a school (spec 21 → Data, batch 1). Names, city, website and system only. Community colleges: the Chancellor's Office alphabetical listing (118 entries) minus its 2 noncredit continuing-education schools (North Orange Continuing Education, San Diego College of Continuing Education) = 116, including Calbright. Changes from that listing: names written in normal case instead of capitals (DEANZA → De Anza, MIRACOSTA → MiraCosta); websites given https:// and lower case (www.ClovisCollege.edu → https://www.cloviscollege.edu); Laney's website is printed www.laneyedu, entered as https://www.laney.edu; Lake Tahoe's city So. Lake Tahoe → South Lake Tahoe; Calbright has no address, so no city. Cities are the listing's mailing-address city (Clovis Community College's is Fresno). Cal State: the 22 university cards on calstate.edu/attend/campuses, with their short names and website links (http links entered as https). Cal Maritime has no card (it is now part of Cal Poly San Luis Obispo) and isn't listed. UC: the 9 undergraduate campuses on universityofcalifornia.edu (UCSF has no undergraduates). las-positas and uc-san-diego are copied unchanged from las-positas-ucsd-cs.json so the import reports them unchanged. Spot-check 10 community colleges and every Cal State and UC row against the source_url, fill in retrieved_at with the date you checked, then run: npm run import -- data/raw/planning/california-institutions.json --dry-run Checked by Abyan on 2026-10-31. Every Cal State row against calstate.edu/attend/campuses, every UC row against universityofcalifornia.edu/about-uc/campuses-locations, and all 116 community colleges (not just 10) against the Chancellor's Office listing: names, cities and websites match, apart from the Lake Tahoe and Laney fixes above. Every website loads. No rows changed. las-positas and uc-san-diego keep their 2026-10-04 retrieved_at so they stay identical to las-positas-ucsd-cs.json.",
   "institutions": [
     {
       "slug": "allan-hancock",
@@ -12,7 +12,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "american-river",
@@ -24,7 +24,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "antelope-valley",
@@ -36,7 +36,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "bakersfield",
@@ -48,7 +48,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "barstow",
@@ -60,7 +60,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "berkeley-city",
@@ -72,7 +72,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "butte",
@@ -84,7 +84,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cabrillo",
@@ -96,7 +96,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "calbright",
@@ -107,7 +107,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "canada",
@@ -119,7 +119,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cerritos",
@@ -131,7 +131,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cerro-coso",
@@ -143,7 +143,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "chabot",
@@ -155,7 +155,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "chaffey",
@@ -167,7 +167,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "citrus",
@@ -179,7 +179,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "city-college-of-san-francisco",
@@ -191,7 +191,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "clovis",
@@ -203,7 +203,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "coalinga",
@@ -215,7 +215,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "coastline",
@@ -227,7 +227,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-alameda",
@@ -239,7 +239,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-marin",
@@ -251,7 +251,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-san-mateo",
@@ -263,7 +263,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-the-canyons",
@@ -275,7 +275,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-the-desert",
@@ -287,7 +287,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-the-redwoods",
@@ -299,7 +299,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-the-sequoias",
@@ -311,7 +311,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "college-of-the-siskiyous",
@@ -323,7 +323,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "columbia",
@@ -335,7 +335,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "compton",
@@ -347,7 +347,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "contra-costa",
@@ -359,7 +359,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "copper-mountain",
@@ -371,7 +371,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cosumnes-river",
@@ -383,7 +383,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "crafton-hills",
@@ -395,7 +395,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cuesta",
@@ -407,7 +407,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cuyamaca",
@@ -419,7 +419,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cypress",
@@ -431,7 +431,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "de-anza",
@@ -443,7 +443,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "diablo-valley",
@@ -455,7 +455,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "east-los-angeles",
@@ -467,7 +467,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "el-camino",
@@ -479,7 +479,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "evergreen-valley",
@@ -491,7 +491,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "feather-river",
@@ -503,7 +503,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "folsom-lake",
@@ -515,7 +515,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "foothill",
@@ -527,7 +527,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "fresno-city",
@@ -539,7 +539,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "fullerton",
@@ -551,7 +551,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "gavilan",
@@ -563,7 +563,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "glendale",
@@ -575,7 +575,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "golden-west",
@@ -587,7 +587,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "grossmont",
@@ -599,7 +599,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "hartnell",
@@ -611,7 +611,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "imperial-valley",
@@ -623,7 +623,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "irvine-valley",
@@ -635,7 +635,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "lake-tahoe",
@@ -647,7 +647,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "laney",
@@ -659,7 +659,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "las-positas",
@@ -683,7 +683,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "lemoore",
@@ -695,7 +695,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "long-beach-city",
@@ -707,7 +707,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-city",
@@ -719,7 +719,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-harbor",
@@ -731,7 +731,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-mission",
@@ -743,7 +743,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-pierce",
@@ -755,7 +755,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-southwest",
@@ -767,7 +767,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-trade-tech",
@@ -779,7 +779,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-angeles-valley",
@@ -791,7 +791,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "los-medanos",
@@ -803,7 +803,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "madera",
@@ -815,7 +815,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "mendocino",
@@ -827,7 +827,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "merced",
@@ -839,7 +839,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "merritt",
@@ -851,7 +851,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "miracosta",
@@ -863,7 +863,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "mission",
@@ -875,7 +875,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "modesto-junior",
@@ -887,7 +887,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "monterey-peninsula",
@@ -899,7 +899,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "moorpark",
@@ -911,7 +911,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "moreno-valley",
@@ -923,7 +923,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "mt-san-antonio",
@@ -935,7 +935,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "mt-san-jacinto",
@@ -947,7 +947,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "napa-valley",
@@ -959,7 +959,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "norco",
@@ -971,7 +971,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "ohlone",
@@ -983,7 +983,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "orange-coast",
@@ -995,7 +995,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "oxnard",
@@ -1007,7 +1007,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "palo-verde",
@@ -1019,7 +1019,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "palomar",
@@ -1031,7 +1031,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "pasadena-city",
@@ -1043,7 +1043,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "porterville",
@@ -1055,7 +1055,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "reedley",
@@ -1067,7 +1067,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "rio-hondo",
@@ -1079,7 +1079,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "riverside-city",
@@ -1091,7 +1091,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "sacramento-city",
@@ -1103,7 +1103,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "saddleback",
@@ -1115,7 +1115,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-bernardino-valley",
@@ -1127,7 +1127,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-diego-city",
@@ -1139,7 +1139,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-diego-mesa",
@@ -1151,7 +1151,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-diego-miramar",
@@ -1163,7 +1163,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-joaquin-delta",
@@ -1175,7 +1175,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-jose-city",
@@ -1187,7 +1187,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "santa-ana",
@@ -1199,7 +1199,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "santa-barbara-city",
@@ -1211,7 +1211,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "santa-monica",
@@ -1223,7 +1223,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "santa-rosa-junior",
@@ -1235,7 +1235,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "santiago-canyon",
@@ -1247,7 +1247,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "shasta",
@@ -1259,7 +1259,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "sierra",
@@ -1271,7 +1271,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "skyline",
@@ -1283,7 +1283,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "solano",
@@ -1295,7 +1295,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "southwestern",
@@ -1307,7 +1307,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "taft",
@@ -1319,7 +1319,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "ventura",
@@ -1331,7 +1331,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "victor-valley",
@@ -1343,7 +1343,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "west-los-angeles",
@@ -1355,7 +1355,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "west-valley",
@@ -1367,7 +1367,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "woodland",
@@ -1379,7 +1379,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "yuba",
@@ -1391,7 +1391,7 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-bakersfield",
@@ -1403,7 +1403,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-channel-islands",
@@ -1415,7 +1415,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "chico-state",
@@ -1427,7 +1427,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-dominguez-hills",
@@ -1439,7 +1439,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-east-bay",
@@ -1451,7 +1451,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "fresno-state",
@@ -1463,7 +1463,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-fullerton",
@@ -1475,7 +1475,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cal-poly-humboldt",
@@ -1487,7 +1487,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-long-beach",
@@ -1499,7 +1499,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cal-state-la",
@@ -1511,7 +1511,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-monterey-bay",
@@ -1523,7 +1523,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csun",
@@ -1535,7 +1535,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cal-poly-pomona",
@@ -1547,7 +1547,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "sacramento-state",
@@ -1559,7 +1559,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-san-bernardino",
@@ -1571,7 +1571,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-diego-state",
@@ -1583,7 +1583,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-francisco-state",
@@ -1595,7 +1595,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "san-jose-state",
@@ -1607,7 +1607,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "cal-poly-san-luis-obispo",
@@ -1619,7 +1619,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "csu-san-marcos",
@@ -1631,7 +1631,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "sonoma-state",
@@ -1643,7 +1643,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "stanislaus-state",
@@ -1655,7 +1655,7 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-berkeley",
@@ -1667,7 +1667,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-davis",
@@ -1679,7 +1679,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-irvine",
@@ -1691,7 +1691,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-los-angeles",
@@ -1703,7 +1703,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-merced",
@@ -1715,7 +1715,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-riverside",
@@ -1727,7 +1727,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-san-diego",
@@ -1751,7 +1751,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "slug": "uc-santa-cruz",
@@ -1763,7 +1763,7 @@
       "source_name": "University of California",
       "source_url": "https://www.universityofcalifornia.edu/about-uc/campuses-locations",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     }
   ]
 }
