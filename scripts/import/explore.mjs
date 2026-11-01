@@ -138,7 +138,8 @@ export function validateExploreFile(file) {
           if (!o || typeof o !== "object" || Array.isArray(o)) return say(ow, "must be an object");
           for (const key of Object.keys(o)) if (!["label", "c_id", "units"].includes(key)) say(ow, `${key} isn't a field an option takes (label, c_id, units)`);
           if (!text(o.label)) say(ow, "label is missing");
-          if (!Array.isArray(o.c_id) || o.c_id.length === 0) say(ow, "c_id must list at least one C-ID number");
+          // A template choice can have no C-ID number; c_id is then an empty list
+          if (!Array.isArray(o.c_id)) say(ow, "c_id must be a list of C-ID numbers, empty if the option has none");
           else cIdsOk(ow, o.c_id, "c_id");
           if (!positive(o.units)) say(ow, "units must be a number above 0");
         });

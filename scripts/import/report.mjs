@@ -102,7 +102,7 @@ export function exploreReportRows(payload, stored) {
     if (!s) continue;
     const p = pathwayOf.get(s.pathway_id);
     const ids = s.c_id.length ? ` [${s.c_id.join(" + ")}]` : "";
-    const options = s.options.length ? ` Options: ${s.options.map((o) => `${o.label} [${o.c_id.join(" + ")}]${units(o.units)}`).join("; ")}.` : "";
+    const options = s.options.length ? ` Options: ${s.options.map((o) => `${o.label} [${o.c_id.join(" + ") || "no C-ID"}]${units(o.units)}`).join("; ")}.` : "";
     rows.push({
       table: "pathway_requirements", ...s, cycle: p.effective_term ?? "",
       record: `${p.slug}, ${label(p)} ${s.sort}. ${s.name} (topic ${s.topic}; ${s.how_many}${units(s.units)})${ids}: ${s.description}${options}`,

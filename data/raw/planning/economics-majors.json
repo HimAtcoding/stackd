@@ -1,0 +1,195 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Economics majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's economics. UC: every campus major the Economics Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. UC Santa Cruz's Business Management Economics is in this pathway, and economics.json lists it in the campus rows, but its majors row is in business-administration-majors.json: a major has one explore_slug, and a second import would overwrite the first. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/economics-majors.json --dry-run",
+  "majors": [
+    {
+      "institution": "uc-berkeley",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-davis",
+      "slug": "economics-ab",
+      "name": "Economics",
+      "degree_type": "AB",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-irvine",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-los-angeles",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-merced",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-riverside",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-san-diego",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-santa-barbara",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-santa-cruz",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-santa-cruz",
+      "slug": "economics-mathematics-ba",
+      "name": "Economics/Mathematics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-santa-cruz",
+      "slug": "global-economics-ba",
+      "name": "Global Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/economics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "csun",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "CSUN catalog",
+      "source_url": "https://catalog.csun.edu/academics/econ/programs/ba-economics/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "sacramento-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Sacramento State catalog",
+      "source_url": "https://catalog.csus.edu/colleges/social-sciences-interdisciplinary-studies/economics/ba-in-economics/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "csu-san-bernardino",
+      "slug": "quantitative-economics-bs",
+      "name": "Quantitative Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "CSU San Bernardino catalog",
+      "source_url": "https://catalog.csusb.edu/colleges-schools-departments/social-behavioral-sciences/economics/economics-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Closest match, not an exact one: confirm it belongs here. The campus has no degree called plain Economics. The link says economics-ba, but the page is this B.S."
+    },
+    {
+      "institution": "csu-san-bernardino",
+      "slug": "political-economy-ba",
+      "name": "Political Economy",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "CSU San Bernardino catalog",
+      "source_url": "https://catalog.csusb.edu/colleges-schools-departments/social-behavioral-sciences/economics/economics-political-economy-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Closest match, not an exact one: confirm it belongs here. The campus has no degree called plain Economics; the Economics department offers this one."
+    },
+    {
+      "institution": "san-francisco-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "San Francisco State bulletin",
+      "source_url": "https://bulletin.sfsu.edu/colleges/business/economics/ba-economics/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "cal-poly-san-luis-obispo",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "Cal Poly San Luis Obispo catalog",
+      "source_url": "https://catalog.calpoly.edu/business/undergraduate/economics-bs/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    }
+  ]
+}

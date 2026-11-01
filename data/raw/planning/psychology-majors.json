@@ -1,0 +1,172 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Psychology majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's psychology. UC: every campus major the Psychology Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/psychology-majors.json --dry-run",
+  "majors": [
+    {
+      "institution": "uc-berkeley",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-davis",
+      "slug": "psychology-ab",
+      "name": "Psychology",
+      "degree_type": "AB",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-davis",
+      "slug": "psychology-bs",
+      "name": "Psychology",
+      "degree_type": "BS",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-los-angeles",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-merced",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-riverside",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-san-diego",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-san-diego",
+      "slug": "psychology-bs",
+      "name": "Psychology",
+      "degree_type": "BS",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "uc-santa-cruz",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "csun",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSUN catalog",
+      "source_url": "https://catalog.csun.edu/academics/psy/programs/ba-psychology-i/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "sacramento-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Sacramento State catalog",
+      "source_url": "https://catalog.csus.edu/colleges/social-sciences-interdisciplinary-studies/psychology/ba-in-psychology/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "sacramento-state",
+      "slug": "psychology-bs",
+      "name": "Psychology",
+      "degree_type": "BS",
+      "explore_slug": "psychology",
+      "source_name": "Sacramento State catalog",
+      "source_url": "https://catalog.csus.edu/colleges/social-sciences-interdisciplinary-studies/psychology/bs-in-psychology/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "csu-san-bernardino",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU San Bernardino catalog",
+      "source_url": "https://catalog.csusb.edu/colleges-schools-departments/social-behavioral-sciences/psychology/psychology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    },
+    {
+      "institution": "san-francisco-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "San Francisco State bulletin",
+      "source_url": "https://bulletin.sfsu.edu/colleges/science-engineering/psychology/ba-psychology/",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "A separate Psychology BA also appears under Professional and Global Education (extended-learning/ba-psychology/); not counted as a distinct degree. Confirm this is one degree."
+    },
+    {
+      "institution": "cal-poly-san-luis-obispo",
+      "slug": "psychology-bs",
+      "name": "Psychology",
+      "degree_type": "BS",
+      "explore_slug": "psychology",
+      "source_name": "Cal Poly San Luis Obispo catalog",
+      "source_url": "https://catalog.calpoly.edu/liberal-arts/psychology-child-development/psychology-bs/",
+      "academic_year": "2026-27",
+      "retrieved_at": ""
+    }
+  ]
+}

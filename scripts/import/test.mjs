@@ -475,8 +475,8 @@ const major = () => ({
       effective_term: null, ...tmcProv,
       requirements: [
         { code: "test-101", sort: 1, topic: "t-shared", name: "Shared course", description: "A made-up course both list.", how_many: "One course", units: 3, c_id: ["TEST 101"] },
-        { code: "pick", sort: 2, topic: "t-pick", name: "Pick one", description: "Made-up options.", how_many: "One of 2 options", units: 4,
-          options: [{ label: "First option", c_id: ["TEST 102", "TEST 103"], units: 4 }, { label: "Second option", c_id: ["TEST 900S"], units: 5 }] },
+        { code: "pick", sort: 2, topic: "t-pick", name: "Pick one", description: "Made-up options.", how_many: "One of 3 options", units: 4,
+          options: [{ label: "First option", c_id: ["TEST 102", "TEST 103"], units: 4 }, { label: "Second option", c_id: ["TEST 900S"], units: 5 }, { label: "Any course for the major", c_id: [], units: 4 }] },
       ],
     },
   ],
@@ -503,19 +503,19 @@ check("explore: imported rows start unverified", (await count("pathway_requireme
 check("explore: requirement and campus rows take their pathway's source",
   (await count("pathway_requirements", "source_url = 'https://www.cccco.edu/test-template.pdf'")) === 2 && (await count("pathway_campuses", "source_url like 'https://admission.%'")) === 1);
 check("explore: C-ID numbers and options are stored as written",
-  (await count("pathway_requirements", "c_id = array['TEST 101']")) === 1 && (await count("pathway_requirements", "options -> 1 -> 'c_id' = '[\"TEST 900S\"]'")) === 1);
+  (await count("pathway_requirements", "c_id = array['TEST 101']")) === 1 && (await count("pathway_requirements", "options -> 1 -> 'c_id' = '[\"TEST 900S\"]'")) === 1 && (await count("pathway_requirements", "options -> 2 -> 'c_id' = '[]'")) === 1);
 let majorReport = `${out.report}.csv`;
 const majorRows = readReportCsv(majorReport);
 check("explore: the review report lists every record", majorRows.length === 7, `${majorRows.length} rows`);
 check("explore: the report spells out C-ID numbers, options and campus majors",
-  majorRows.some((r) => r.record.includes("[TEST 101]")) && majorRows.some((r) => r.record.includes("Second option [TEST 900S], 5 units")) &&
+  majorRows.some((r) => r.record.includes("[TEST 101]")) && majorRows.some((r) => r.record.includes("Second option [TEST 900S], 5 units")) && majorRows.some((r) => r.record.includes("Any course for the major [no C-ID], 4 units")) &&
     majorRows.some((r) => r.record.includes("at example-university: Test major, B.S.")),
   JSON.stringify(majorRows.map((r) => r.record)));
 const majorMd = fs.readFileSync(`${out.report}.md`, "utf8");
 check("explore: the report sets each topic's UC and Cal State rows side by side",
   majorMd.includes("## Counts for both: example-major") && majorMd.includes("1 of 2 UC course types also count for Cal State") &&
     majorMd.includes("| t-shared | 1. Shared course | 1. Shared course [TEST 101] | yes |") && majorMd.includes("| t-uc | 2. UC-only course |  | no |") &&
-    majorMd.includes("| t-pick |  | 2. Pick one [2 options] | no |"),
+    majorMd.includes("| t-pick |  | 2. Pick one [3 options] | no |"),
   majorMd.slice(majorMd.indexOf("## Counts")));
 out = await runImport({ file: writeMajor("major", major()), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("explore: re-importing the same file changes nothing",
@@ -576,6 +576,10 @@ await badMajor("a topic twice", (d) => (d.pathways[1].requirements[1].topic = "t
 await badMajor("units that don't add up", (d) => (d.pathways[1].major_units = 8), /add up to 7 units, but major_units is 8/);
 await badMajor("a pick-one row's units", (d) => (d.pathways[1].requirements[1].units = 5), /smallest option's units \(4\)/);
 await badMajor("an option with UC's text", (d) => (d.pathways[1].requirements[1].options[0].text = "UC's words"), /isn't a field an option takes/);
+await badMajor("an option's badly written C-ID", (d) => (d.pathways[1].requirements[1].options[0].c_id = ["TEST 102", "test 103"]), /C-ID numbers written like COMP 122/);
+await badMajor("an option without a c_id list", (d) => delete d.pathways[1].requirements[1].options[2].c_id, /c_id must be a list/);
+await badMajor("an option with no C-ID and no label", (d) => (d.pathways[1].requirements[1].options[2].label = " "), /label is missing/);
+await badMajor("an option with no C-ID and no units", (d) => delete d.pathways[1].requirements[1].options[2].units, /units must be a number above 0/);
 await badMajor("a TMC source off cccco.edu", (d) => (d.pathways[1].source_url = "https://example.org/template.pdf"), /must be on cccco.edu/);
 await badMajor("a UC source off UC Admissions", (d) => (d.pathways[0].source_url = "https://www.ucop.edu/pathway"), /admission.universityofcalifornia.edu/);
 await badMajor("an effective term with a space", (d) => (d.pathways[0].effective_term = "fall 2027"), /look like fall-2027/);
@@ -624,6 +628,29 @@ check("computer-science.json names template #2007 rev. 3 at 28 and 60 units",
     tmcPath.source_url === "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-computersci-rev-3-a11y.pdf");
 check("computer-science.json lists the 9 UC campuses, 5 majors at Santa Cruz",
   cs.payload?.pathway_campuses.length === 9 && cs.payload.pathway_campuses.find((c) => c.institution === "uc-santa-cruz").major_names.length === 5);
+
+// Batch 2a: drafts stop only on their todos and empty dates, and pass once a person has cleared those
+const BATCH_2A = ["biological-sciences", "psychology", "business-administration", "economics", "political-science", "sociology", "communication", "mathematics"];
+const readRaw = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
+for (const slug of BATCH_2A) {
+  const explore = `data/raw/explore/${slug}.json`;
+  const planning = `data/raw/planning/${slug}-majors.json`;
+  const exploreOpen = validateExploreFile(readRaw(explore)).problems.filter((p) => !/still has a todo|retrieved_at is empty/.test(p));
+  check(`${slug}.json is refused only for its todos and dates`, exploreOpen.length === 0, JSON.stringify(exploreOpen));
+  const filled = validateExploreFile(fillIn(readRaw(explore), "2026-10-31"));
+  check(`${slug}.json passes once checked`, filled.problems.length === 0, JSON.stringify(filled.problems));
+  const majorsOpen = validatePlanningFile(readRaw(planning)).problems.filter((p) => !/retrieved_at is empty|todo isn't a field/.test(p));
+  check(`${slug}-majors.json is refused only for its todos and dates`, majorsOpen.length === 0, JSON.stringify(majorsOpen));
+  const majorsFilled = validatePlanningFile(fillIn(readRaw(planning), "2026-10-31"));
+  check(`${slug}-majors.json passes once checked`, majorsFilled.problems.length === 0, JSON.stringify(majorsFilled.problems));
+}
+const bioCalculus = readRaw("data/raw/explore/biological-sciences.json").pathways[1].requirements.find((r) => r.code === "calculus-first");
+check("biology's calculus row has the 3-unit course as its own option with no C-ID",
+  bioCalculus.units === 3 && bioCalculus.c_id === undefined && JSON.stringify(bioCalculus.options.map((o) => [o.c_id, o.units])) === JSON.stringify([[["MATH 210"], 4], [["MATH 211"], 4], [[], 3]]), JSON.stringify(bioCalculus));
+const santaCruzSlugs = (slug) => readRaw(`data/raw/planning/${slug}-majors.json`).majors.filter((m) => m.institution === "uc-santa-cruz").map((m) => m.slug);
+const econCampus = readRaw("data/raw/explore/economics.json").pathways[0].campuses.find((c) => c.institution === "uc-santa-cruz");
+check("UC Santa Cruz's Business Management Economics: both pathways list it, one majors row",
+  econCampus.major_names.includes("Business Management Economics, B.A.") && santaCruzSlugs("business-administration").includes("business-management-economics-ba") && !santaCruzSlugs("economics").includes("business-management-economics-ba"));
 
 const realInst = () => JSON.parse(fs.readFileSync("data/raw/planning/california-institutions.json", "utf8"));
 const instAsIs = validatePlanningFile(realInst()).problems;

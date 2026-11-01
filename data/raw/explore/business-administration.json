@@ -1,0 +1,195 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Business administration for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Business Administration Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #2006, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): financial-accounting, managerial-accounting, microeconomics, macroeconomics, statistics. Intro to business isn't shared: the template's row also accepts business communication, which UC doesn't ask for, so marking that row done wouldn't always mean UC's course is done. Both rows point at each other in their descriptions. Calculus is kept apart too: UC asks for a year, the template for one math course. Business law is Cal State only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/business-administration.json --dry-run",
+  "slug": "business-administration",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Business administration",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/business-administration.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 7 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "microeconomics",
+          "sort": 1,
+          "topic": "microeconomics",
+          "name": "Microeconomics",
+          "description": "How people and businesses make choices about prices and money.",
+          "how_many": "One course"
+        },
+        {
+          "code": "macroeconomics",
+          "sort": 2,
+          "topic": "macroeconomics",
+          "name": "Macroeconomics",
+          "description": "How a whole economy works: growth, jobs, inflation and policy.",
+          "how_many": "One course"
+        },
+        {
+          "code": "calculus",
+          "sort": 3,
+          "topic": "calculus-year",
+          "name": "Calculus, a full year",
+          "description": "A year-long single-variable calculus sequence. Take the STEM version if you can; some campuses accept a non-STEM version, so check yours. Cal State's degree asks for one math course instead.",
+          "how_many": "A year-long sequence"
+        },
+        {
+          "code": "statistics",
+          "sort": 4,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course.",
+          "how_many": "One course"
+        },
+        {
+          "code": "intro-business",
+          "sort": 5,
+          "topic": "intro-business",
+          "name": "Intro to business",
+          "description": "A survey of how businesses run. It should cover finance. In Cal State's degree this is one of two choices, so pick intro to business there and it works for UC too.",
+          "how_many": "One course"
+        },
+        {
+          "code": "financial-accounting",
+          "sort": 6,
+          "topic": "financial-accounting",
+          "name": "Financial accounting",
+          "description": "How a business records its money and reports it to people outside the company.",
+          "how_many": "One course"
+        },
+        {
+          "code": "managerial-accounting",
+          "sort": 7,
+          "topic": "managerial-accounting",
+          "name": "Managerial accounting",
+          "description": "How managers use accounting numbers to plan and decide.",
+          "how_many": "One course"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Business administration, B.S."] },
+        { "institution": "uc-davis", "major_names": ["Managerial economics, B.S."] },
+        { "institution": "uc-irvine", "major_names": ["Business administration, B.A."] },
+        { "institution": "uc-merced", "major_names": ["Management and business economics, B.S."] },
+        { "institution": "uc-riverside", "major_names": ["Business administration, B.S."] },
+        { "institution": "uc-santa-cruz", "major_names": ["Business management economics, B.A."] }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Business administration",
+      "code": "2006",
+      "revision": "5",
+      "degree_name": "Associate in Science in Business Administration for Transfer 2.0",
+      "major_units": 24,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-business-admin-20-rev-5-updated-a11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Business Administration 2.0, Rev. 5 (02/08/21) is still the newest template; the older Rev. 4 (09/01/14, 23 units) is still on the page. The Cal-GETC form (business-admin-20-rev-Form-.docx) has the same courses. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "acct-110",
+          "sort": 1,
+          "topic": "financial-accounting",
+          "name": "Financial accounting",
+          "description": "How a business records its money and reports it to people outside the company.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ACCT 110"]
+        },
+        {
+          "code": "acct-120",
+          "sort": 2,
+          "topic": "managerial-accounting",
+          "name": "Managerial accounting",
+          "description": "How managers use accounting numbers to plan and decide.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ACCT 120"]
+        },
+        {
+          "code": "econ-201",
+          "sort": 3,
+          "topic": "microeconomics",
+          "name": "Microeconomics",
+          "description": "How people and businesses make choices about prices and money.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ECON 201"]
+        },
+        {
+          "code": "econ-202",
+          "sort": 4,
+          "topic": "macroeconomics",
+          "name": "Macroeconomics",
+          "description": "How a whole economy works: growth, jobs, inflation and policy.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["ECON 202"]
+        },
+        {
+          "code": "business-law",
+          "sort": 5,
+          "topic": "business-law",
+          "name": "Business law",
+          "description": "The legal rules businesses work under.",
+          "how_many": "One of 2 options",
+          "units": 3,
+          "options": [
+            { "label": "Business law", "c_id": ["BUS 125"], "units": 3 },
+            { "label": "Legal environment of business", "c_id": ["BUS 120"], "units": 3 }
+          ]
+        },
+        {
+          "code": "math",
+          "sort": 6,
+          "topic": "business-math",
+          "name": "One math course",
+          "description": "Pick one. UC asks for a full year of calculus, so calculus is the better choice if you're aiming for both.",
+          "how_many": "One of 3 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Business calculus", "c_id": ["MATH 140"], "units": 3 },
+            { "label": "Finite math", "c_id": ["MATH 130"], "units": 3 },
+            {
+              "label": "Another math course, not statistics, that counts for the business major at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        },
+        {
+          "code": "math-110",
+          "sort": 7,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["MATH 110"]
+        },
+        {
+          "code": "intro-or-communication",
+          "sort": 8,
+          "topic": "business-intro-or-communication",
+          "name": "Intro to business or business communication",
+          "description": "UC asks for intro to business, so pick that one if you're aiming for both.",
+          "how_many": "One of 2 options",
+          "units": 3,
+          "options": [
+            { "label": "Intro to business", "c_id": ["BUS 110"], "units": 3 },
+            { "label": "Business communication", "c_id": ["BUS 115"], "units": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

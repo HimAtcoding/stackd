@@ -1,0 +1,187 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Psychology for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Psychology Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1002, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): statistics, psych-intro. UC's biology (the first course of the STEM series) isn't shared with the template's biology-based list, which accepts non-majors biology. Research methods is Cal State only. Calculus, the extra science and the social science courses are UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/psychology.json --dry-run",
+  "slug": "psychology",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Psychology",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/psychology.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 6 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "intro-psychology",
+          "sort": 1,
+          "topic": "psych-intro",
+          "name": "Intro to psychology",
+          "description": "The first psychology course, a survey of how people think, feel and behave.",
+          "how_many": "One course"
+        },
+        {
+          "code": "statistics",
+          "sort": 2,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course.",
+          "how_many": "One course"
+        },
+        {
+          "code": "calculus-first",
+          "sort": 3,
+          "topic": "calculus-first",
+          "name": "Calculus, first course",
+          "description": "The first calculus course. The life sciences version is enough; a higher version works too.",
+          "how_many": "One course"
+        },
+        {
+          "code": "biology-first",
+          "sort": 4,
+          "topic": "biology-first",
+          "name": "Biology for science majors, first course",
+          "description": "The first biology course in the STEM series, not a general education biology course. Cal State's degree accepts other biology courses here, so choose this one if you're aiming for both.",
+          "how_many": "One course"
+        },
+        {
+          "code": "science-extra",
+          "sort": 5,
+          "topic": "science-extra",
+          "name": "One more science course",
+          "description": "A course in biology, chemistry or physics.",
+          "how_many": "One course"
+        },
+        {
+          "code": "social-science",
+          "sort": 6,
+          "topic": "psych-social-science",
+          "name": "Two social science courses",
+          "description": "Pick two: social or cultural anthropology, linguistic anthropology, logic, intro to sociology, or modern philosophy.",
+          "how_many": "Two of these 5"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Psychology, B.A."] },
+        { "institution": "uc-davis", "major_names": ["Psychology, A.B. and B.S."] },
+        { "institution": "uc-los-angeles", "major_names": ["Psychology, B.A."] },
+        { "institution": "uc-merced", "major_names": ["Psychology, B.A."] },
+        { "institution": "uc-riverside", "major_names": ["Psychology, B.A."] },
+        { "institution": "uc-san-diego", "major_names": ["Psychology, B.A. and B.S."] },
+        { "institution": "uc-santa-cruz", "major_names": ["Psychology, B.A."] }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Psychology",
+      "code": "1002",
+      "revision": "3",
+      "degree_name": "Associate in Arts in Psychology for Transfer",
+      "major_units": 18,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-psychology-templatea11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Rev. 3 (09/01/14) is still the newest Psychology template. This PDF is the IGETC form; the Cal-GETC form (psychology-form.docx) has the same courses but shows the major as 18-24 units. major_units is the PDF's 18. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "math-110",
+          "sort": 1,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course. The template allows 3 or 4 units.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["MATH 110"]
+        },
+        {
+          "code": "psy-110",
+          "sort": 2,
+          "topic": "psych-intro",
+          "name": "Intro to psychology",
+          "description": "The first psychology course, a survey of how people think, feel and behave.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["PSY 110"]
+        },
+        {
+          "code": "research-methods",
+          "sort": 3,
+          "topic": "psych-research-methods",
+          "name": "Research methods in psychology",
+          "description": "How psychologists design studies and collect data. Some colleges include a lab.",
+          "how_many": "One of 2 options",
+          "units": 3,
+          "options": [
+            { "label": "Research methods in psychology", "c_id": ["PSY 200"], "units": 3 },
+            { "label": "Research methods in psychology, with lab", "c_id": ["PSY 205B"], "units": 4 }
+          ]
+        },
+        {
+          "code": "list-a",
+          "sort": 4,
+          "topic": "psych-list-a",
+          "name": "One biology-based course",
+          "description": "Pick one. The template allows 3 or 4 units for the two biology courses.",
+          "how_many": "One of 3 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 }
+          ]
+        },
+        {
+          "code": "list-b",
+          "sort": 5,
+          "topic": "psych-list-b",
+          "name": "One more course for the major",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 4 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for psychology at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        },
+        {
+          "code": "list-c",
+          "sort": 6,
+          "topic": "psych-list-c",
+          "name": "One elective",
+          "description": "Pick one you haven't used.",
+          "how_many": "One of 6 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Intro to biological psychology", "c_id": ["PSY 150"], "units": 3 },
+            { "label": "Intro to biology", "c_id": [], "units": 3 },
+            { "label": "Human biology", "c_id": [], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for psychology at a Cal State",
+              "c_id": [],
+              "units": 3
+            },
+            { "label": "Any Cal State transferable psychology course", "c_id": [], "units": 3 },
+            {
+              "label": "Any course, in or outside psychology, that prepares you for the major at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

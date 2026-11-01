@@ -1,0 +1,220 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Biological sciences for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Biological Sciences Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #2014, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): biology-sequence, chemistry-general. UC's calculus (a full year) and the template's calculus (the first course) are kept apart, like the physics split in Computer Science: calculus-single and calculus-first. The UC row says Cal State's degree asks for only the first course. Organic chemistry is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/biological-sciences.json --dry-run",
+  "slug": "biological-sciences",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Biological sciences",
+      "effective_term": "fall-2027",
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/biological-sciences.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 4 requirements against the page's course list, in the same order, and the campus rows against its list of majors. The page says this pathway starts in fall 2027 and replaces four older biology pathways with the same courses, so effective_term is fall-2027: confirm. The page lists organic chemistry as expected and also says it can wait until after transfer: confirm the organic row says this fairly.",
+      "requirements": [
+        {
+          "code": "general-biology",
+          "sort": 1,
+          "topic": "biology-sequence",
+          "name": "General biology with lab, the full sequence",
+          "description": "The intro biology series for biology majors, with labs, from the first course to the last. Colleges split it up differently, so start it early.",
+          "how_many": "A full sequence with labs"
+        },
+        {
+          "code": "general-chemistry",
+          "sort": 2,
+          "topic": "chemistry-general",
+          "name": "General chemistry with lab, a full year",
+          "description": "The year-long chemistry series for science majors, with labs.",
+          "how_many": "A year-long sequence with labs"
+        },
+        {
+          "code": "calculus",
+          "sort": 3,
+          "topic": "calculus-single",
+          "name": "Calculus, a full year",
+          "description": "Single-variable calculus for STEM majors. Finish the whole year-long sequence. Cal State's transfer degree asks for only the first course.",
+          "how_many": "A year-long sequence"
+        },
+        {
+          "code": "organic-chemistry",
+          "sort": 4,
+          "topic": "chemistry-organic",
+          "name": "Organic chemistry with lab, a full year",
+          "description": "The year-long organic chemistry series, with labs. Cal State's degree doesn't ask for it. UC says finishing it after transfer won't hurt your chances, and that some campuses also want calculus-based physics or a statistics course before you graduate.",
+          "how_many": "A year-long sequence with labs"
+        }
+      ],
+      "campuses": [
+        {
+          "institution": "uc-berkeley",
+          "major_names": [
+            "Molecular and cell biology, B.A. (biochemistry and molecular biology emphasis)",
+            "Molecular and cell biology, B.A.",
+            "Integrative biology, B.A."
+          ]
+        },
+        {
+          "institution": "uc-davis",
+          "major_names": [
+            "Biochemistry and molecular biology, B.S.",
+            "Cell biology, B.S.",
+            "Biological sciences, B.S.",
+            "Global disease biology, B.S."
+          ]
+        },
+        {
+          "institution": "uc-irvine",
+          "major_names": [
+            "Biochemistry and molecular biology, B.S.",
+            "Developmental and cell biology, B.S.",
+            "Biological sciences, B.S.",
+            "Microbiology & immunology, B.S.",
+            "Neurobiology, B.S.",
+            "Biology/education, B.S.",
+            "Ecology & evolutionary biology, B.S.",
+            "Exercise sciences, B.S.",
+            "Genetics, B.S."
+          ]
+        },
+        {
+          "institution": "uc-los-angeles",
+          "major_names": ["Biochemistry, B.S.", "Molecular, cell and developmental biology, B.S.", "Biology, B.S."]
+        },
+        {
+          "institution": "uc-merced",
+          "major_names": [
+            "Biochemistry, B.S.",
+            "Biochemistry, B.S. (education emphasis)",
+            "Biochemistry, B.S. (pre-pharmacy emphasis)",
+            "Biological science, B.S. (molecular and cell biology emphasis)",
+            "Biological sciences, B.A.",
+            "Biological sciences, B.S. (general biology emphasis)",
+            "Biological sciences, B.S. (microbiology and immunology emphasis)",
+            "Biological sciences, B.S. (molecular and cell biology emphasis)",
+            "Neuroscience, B.A.",
+            "Neuroscience, B.S.",
+            "Neuroscience, B.S. (computational, perceptual, and cognitive neuroscience)",
+            "Neuroscience, B.S. (molecular, cellular, and system neuroscience)",
+            "Neuroscience, B.S. (neuroscience of human development)",
+            "Neuroscience, B.S. (pre-med)",
+            "Biological sciences, B.S. (developmental biology emphasis)",
+            "Biological sciences, B.S. (education emphasis)",
+            "Biological sciences, B.S. (human biology emphasis)",
+            "Ecology, evolution, and conservation biology, B.S.",
+            "Ecology, evolution, and conservation biology (education emphasis), B.S.",
+            "Ecology, evolution, and conservation biology (pre-health emphasis), B.S."
+          ]
+        },
+        {
+          "institution": "uc-riverside",
+          "major_names": [
+            "Biochemistry, B.A. and B.S.",
+            "Cell, molecular and developmental biology, B.A.",
+            "Biology, B.A. and B.S.",
+            "Microbiology, B.A. and B.S.",
+            "Cell, molecular and developmental biology, B.S.",
+            "Neuroscience, B.A. and B.S."
+          ]
+        },
+        {
+          "institution": "uc-san-diego",
+          "major_names": [
+            "Molecular and cell biology, B.S.",
+            "General biology, B.S.",
+            "Microbiology, B.S.",
+            "Human biology, B.S."
+          ]
+        },
+        {
+          "institution": "uc-santa-barbara",
+          "major_names": [
+            "Biochemistry and molecular biology, B.S.",
+            "Cell and developmental biology, B.S.",
+            "Biological sciences, B.A. and B.S.",
+            "Microbiology, B.S.",
+            "Physiology, B.S.",
+            "Aquatic biology, B.S.",
+            "Pharmacology, B.S."
+          ]
+        },
+        {
+          "institution": "uc-santa-cruz",
+          "major_names": [
+            "Biochemistry and molecular biology, B.S.",
+            "Molecular, cell and developmental biology, B.S.",
+            "Biology, B.S.",
+            "Neuroscience, B.S.",
+            "Science education, B.S."
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Biology",
+      "code": "2014",
+      "revision": "2.0",
+      "degree_name": "Associate in Science in Biology 2.0 for Transfer",
+      "major_units": 21,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/form/biology20adtsubmissionforma11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Biology 2.0 (ADT Submission Form #2014, released 02/01/2026, Cal-GETC) is still the newest; it has no Rev. number, so revision is 2.0. The older Rev. 2 (05/18/2015) asked for a year of physics; this one doesn't. Confirm the degree name: the PDF's line is cut off by the college name field. The major is 21-30 units; major_units is the minimum, 21.",
+      "requirements": [
+        {
+          "code": "biology-sequence",
+          "sort": 1,
+          "topic": "biology-sequence",
+          "name": "General biology with lab, the full sequence",
+          "description": "The intro biology series for biology majors. Your college offers one of these sets of courses; take all the courses in it.",
+          "how_many": "One of 4 options",
+          "units": 8,
+          "options": [
+            { "label": "Biology sequence for majors, numbered as one", "c_id": ["BIOL 135S"], "units": 8 },
+            { "label": "Cell and molecular biology, plus organismal biology", "c_id": ["BIOL 190", "BIOL 140"], "units": 8 },
+            {
+              "label": "Cell and molecular biology, plus organismal biology, ecology and evolution",
+              "c_id": ["BIOL 190", "BIOL 130S"],
+              "units": 12
+            },
+            {
+              "label": "Cell and molecular biology, plus zoology, plus botany",
+              "c_id": ["BIOL 190", "BIOL 150", "BIOL 155"],
+              "units": 12
+            }
+          ]
+        },
+        {
+          "code": "chem-120s",
+          "sort": 2,
+          "topic": "chemistry-general",
+          "name": "General chemistry with lab, a full year",
+          "description": "The year-long chemistry series for science majors, numbered as one sequence.",
+          "how_many": "A year-long sequence",
+          "units": 10,
+          "c_id": ["CHEM 120S"]
+        },
+        {
+          "code": "calculus-first",
+          "sort": 3,
+          "topic": "calculus-first",
+          "name": "Calculus, first course",
+          "description": "Pick one. If your degree has room, it can also include one more course that counts toward the major at a Cal State. UC asks for the full year of calculus.",
+          "how_many": "One of 3 options",
+          "units": 3,
+          "todo": "The calculus for life and social sciences option has no C-ID number. The optional 0-4 unit List A has no row, because a row needs at least 1 unit; it's in this description. Confirm both against the PDF.",
+          "options": [
+            { "label": "Calculus I, early transcendentals", "c_id": ["MATH 210"], "units": 4 },
+            { "label": "Calculus I, late transcendentals", "c_id": ["MATH 211"], "units": 4 },
+            { "label": "Calculus for life and social sciences", "c_id": [], "units": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

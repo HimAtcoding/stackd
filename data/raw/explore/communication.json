@@ -1,0 +1,207 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Communication for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Communication Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #1001, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): none. No topic is shared. UC's overlap with this template sits inside choices: public speaking is one of UC's pick-3 and required here; intro to psychology and intro to sociology are in UC's pick-3 and in List B here. A shared status would claim more than either row says, so the descriptions point at each other. UC's intro to communication studies covers more than any single row here. Statistics is UC only. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/communication.json --dry-run",
+  "slug": "communication",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Communication",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/communication.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 4 requirements against the page's course list, in the same order, and the campus rows against its list of majors. No topic is shared with the template: see the notes.",
+      "requirements": [
+        {
+          "code": "statistics",
+          "sort": 1,
+          "topic": "statistics",
+          "name": "Statistics",
+          "description": "An intro statistics course. Cal State's degree doesn't ask for it.",
+          "how_many": "One course"
+        },
+        {
+          "code": "intro-communication",
+          "sort": 2,
+          "topic": "comm-intro",
+          "name": "Intro to communication studies",
+          "description": "A survey that covers mass communication and interpersonal communication. Some colleges take one term for this and some take two.",
+          "how_many": "One or two courses"
+        },
+        {
+          "code": "logic-computing-culture",
+          "sort": 3,
+          "topic": "comm-logic-computing-culture",
+          "name": "One course in logic, computing or culture",
+          "description": "Pick one: symbolic logic, intro to computer science, or intro to cultural studies or culture and communication.",
+          "how_many": "One of these 3"
+        },
+        {
+          "code": "three-more",
+          "sort": 4,
+          "topic": "comm-three-more",
+          "name": "Three more courses",
+          "description": "Pick three: public speaking, linguistics, intro to psychology, intro to sociology. Public speaking is required in Cal State's degree, and intro to psychology and intro to sociology are choices there too.",
+          "how_many": "Three of these 4"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-davis", "major_names": ["Communication, A.B."] },
+        { "institution": "uc-los-angeles", "major_names": ["Communication, B.A."] },
+        { "institution": "uc-san-diego", "major_names": ["Communication, B.A."] },
+        { "institution": "uc-santa-barbara", "major_names": ["Communication, B.A."] }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Communication studies",
+      "code": "1001",
+      "revision": "6",
+      "degree_name": "Associate in Arts in Communication Studies for Transfer 2.0",
+      "major_units": 18,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmccommunicationstudies20rev6V3a11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Communication Studies 2.0, Rev. 6 (09/01/22) is still the newest template; the older Rev. 5 (02/01/16) is still on the page. The Cal-GETC form (communicationstudies20rev-form.docx) has the same courses. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "comm-110",
+          "sort": 1,
+          "topic": "public-speaking",
+          "name": "Public speaking",
+          "description": "Planning and giving speeches to an audience.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMM 110"]
+        },
+        {
+          "code": "comm-130",
+          "sort": 2,
+          "topic": "interpersonal-communication",
+          "name": "Interpersonal communication",
+          "description": "How people communicate one on one and in close relationships.",
+          "how_many": "One course",
+          "units": 3,
+          "c_id": ["COMM 130"]
+        },
+        {
+          "code": "list-a-1",
+          "sort": 3,
+          "topic": "comm-list-a-1",
+          "name": "Communication elective, first of 3",
+          "description": "Pick one.",
+          "how_many": "One of 10 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF. The template lists forensics at 1 unit, 3 units at most. A row's units must match its smallest option, so the option shows 3: confirm.",
+          "options": [
+            { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
+            { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
+            { "label": "Forensics (speech and debate), up to 3 units in all", "c_id": ["COMM 160B"], "units": 3 },
+            { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
+            { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
+            { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
+            { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        },
+        {
+          "code": "list-a-2",
+          "sort": 4,
+          "topic": "comm-list-a-2",
+          "name": "Communication elective, second of 3",
+          "description": "A second course from the same list, different from the first.",
+          "how_many": "One of 10 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
+            { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
+            { "label": "Forensics (speech and debate), up to 3 units in all", "c_id": ["COMM 160B"], "units": 3 },
+            { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
+            { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
+            { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
+            { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        },
+        {
+          "code": "list-a-3",
+          "sort": 5,
+          "topic": "comm-list-a-3",
+          "name": "Communication elective, third of 3",
+          "description": "A third course from the same list, different from the first two.",
+          "how_many": "One of 10 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
+            { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
+            { "label": "Forensics (speech and debate), up to 3 units in all", "c_id": ["COMM 160B"], "units": 3 },
+            { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
+            { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
+            { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
+            { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        },
+        {
+          "code": "list-b",
+          "sort": 6,
+          "topic": "comm-list-b",
+          "name": "One more course",
+          "description": "Pick one you haven't used. Intro to psychology and intro to sociology also count toward UC's pathway.",
+          "how_many": "One of 19 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Survey of human communication", "c_id": ["COMM 115"], "units": 3 },
+            { "label": "Intro to cultural anthropology", "c_id": ["ANTH 120"], "units": 3 },
+            { "label": "Intro to psychology", "c_id": ["PSY 110"], "units": 3 },
+            { "label": "Intro to sociology", "c_id": ["SOCI 110"], "units": 3 },
+            { "label": "Intro to literature", "c_id": ["ENGL 120"], "units": 3 },
+            { "label": "Argumentative writing and critical thinking", "c_id": ["ENGL 105"], "units": 3 },
+            { "label": "Intro to reporting and newswriting", "c_id": ["JOUR 110"], "units": 3 },
+            { "label": "Intro to journalism", "c_id": [], "units": 3 },
+            { "label": "Any Cal State transferable communication studies course", "c_id": [], "units": 3 },
+            { "label": "Argumentation and debate", "c_id": ["COMM 120"], "units": 3 },
+            { "label": "Small group communication", "c_id": ["COMM 140"], "units": 3 },
+            { "label": "Forensics (speech and debate), up to 3 units in all", "c_id": ["COMM 160B"], "units": 3 },
+            { "label": "Intercultural communication", "c_id": ["COMM 150"], "units": 3 },
+            { "label": "Communication theory", "c_id": ["COMM 180"], "units": 3 },
+            { "label": "Mass communication", "c_id": ["JOUR 100"], "units": 3 },
+            { "label": "Communication and new media", "c_id": [], "units": 3 },
+            { "label": "Oral interpretation of literature", "c_id": ["COMM 170"], "units": 3 },
+            { "label": "Persuasion", "c_id": ["COMM 190"], "units": 3 },
+            {
+              "label": "Any course that counts as lower-division preparation for communication at a Cal State",
+              "c_id": [],
+              "units": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

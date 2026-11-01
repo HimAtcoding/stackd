@@ -1,0 +1,143 @@
+{
+  "written_by": "Claude Code, for Ryan Saleh to check",
+  "notes": "Mathematics for Explore (spec 21), batch 2. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Mathematics Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: template #2001, the PDF in source_url. An option with no C-ID number has an empty c_id, which needs the migration 20261031120000_explore_option_no_c_id.sql before this file can be imported. Topics in both pathways (Counts for both): calculus-single, calculus-multi. Differential equations and linear algebra aren't shared even though both sides ask for them: UC has two rows, the template one row, because it allows one combined course (MATH 910S, 5 units), and the units can't be split between two rows without changing the template's total. The descriptions point at each other. Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/mathematics.json --dry-run",
+  "slug": "mathematics",
+  "pathways": [
+    {
+      "kind": "uc_pathway",
+      "name": "Mathematics",
+      "effective_term": null,
+      "source_name": "UC Admissions",
+      "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/mathematics.html",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "Check the 4 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "requirements": [
+        {
+          "code": "calculus",
+          "sort": 1,
+          "topic": "calculus-single",
+          "name": "Calculus, a full year",
+          "description": "Single-variable calculus. Finish the whole sequence, not just the first course.",
+          "how_many": "A full sequence"
+        },
+        {
+          "code": "multivariable-calculus",
+          "sort": 2,
+          "topic": "calculus-multi",
+          "name": "Multivariable calculus",
+          "description": "Calculus with more than one variable, taken after the single-variable sequence.",
+          "how_many": "One course"
+        },
+        {
+          "code": "differential-equations",
+          "sort": 3,
+          "topic": "diff-eq",
+          "name": "Differential equations",
+          "description": "Equations that describe how things change. Cal State's degree asks for this too, or for one course that combines it with linear algebra.",
+          "how_many": "One course"
+        },
+        {
+          "code": "linear-algebra",
+          "sort": 4,
+          "topic": "linear-algebra",
+          "name": "Linear algebra",
+          "description": "Vectors, matrices and systems of linear equations. Cal State's degree asks for this too. Some majors recommend a full physics, chemistry, biology or economics sequence, but UC says it can wait until after transfer.",
+          "how_many": "One course"
+        }
+      ],
+      "campuses": [
+        { "institution": "uc-berkeley", "major_names": ["Mathematics, B.A."] },
+        {
+          "institution": "uc-davis",
+          "major_names": [
+            "Applied mathematics, B.S.",
+            "Mathematical and scientific computation, B.S.",
+            "Mathematical analytics and operations research, B.S.",
+            "Mathematics, B.S."
+          ]
+        },
+        { "institution": "uc-irvine", "major_names": ["Mathematics, B.S."] },
+        { "institution": "uc-los-angeles", "major_names": ["Mathematics, B.S."] },
+        { "institution": "uc-merced", "major_names": ["Applied mathematical sciences, B.S."] },
+        { "institution": "uc-riverside", "major_names": ["Mathematics, B.S."] },
+        { "institution": "uc-san-diego", "major_names": ["Mathematics, B.S."] },
+        { "institution": "uc-santa-barbara", "major_names": ["Mathematics, B.S."] },
+        { "institution": "uc-santa-cruz", "major_names": ["Mathematics, B.A."] }
+      ]
+    },
+    {
+      "kind": "tmc",
+      "name": "Mathematics",
+      "code": "2001",
+      "revision": "5",
+      "degree_name": "Associate in Science in Mathematics 2.0 for Transfer",
+      "major_units": 20,
+      "total_units": 60,
+      "effective_term": null,
+      "source_name": "California Community Colleges Chancellor's Office",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/calgetcmathematics20forma11y.pdf",
+      "academic_year": "2026-27",
+      "retrieved_at": "",
+      "todo": "On the day you check, confirm on cccco.edu that Mathematics 2.0, Rev. 5 (02/01/25) is still the newest template; the older Rev. 4 (09/01/14) is still on the page. The major is 20-22 units; major_units is the minimum, 20. Then check each C-ID number and unit count against the PDF.",
+      "requirements": [
+        {
+          "code": "calculus",
+          "sort": 1,
+          "topic": "calculus-single",
+          "name": "Calculus, a full year",
+          "description": "Single-variable calculus for math and science majors. Your college offers one of these sequences; take both courses, or the whole sequence.",
+          "how_many": "One of 3 options",
+          "units": 8,
+          "options": [
+            { "label": "The whole calculus sequence, numbered as one", "c_id": ["MATH 900S"], "units": 8 },
+            { "label": "Calculus I and II, early transcendentals", "c_id": ["MATH 210", "MATH 220"], "units": 8 },
+            { "label": "Calculus I and II, late transcendentals", "c_id": ["MATH 211", "MATH 221"], "units": 8 }
+          ]
+        },
+        {
+          "code": "math-230",
+          "sort": 2,
+          "topic": "calculus-multi",
+          "name": "Multivariable calculus",
+          "description": "Calculus with more than one variable, taken after the single-variable sequence.",
+          "how_many": "One course",
+          "units": 4,
+          "c_id": ["MATH 230"]
+        },
+        {
+          "code": "diff-eq-linear",
+          "sort": 3,
+          "topic": "diff-eq-and-linear-algebra",
+          "name": "Differential equations and linear algebra",
+          "description": "Take the two as separate courses, or one course that combines them. UC lists them as two courses.",
+          "how_many": "One of 2 options",
+          "units": 5,
+          "options": [
+            { "label": "Differential equations, plus linear algebra", "c_id": ["MATH 240", "MATH 250"], "units": 6 },
+            { "label": "One course that combines both", "c_id": ["MATH 910S"], "units": 5 }
+          ]
+        },
+        {
+          "code": "list-a",
+          "sort": 4,
+          "topic": "math-list-a",
+          "name": "Programming or physics",
+          "description": "Pick one.",
+          "how_many": "One of 3 options",
+          "units": 3,
+          "todo": "Options with no C-ID number are in Stackd's words, and their units are the list's minimum: check both against the PDF.",
+          "options": [
+            { "label": "Intro to programming", "c_id": ["COMP 122"], "units": 3 },
+            {
+              "label": "Another intro programming course, such as C++ or Python, that counts for the major",
+              "c_id": [],
+              "units": 3
+            },
+            { "label": "Physics with calculus, first course", "c_id": ["PHYS 205"], "units": 4 }
+          ]
+        }
+      ]
+    }
+  ]
+}
