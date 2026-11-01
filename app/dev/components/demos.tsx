@@ -1,16 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { EnvelopeIcon, EyeIcon, LockIcon } from "@phosphor-icons/react/ssr";
+import { CodeIcon, EnvelopeIcon, EyeIcon, GraduationCapIcon, LockIcon } from "@phosphor-icons/react/ssr";
+import { AskCard } from "@/components/ui/ask-card";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceChip, ChoiceChips } from "@/components/ui/choice-chip";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { DestructiveButton } from "@/components/ui/destructive-button";
 import { Loading } from "@/components/ui/loading";
+import { MajorRow } from "@/components/ui/major-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { RequirementRow } from "@/components/ui/requirement-row";
 import { SearchField } from "@/components/ui/search-field";
+import { SegmentedBar } from "@/components/ui/segmented-bar";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SettingsGroup, SettingsRow } from "@/components/ui/settings-row";
+import { SourceBlock } from "@/components/ui/source-block";
 import { Spinner } from "@/components/ui/spinner";
+import { StatusTile, type TileStatus } from "@/components/ui/status-tile";
 import { Switch } from "@/components/ui/switch";
 import { TextField } from "@/components/ui/text-field";
 import { Toast } from "@/components/ui/toast";
@@ -19,6 +26,47 @@ import { UnderlineTabs } from "@/components/ui/underline-tabs";
 
 function Label({ children }: { children: string }) {
   return <p className="mb-1.5 text-slate-600 type-caption">{children}</p>;
+}
+
+const TILE_STATUSES: { value: TileStatus; label: string }[] = [
+  { value: "not_started", label: "Not yet" },
+  { value: "in_progress", label: "Taking now" },
+  { value: "done", label: "Done" },
+];
+
+export function ExploreDemo() {
+  const [status, setStatus] = useState<TileStatus>("not_started");
+  const next = () => setStatus((s) => (s === "done" ? "not_started" : "done"));
+  return (
+    <>
+      <Label>Segmented control</Label>
+      <SegmentedControl options={TILE_STATUSES} value={status} onChange={setStatus} aria-label="Sample status" />
+      <Label>Status tile: not yet, taking now, done</Label>
+      <div className="flex gap-3">
+        {TILE_STATUSES.map((s) => (
+          <StatusTile key={s.value} status={s.value} name={s.label} icon={CodeIcon} tile="bg-mint-100" color="text-mint-600" />
+        ))}
+      </div>
+      <Label>Requirement row, the tile follows the control above</Label>
+      <div className="-mx-6">
+        <RequirementRow name="Sample course type" howMany="One course" countsForBoth status={status} icon={CodeIcon} onToggle={next} onOpen={() => {}} />
+      </div>
+      <Label>Major row</Label>
+      <MajorRow href="#" name="Sample major" detail="UC and Cal State" icon={CodeIcon} />
+      <Label>Segmented bar on a solid panel: done, taking now, not yet</Label>
+      <div className="rounded-lg bg-mint-800 p-5">
+        <SegmentedBar steps={[true, "taking", false]} onFill />
+      </div>
+      <Label>Ask, tier 3</Label>
+      <AskCard labelledBy="demo-ask" icon={<GraduationCapIcon weight="fill" size={24} aria-hidden />}>
+        <h3 id="demo-ask" className="text-navy-900 type-headline">
+          A sample ask
+        </h3>
+      </AskCard>
+      <Label>Source block</Label>
+      <SourceBlock line="From a sample source. Checked Oct 31, 2026." link={{ href: "https://example.com", label: "Open the sample page" }} report="mailto:joinstackd@gmail.com" />
+    </>
+  );
 }
 
 export function ProgressDemo() {

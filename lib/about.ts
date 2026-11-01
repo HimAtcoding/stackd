@@ -9,6 +9,9 @@ export const SITE_URL = "https://joinstackd-chi.vercel.app";
 // The public support address, approved by the founders on 2026-10-12
 export const SUPPORT_EMAIL = "joinstackd@gmail.com";
 
+// Where a student goes when Stackd has no agreement link for their path
+export const ASSIST_HOME = "https://assist.org";
+
 // When Privacy and Terms last changed. Change each with its own text.
 export const PRIVACY_UPDATED = "October 28, 2026";
 export const TERMS_UPDATED = "October 21, 2026";

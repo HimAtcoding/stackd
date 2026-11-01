@@ -45,6 +45,8 @@
   --mint-600: #12946a;
   /* The Up next hero pressed at 14 days or less (16) */
   --coral-pressed: #9c2d16;
+  /* The Explore panel pressed (21) */
+  --mint-pressed: #085a38;
   /* The second and third layers of the deadline stack (14) */
   --stack-2: #f1f7fd;
   --stack-3: #e6f0fa;
@@ -75,6 +77,9 @@
   --dur-fast: 120ms;
   --dur-base: 200ms;
   --dur-slow: 320ms;
+
+  /* Course codes only, like COMP 122 (21) */
+  --font-code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Safe areas as variables so screenshots can simulate an installed iPhone app */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -129,6 +134,7 @@
   --color-amber-700: var(--amber-700);
   --color-mint-600: var(--mint-600);
   --color-coral-pressed: var(--coral-pressed);
+  --color-mint-pressed: var(--mint-pressed);
   --color-confetti-sky: var(--confetti-sky);
   --color-stack-2: var(--stack-2);
   --color-stack-3: var(--stack-3);
@@ -238,6 +244,13 @@
   font-weight: 600;
 }
 @utility type-caption {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+}
+/* Course codes (21): the one place monospace is allowed */
+@utility type-code {
+  font-family: var(--font-code);
   font-size: 13px;
   line-height: 16px;
   font-weight: 400;

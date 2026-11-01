@@ -14,11 +14,13 @@ type UnderlineTabsProps = {
   columnWidth?: number;
   // Each tab as wide as its indicator (label + 28), grouped on the left (the editor's Answer and Notes, 20)
   fit?: boolean;
+  // On a tinted band: --blue-600 is only 4.2:1 on --mint-100, so the active tab is --blue-700 (21)
+  onTint?: boolean;
   className?: string;
 };
 
 // Indicator: 3 px bar on the divider, label width + 28, slides and resizes over 200 ms.
-export function UnderlineTabs({ tabs, value, onChange, columnWidth, fit, className, ...rest }: UnderlineTabsProps) {
+export function UnderlineTabs({ tabs, value, onChange, columnWidth, fit, onTint, className, ...rest }: UnderlineTabsProps) {
   const rowRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef(new Map<string, HTMLSpanElement>());
   const [bar, setBar] = useState<{ left: number; width: number } | null>(null);
@@ -66,7 +68,7 @@ export function UnderlineTabs({ tabs, value, onChange, columnWidth, fit, classNa
             className={cn(
               "flex h-full items-center justify-center type-segment",
               fit ? "px-3.5" : !columnWidth && "flex-1",
-              selected ? "text-blue-600" : "text-navy-900",
+              selected ? (onTint ? "text-blue-700" : "text-blue-600") : "text-navy-900",
             )}
             style={columnWidth ? { width: columnWidth } : undefined}
           >
@@ -84,7 +86,10 @@ export function UnderlineTabs({ tabs, value, onChange, columnWidth, fit, classNa
       {bar && (
         <span
           aria-hidden
-          className="absolute -bottom-px h-[3px] rounded-[2px] bg-blue-600 transition-[left,width] duration-200 ease-out motion-reduce:transition-none"
+          className={cn(
+            "absolute -bottom-px h-[3px] rounded-[2px] transition-[left,width] duration-200 ease-out motion-reduce:transition-none",
+            onTint ? "bg-blue-700" : "bg-blue-600",
+          )}
           style={{ left: bar.left, width: bar.width }}
         />
       )}

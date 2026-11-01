@@ -9,6 +9,8 @@ export const ART = {
   "husky-wave": "/art/husky/husky-wave",
   "husky-forgot": "/art/husky/husky-forgot",
   "husky-home": "/art/husky/husky-home",
+  "husky-looking": "/art/husky/husky-looking",
+  "husky-looking-full": "/art/husky/husky-looking-full",
   "burst-dashes": "/art/brand/burst-dashes",
   "campus-1": "/art/campus/campus-1",
   "campus-2": "/art/campus/campus-2",

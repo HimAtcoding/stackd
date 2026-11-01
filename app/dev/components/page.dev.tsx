@@ -30,7 +30,7 @@ import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { ProgressRing } from "@/components/ui/progress-ring";
 import { DateRow } from "@/components/ui/date-row";
 import { WindowBar } from "@/components/ui/window-bar";
-import { BottomSheetDemo, ChipDemo, ChoiceDemo, SwitchDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
+import { BottomSheetDemo, ChipDemo, ChoiceDemo, ExploreDemo, SwitchDemo, LoadingDemo, ProgressDemo, SearchFieldDemo, SettingsRowDemo, TabsDemo, TextFieldDemo, ToastDemo } from "./demos";
 
 export const metadata = { title: "Components · Stackd dev" };
 
@@ -38,13 +38,13 @@ const COLORS = [
   "blue-600", "blue-700", "blue-100", "blue-50", "blue-50-border", "sky-200", "sky-100", "sky-50",
   "surface", "white", "navy-900", "slate-700", "slate-600", "slate-400", "border", "border-strong",
   "field-border", "surface-pressed", "tint-sky", "tint-indigo", "node-empty", "green-600", "mint-100",
-  "mint-800", "coral-500", "coral-700", "coral-50", "coral-25", "amber-50", "amber-500", "yellow-400",
+  "mint-800", "mint-pressed", "coral-500", "coral-700", "coral-50", "coral-25", "amber-50", "amber-500", "yellow-400",
   "confetti-sky", "stack-2", "stack-3",
 ];
 
 const TYPE = [
   "celebrate", "countdown", "display", "title-1", "title-2", "title-3", "headline", "row-title", "body-lg", "body",
-  "body-md", "label", "pill", "caption", "tab", "button-lg", "button", "link", "segment", "demo",
+  "body-md", "label", "pill", "caption", "code", "tab", "button-lg", "button", "link", "segment", "demo",
 ];
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -262,6 +262,10 @@ export default function ComponentsPage() {
           <li><DateRow month="Sep" day="30" status="done" dimmed title="Done" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, done" /></li>
           <li><DateRow month="Sep" day="30" status="missed" dimmed title="Missed" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, missed" /></li>
         </ul>
+      </Section>
+
+      <Section title="Explore (21)">
+        <ExploreDemo />
       </Section>
 
       <Section title="Toast">
