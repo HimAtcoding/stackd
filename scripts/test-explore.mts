@@ -43,7 +43,7 @@ const file: { slug: string; pathways: FilePathway[] } = JSON.parse(fs.readFileSy
 
 // The file as the database hands it back: ids, provenance and joined campuses
 function fromFile(): ExploreRecords {
-  const records: ExploreRecords = { pathways: [], requirements: [], campuses: [], majorNames: [{ name: "Computer Science and Engineering", explore_slug: "computer-science" }, { name: "Computer Science", explore_slug: "computer-science" }] };
+  const records: ExploreRecords = { pathways: [], requirements: [], campuses: [] };
   for (const { requirements, campuses = [], ...p } of file.pathways) {
     const id = `${file.slug}-${p.kind}`;
     records.pathways.push({
@@ -68,10 +68,7 @@ const records = fromFile();
 const [cs] = buildMajors(records);
 
 check("one major from two pathways", buildMajors(records).length === 1 && cs.slug === "computer-science");
-check("the major's proper name comes from a major in the same words", cs.name === "Computer Science", cs.name);
-check("another major's name isn't taken", buildMajors({ ...records, majorNames: [{ name: "Computer Engineering", explore_slug: "computer-science" }] })[0].name === "Computer science");
-check("a major with the same words under another slug isn't taken", buildMajors({ ...records, majorNames: [{ name: "Computer Science", explore_slug: "economics" }] })[0].name === "Computer science");
-check("an older device copy with no majors keeps the stored name", buildMajors({ ...records, majorNames: undefined })[0].name === "Computer science");
+check("the major shows its stored name", cs.name === "Computer Science", cs.name);
 check('the list says "UC and Cal State"', systemsLine(cs) === "UC and Cal State", systemsLine(cs));
 check("UC has 9 rows in the pathway's order", cs.uc?.requirements.length === 9 && cs.uc.requirements[0].code === "intro-programming" && cs.uc.requirements[8].code === "physics");
 check("Cal State has 7 rows", cs.calState?.requirements.length === 7);

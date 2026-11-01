@@ -80,7 +80,7 @@ The husky appears once per screen at most.
 
 | Where | Art | Fallback until it exists |
 |---|---|---|
-| "Your major" panel, peeking up at the bottom right under the bar, cut straight by the panel's bottom edge | `husky-looking` (holding a map or magnifier, listed in `art-assets.md` as needed) at 112 wide | `husky-wave` at 104 wide |
+| "Your major" panel, at the top right beside the title, standing on the bar, the whole bust showing | `husky-looking` (holding a map or magnifier, listed in `art-assets.md` as needed) at 112 wide | `husky-wave` at 104 wide |
 | No search results | `husky-looking`, full pose, 140 wide | `husky-wave` at 140 wide |
 | No major in the plan | Same as no results, with its own copy | `husky-wave` |
 
@@ -97,11 +97,11 @@ Add to `art-assets.md`: `husky-looking` moves from "for later" to "Need, v1.4", 
 └──────────────────────────────────────────────┘
 
 ┌ mint-800 panel, r-lg, shadow-lift ──────────┐
-│ Your major                                   │  label white 90%
-│ Computer Science                             │  title-1 white
+│ Your major                          [husky]  │  label white 90%
+│ Computer Science                    [husky]  │  title-1 white
 │ ▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯ │  bar, full width
 │ 4 of 9 done for UC                           │  label white
-│ 5 also count for Cal State.        [husky]   │  body white 90%
+│ 5 also count for Cal State.                  │  body white 90%
 └──────────────────────────────────────────────┘
 
 All majors                                       title-3
@@ -116,8 +116,8 @@ From UC Admissions and the CCC Chancellor's Office. How we check this
 |---|---|
 | Band | `--mint-100`, from the physical top to 16 below the search field. Title `title-1` `--navy-900`, 8 below it the subtitle in `body` `--slate-700`, 16 below that the search field (00) on `--surface`, placeholder "Search majors". The band has no back button (it's a tab) |
 | Panel | Shows when the plan has a major that Explore has data for (Data → `majors.explore_slug`). Inset 16, 16 below the band, `--mint-800`, `--r-lg`, `--shadow-lift`, padding 20, the whole panel a button opening that major's page on the UC tab (or Cal State if the plan has only Cal State schools). Pressed: `--mint-pressed` |
-| Panel text | "Your major" `label` white at 90% (5.57:1). The major `title-1` white, 4 below. The bar 16 below, on its own full-width line: one segment per UC requirement, 6 tall, gap 4; done white, taking now `--yellow-400`, not yet white at 28%. Under it, 8 below: "{done} of {total} done for UC" `label` white. Under that, 8 below: "{n} also count for Cal State." `body` white 90%. Text lines leave 96 for the husky; the bar doesn't |
-| Husky | Bottom right, 112 wide, its top 8 under the bar and cut by the panel's bottom edge, so it peeks up and never touches the bar, `aria-hidden`. Not shown under 340 wide (text needs the room) |
+| Panel text | "Your major" `label` white at 90% (5.57:1). The major `title-1` white, 4 below. The bar 16 below, on its own full-width line: one segment per UC requirement, 6 tall, gap 4; done white, taking now `--yellow-400`, not yet white at 28%. Under it, 8 below: "{done} of {total} done for UC" `label` white. Under that, 8 below: "{n} also count for Cal State." `body` white 90%. The title's max width is the panel's width minus the husky's 112; a word too long for that breaks rather than running under the husky |
+| Husky | Top right of the panel, beside the title, 112 wide and flush with the panel's right edge, the whole bust showing. Its straight bottom edge rests 8 above the bar, so it stands on the bar. The space above the bar is at least 107 tall, so a one-line title still leaves the husky 8 from the panel's top. `aria-hidden`. Not shown under 340 wide (text needs the room) |
 | No major in the plan | No panel. In its place, a tier-3 ask (00): "Pick your major to see what to take." with a text button "Choose your major", opening Settings → Your plan |
 | List title | "All majors" `title-3`, 24 below the panel |
 | Row | Min height 64, padding 12 16, whole row a button. Icon tile 40 (`--r-sm`, `--mint-100`, icon 22 duotone `--mint-600`, from a code map by slug, `lib/explore-icons.ts`, fallback `GraduationCap`). Name `row-title` `--navy-900`. Second line `caption` `--slate-600`: "UC and Cal State", "UC" or "Cal State", by which pathways exist. No chevron, no dividers; rows 4 apart |
@@ -183,7 +183,7 @@ Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the sec
 | Requirement row | Min height 64, padding 12 24. Left: the status tile (below). Text: name `row-title` `--navy-900`, up to 2 lines; second line `caption` `--slate-600` with how many ("One course", "A one-year sequence", "One of 3 options") and, when the course type is in both systems, `Intersect` bold 14 `--mint-600` + "Counts for both". The row's text opens the requirement sheet (3) |
 | Status tile | 40, `--r-sm`, hit area 44, `role="checkbox"`. Not yet: `--mint-100` with the course type's icon (code map by topic: `Code`, `TreeStructure`, `Cpu`, `Function`, `MathOperations`, `Atom` …) in `--mint-600`. Taking now: `--surface` with a 1.5 px inset `--blue-600` ring and `HourglassMedium` `--blue-600`, the ring the open-window date tile uses (18). Done: `--green-600` with a white `Check`, like step tiles (16). A tap toggles Done (from either other state) with the step burst (16 → Small rewards); "Taking now" is set in the sheet. Toast "Marked done" with Undo |
 | Find at your college (UC tab) | A link line (18). With an agreement link in the plan for this campus and major: "Find these at {college short name}" / "Your {year} agreement on assist.org", opening that exact URL. Without: "Find these at your college" / "assist.org". Never a list of college courses (step E) |
-| Find at your college (Cal State tab) | One sentence in `body` `--slate-700`: "Your college's catalog shows the C-ID number next to each matching course." Then a link line "See which Cal State majors match" / "icangotocollege.com", the address adegreewithaguarantee.com (the site Cal State points students to) redirects to, checked Oct 31, 2026 |
+| Find at your college (Cal State tab) | One sentence in `body` `--slate-700`: "Your college's catalog shows the C-ID number next to each matching course." Then a link line "How transfer degrees work" / "icangotocollege.com", opening https://icangotocollege.com/associate-degree-for-transfer, the community colleges' page on the degree (loads with a plain request, Nov 1, 2026) |
 | Campuses (UC tab) | "Campuses that use this pathway ({n})" `title-3`, 32 below the link line. Rows 48 min, padding 8 24, two columns: the campus's stored name ("UC San Diego", "UCLA") `row-title`, its major names `body` `--slate-700` (up to 2 lines, then "and {n} more", tapping the row expands it). A campus in the student's plan gets `Star` fill 16 `--yellow-400` before its name and moves to the top. Not tappable otherwise in v1.4 |
 | About the degree (Cal State tab) | In place of campuses: "What this degree does" `title-3`, then in `body` `--navy-900`: "Finish this degree at your college and you get priority admission to Cal State. That's the system, not a specific campus or major: if your first choice is full, you may be offered another campus. If you're admitted to a similar major, you can finish the bachelor's in about 60 more units." Then "At least {major_units} units in the major, {total_units} units total." `caption` `--slate-600`. Wording checked against [Cal State's ADT page](https://calstate.edu/apply/transfer/pages/ccc-associate-degree-for-transfer.aspx) on Oct 26, 2026 |
 | Source block | 32 below, inset 24. "From {source}, {pathway or template name}. Checked {date}." `caption` `--slate-600` (template: "Transfer Model Curriculum #2007, revision 3"). Link line to the source page or PDF. Then a text button "Report a problem" (`caption` size, `--blue-700`), a mailto to joinstackd@gmail.com with the major, tab and the row codes in the body |
@@ -259,7 +259,7 @@ Every academic table uses the same provenance columns and `protect_verified` tri
 
 Public read (anon and authenticated) on the three academic tables, verified rows only, like `piq_prompts`.
 
-**Major names.** A major's name is a proper name: "Computer Science" everywhere it shows (list row, page title, source line). `pathways.name` is stored in sentence case, so the name shown comes from a verified `majors` row with the same `explore_slug` and the same words, ignoring case. With no such row, the stored name shows as it is. Nothing changes the case in code.
+**Major names.** A major's name is a proper name: "Computer Science" everywhere it shows (list row, page title, source line). It's stored that way in `pathways.name` and shown as stored; nothing changes the case in code. A wrong name is fixed in the data file and imported again.
 
 "Counts for both" isn't stored: it's computed as "this topic appears in both the UC pathway and the TMC with the same slug." Because topics are set by a person and verified, the claim is only as strong as that check, which is why the review report lists each shared topic side by side.
 
@@ -292,7 +292,7 @@ Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **e
 
 ## Test
 
-- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "5 also count for Cal State.", the husky (or `husky-wave`) at the bottom right; then "All majors" with Computer Science, "UC and Cal State".
+- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "5 also count for Cal State.", the husky (or `husky-wave`) at the top right, standing on the bar; then "All majors" with Computer Science, "UC and Cal State".
 - Plan without a major: no panel; the "Pick your major" ask opens Settings → Your plan.
 - Search "cs": Computer Science only, panel hidden. Search "nursing": the husky, "No majors match "nursing" yet.", and the ASSIST link line.
 - Open Computer Science: UC tab, 9 rows in the pathway's order, 5 with "Counts for both" (not physics), the agreement link line names Las Positas and 2026-27, 9 campus rows with UC San Diego starred at the top, the source block with the checked date and Report a problem.

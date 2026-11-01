@@ -49,10 +49,7 @@ export type CampusRecord = {
   institution: { id: string; slug: string; name: string } | null;
 };
 
-export type MajorName = { name: string; explore_slug: string };
-
-// majorNames is missing from a device copy saved before it was added
-export type ExploreRecords = { pathways: PathwayRow[]; requirements: RequirementRecord[]; campuses: CampusRecord[]; majorNames?: MajorName[] };
+export type ExploreRecords = { pathways: PathwayRow[]; requirements: RequirementRecord[]; campuses: CampusRecord[] };
 
 export type Pathway = PathwayRow & { requirements: RequirementRecord[]; campuses: CampusRecord[] };
 
@@ -63,17 +60,10 @@ export const SYSTEM_TABS: { id: SystemTab; label: string }[] = [
   { id: "cal-state", label: "Cal State" },
 ];
 
-// Pathway rows store a major in sentence case ("Computer science"). A major in the same words has its proper name.
-function properName(pathway: PathwayRow, majorNames: MajorName[]) {
-  const same = (m: MajorName) => m.explore_slug === pathway.slug && m.name.toLowerCase() === pathway.name.toLowerCase();
-  return majorNames.find(same)?.name ?? pathway.name;
-}
-
 // One major for each slug, A to Z. A pathway with no requirements shows nothing, so it doesn't count.
-export function buildMajors({ pathways, requirements, campuses, majorNames = [] }: ExploreRecords): ExploreMajor[] {
+export function buildMajors({ pathways, requirements, campuses }: ExploreRecords): ExploreMajor[] {
   const full: Pathway[] = pathways.map((p) => ({
     ...p,
-    name: properName(p, majorNames),
     requirements: requirements.filter((r) => r.pathway_id === p.id).sort((a, b) => a.sort - b.sort),
     campuses: campuses.filter((c) => c.pathway_id === p.id && c.institution),
   }));

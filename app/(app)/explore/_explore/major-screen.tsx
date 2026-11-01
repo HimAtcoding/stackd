@@ -42,8 +42,8 @@ import { CampusList } from "./campus-list";
 import { RequirementSheet } from "./requirement-sheet";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
-// Where adegreewithaguarantee.com, the site Cal State points students to, now redirects (21 → Find at your college)
-const CAL_STATE_MATCHES = "https://icangotocollege.com";
+// The community colleges' page on the degree (21 → Find at your college)
+const TRANSFER_DEGREES = "https://icangotocollege.com/associate-degree-for-transfer";
 
 // With Explore's flag off the address goes Home; a major that isn't listed goes back to the list (13: no dead ends)
 export function MajorRoute() {
@@ -160,7 +160,7 @@ function MajorScreen({ major, wantedTab }: { major: ExploreMajor; wantedTab: str
           ) : (
             <div className="mt-3 px-6">
               <p className="text-slate-700 type-body">Your college&apos;s catalog shows the C-ID number next to each matching course.</p>
-              <LinkLine href={CAL_STATE_MATCHES} label="See which Cal State majors match" className="mt-2" />
+              <LinkLine href={TRANSFER_DEGREES} label="How transfer degrees work" className="mt-2" />
               <h2 className="mt-8 text-navy-900 type-title-3">What this degree does</h2>
               <p className="mt-2 text-navy-900 type-body">{DEGREE_NOTE}</p>
               {units && <p className="mt-2 text-slate-600 tabular-nums type-caption">{units}</p>}
