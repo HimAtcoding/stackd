@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Computer Science majors so a student at any school can pick one in onboarding (spec 21, PR A). Import after california-institutions.json, which adds the schools. Every row links to Explore's computer-science. UC: every campus major the Computer Science Transfer Pathway page lists (same names as the pathway's campus rows), from that page; Santa Cruz's \"Computer Science, B.A. and B.S.\" is two rows. UC San Diego's Computer Science is in las-positas-ucsd-cs.json, so it isn't repeated here. Cal State: each campus's Computer Science bachelor's from its own catalog, because calstate.edu's degree search showed a human-verification page to the automated browser. All 22 campuses offer a B.S. in Computer Science; none offers a B.A. These source_url links point at an older catalog edition, because the 2026-27 program page couldn't be found: Channel Islands (the department's current page instead of the 2020-21 catalog), Fresno State (2025-26), CSU Fullerton (2023-24), CSU Long Beach (2024-25), Cal Poly Pomona (2025-26), CSU San Marcos (2023-24), Stanislaus State (2020-21). Swap in the 2026-27 page when you check those. San José State's 2026-27 page is marked as a draft. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/computer-science-majors.json --dry-run Checked by Abyan on 2026-10-31. UC: all 13 rows match the pathway page's campus majors. Cal State: 15 rows confirmed as Computer Science, B.S. on their 2026-27 catalog pages (Cal Poly San Luis Obispo's catalog covers 2026-2028), and San José State's 2026-27 page is no longer marked as a draft. Links replaced with the 2026-27 catalog page: Channel Islands (catalog.csuci.edu instead of the department page), Fresno State, CSU San Marcos. Not checked because their catalog sites wouldn't load, so their links and empty retrieved_at are left as they were: CSU Long Beach, CSU Fullerton, Cal Poly Pomona and Stanislaus State (still older catalogs), Cal State LA, CSU Monterey Bay, Sonoma State. No names or degrees changed.",
+  "notes": "Computer Science majors so a student at any school can pick one in onboarding (spec 21, PR A). Import after california-institutions.json, which adds the schools. Every row links to Explore's computer-science. UC: every campus major the Computer Science Transfer Pathway page lists (same names as the pathway's campus rows), from that page; Santa Cruz's \"Computer Science, B.A. and B.S.\" is two rows. UC San Diego's Computer Science is in las-positas-ucsd-cs.json, so it isn't repeated here. Cal State: each campus's Computer Science bachelor's from its own catalog, because calstate.edu's degree search showed a human-verification page to the automated browser. All 22 campuses offer a B.S. in Computer Science; none offers a B.A. These source_url links point at an older catalog edition, because the 2026-27 program page couldn't be found: Channel Islands (the department's current page instead of the 2020-21 catalog), Fresno State (2025-26), CSU Fullerton (2023-24), CSU Long Beach (2024-25), Cal Poly Pomona (2025-26), CSU San Marcos (2023-24), Stanislaus State (2020-21). Swap in the 2026-27 page when you check those. San José State's 2026-27 page is marked as a draft. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/computer-science-majors.json --dry-run Checked by Abyan on 2026-10-31. UC: all 13 rows match the pathway page's campus majors. Cal State: all 22 rows confirmed as Computer Science, B.S. on their 2026-27 catalog pages (Cal Poly San Luis Obispo's catalog covers 2026-2028), and San José State's 2026-27 page is no longer marked as a draft. All 7 older links replaced with the 2026-27 catalog page: Channel Islands (catalog.csuci.edu instead of the department page), Fresno State, CSU Fullerton, CSU Long Beach, Cal Poly Pomona, CSU San Marcos, Stanislaus State. No names or degrees changed.",
   "majors": [
     {
       "institution": "uc-berkeley",
@@ -218,9 +218,9 @@
       "degree_type": "BS",
       "explore_slug": "computer-science",
       "source_name": "CSU Fullerton catalog",
-      "source_url": "https://fullerton.catalog.acalog.com/preview_program.php?catoid=80&poid=38156",
+      "source_url": "https://fullerton.catalog.acalog.com/preview_program.php?catoid=101&poid=47269",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "cal-poly-humboldt",
@@ -240,9 +240,9 @@
       "degree_type": "BS",
       "explore_slug": "computer-science",
       "source_name": "CSU Long Beach catalog",
-      "source_url": "https://catalog.csulb.edu/preview_program.php?catoid=10&poid=5239",
+      "source_url": "https://catalog.csulb.edu/preview_program.php?catoid=12&poid=6287",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "cal-state-la",
@@ -253,7 +253,7 @@
       "source_name": "Cal State LA catalog",
       "source_url": "https://ecatalog.calstatela.edu/preview_program.php?catoid=77&poid=35250",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "csu-monterey-bay",
@@ -264,7 +264,7 @@
       "source_name": "CSU Monterey Bay catalog",
       "source_url": "https://catalog.csumb.edu/preview_program.php?catoid=12&poid=2730",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "csun",
@@ -284,9 +284,9 @@
       "degree_type": "BS",
       "explore_slug": "computer-science",
       "source_name": "Cal Poly Pomona catalog",
-      "source_url": "https://catalog.cpp.edu/preview_program.php?catoid=69&poid=19729",
+      "source_url": "https://catalog.cpp.edu/preview_program.php?catoid=78&poid=24270",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "sacramento-state",
@@ -374,7 +374,7 @@
       "source_name": "Sonoma State catalog",
       "source_url": "https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6018",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     },
     {
       "institution": "stanislaus-state",
@@ -383,9 +383,9 @@
       "degree_type": "BS",
       "explore_slug": "computer-science",
       "source_name": "Stanislaus State catalog",
-      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=26&poid=4576",
+      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8340",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-10-31"
     }
   ]
 }
