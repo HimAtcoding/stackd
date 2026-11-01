@@ -27,7 +27,7 @@ Claude Code adds this table to `docs/16-open-questions.md` as the step A record.
 
 ## Design plan
 
-**Tokens.** No new tokens. Explore's section color from 16 is mint; the solid panel uses `--mint-800` because white on `--mint-600` is only 3.84:1.
+**Tokens.** Three additions, all in 00: `--mint-pressed`, `--font-code` and `type-code`. Explore's section color from 16 is mint; the solid panel uses `--mint-800` because white on `--mint-600` is only 3.84:1.
 
 | Name | Value | Role here |
 |---|---|---|
@@ -36,9 +36,10 @@ Claude Code adds this table to `docs/16-open-questions.md` as the step A record.
 | `--mint-100` | #D2F3EC | Explore's header band, major icon tiles |
 | `--yellow-400` | #FDC940 | "Taking now" segments on the panel bar (4.2:1 on `--mint-800`) |
 | `--green-600` | #40A459 | Done tiles and segments on white, as everywhere |
+| `--mint-pressed` | #085A38 | The panel's pressed state |
 | `--navy-900` | #051042 | Text |
 
-Type: Figtree only, existing scale. C-ID numbers (COMP 122, MATH 210) are course codes, so they're the one place monospace is allowed (project rules), at `caption` size.
+Type: Figtree, existing scale. C-ID numbers (COMP 122, MATH 210) are course codes, so they're the one place monospace is allowed (project rules), in `type-code` (00).
 
 **Layout.** Explore is a tab. A quiet mint band holds the title and the search field. Under it, one solid mint panel for the student's own major with their progress, then the list of majors. A major opens a pushed page with UC and Cal State tabs. Each tab is a list of course types the student can mark, the campuses it applies to, and the source.
 
@@ -79,7 +80,7 @@ The husky appears once per screen at most.
 
 | Where | Art | Fallback until it exists |
 |---|---|---|
-| "Your major" panel, peeking in at the bottom right, bottom edge cut straight by the panel's edge | `husky-looking` (holding a map or magnifier, listed in `art-assets.md` as needed) at 112 wide | `husky-wave` at 104 wide |
+| "Your major" panel, peeking up at the bottom right under the bar, cut straight by the panel's bottom edge | `husky-looking` (holding a map or magnifier, listed in `art-assets.md` as needed) at 112 wide | `husky-wave` at 104 wide |
 | No search results | `husky-looking`, full pose, 140 wide | `husky-wave` at 140 wide |
 | No major in the plan | Same as no results, with its own copy | `husky-wave` |
 
@@ -98,14 +99,15 @@ Add to `art-assets.md`: `husky-looking` moves from "for later" to "Need, v1.4", 
 ┌ mint-800 panel, r-lg, shadow-lift ──────────┐
 │ Your major                                   │  label white 90%
 │ Computer Science                             │  title-1 white
-│ ▮▮▮▮▯▯▯▯▯   4 of 9 done for UC               │  bar + label white
+│ ▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯ │  bar, full width
+│ 4 of 9 done for UC                           │  label white
 │ 5 also count for Cal State.        [husky]   │  body white 90%
 └──────────────────────────────────────────────┘
 
 All majors                                       title-3
-[▣] Aerospace engineering            UC          row: tile 40, name, systems
-[▣] Biological sciences              UC, Cal State
-[▣] Computer science                 UC, Cal State
+[▣] Aerospace Engineering            UC          row: tile 40, name, systems
+[▣] Biological Sciences              UC, Cal State
+[▣] Computer Science                 UC, Cal State
 …
 From UC Admissions and the CCC Chancellor's Office. How we check this
 ```
@@ -113,16 +115,16 @@ From UC Admissions and the CCC Chancellor's Office. How we check this
 | Part | Spec |
 |---|---|
 | Band | `--mint-100`, from the physical top to 16 below the search field. Title `title-1` `--navy-900`, 8 below it the subtitle in `body` `--slate-700`, 16 below that the search field (00) on `--surface`, placeholder "Search majors". The band has no back button (it's a tab) |
-| Panel | Shows when the plan has a major that Explore has data for (Data → `majors.explore_slug`). Inset 16, 16 below the band, `--mint-800`, `--r-lg`, `--shadow-lift`, padding 20, the whole panel a button opening that major's page on the UC tab (or Cal State if the plan has only Cal State schools). Pressed: #085A38 |
-| Panel text | "Your major" `label` white at 90% (5.57:1). The major `title-1` white, 4 below. The bar 16 below: one segment per UC requirement, 6 tall, gap 4; done white, taking now `--yellow-400`, not yet white at 28%. Right of the bar: "{done} of {total} done for UC" `label` white. Under it, 8 below: "{n} also count for Cal State." `body` white 90%. Max text width leaves 96 for the husky |
-| Husky | Bottom right, cut by the panel's bottom edge, `aria-hidden`. Not shown under 340 wide (text needs the room) |
+| Panel | Shows when the plan has a major that Explore has data for (Data → `majors.explore_slug`). Inset 16, 16 below the band, `--mint-800`, `--r-lg`, `--shadow-lift`, padding 20, the whole panel a button opening that major's page on the UC tab (or Cal State if the plan has only Cal State schools). Pressed: `--mint-pressed` |
+| Panel text | "Your major" `label` white at 90% (5.57:1). The major `title-1` white, 4 below. The bar 16 below, on its own full-width line: one segment per UC requirement, 6 tall, gap 4; done white, taking now `--yellow-400`, not yet white at 28%. Under it, 8 below: "{done} of {total} done for UC" `label` white. Under that, 8 below: "{n} also count for Cal State." `body` white 90%. Text lines leave 96 for the husky; the bar doesn't |
+| Husky | Bottom right, 112 wide, its top 8 under the bar and cut by the panel's bottom edge, so it peeks up and never touches the bar, `aria-hidden`. Not shown under 340 wide (text needs the room) |
 | No major in the plan | No panel. In its place, a tier-3 ask (00): "Pick your major to see what to take." with a text button "Choose your major", opening Settings → Your plan |
 | List title | "All majors" `title-3`, 24 below the panel |
 | Row | Min height 64, padding 12 16, whole row a button. Icon tile 40 (`--r-sm`, `--mint-100`, icon 22 duotone `--mint-600`, from a code map by slug, `lib/explore-icons.ts`, fallback `GraduationCap`). Name `row-title` `--navy-900`. Second line `caption` `--slate-600`: "UC and Cal State", "UC" or "Cal State", by which pathways exist. No chevron, no dividers; rows 4 apart |
 | Only verified majors | A major shows only when every row behind it is verified. No empty or "coming soon" majors |
 | Footer | `caption` `--slate-600`, 24 below the list: "From UC Admissions and the California Community Colleges Chancellor's Office." Then a link line (18) "How we check this" opening `/about/data/` (2) |
 
-**Search.** Filters the list as you type, matching the name and a few plain synonyms kept with the icon map ("cs", "coding" → Computer science; "bio" → Biological sciences; "business" → Business administration). The panel hides while the field has text. No results:
+**Search.** Filters the list as you type, matching the name and a few plain synonyms kept with the icon map ("cs", "coding" → Computer Science; "bio" → Biological sciences; "business" → Business administration). Three letters or fewer match the start of a word only, because "cs" is inside "economics". The panel hides while the field has text. No results:
 
 ```
         [husky-looking]
@@ -137,12 +139,12 @@ Headline `title-3`, body `body` `--slate-700`, centered, then a link line. "Yet"
 
 ## 2. Major page
 
-Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the mint band (16 → Header band).
+Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the section band (00), using the Essays spacing: back button 8 under the safe area, title 24 under it, subtitle 4 under the title, tabs 16 under that.
 
 ```
 ┌ mint-100 band ──────────────────────────────┐
 │ ‹                                            │
-│ Computer science                             │  title-1
+│ Computer Science                             │  title-1
 │ What to take before you transfer.            │  body slate-700
 │  UC        Cal State                         │  UnderlineTabs
 └──────────────────────────────────────────────┘
@@ -161,10 +163,10 @@ Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the min
    Your 2026-27 agreement on assist.org
 
  Campuses that use this pathway (9)             title-3
- Berkeley              Computer Science, B.A.
- Davis                 Computer Science, B.S.
+ UC Berkeley           Computer Science, B.A.
+ UC Davis              Computer Science, B.S.
  …
- Santa Cruz            Computer Science, B.A. and B.S.,
+ UC Santa Cruz         Computer Science, B.A. and B.S.,
                        and 4 more
 
  From UC Admissions, Computer Science
@@ -176,16 +178,16 @@ Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the min
 
 | Part | Spec |
 |---|---|
-| Tabs | "UC" and "Cal State", only the ones the major has. With one, no tabs; the title line says which ("Cal State degree for transfer" under the title). Switching tabs replaces the list with no slide; the URL's `tab` follows |
+| Tabs | "UC" and "Cal State", only the ones the major has. On the band the active tab and its bar are `--blue-700` (`--blue-600` is 4.2:1 on `--mint-100`). With one, no tabs; the title line says which ("Cal State degree for transfer" under the title). Switching tabs replaces the list with no slide; the URL's `tab` follows |
 | Progress | 16 under the band, inset 24: "{done} of {total} done" `label` `--navy-900`, then the existing `SegmentedBar` (green done, `--blue-100` not yet) 8 below. Taking now shows in the count's sentence only: "4 of 9 done, 1 taking now" |
 | Requirement row | Min height 64, padding 12 24. Left: the status tile (below). Text: name `row-title` `--navy-900`, up to 2 lines; second line `caption` `--slate-600` with how many ("One course", "A one-year sequence", "One of 3 options") and, when the course type is in both systems, `Intersect` bold 14 `--mint-600` + "Counts for both". The row's text opens the requirement sheet (3) |
-| Status tile | 40, `--r-sm`, hit area 44, `role="checkbox"`. Not yet: `--mint-100` with the course type's icon (code map by topic: `Code`, `TreeStructure`, `Cpu`, `Function`, `MathOperations`, `Atom` …) in `--mint-600`. Taking now: `--tint-sky` with `HourglassMedium` `--blue-600`. Done: `--green-600` with a white `Check`, like step tiles (16). A tap toggles Done (from either other state) with the step burst (16 → Small rewards); "Taking now" is set in the sheet. Toast "Marked done" with Undo |
+| Status tile | 40, `--r-sm`, hit area 44, `role="checkbox"`. Not yet: `--mint-100` with the course type's icon (code map by topic: `Code`, `TreeStructure`, `Cpu`, `Function`, `MathOperations`, `Atom` …) in `--mint-600`. Taking now: `--surface` with a 1.5 px inset `--blue-600` ring and `HourglassMedium` `--blue-600`, the ring the open-window date tile uses (18). Done: `--green-600` with a white `Check`, like step tiles (16). A tap toggles Done (from either other state) with the step burst (16 → Small rewards); "Taking now" is set in the sheet. Toast "Marked done" with Undo |
 | Find at your college (UC tab) | A link line (18). With an agreement link in the plan for this campus and major: "Find these at {college short name}" / "Your {year} agreement on assist.org", opening that exact URL. Without: "Find these at your college" / "assist.org". Never a list of college courses (step E) |
-| Find at your college (Cal State tab) | One sentence in `body` `--slate-700`: "Your college's catalog shows the C-ID number next to each matching course." Then a link line "See which Cal State majors match" / "adegreewithaguarantee.com" (the site Cal State points students to) |
-| Campuses (UC tab) | "Campuses that use this pathway ({n})" `title-3`, 32 below the link line. Rows 48 min, padding 8 24, two columns: campus short name `row-title`, its major names `body` `--slate-700` (up to 2 lines, then "and {n} more", tapping the row expands it). A campus in the student's plan gets `Star` fill 16 `--yellow-400` before its name and moves to the top. Not tappable otherwise in v1.4 |
-| About the degree (Cal State tab) | In place of campuses: "What this degree does" `title-3`, then in `body` `--navy-900`: "Finish this degree at your college and you get priority admission to Cal State. That's the system, not a specific campus or major: if your first choice is full, you may be offered another campus. If you're admitted to a similar major, you can finish the bachelor's in about 60 more units." Then "{total} units in the major, {max} units total." `caption` `--slate-600`. Wording checked against [Cal State's ADT page](https://calstate.edu/apply/transfer/pages/ccc-associate-degree-for-transfer.aspx) on Oct 26, 2026 |
+| Find at your college (Cal State tab) | One sentence in `body` `--slate-700`: "Your college's catalog shows the C-ID number next to each matching course." Then a link line "See which Cal State majors match" / "icangotocollege.com", the address adegreewithaguarantee.com (the site Cal State points students to) redirects to, checked Oct 31, 2026 |
+| Campuses (UC tab) | "Campuses that use this pathway ({n})" `title-3`, 32 below the link line. Rows 48 min, padding 8 24, two columns: the campus's stored name ("UC San Diego", "UCLA") `row-title`, its major names `body` `--slate-700` (up to 2 lines, then "and {n} more", tapping the row expands it). A campus in the student's plan gets `Star` fill 16 `--yellow-400` before its name and moves to the top. Not tappable otherwise in v1.4 |
+| About the degree (Cal State tab) | In place of campuses: "What this degree does" `title-3`, then in `body` `--navy-900`: "Finish this degree at your college and you get priority admission to Cal State. That's the system, not a specific campus or major: if your first choice is full, you may be offered another campus. If you're admitted to a similar major, you can finish the bachelor's in about 60 more units." Then "At least {major_units} units in the major, {total_units} units total." `caption` `--slate-600`. Wording checked against [Cal State's ADT page](https://calstate.edu/apply/transfer/pages/ccc-associate-degree-for-transfer.aspx) on Oct 26, 2026 |
 | Source block | 32 below, inset 24. "From {source}, {pathway or template name}. Checked {date}." `caption` `--slate-600` (template: "Transfer Model Curriculum #2007, revision 3"). Link line to the source page or PDF. Then a text button "Report a problem" (`caption` size, `--blue-700`), a mailto to joinstackd@gmail.com with the major, tab and the row codes in the body |
-| Demo or unverified | Never shown. A major with any unverified row isn't listed (1) |
+| Demo or unverified | Never shown. A major with any unverified row isn't listed (1). Status needs an account, so the Explore tab and the major page stay off in demo mode, like an unflagged route: the address goes Home |
 
 ## 3. Requirement sheet
 
@@ -213,6 +215,7 @@ Your status                                      headline
 |---|---|
 | Header | Status tile at 40 (same states), 12 gap, name `title-2` |
 | What it is | `body` `--slate-700`, 8 below: Stackd's plain description (from the data file, our words) |
+| C-ID (one-course Cal State rows) | `caption` `--slate-600`, 8 below: the number in `type-code` and its units, so the catalog match works from the sheet too |
 | Options (Cal State rows with alternatives) | "Pick one" `headline`, then each option as a line: its name in `body` and its C-ID numbers, if it has any, in monospace `caption` `--slate-600`, with its units |
 | Counts for both | Only when the topic is in both pathways. On the UC sheet it names the Cal State C-ID numbers; on the Cal State sheet it names the UC course type |
 | Your status | The segmented control (00), three segments, 44 tall. Changing it saves at once and updates the row, the bar and the Explore panel. "Done" plays the burst on the sheet's tile |
@@ -230,7 +233,7 @@ A short static page, `/about/data/`, also on the website. Plain copy:
 - That requirements change every August, and Stackd rechecks them then.
 - "Report a problem" (mailto).
 
-Settings → About gets a link to it too.
+Settings gets a link to it too, in its footer with Terms, Privacy and Support. It's behind the `explore` flag, but open to anyone once the flag is on, signed in or not.
 
 ## 5. Elsewhere in the app
 
@@ -255,6 +258,8 @@ Every academic table uses the same provenance columns and `protect_verified` tri
 | `user_topic_status` | `user_id`, `topic`, `status progress_status`, `updated_at`; primary key `(user_id, topic)` | Owner-only row-level security like the other per-student tables; deleted by `delete_my_account()` |
 
 Public read (anon and authenticated) on the three academic tables, verified rows only, like `piq_prompts`.
+
+**Major names.** A major's name is a proper name: "Computer Science" everywhere it shows (list row, page title, source line). `pathways.name` is stored in sentence case, so the name shown comes from a verified `majors` row with the same `explore_slug` and the same words, ignoring case. With no such row, the stored name shows as it is. Nothing changes the case in code.
 
 "Counts for both" isn't stored: it's computed as "this topic appears in both the UC pathway and the TMC with the same slug." Because topics are set by a person and verified, the claim is only as strong as that check, which is why the review report lists each shared topic side by side.
 
@@ -283,18 +288,18 @@ Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **e
 | PR | Contains | Risk |
 |---|---|---|
 | A | The migration, the import and review-report changes, `data/raw/planning/california-institutions.json` (all 116 community colleges, the Cal State universities, the 9 UCs), `data/raw/explore/computer-science.json` drafted with TODOs, the `docs/16` record, `art-assets.md`, and a check that onboarding's and Settings' college and school pickers search well with 116+ entries | Migration and data: branch and PR. Ryan pushes the migration, checks the files, runs the imports |
-| B | Screens 1–5, behind `explore`, built against the verified Computer Science data (or the local demo seed in development) | App only |
+| B | Screens 1–5, behind `explore`, built against the verified Computer Science data | App only |
 
 ## Test
 
-- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "5 also count for Cal State.", the husky (or `husky-wave`) at the bottom right; then "All majors" with Computer science, "UC and Cal State".
+- Explore tab with a plan of Las Positas → UC San Diego, Computer Science: the mint band, the solid panel with "Computer Science", "0 of 9 done for UC", "5 also count for Cal State.", the husky (or `husky-wave`) at the bottom right; then "All majors" with Computer Science, "UC and Cal State".
 - Plan without a major: no panel; the "Pick your major" ask opens Settings → Your plan.
-- Search "cs": Computer science only, panel hidden. Search "nursing": the husky, "No majors match "nursing" yet.", and the ASSIST link line.
-- Open Computer science: UC tab, 9 rows in the pathway's order, 5 with "Counts for both" (not physics), the agreement link line names Las Positas and 2026-27, 9 campus rows with UC San Diego starred at the top, the source block with the checked date and Report a problem.
+- Search "cs": Computer Science only, panel hidden. Search "nursing": the husky, "No majors match "nursing" yet.", and the ASSIST link line.
+- Open Computer Science: UC tab, 9 rows in the pathway's order, 5 with "Counts for both" (not physics), the agreement link line names Las Positas and 2026-27, 9 campus rows with UC San Diego starred at the top, the source block with the checked date and Report a problem.
 - Tap the calculus tile: green with a check, the burst, "1 of 9 done", toast with Undo. Switch to Cal State: the calculus row (MATH 210 …) shows done too.
-- Open the Data structures sheet, set Taking now: the tile turns sky with an hourglass; the count reads "1 of 9 done, 1 taking now"; on Explore the panel's bar shows one yellow segment.
+- Open the Data structures sheet, set Taking now: the tile turns white with a blue ring and an hourglass; the count reads "1 of 9 done, 1 taking now"; on Explore the panel's bar shows one yellow segment.
 - Cal State tab: COMP 122, 132, 142, 152 in monospace in the sheets; the calculus row says "One of 3 options" and its sheet lists the three with C-ID numbers and units; "What this degree does" and the unit totals; the source block names template #2007 and its revision.
-- A row set back to unverified (`import:reopen`): Computer science disappears from the list.
+- A row set back to unverified (`import:reopen`): Computer Science disappears from the list.
 - Another student can't read this student's `user_topic_status` (test:db). Delete account removes it.
 - University page → Requirements for UC San Diego: "See what to take for Computer Science" opens the major page.
 - `/about/data/` opens from the footer, from Settings → About, and on the website.
@@ -305,9 +310,16 @@ Because Transfer Pathways and TMCs are statewide, batch 2 covers students at **e
 
 ## Additions to 00
 
+All in 00 since step 26.
+
 | Addition | Value |
 |---|---|
+| Tokens | `--mint-pressed`, `--font-code`, `type-code` |
+| Component: segmented control | The status control in 3 |
 | Component: requirement row | As in 2 |
 | Component: status tile (3 states) | As in 2; the step tile gains the "taking now" state |
+| Component: section band | The mint band in 1 and 2 |
+| Component: major row | As in 1 |
+| Component: ask card | The tier-3 ask, shared with Reminders (15) |
 | Pattern: source block with Report a problem | As in 2; use it under every list of facts from now on |
 | Rule: Mobbin references | As in "Mobbin, as a standing rule" |

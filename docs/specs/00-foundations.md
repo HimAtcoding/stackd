@@ -50,7 +50,8 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 | `--confetti-sky` | #4FA8F7 | Confetti only |
 | `--indigo-600` | #4F55E0 | Essays section color, the writing step's icon (`16-color-pass.md`) |
 | `--amber-700` | #A86A00 | The activities step's icon (16) |
-| `--mint-600` | #12946A | Explore section color later, the courses step's icon (16) |
+| `--mint-600` | #12946A | Explore section color, the courses step's icon (16) |
+| `--mint-pressed` | #085A38 | Pressed state of a solid `--mint-800` panel (21) |
 
 Feature panels, the step tile and the step burst are specified in `16-color-pass.md`. The date tile, the link line (which replaces 16's outside-link row) and the step sheet are specified in `18-list-link-steps.md`; the Deadlines list has no timeline spine or nodes since 18. The section colors above mark features and never carry status: the status colors below stay fixed everywhere.
 
@@ -97,6 +98,8 @@ Sizes were fitted by matching the rendered width of each mockup string in Figtre
 | `link` | 15 / 20 | 700 | 0 | "View feedback", "View progress" |
 | `segment` | 16 / 20 | 600 | 0 | Underline tabs on university and essays screens |
 | `demo` | 12 / 16 | 600 | 0.01em | Demo strip, footer disclaimer (400) |
+
+`type-code` is the one type style outside Figtree: 13 / 16, weight 400, in `--font-code` (`ui-monospace, "SF Mono", Menlo, Consolas, monospace`). It's for real course codes such as COMP 122 or MATH 210, and nothing else (21).
 
 Sentence case everywhere. No text smaller than 12.
 
@@ -209,6 +212,36 @@ Height 8, `--r-full`, track `--blue-100`, fill `--blue-600`. Width animates 320 
 
 Row height 44, bottom 1 px `--border` spanning full width. Label `segment`, active `--blue-600`, inactive `--navy-900`. Indicator: 3 px `--blue-600` bar, radius 2, sitting on the divider, width = label width + 28, centered under the active label. On change the indicator slides and resizes, 200 ms `--ease-out`. `role="tablist"` / `role="tab"` / `aria-selected`.
 
+On a tinted band (`onTint`), the active label and bar are `--blue-700`, because `--blue-600` is only 4.2:1 on `--mint-100` (21).
+
+### Segmented control
+
+Pick one of a few values on the spot, such as a status (21). Height 44, track `--surface-pressed` with a 1 px `--border` and `--r-md`, padding 3. Selected thumb `--surface`, `--r-sm`, `--shadow-card`. Labels `label`: selected `--navy-900`, others `--slate-600`. The thumb slides 200 ms `--ease-out`, instantly under reduced motion. `role="radiogroup"`, arrow keys move between options. Neutral on purpose: it isn't a primary action, and the Tab bar and underline tabs already use blue for where you are.
+
+### Section band
+
+A quiet band in a section's color, from the physical top across the full width (21). On a tab: 24 under the safe area, title `title-1`, subtitle `body` `--slate-700` 8 below. On a pushed screen: the back button 8 under the safe area, title 24 under it, subtitle 4 below. What sits at the bottom of the band (a search field, or tabs) comes after.
+
+### Status tile
+
+40, `--r-sm`, hit area 44, three states: not yet (the item's own icon on its tint), taking now (`HourglassMedium` `--blue-600` on `--surface` with a 1.5 px inset `--blue-600` ring), done (white `Check` on `--green-600`, with the step burst). The step tile (16) is this tile with no "taking now". As a control it's `role="checkbox"` with `aria-checked` true, "mixed" or false (21).
+
+### Requirement row
+
+Min height 64, padding 12 24: a status tile, then name `row-title` `--navy-900` up to 2 lines, and one line of detail `caption` `--slate-600`, with `Intersect` + "Counts for both" when that applies. The tile and the text are separate controls (21).
+
+### Major row
+
+Min height 64, padding 12 16, the whole row a button: icon tile 40, name `row-title`, one line of detail `caption` `--slate-600`. No chevron, no dividers, rows 4 apart (21).
+
+### Source block
+
+Goes under every list of facts. "From {source}. Checked {date}." `caption` `--slate-600`, a link line (18) to the source, then "Report a problem" (`caption` size, `--blue-700`), a mailto to joinstackd@gmail.com that names what's being reported (21).
+
+### Ask card
+
+Tier 3 (15 → Reminders ask): `--blue-50` fill, its border, `--r-md`, padding 16, a 24 `--blue-600` icon inline at the left, no shadow, no icon tile. Asks the student for one thing.
+
 ### Tab bar
 
 Fixed to the bottom. Height 56 + `env(safe-area-inset-bottom)`. `--surface`. The top edge line is drawn with `box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(5,16,66,.04)`, so it takes no space inside the 56. Four equal columns. Each column: 6 top padding, icon 28, 2 gap, label `tab` (16 line), which leaves 4 below the label when there's no home indicator. Active: icon fill `--blue-600`, label `--blue-600`. Inactive: icon regular `--slate-400`, label `--slate-600`. No animation on switch. Each tab keeps its own scroll position. Hidden on pushed screens (the university screen) and on the celebration.
@@ -256,7 +289,7 @@ Row height 24. Two 1 px `--border-strong` rules filling the space on each side o
 
 ### Text link
 
-Inline text action. `link` (15/20 700) `--blue-600`, or `label` (14/18 600) `--blue-600` for small links. No underline at rest; underline on press and on keyboard focus. The hit area is at least 44 tall, made with vertical padding and a matching negative margin so the layout doesn't move.
+Inline text action. `link` (15/20 700) `--blue-600`, or `label` (14/18 600) `--blue-600` for small links, `--blue-700` on a tinted fill. No underline at rest; underline on press and on keyboard focus. The hit area is at least 44 tall, made with vertical padding and a matching negative margin so the layout doesn't move.
 
 ### Toast
 

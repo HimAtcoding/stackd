@@ -20,3 +20,11 @@ export function matchesSearch(query: string, name: string, ...others: (string | 
   if (q.length >= 2 && initials(name).startsWith(q)) return true;
   return [name, ...others].some((f) => f && squash(f).includes(q));
 }
+
+// For very short searches, where matching inside a word finds too much ("cs" is in "economics"): a word of the name
+// starts with the search, or its initials do
+export function startsAWord(query: string, name: string) {
+  const q = squash(query);
+  if (!q) return true;
+  return initials(name).startsWith(q) || fold(name).split(/[^a-z0-9]+/).some((w) => w.startsWith(q));
+}
