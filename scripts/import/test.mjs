@@ -654,7 +654,7 @@ check("UC Santa Cruz's Business Management Economics: both pathways list it, one
 
 const realInst = () => JSON.parse(fs.readFileSync("data/raw/planning/california-institutions.json", "utf8"));
 const instAsIs = validatePlanningFile(realInst()).problems;
-check("california-institutions.json is refused until every new row is checked", instAsIs.length === 145 && instAsIs.every((p) => /retrieved_at is empty/.test(p)), `${instAsIs.length}: ${instAsIs[0]}`);
+check("california-institutions.json is checked (every row has retrieved_at)", instAsIs.length === 0, `${instAsIs.length}: ${instAsIs[0]}`);
 const inst = validatePlanningFile(fillIn(realInst(), "2026-10-31"));
 check("california-institutions.json passes once checked", inst.problems.length === 0, JSON.stringify(inst.problems.slice(0, 3)));
 const bySystem = (s, type) => (inst.payload?.institutions ?? []).filter((r) => r.system === s && r.institution_type === type).length;
@@ -684,8 +684,8 @@ check("its review report shows 5 of 9 counting for both", csMd.includes("5 of 9 
 // so a student anywhere can pick a real major in onboarding
 const realMajors = () => JSON.parse(fs.readFileSync("data/raw/planning/computer-science-majors.json", "utf8"));
 const majorsAsIs = validatePlanningFile(realMajors()).problems;
-check("computer-science-majors.json is refused until every row is checked",
-  majorsAsIs.length === realMajors().majors.length && majorsAsIs.every((p) => /retrieved_at is empty/.test(p)), `${majorsAsIs.length}: ${majorsAsIs[0]}`);
+check("computer-science-majors.json is refused only for rows not checked yet",
+  majorsAsIs.length === realMajors().majors.filter((m) => !m.retrieved_at).length && majorsAsIs.every((p) => /retrieved_at is empty/.test(p)), `${majorsAsIs.length}: ${majorsAsIs[0]}`);
 const csMajors = realMajors().majors;
 check("every major links to Explore's computer-science", csMajors.every((m) => m.explore_slug === "computer-science"));
 check("UC San Diego's major isn't added twice (the first slice has it)", !csMajors.some((m) => m.institution === "uc-san-diego"));
