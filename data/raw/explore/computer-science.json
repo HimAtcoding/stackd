@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Computer Science for Explore (spec 21), batch 1. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the degree name, the unit totals and the campus major names are copied exactly. UC pathway: the Computer Science Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: Template #2007, Rev. 3: 10/14/16, the PDF in source_url. The same course list is in the current Cal-GETC ADT submission form (https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/computerscirevform.docx), which shows the major as 28-29 units because one option is 5 units; major_units is the template's minimum, 28. The templates page (Templates For Approved Transfer Model Curriculum on cccco.edu) labels both files 'Rev 1: 10/14/2016', but the files themselves say Rev. 3. Topics: cs1, cs2, comp-org, discrete and calculus-single appear in both pathways (Counts for both, 5 of 9). Physics is kept apart: UC asks for a year (physics-year), the TMC for the first course (physics-mechanics). Check every row against its source, delete each todo once confirmed, fill in retrieved_at on both pathways, then run: npm run import -- data/raw/explore/computer-science.json --dry-run",
+  "notes": "Computer Science for Explore (spec 21), batch 1. Every name and description is in Stackd's own words; nothing is copied from UC's page. C-ID numbers, the template number and revision, the unit totals and the campus major names are copied exactly. The degree name is the name from the form without the word 'Degree'. UC pathway: the Computer Science Transfer Pathway page on admission.universityofcalifornia.edu (it states no term or year; academic_year is the year it was checked). TMC: Form # 2007, Rev. 3: 10/14/16, the PDF in source_url. The same course list is in the current Cal-GETC ADT submission form (https://www.cccco.edu/-/media/CCCCO-Website/docs/curriculum/computerscirevform.docx), which shows the major as '28-29*' without explaining it; major_units is the template's minimum, 28. The templates page (Associate Degrees for Transfer (ADT) Submission Forms on cccco.edu) labels both files 'Rev 1: 10/14/2016', but the files themselves say Rev. 3. Topics: cs1, cs2, comp-org, discrete and calculus-single appear in both pathways (Counts for both, 5 of 9). Physics is kept apart: UC asks for a year (physics-year), the TMC for the first course (physics-mechanics). Checked by Ryan Saleh on 2026-10-31.",
   "slug": "computer-science",
   "pathways": [
     {
@@ -10,8 +10,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/computer-science.html",
       "academic_year": "2026-27",
-      "retrieved_at": "",
-      "todo": "Check the 9 requirements against the page's course list, in the same order, and the campus rows against its list of majors.",
+      "retrieved_at": "2026-10-31",
       "requirements": [
         {
           "code": "intro-programming",
@@ -117,10 +116,9 @@
       "total_units": 60,
       "effective_term": null,
       "source_name": "California Community Colleges Chancellor's Office",
-      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/Files/Educational-Services-and-Support/TMC-Templates/tmc-computersci-template-rev-3-ada.pdf",
+      "source_url": "https://www.cccco.edu/-/media/CCCCO-Website/docs/template/tmc-computersci-rev-3-a11y.pdf",
       "academic_year": "2026-27",
-      "retrieved_at": "",
-      "todo": "On the day you check, confirm on cccco.edu that Rev. 3 (10/14/16) is still the newest Computer Science template; the templates page labels it Rev 1. Then check each C-ID number and unit count against the PDF.",
+      "retrieved_at": "2026-10-31",
       "requirements": [
         {
           "code": "comp-122",
@@ -167,7 +165,7 @@
           "sort": 5,
           "topic": "calculus-single",
           "name": "Calculus, a full year",
-          "description": "Single-variable calculus for science and engineering majors. Your college offers one of these sequences; take both courses, or the whole sequence.",
+          "description": "Pick one of these sequences.",
           "how_many": "One of 3 options",
           "units": 8,
           "options": [
@@ -194,7 +192,6 @@
           "description": "Pick one: the second physics course, a biology course or a chemistry course for science majors.",
           "how_many": "One of 4 options",
           "units": 4,
-          "todo": "The PDF's text shows BIOL 140 with no course title next to it; the IGETC form (tmc-computersci-rev-3-a11y.pdf) and the Cal-GETC form call it Organismal Biology (4). Confirm on the PDF itself.",
           "options": [
             { "label": "Physics with calculus, second course", "c_id": ["PHYS 210"], "units": 4 },
             { "label": "Cell and molecular biology", "c_id": ["BIOL 190"], "units": 4 },
