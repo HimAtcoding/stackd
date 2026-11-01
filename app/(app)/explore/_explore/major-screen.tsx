@@ -42,8 +42,8 @@ import { CampusList } from "./campus-list";
 import { RequirementSheet } from "./requirement-sheet";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
-// The site Cal State points students to (21 → Find at your college)
-const CAL_STATE_MATCHES = "https://adegreewithaguarantee.com";
+// Where adegreewithaguarantee.com, the site Cal State points students to, now redirects (21 → Find at your college)
+const CAL_STATE_MATCHES = "https://icangotocollege.com";
 
 // With Explore's flag off the address goes Home; a major that isn't listed goes back to the list (13: no dead ends)
 export function MajorRoute() {

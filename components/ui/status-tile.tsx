@@ -32,7 +32,7 @@ const OUT = [0.2, 0.8, 0.2, 1] as const;
 const BURST = { step: { count: 6, reach: 28 }, finale: { count: 10, reach: 40 } };
 
 // A status as an icon tile (16 → Step icons, 21 → Status tile). Not started shows its own icon, taking now an hourglass
-// on sky, done a white check on green. Turning done takes 160 ms with a burst of yellow dashes; going back swaps at once.
+// in a blue ring, done a white check on green. Turning done takes 160 ms with a burst of yellow dashes; going back swaps at once.
 // Reduced motion: colors only.
 export function StatusTile({ status, name, icon: Glyph, tile, color, onToggle, size = 40, burst = 0, finale, className }: StatusTileProps) {
   const still = useReducedMotion();
@@ -55,7 +55,7 @@ export function StatusTile({ status, name, icon: Glyph, tile, color, onToggle, s
         done
           ? "bg-green-600 text-white transition-colors duration-160 ease-out motion-reduce:transition-none"
           : status === "in_progress"
-            ? "bg-tint-sky text-blue-600"
+            ? "bg-surface text-blue-600 shadow-[inset_0_0_0_1.5px_var(--blue-600)]"
             : `${tile} ${color}`,
       )}
     >

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
-import { buildMajors, type CampusRecord, type ExploreMajor, type ExploreRecords, type PathwayRow, type RequirementRecord } from "@/lib/explore";
+import { buildMajors, type CampusRecord, type ExploreMajor, type ExploreRecords, type MajorName, type PathwayRow, type RequirementRecord } from "@/lib/explore";
 import { exploreHref } from "@/lib/features";
 import { collegeShortName } from "@/lib/format";
 import { readStorage, writeStorage } from "@/lib/storage";
@@ -57,7 +57,7 @@ function subscribe(onChange: () => void) {
 async function fetchRecords(): Promise<ExploreRecords> {
   const supabase = getSupabase();
   if (!supabase) throw new Error("Supabase isn't configured");
-  const [p, r, c] = await Promise.all([
+  const [p, r, c, m] = await Promise.all([
     supabase
       .from("pathways")
       .select("id, slug, kind, name, code, revision, major_units, total_units, source_name, source_url, verified_at")
@@ -73,11 +73,13 @@ async function fetchRecords(): Promise<ExploreRecords> {
       .select("pathway_id, major_names, institution:institutions!institution_id(id, slug, name)")
       .eq("verification_status", "verified")
       .eq("is_demo", false),
+    supabase.from("majors").select("name, explore_slug").not("explore_slug", "is", null).eq("verification_status", "verified").eq("is_demo", false),
   ]);
   if (p.error) throw p.error;
   if (r.error) throw r.error;
   if (c.error) throw c.error;
-  return { pathways: p.data as PathwayRow[], requirements: r.data as RequirementRecord[], campuses: c.data as unknown as CampusRecord[] };
+  if (m.error) throw m.error;
+  return { pathways: p.data as PathwayRow[], requirements: r.data as RequirementRecord[], campuses: c.data as unknown as CampusRecord[], majorNames: m.data as MajorName[] };
 }
 
 let loading: Promise<void> | null = null;

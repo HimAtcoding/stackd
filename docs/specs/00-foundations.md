@@ -224,7 +224,7 @@ A quiet band in a section's color, from the physical top across the full width (
 
 ### Status tile
 
-40, `--r-sm`, hit area 44, three states: not yet (the item's own icon on its tint), taking now (`HourglassMedium` `--blue-600` on `--tint-sky`), done (white `Check` on `--green-600`, with the step burst). The step tile (16) is this tile with no "taking now". As a control it's `role="checkbox"` with `aria-checked` true, "mixed" or false (21).
+40, `--r-sm`, hit area 44, three states: not yet (the item's own icon on its tint), taking now (`HourglassMedium` `--blue-600` on `--surface` with a 1.5 px inset `--blue-600` ring), done (white `Check` on `--green-600`, with the step burst). The step tile (16) is this tile with no "taking now". As a control it's `role="checkbox"` with `aria-checked` true, "mixed" or false (21).
 
 ### Requirement row
 

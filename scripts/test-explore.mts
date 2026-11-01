@@ -43,7 +43,7 @@ const file: { slug: string; pathways: FilePathway[] } = JSON.parse(fs.readFileSy
 
 // The file as the database hands it back: ids, provenance and joined campuses
 function fromFile(): ExploreRecords {
-  const records: ExploreRecords = { pathways: [], requirements: [], campuses: [] };
+  const records: ExploreRecords = { pathways: [], requirements: [], campuses: [], majorNames: [{ name: "Computer Science and Engineering", explore_slug: "computer-science" }, { name: "Computer Science", explore_slug: "computer-science" }] };
   for (const { requirements, campuses = [], ...p } of file.pathways) {
     const id = `${file.slug}-${p.kind}`;
     records.pathways.push({
@@ -68,6 +68,10 @@ const records = fromFile();
 const [cs] = buildMajors(records);
 
 check("one major from two pathways", buildMajors(records).length === 1 && cs.slug === "computer-science");
+check("the major's proper name comes from a major in the same words", cs.name === "Computer Science", cs.name);
+check("another major's name isn't taken", buildMajors({ ...records, majorNames: [{ name: "Computer Engineering", explore_slug: "computer-science" }] })[0].name === "Computer science");
+check("a major with the same words under another slug isn't taken", buildMajors({ ...records, majorNames: [{ name: "Computer Science", explore_slug: "economics" }] })[0].name === "Computer science");
+check("an older device copy with no majors keeps the stored name", buildMajors({ ...records, majorNames: undefined })[0].name === "Computer science");
 check('the list says "UC and Cal State"', systemsLine(cs) === "UC and Cal State", systemsLine(cs));
 check("UC has 9 rows in the pathway's order", cs.uc?.requirements.length === 9 && cs.uc.requirements[0].code === "intro-programming" && cs.uc.requirements[8].code === "physics");
 check("Cal State has 7 rows", cs.calState?.requirements.length === 7);
@@ -141,12 +145,12 @@ const scienceRow = { ...calculus, options: [{ label: "No number", c_id: [], unit
 check("calculus lists 3 ways with their numbers", JSON.stringify(cIdGroups(calculus)) === JSON.stringify([["MATH 210", "MATH 220"], ["MATH 211", "MATH 221"], ["MATH 900S"]]), cIdGroups(calculus));
 check("a one-course row has its one number", JSON.stringify(cIdGroups(cs.calState!.requirements[0])) === '[["COMP 122"]]');
 check("an option with no C-ID number is left out of the sentence", cIdGroups(scienceRow).length === 3);
-check("the UC source line", sourceLine(cs.uc!) === "From UC Admissions, Computer science Transfer Pathway. Checked Oct 31, 2026.", sourceLine(cs.uc!));
+check("the UC source line", sourceLine(cs.uc!) === "From UC Admissions, Computer Science Transfer Pathway. Checked Oct 31, 2026.", sourceLine(cs.uc!));
 check("the template source line", sourceLine(cs.calState!).endsWith("Transfer Model Curriculum #2007, revision 3. Checked Oct 31, 2026."), sourceLine(cs.calState!));
 check("the unit totals", unitsLine(cs.calState!) === "At least 28 units in the major, 60 units total.", unitsLine(cs.calState!));
 
 const mail = decodeURIComponent(problemMailto(cs, "cal-state", cs.calState!));
-check("Report a problem names the major, tab and rows", mail.startsWith("mailto:joinstackd@gmail.com?") && mail.includes("Major: Computer science") && mail.includes("Tab: Cal State") && mail.includes("comp-122"), mail);
+check("Report a problem names the major, tab and rows", mail.startsWith("mailto:joinstackd@gmail.com?") && mail.includes("Major: Computer Science") && mail.includes("Tab: Cal State") && mail.includes("comp-122"), mail);
 
 const own = agreementLine("these", { url: "https://assist.org/x", academicYear: "2026-27", college: "Las Positas" });
 const none = agreementLine("these", null);

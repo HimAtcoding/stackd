@@ -514,6 +514,12 @@ Spec `21-explore.md` parts 1 to 5, on branch `explore-screens-b`. **Behind `expl
 - **Flags:** `exploreHref()` is null with the flag off or in demo mode, since status needs an account. `aboutDataHref()` is null with the flag off. `NEXT_PUBLIC_FEATURES` now takes a list (`explore,mentors`) as well as `all`; production builds still ignore it.
 - **References:** the 8 in spec 21 plus 8 more from Mobbin are in `docs/refs/21-explore/` (git-ignored). The PR lists them and the differences. No design change came from them.
 
+**Review fixes on the PR, same day:**
+- The panel's bar has its own full-width line, with the count 8 under it. The husky keeps 96 beside the text lines only, and starts 8 under the bar, so it peeks up from the bottom edge and shows its head, not its map. A full-size husky would sit behind the bar.
+- Taking now is a `--surface` tile with a 1.5 px `--blue-600` ring. The open-window date tile keeps its `--tint-sky` fill.
+- Major names are proper names. `lib/data/explore.ts` also reads verified `majors` rows, and `buildMajors` takes the casing from one with the same slug and the same words, so "Computer Science and Engineering" is never picked. No database row changed.
+- The Cal State link points at `https://icangotocollege.com` and shows that domain.
+
 **Tested:**
 - Spec 21's Test list, at 393 and 320 wide, against a real static export built with `explore` on for that one build, using a stand-in session (real Explore rows, made-up student rows). Also the other plans: no major, another college, Cal State only, a hidden major, reduced motion.
 - A real account (Las Positas → UC San Diego, Computer Science) through sign-up, code and onboarding. Marking done and Taking now both reached `user_topic_status`; a clean browser that signed in showed them; clearing one removed its row, confirmed from a third clean browser. The account was then deleted through Settings, and the same email and password no longer sign in.
@@ -526,10 +532,10 @@ Spec `21-explore.md` parts 1 to 5, on branch `explore-screens-b`. **Behind `expl
 - `/about/data/` on the live website: nothing was deployed, and the page stays off until the flag is on.
 
 **Before Explore turns on:**
-- `adegreewithaguarantee.com` now redirects to `icangotocollege.com`. The link works and the label still shows the spec's domain.
+- The Cal State link opens `icangotocollege.com`, where `adegreewithaguarantee.com` redirects. That's the community colleges' general site, with the Associate Degree for Transfer page one tap in, so the label "See which Cal State majors match" promises more than the page does.
 - calstate.edu's ADT page returned 403 to a plain request, so "What this degree does" wasn't rechecked. The Oct 26 check in spec 21 stands.
 - The privacy page already covers "any progress you mark". Read it again at release against what `user_topic_status` holds.
-- For the design-spec chat: the panel's 9 segments look like dots at 393, because the bar shares a row with its label and the husky keeps 96. The Taking now tile (`--tint-sky`) is faint on the `--sky-50` page.
+- `pathways.name` stays in sentence case in the database and the data files. Fixing it there needs a reopen, a re-import and a person's check; the app shows the proper name either way.
 
 ## Computer Science imported for Explore (2026-10-31)
 
