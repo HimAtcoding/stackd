@@ -1,6 +1,6 @@
 # Roadmap and non-goals
 
-## Build-to-launch order (revised October 2026)
+## Build-to-launch order (revised November 1, 2026)
 
 The working plan from today through App Store launch and after. Each phase depends on the one before it. Step-by-step progress is tracked in `docs/build-status.md`; decisions behind this plan are in `16-open-questions.md → Decided`.
 
@@ -10,13 +10,35 @@ The working plan from today through App Store launch and after. Each phase depen
 | 2 | Data access and accounts | Read ASSIST's terms and email them about data access; create the Supabase project; Apple Developer Program | Founders | Done |
 | 3 | Database and real sign-in | Tables from `05-data-model.md` with provenance; an importer that works on agreements saved by hand; Supabase email sign-in replaces demo auth; progress saved per user with row-level security | Claude Code | Done |
 | 4 | Planning layer on real structure | Colleges, universities, and majors in the database (names and official links only, no copied agreement data). Each plan links to the official ASSIST agreement | Claude Code | Done |
-| 5 | Core screens | Onboarding, Home plan states, the official agreement card, Settings (built). Still to come: Explore (search), requirement detail, university Overview tab | Design chat (specs), Claude Code | A student goes from sign-up to "these courses count" on real data |
-| 6 | iOS app | Capacitor iOS project, Sign in with Apple (native) and Google (in-app browser), App Store listing (PR #2). Native Google sign-in and push notifications for deadlines still to come | Claude Code, founders on the Mac | Runs on a real iPhone |
+| 5 | Core screens | Onboarding, Home plan states, the official agreement card, Settings (built). Explore: all 147 California public schools, Computer Science at every UC and Cal State, the Explore tab and major pages (built, flag off until 1.4). Still to come: requirement detail, university Overview tab | Design chat (specs), Claude Code | Done for v1.4 |
+| 6 | iOS app | Capacitor iOS project, Sign in with Apple (native) and Google (in-app browser). Native Google sign-in still to come | Claude Code, founders on the Mac | Done |
 | 7 | TestFlight beta | Las Positas students, starting with the CS club: 10, fix, then 50. Time it to a registration window | Founders | Students return and save plans without help |
-| 8 | App Store | v1 per `docs/specs/13-v1-launch.md`: no dead ends, privacy, terms, support, review account | Founders | Approved and live |
-| 9 | Expand and polish | v1.1 Essays and deadlines with push notifications; v1.2 Explore, more schools and majors, native Google sign-in; v1.3+ Events and Mentors after their product decisions. An ASSIST-like database for out-of-state transfers, each source's terms checked first. Student life, the celebration, Rive animations, design rev 2 | Everyone | Ongoing |
+| 8 | App Store | v1.2.0 (Essays) and v1.3.0 (Essays start, notes, reviews) submitted Oct 2026 | Founders | Approved and live |
+| 9 | Expand | See "Product roadmap after Explore" below | Everyone | Ongoing |
 
 **On coverage speed:** the number of universities supported is limited by how fast data can be legitimately obtained and verified, not by code. Bulk-imported records show as "unverified" until checked (`06-trust-and-provenance.md`). A few schools covered correctly beats many covered loosely.
+
+## Product roadmap after Explore (November 2026)
+
+The goal is to reach tens of thousands of community college students and keep them coming back. What exists today (deadlines, the application checklist, Essays with reviewers, Explore) helps a student a few times a year. The work below gives them reasons to return every week, reaches every student, and spreads through students, colleges and counselors. Order is a working plan; real student use (validation stage 4) can reorder it.
+
+| Order | Feature | What it does | Why |
+|---|---|---|---|
+| 1 | Explore, 9 majors | Computer Science plus batch 2a (8 majors), checked and live in v1.4 | One major isn't a product |
+| 2 | Your college's courses | "At Las Positas: CS 1, CS 2, CS 21…" from C-ID numbers and college catalogs, Las Positas first, then every college once C-ID allows its approved-course list | Makes Explore personal; the Cal State side is official through C-ID |
+| 3 | My plan | Mark what you've taken; see, for UC and Cal State together, what's done, what's missing and a term-by-term plan to finish by your transfer term, including online courses at other colleges through CVC | The original vision ("what to take next, where, and why"); nobody does it across UC and Cal State; brings students back every registration window |
+| 4 | TAG checker and transfer GPA | "You're on track for a TAG at UC Davis; here's what's missing." UC and Cal State transfer GPA calculated their way | Six UC campuses guarantee admission; almost no tool explains eligibility clearly |
+| 5 | Android | The same app on Android through Capacitor | About half of community college students aren't on iPhone |
+| 6 | Community and forums | Forums by school, major and topic (PIQs, TAG, stats, course advice), plus anonymous admit results ("Las Positas → UC San Diego CS, admitted"). Woven into the rest of the app: each Explore major, school and event links to its discussion; admitted students become mentors; questions surface in My plan. Needs moderation, reporting and blocking from day one (Apple requires it) | Replaces scattered Reddit threads with structured, searchable answers; grows by itself |
+| 7 | Events and opportunities | A feed matched to your major and schools: transfer fairs, UC and Cal State programs, scholarships, competitions, research programs, club events. Clubs post their own events, starting with the LPC CS club | A reason to open the app every week |
+| 8 | Reminders that know your plan | "Registration opens Nov 12 and you still need Linear Algebra." Push notifications are built and switched off | Retention |
+| 9 | Mentors and AI | Admitted transfers review essays; AI essay feedback; an AI counselor that answers only from Stackd's verified data | The mentor loop is the network effect; AI needs paid credits |
+| 10 | Money | FAFSA and Dream Act deadlines, the Cal Grant for transfers, scholarships matched to the profile, what each campus costs | Money is a top reason students don't transfer |
+| 11 | Application tracker | Submitted, documents due, decisions (`trackApplication` flag) | Keeps the student through the whole cycle |
+| 12 | Spanish | The app in Spanish | Many students are first-generation and Latino; families help decide |
+| 13 | Counselors and colleges | A counselor dashboard (students opt in to share their plan), campus ambassadors, partnerships with MESA, Puente, EOPS and Honors programs | Reaches whole campuses at once; the student stays the user whose experience wins (see Business model) |
+| 14 | After transfer | Comparing offers, housing, orientation | Students stay and become mentors |
+| 15 | Beyond California | States with statewide course numbering (Texas, Florida, Arizona) first | Expansion phase 6 |
 
 ## Course data track (runs alongside every release)
 
@@ -24,14 +46,14 @@ Showing course requirements inside the app, instead of sending students to ASSIS
 
 | Step | What | Who | Done when |
 |---|---|---|---|
-| A | Read the terms of use for UC Transfer Pathways (UC Admissions) and the CSU Transfer Model Curricula (CCC Chancellor's Office). Record what's allowed in `16` | Founders, Claude Code | Terms recorded |
-| B | If allowed: import the UC Computer Science Transfer Pathway as the requirement list for every UC CS target, with source and year. This gives requirement names and course types, not yet which Las Positas courses match | Claude Code | UC San Diego CS shows its requirement list in the app |
-| C | Ask UC San Diego (then the other 8 UC campuses) for permission to show their published major requirements. One email per campus | Founders | Replies recorded in `16` |
+| A | Read the terms of use for UC Transfer Pathways (UC Admissions) and the CSU Transfer Model Curricula (CCC Chancellor's Office). Record what's allowed in `16` | Founders, Claude Code | Done Oct 26, 2026: UC Admissions confirmed facts in Stackd's own words with links back |
+| B | Import Transfer Pathways and TMCs as each major's requirement list, with source and year | Claude Code, founders check | Computer Science verified Oct 31, 2026; batch 2a (8 majors) drafted, being checked; batch 2b (the other 18 pathways and Cal State-only degrees) next |
+| C | Ask C-ID for permission to show which courses at each college carry each C-ID number | Founders | Reply recorded in `16` |
 | D | Ask Las Positas's articulation officer or transfer center to review Stackd and, ideally, check its course matches. A college-endorsed source is both more accurate and easier to defend | Founders | A meeting held |
-| E | Course matches (which Las Positas courses meet each requirement) only from a permitted source: ASSIST licensed access, a campus's permission, or a college partner. Every match carries source, year, and verification status | Claude Code, founders | The first verified match shows in the app |
+| E | Course matches (which Las Positas courses meet each requirement) only from a permitted source: the college's own catalog (C-ID numbers), C-ID's list with permission, ASSIST licensed access, or a college partner. Every match carries source, year, and verification status. For UC, a match is shown as "matches the statewide course type", never as "counts for" a campus, until ASSIST or the campus confirms it | Claude Code, founders | The first verified match shows in the app |
 | F | Check the ASSIST Resource Center Data page each term for outside access | Founders | Ongoing |
 
-Until step E, the official agreement card stays as the way to see course matches, and the requirement list (step B) says plainly that matches are on ASSIST.
+Until step E, Explore's "Find these at your college" links to ASSIST.
 
 ## Validation stages
 
