@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day.",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it.",
   "opportunities": [
     {
       "slug": "cooke-undergraduate-transfer-scholarship-2027",
@@ -196,37 +196,6 @@
       "location": "NASA centers",
       "online": false,
       "cost": "paid",
-      "url": "https://www.nasa.gov/learning-resources/internship-programs/",
-      "source_name": "NASA",
-      "source_url": "https://www.nasa.gov/learning-resources/internship-programs/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-07"
-    },
-    {
-      "slug": "nasa-internships-webinar-2026",
-      "kind": "event",
-      "title": "Launch Your Future: NASA internships webinar",
-      "org_name": "NASA Office of STEM Engagement",
-      "summary": "An online session, 3 to 4:15 p.m. Eastern, with NASA's internship and early-career teams on who can apply and how to make a strong application, plus advice from current interns.",
-      "who_for": [
-        "U.S. citizen"
-      ],
-      "wants": [
-        "Register through NASA's STEM Gateway"
-      ],
-      "offers": [
-        "Answers from NASA internship staff and current interns"
-      ],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [],
-      "terms": [],
-      "deadline": "2026-12-03",
-      "starts_on": "2026-12-03",
-      "ends_on": "2026-12-03",
-      "location": null,
-      "online": true,
-      "cost": "free",
       "url": "https://www.nasa.gov/learning-resources/internship-programs/",
       "source_name": "NASA",
       "source_url": "https://www.nasa.gov/learning-resources/internship-programs/",
@@ -655,6 +624,680 @@
       "source_url": "https://admission.ucla.edu/visit/events",
       "academic_year": "2026-27",
       "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "ucsd-ask-admissions-transfer-qa-2026",
+      "kind": "event",
+      "title": "UC San Diego: Ask Admissions, transfer student Q&A",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom Q&A with UC San Diego admissions, for transfer students only, from its Pathway to Transfer Success series. 3 to 4 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-09",
+      "starts_on": "2026-11-09",
+      "ends_on": "2026-11-09",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-spotlight-public-health-2026",
+      "kind": "event",
+      "title": "UC San Diego spotlight: School of Public Health",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom session introducing UC San Diego's School of Public Health, open to prospective first-year and transfer students. 3:45 to 4:30 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-10",
+      "starts_on": "2026-11-10",
+      "ends_on": "2026-11-10",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-spotlight-pharmacy-2026",
+      "kind": "event",
+      "title": "UC San Diego spotlight: Pharmacy and Pharmaceutical Sciences",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom session introducing UC San Diego's School of Pharmacy and Pharmaceutical Sciences, open to prospective first-year and transfer students. 5 to 5:45 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-10",
+      "starts_on": "2026-11-10",
+      "ends_on": "2026-11-10",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-ujamaa-uc-student-experience-2026",
+      "kind": "event",
+      "title": "UC San Diego: Ujamaa, the UC student experience",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "An evening Zoom session from UC San Diego admissions on the UC student experience, open to prospective first-year and transfer students. 6 to 7:15 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-10",
+      "starts_on": "2026-11-10",
+      "ends_on": "2026-11-10",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-spotlight-biological-sciences-2026",
+      "kind": "event",
+      "title": "UC San Diego spotlight: School of Biological Sciences",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom session introducing UC San Diego's School of Biological Sciences, open to prospective first-year and transfer students. 3:45 to 4:30 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [
+        "biological-sciences"
+      ],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-12",
+      "starts_on": "2026-11-12",
+      "ends_on": "2026-11-12",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-creating-comunidad-uc-student-experience-2026",
+      "kind": "event",
+      "title": "UC San Diego: Creating Comunidad, the UC student experience",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "An evening Zoom session from UC San Diego admissions on the UC student experience, open to prospective first-year and transfer students. 6 to 7:15 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-12",
+      "starts_on": "2026-11-12",
+      "ends_on": "2026-11-12",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-insights-admissions-officer-2026",
+      "kind": "event",
+      "title": "UC San Diego: Insights from an admissions officer",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom session where a UC San Diego admissions officer talks about applying, open to prospective first-year and transfer students. 5 to 5:45 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-18",
+      "starts_on": "2026-11-18",
+      "ends_on": "2026-11-18",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-enhanced-tour-2026-11-20",
+      "kind": "event",
+      "title": "UC San Diego enhanced campus tour",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A two-hour in-person campus tour, 1 to 3 p.m., open to prospective first-year and transfer students.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-11-20",
+      "starts_on": "2026-11-20",
+      "ends_on": "2026-11-20",
+      "location": "La Jolla",
+      "online": false,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-transfer-paying-for-college-2026",
+      "kind": "event",
+      "title": "UC San Diego: Paying for college, financial aid and scholarships for transfers",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom session on financial aid and scholarships, for transfer students only, from UC San Diego's Pathway to Transfer Success series. 3 to 4 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-12-07",
+      "starts_on": "2026-12-07",
+      "ends_on": "2026-12-07",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsd-ask-a-transfer-mentor-2026",
+      "kind": "event",
+      "title": "UC San Diego: Ask a transfer mentor about life at UC San Diego",
+      "org_name": "UC San Diego Undergraduate Admissions",
+      "summary": "A Zoom conversation with a current transfer mentor about student life at UC San Diego, for transfer students only. 3 to 4 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on UC San Diego's events page"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-12-10",
+      "starts_on": "2026-12-10",
+      "ends_on": "2026-12-10",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsd.edu/visit/events/",
+      "source_name": "UC San Diego Undergraduate Admissions",
+      "source_url": "https://admissions.ucsd.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsc-financing-your-uc-education-2027",
+      "kind": "event",
+      "title": "UC Santa Cruz: Financing your UC education",
+      "org_name": "UC Santa Cruz Admissions",
+      "summary": "An hour-long online presentation on the 2027-28 financial aid application, with tips on paying for college. Prospective transfers are among the audiences it's for. It runs at noon, and again at 6 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on the UC Santa Cruz event page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2027-01-21",
+      "starts_on": "2027-01-21",
+      "ends_on": "2027-01-21",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.ucsc.edu/events/virtual-presentation-financing-your-uc-education-1",
+      "source_name": "UC Santa Cruz Admissions",
+      "source_url": "https://admissions.ucsc.edu/events/virtual-presentation-financing-your-uc-education-1",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "uc-berkeley-admissions-presentation",
+      "kind": "event",
+      "title": "UC Berkeley admissions presentation",
+      "org_name": "UC Berkeley Office of Undergraduate Admissions",
+      "summary": "An admissions presentation followed by Q&A, held Monday through Friday on campus or online, for prospective first-year and transfer students. A student-led campus tour can be booked separately.",
+      "who_for": [],
+      "wants": [
+        "Register through UC Berkeley's events page"
+      ],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": null,
+      "starts_on": null,
+      "ends_on": null,
+      "location": "Berkeley",
+      "online": true,
+      "cost": "free",
+      "url": "https://admissions.berkeley.edu/visit/events/",
+      "source_name": "UC Berkeley Office of Undergraduate Admissions",
+      "source_url": "https://admissions.berkeley.edu/visit/events/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "sdsu-cal-state-apply-transfer-webinar-2026-11-13",
+      "kind": "event",
+      "title": "San Diego State: Cal State Apply transfer webinar",
+      "org_name": "San Diego State University Admissions",
+      "summary": "An online Cal State Apply workshop with SDSU admissions counselors, with application tips and a Q&A, at 3 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on SDSU's transfer webinar page"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "CSU"
+      ],
+      "terms": [],
+      "deadline": "2026-11-13",
+      "starts_on": "2026-11-13",
+      "ends_on": "2026-11-13",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://enroll.sdsu.edu/portal/transfer-app-webinars",
+      "source_name": "San Diego State University Admissions",
+      "source_url": "https://enroll.sdsu.edu/portal/transfer-app-webinars",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "sdsu-cal-state-apply-transfer-webinar-2026-11-24",
+      "kind": "event",
+      "title": "San Diego State: Cal State Apply transfer webinar",
+      "org_name": "San Diego State University Admissions",
+      "summary": "A repeat of SDSU's online Cal State Apply workshop for transfer applicants, with tips and a Q&A, at 3 p.m. Pacific.",
+      "who_for": [],
+      "wants": [
+        "Register on SDSU's transfer webinar page"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "CSU"
+      ],
+      "terms": [],
+      "deadline": "2026-11-24",
+      "starts_on": "2026-11-24",
+      "ends_on": "2026-11-24",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://enroll.sdsu.edu/portal/transfer-app-webinars",
+      "source_name": "San Diego State University Admissions",
+      "source_url": "https://enroll.sdsu.edu/portal/transfer-app-webinars",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "doe-suli-summer-2027",
+      "kind": "internship",
+      "title": "Science Undergraduate Laboratory Internships (SULI), summer 2027",
+      "org_name": "U.S. Department of Energy, Office of Science",
+      "summary": "A paid 10-week research internship at a Department of Energy national lab, across fields including the life sciences. Full-time community college students can apply, alongside four-year students.",
+      "who_for": [
+        "Full-time student at a community college, two-year or four-year school",
+        "U.S. citizen or permanent resident",
+        "18 or older when the internship starts",
+        "Cumulative GPA of 3.0 or higher",
+        "At least 12 college credit hours done, 6 of them in STEM, by the deadline"
+      ],
+      "wants": [],
+      "offers": [
+        "$650 a week",
+        "Travel paid if you live more than 50 miles from the lab",
+        "Housing help, depending on the lab"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-06",
+      "starts_on": null,
+      "ends_on": null,
+      "location": "A Department of Energy national lab",
+      "online": false,
+      "cost": "paid",
+      "url": "https://science.osti.gov/wdts/suli",
+      "source_name": "U.S. Department of Energy, Office of Science",
+      "source_url": "https://science.osti.gov/wdts/suli",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "doe-suli-alumni-panel-2026",
+      "kind": "event",
+      "title": "SULI alumni panel",
+      "org_name": "U.S. Department of Energy, Office of Science",
+      "summary": "An hour online, 2 to 3 p.m. Eastern, with past SULI interns talking about their national lab projects and how they applied.",
+      "who_for": [],
+      "wants": [
+        "Register on the SULI page"
+      ],
+      "offers": [
+        "Advice from past interns"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-12-08",
+      "starts_on": "2026-12-08",
+      "ends_on": "2026-12-08",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://science.osti.gov/wdts/suli",
+      "source_name": "U.S. Department of Energy, Office of Science",
+      "source_url": "https://science.osti.gov/wdts/suli",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "nih-sip-application-webinar-2026",
+      "kind": "event",
+      "title": "NIH Summer Internship Program application webinar",
+      "org_name": "NIH Office of Intramural Training & Education",
+      "summary": "An hour online, 4 to 5 p.m. Eastern, on how to apply to NIH's summer research internships, which take community college students.",
+      "who_for": [],
+      "wants": [],
+      "offers": [],
+      "audience": "any",
+      "major_slugs": [
+        "biological-sciences"
+      ],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-11-17",
+      "starts_on": "2026-11-17",
+      "ends_on": "2026-11-17",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://www.training.nih.gov/research-training/pb/sip/",
+      "source_name": "NIH Office of Intramural Training & Education",
+      "source_url": "https://www.training.nih.gov/research-training/pb/sip/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "ucsf-summer-research-training-program-2027",
+      "kind": "research",
+      "title": "UCSF Summer Research Training Program",
+      "org_name": "UC San Francisco Graduate Division",
+      "summary": "Ten weeks of full-time biomedical and biological sciences research in a UCSF lab, with a package worth over $15,000 including a stipend, travel and housing in San Francisco.",
+      "who_for": [
+        "Currently enrolled undergraduate, not finishing a bachelor's by spring 2027",
+        "U.S. citizen or permanent resident (DACA or AB 540 students should contact the program)"
+      ],
+      "wants": [
+        "An application with a personal statement",
+        "Two recommendation letters",
+        "College transcripts"
+      ],
+      "offers": [
+        "A summer stipend and transit stipend",
+        "Round-trip travel to San Francisco",
+        "Housing in San Francisco"
+      ],
+      "audience": "any",
+      "major_slugs": [
+        "biological-sciences"
+      ],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-02-01",
+      "starts_on": "2027-05-30",
+      "ends_on": "2027-08-07",
+      "location": "San Francisco",
+      "online": false,
+      "cost": "paid",
+      "url": "https://graduate.ucsf.edu/academics/srtp",
+      "source_name": "UC San Francisco Graduate Division",
+      "source_url": "https://graduate.ucsf.edu/academics/srtp",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "leadership-alliance-sr-eip-2027",
+      "kind": "research",
+      "title": "Leadership Alliance Summer Research Early Identification Program",
+      "org_name": "The Leadership Alliance",
+      "summary": "Eight to 10 weeks of summer research at a Leadership Alliance member university, in fields including the life sciences, psychology, the social sciences and math, for students thinking about a PhD.",
+      "who_for": [
+        "Enrolled full time at an accredited U.S. college",
+        "At least two semesters done and one left by the summer",
+        "U.S. citizen, national or permanent resident"
+      ],
+      "wants": [
+        "An online application",
+        "Two recommendation letters",
+        "Official transcripts"
+      ],
+      "offers": [
+        "A stipend",
+        "Travel and housing from the host institution"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-02-03",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": false,
+      "cost": "paid",
+      "url": "https://theleadershipalliance.org/summer-research-early-identification-program",
+      "source_name": "The Leadership Alliance",
+      "source_url": "https://theleadershipalliance.org/summer-research-early-identification-program",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "chci-congressional-internship-summer-2027",
+      "kind": "internship",
+      "title": "CHCI Congressional Internship, summer 2027",
+      "org_name": "Congressional Hispanic Caucus Institute",
+      "summary": "A paid 10-week internship in a congressional office in Washington, D.C., with leadership training, for students committed to public service and the Latino community. Community college students transferring to a four-year school in the fall can apply.",
+      "who_for": [
+        "Enrolled full time in spring 2027",
+        "GPA of 3.0 or higher preferred",
+        "U.S. citizen, permanent resident, or authorized to work in the U.S. (DACA recipients need valid work authorization)",
+        "A record of public service"
+      ],
+      "wants": [],
+      "offers": [
+        "$4,776 for the summer",
+        "Furnished housing",
+        "$100 a month for transit"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-12-01",
+      "starts_on": "2027-05-19",
+      "ends_on": "2027-07-30",
+      "location": "Washington, D.C.",
+      "online": false,
+      "cost": "paid",
+      "url": "https://chci.org/programs/congressional-internship-program/",
+      "source_name": "Congressional Hispanic Caucus Institute",
+      "source_url": "https://chci.org/programs/congressional-internship-program/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "psi-beta-student-awards-2027",
+      "kind": "scholarship",
+      "title": "Psi Beta student awards",
+      "org_name": "Psi Beta, the community college honor society in psychology",
+      "summary": "Awards for community college psychology students who are Psi Beta members, including a research award, a leadership award and a community service award. Applications open April 1.",
+      "who_for": [
+        "A registered Psi Beta member",
+        "Currently taking classes at a community college"
+      ],
+      "wants": [
+        "A personal statement or research narrative, depending on the award",
+        "A statement from your chapter advisor"
+      ],
+      "offers": [],
+      "audience": "community_college",
+      "major_slugs": [
+        "psychology"
+      ],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-06-01",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://psibeta.org/awards/current-deadlines/",
+      "source_name": "Psi Beta, the community college honor society in psychology",
+      "source_url": "https://psibeta.org/awards/current-deadlines/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "live-mas-scholarship-2027",
+      "kind": "scholarship",
+      "title": "Live Más Scholarship",
+      "org_name": "Taco Bell Foundation",
+      "summary": "A passion-based scholarship, not based on grades or need, for students aged 16 to 26 at any two- or four-year college, trade or vocational school. You apply with a short video about what drives you.",
+      "who_for": [
+        "Aged 16 to 26",
+        "Legal resident of the U.S. or D.C.",
+        "Enrolled in, or on track for, an accredited college or trade program"
+      ],
+      "wants": [
+        "A 30-second to 2-minute video about your passion, in English"
+      ],
+      "offers": [
+        "Scholarships, renewable up to three times",
+        "Mentors and career connections"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-05",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://tacobellfoundation.org/live-mas-scholarship/",
+      "source_name": "Taco Bell Foundation",
+      "source_url": "https://tacobellfoundation.org/live-mas-scholarship/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     }
   ]
 }
