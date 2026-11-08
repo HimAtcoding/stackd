@@ -25,7 +25,7 @@ import { inlineErrorCopy } from "@/lib/auth/messages";
 import { REMINDER_DAYS, saveTerm, useTerm, type TermChoice } from "@/lib/data/deadlines";
 import { retryPlan, usePlan, type Plan } from "@/lib/data/plan";
 import { cycleLabel } from "@/lib/deadlines";
-import { FEATURES } from "@/lib/features";
+import { aboutDataHref, FEATURES } from "@/lib/features";
 import { DEMO_MODE } from "@/lib/flags";
 import { setFlash } from "@/lib/flash";
 import { majorWithDegree } from "@/lib/format";
@@ -36,6 +36,7 @@ import { markWelcomeSeen } from "@/lib/session";
 import { TermSheet } from "../../deadlines/_deadlines/term-question";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
+const HOW_WE_CHECK = aboutDataHref();
 const SHEET_TITLE = "delete-account-title";
 
 // What the Schools and Major rows show for a saved plan (11 → Your plan)
@@ -248,6 +249,13 @@ export function SettingsScreen() {
             Support
           </TextLink>
         </p>
+        {HOW_WE_CHECK && (
+          <p className="mt-2">
+            <TextLink href={HOW_WE_CHECK} size="label">
+              How we check this
+            </TextLink>
+          </p>
+        )}
         <p className="mt-2 text-slate-600 tabular-nums type-caption">Stackd {process.env.NEXT_PUBLIC_APP_VERSION}</p>
         <p className="mt-1 text-slate-600 type-caption">{DEVELOPER_CREDIT}</p>
       </footer>

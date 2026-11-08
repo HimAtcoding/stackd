@@ -15,6 +15,8 @@ export type PlanTarget = {
   majorId: string | null;
   majorName: string | null;
   degreeType: string | null;
+  // majors.explore_slug: the major's page in Explore. Undefined in a copy saved before it was read.
+  exploreSlug?: string | null;
   // With no major: true when the student chose "Not listed yet", false when they haven't picked one
   majorNotListed: boolean;
 };
@@ -37,7 +39,7 @@ type ProfileRow = { first_name: string | null; home: { id: string; slug: string;
 type TargetRow = {
   major_not_listed: boolean | null;
   institution: { id: string; slug: string; name: string; system: string | null } | null;
-  major: { id: string; name: string; degree_type: string | null } | null;
+  major: { id: string; name: string; degree_type: string | null; explore_slug: string | null } | null;
 };
 
 // The account's plan, straight from the database. Row-level security returns only the student's own rows.
@@ -48,7 +50,7 @@ export async function fetchPlan(): Promise<Plan> {
     supabase.from("profiles").select("first_name, home:institutions!home_institution_id(id, slug, name)").maybeSingle(),
     supabase
       .from("user_targets")
-      .select("major_not_listed, institution:institutions!institution_id(id, slug, name, system), major:majors!major_id(id, name, degree_type)")
+      .select("major_not_listed, institution:institutions!institution_id(id, slug, name, system), major:majors!major_id(id, name, degree_type, explore_slug)")
       .order("position"),
   ]);
   if (profile.error) throw profile.error;
@@ -68,6 +70,7 @@ export async function fetchPlan(): Promise<Plan> {
               majorId: t.major?.id ?? null,
               majorName: t.major?.name ?? null,
               degreeType: t.major?.degree_type ?? null,
+              exploreSlug: t.major?.explore_slug ?? null,
               majorNotListed: !t.major && t.major_not_listed === true,
             },
           ]

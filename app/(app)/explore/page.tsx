@@ -1,6 +1,11 @@
-import { UnbuiltRoute } from "@/components/unbuilt-route";
+import { Suspense } from "react";
+import { ExploreRoute } from "./_explore/explore-screen";
 
-// Not built yet: the placeholder with its flag on, Home in the v1 release (lib/features.ts)
+// /explore/ (21), a tab. Search state stays in the screen, so nothing is read from the URL here.
 export default function ExplorePage() {
-  return <UnbuiltRoute screen="explore" tab="explore" />;
+  return (
+    <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+      <ExploreRoute />
+    </Suspense>
+  );
 }

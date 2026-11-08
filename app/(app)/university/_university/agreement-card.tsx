@@ -1,10 +1,8 @@
 import { ArrowSquareOutIcon, FileTextIcon } from "@phosphor-icons/react/ssr";
 import { Card } from "@/components/ui/card";
 import { TintedButton } from "@/components/ui/tinted-button";
+import { ASSIST_HOME } from "@/lib/about";
 import type { AgreementLink } from "@/lib/data/university";
-
-// Where "Open ASSIST" goes when there's no agreement link for the student's path
-const ASSIST_HOME = "https://assist.org";
 
 type AgreementCardProps = {
   // Null when the database has no link for this college, school and major

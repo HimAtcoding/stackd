@@ -1,12 +1,17 @@
 "use client";
 
+import { CompassIcon } from "@phosphor-icons/react/ssr";
 import { Art } from "@/components/art";
 import { GoHome } from "@/components/unbuilt-route";
+import { LinkLine } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { campusImage } from "@/lib/campus";
+import { useMajors } from "@/lib/data/explore";
 import { retryPlan, usePlan } from "@/lib/data/plan";
 import { getAgreementLink, getUniversityRecord, type AgreementLink, type UniversityRecord } from "@/lib/data/university";
+import { pathwayOn } from "@/lib/explore";
+import { exploreHref } from "@/lib/features";
 import { institutionKind, majorWithDegree } from "@/lib/format";
 import { useLoaded } from "@/lib/use-loaded";
 import { AgreementCard } from "./agreement-card";
@@ -34,6 +39,12 @@ export function AccountUniversity({ slug }: { slug: string }) {
     () => getAgreementLink(path!),
   );
 
+  // The plan's major in Explore, on the tab for this school (21 → Elsewhere in the app)
+  const majors = useMajors();
+  const exploreMajor = majors.status === "ok" ? majors.majors.find((m) => m.slug === target?.exploreSlug) : undefined;
+  const wantedTab = university?.system?.toUpperCase() === "CSU" ? "cal-state" : "uc";
+  const seeWhatToTake = exploreMajor && exploreHref(`major/?slug=${exploreMajor.slug}&tab=${pathwayOn(exploreMajor, wantedTab) ? wantedTab : "uc"}`);
+
   if (record.status === "loading") return <div className="min-h-dvh bg-surface pt-[248px]">{waiting("Loading requirements")}</div>;
   // A school the database doesn't have goes Home (13: no dead ends)
   if (record.status === "ok" && !university) return <GoHome />;
@@ -57,6 +68,15 @@ export function AccountUniversity({ slug }: { slug: string }) {
         {/* "B.S." already ends the sentence with its own period */}
         {line && <p className="mt-1 px-6 text-slate-600 type-body">{line.endsWith(".") ? line : `${line}.`}</p>}
         <AgreementCard link={found} college={plan.home?.name ?? null} />
+        {seeWhatToTake && target?.majorName && (
+          <LinkLine
+            href={seeWhatToTake}
+            label={`See what to take for ${target.majorName}`}
+            detail="Explore"
+            icon={<CompassIcon weight="bold" size={16} />}
+            className="mx-6 mt-3"
+          />
+        )}
         <UnofficialFooter className="mt-4 px-4" />
       </>
     );

@@ -27,3 +27,6 @@ export function majorWithDegree(name: string, degreeType: string | null): string
   const degree = degreeLabel(degreeType);
   return degree ? `${name} ${degree}` : name;
 }
+
+// "Las Positas College" → "Las Positas". "College of Marin" keeps its name.
+export const collegeShortName = (name: string) => name.replace(/ College$/, "");

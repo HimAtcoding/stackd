@@ -5,7 +5,7 @@
   "pathways": [
     {
       "kind": "uc_pathway",
-      "name": "Business administration",
+      "name": "Business Administration",
       "effective_term": null,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/business-administration.html",
@@ -81,7 +81,7 @@
     },
     {
       "kind": "tmc",
-      "name": "Business administration",
+      "name": "Business Administration",
       "code": "2006",
       "revision": "5",
       "degree_name": "Associate in Science in Business Administration for Transfer 2.0",

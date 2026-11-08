@@ -35,6 +35,9 @@ const PER_ACCOUNT_KEYS = [
   // Essay drafts and the ones not yet sent (lib/data/essays.ts)
   "stackd.essays",
   "stackd.essaysQueue",
+  // Course statuses from Explore and the ones not yet sent (lib/data/topic-status.ts)
+  "stackd.topicStatus",
+  "stackd.topicQueue",
   // Reminder switch, default days and the card's dismissal (lib/reminders)
   "stackd.reminders",
 ];

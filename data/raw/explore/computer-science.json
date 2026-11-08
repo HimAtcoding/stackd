@@ -5,7 +5,7 @@
   "pathways": [
     {
       "kind": "uc_pathway",
-      "name": "Computer science",
+      "name": "Computer Science",
       "effective_term": null,
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/computer-science.html",
@@ -108,7 +108,7 @@
     },
     {
       "kind": "tmc",
-      "name": "Computer science",
+      "name": "Computer Science",
       "code": "2007",
       "revision": "3",
       "degree_name": "Associate in Science in Computer Science for Transfer",
