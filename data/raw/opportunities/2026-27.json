@@ -1,58 +1,660 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). The two rows below are made-up examples that show every field; their todos stop the import, so replace them with real opportunities or delete them. Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over.",
   "opportunities": [
     {
-      "slug": "example-summer-research-2027",
-      "kind": "research",
-      "title": "Example summer research program",
-      "org_name": "Example University",
-      "summary": "Eight weeks of paid lab research for community college students planning to transfer in a STEM major.",
-      "who_for": ["GPA 3.0 or higher", "U.S. citizen or permanent resident"],
-      "wants": ["A short statement of interest", "One recommendation letter"],
-      "offers": ["$5,000 stipend", "Housing on campus"],
+      "slug": "cooke-undergraduate-transfer-scholarship-2027",
+      "kind": "scholarship",
+      "title": "Cooke Undergraduate Transfer Scholarship",
+      "org_name": "Jack Kent Cooke Foundation",
+      "summary": "A large, multi-year scholarship for top community college students starting a bachelor's degree in fall 2027. It can pay up to $55,000 a year toward what other aid doesn't cover, and comes with advising through graduation.",
+      "who_for": [
+        "Sophomore standing at a community college by January 1, 2027, or graduated from one since spring 2022",
+        "Cumulative GPA of 3.5 or higher",
+        "Family adjusted gross income of $95,000 or less",
+        "Never enrolled at a four-year college"
+      ],
+      "wants": [],
+      "offers": [
+        "Up to $55,000 a year toward finishing your bachelor's",
+        "Advising on the move to a four-year school",
+        "Chances to apply for internship and conference stipends"
+      ],
       "audience": "community_college",
-      "major_slugs": ["computer-science", "mathematics"],
+      "major_slugs": [],
       "systems": [],
-      "terms": [],
-      "deadline": "2027-02-01",
-      "starts_on": "2027-06-21",
-      "ends_on": "2027-08-13",
-      "location": "Example City",
-      "online": false,
-      "cost": "paid",
-      "url": "https://example.org/summer-research/apply",
-      "source_name": "Example University",
-      "source_url": "https://example.org/summer-research",
+      "terms": [
+        "fall-2027"
+      ],
+      "deadline": "2026-12-09",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://www.jkcf.org/our-scholarships/undergraduate-transfer-scholarship/how-to-apply/",
+      "source_name": "Jack Kent Cooke Foundation",
+      "source_url": "https://www.jkcf.org/our-scholarships/undergraduate-transfer-scholarship/how-to-apply/",
       "academic_year": "2026-27",
-      "retrieved_at": "",
-      "todo": "Example row showing every field. Replace it with a real opportunity from its official page, or delete it."
+      "retrieved_at": "2026-11-07"
     },
     {
-      "slug": "example-transfer-scholarship",
-      "kind": "scholarship",
-      "title": "Example transfer scholarship",
-      "org_name": "Example Foundation",
-      "summary": "A one-time award for community college students transferring to a UC or Cal State next fall. Applications are read as they arrive.",
-      "who_for": ["Enrolled in at least 6 units"],
-      "wants": ["A 300-word essay about your transfer goal"],
-      "offers": ["$1,000 toward your first term"],
+      "slug": "doe-community-college-internships-summer-2027",
+      "kind": "internship",
+      "title": "Community College Internships (CCI), summer 2027",
+      "org_name": "U.S. Department of Energy, Office of Science",
+      "summary": "A paid 10-week summer internship at one of 17 Department of Energy national labs, working on a technical project with a lab scientist or engineer. It's built for community college students.",
+      "who_for": [
+        "U.S. citizen or permanent resident",
+        "18 or older when the internship starts",
+        "At least 12 college credit hours done, 6 of them in STEM, by the deadline",
+        "Cumulative GPA of 2.7 or higher (under 3.0 needs a short GPA statement)"
+      ],
+      "wants": [
+        "Transcripts",
+        "Recommendation letters",
+        "Short essays"
+      ],
+      "offers": [
+        "$650 a week",
+        "Travel paid if you live more than 50 miles from the lab",
+        "Housing help or an allowance, depending on the lab"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-06",
+      "starts_on": null,
+      "ends_on": null,
+      "location": "A Department of Energy national lab",
+      "online": false,
+      "cost": "paid",
+      "url": "https://science.osti.gov/wdts/cci",
+      "source_name": "U.S. Department of Energy, Office of Science",
+      "source_url": "https://science.osti.gov/wdts/cci",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "doe-virtual-internship-fair-2026",
+      "kind": "event",
+      "title": "National lab virtual internship fair",
+      "org_name": "U.S. Department of Energy, Office of Science",
+      "summary": "An online fair, 1 to 5 p.m. Eastern, where you can meet people from Department of Energy national labs and ask about their paid 10-week summer 2027 internships.",
+      "who_for": [],
+      "wants": [
+        "Register on the CCI page"
+      ],
+      "offers": [
+        "Time with national lab representatives"
+      ],
       "audience": "any",
       "major_slugs": [],
-      "systems": ["UC", "CSU"],
-      "terms": ["fall-2027"],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-11-12",
+      "starts_on": "2026-11-12",
+      "ends_on": "2026-11-12",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://science.osti.gov/wdts/cci",
+      "source_name": "U.S. Department of Energy, Office of Science",
+      "source_url": "https://science.osti.gov/wdts/cci",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "doe-cci-alumni-panel-2026",
+      "kind": "event",
+      "title": "CCI alumni panel",
+      "org_name": "U.S. Department of Energy, Office of Science",
+      "summary": "An hour online, 2 to 3 p.m. Eastern, with past Community College Internships interns talking about their lab experience and how to put together a strong application.",
+      "who_for": [],
+      "wants": [
+        "Register on the CCI page"
+      ],
+      "offers": [
+        "Advice from past interns"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-12-11",
+      "starts_on": "2026-12-11",
+      "ends_on": "2026-12-11",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://science.osti.gov/wdts/cci",
+      "source_name": "U.S. Department of Energy, Office of Science",
+      "source_url": "https://science.osti.gov/wdts/cci",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "jpl-summer-internship-2027",
+      "kind": "internship",
+      "title": "JPL Summer Internship Program",
+      "org_name": "NASA Jet Propulsion Laboratory",
+      "summary": "A full-time, 10-week summer internship at JPL, where you work on a project set by a JPL scientist or engineer and join tours, talks and career advising.",
+      "who_for": [
+        "Enrolled in a STEM degree at an accredited U.S. school",
+        "Cumulative GPA of 3.0 or higher",
+        "U.S. citizen or permanent resident",
+        "Free to work 40 hours a week for at least 10 weeks in summer"
+      ],
+      "wants": [
+        "A resume",
+        "An unofficial transcript"
+      ],
+      "offers": [
+        "A monthly award for the length of the internship",
+        "Housing and travel allowance if your school is more than 50 miles from JPL"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-03-12",
+      "starts_on": null,
+      "ends_on": null,
+      "location": "Pasadena",
+      "online": false,
+      "cost": "paid",
+      "url": "https://www.jpl.nasa.gov/edu/internships/apply/jpl-summer-internship-program/",
+      "source_name": "NASA Jet Propulsion Laboratory",
+      "source_url": "https://www.jpl.nasa.gov/edu/internships/apply/jpl-summer-internship-program/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "nasa-internships-summer-2027",
+      "kind": "internship",
+      "title": "NASA internships, summer 2027",
+      "org_name": "NASA Office of STEM Engagement",
+      "summary": "Internships at NASA centers in science, engineering, technology and more. Most interns get a stipend based on their school level and how long the session runs.",
+      "who_for": [
+        "U.S. citizen",
+        "At least 16 when the internship starts",
+        "Enrolled full or part time in an accredited degree or certificate program"
+      ],
+      "wants": [],
+      "offers": [
+        "A stipend for most interns"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-03-01",
+      "starts_on": null,
+      "ends_on": null,
+      "location": "NASA centers",
+      "online": false,
+      "cost": "paid",
+      "url": "https://www.nasa.gov/learning-resources/internship-programs/",
+      "source_name": "NASA",
+      "source_url": "https://www.nasa.gov/learning-resources/internship-programs/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "nasa-internships-webinar-2026",
+      "kind": "event",
+      "title": "Launch Your Future: NASA internships webinar",
+      "org_name": "NASA Office of STEM Engagement",
+      "summary": "An online session, 3 to 4:15 p.m. Eastern, with NASA's internship and early-career teams on who can apply and how to make a strong application, plus advice from current interns.",
+      "who_for": [
+        "U.S. citizen"
+      ],
+      "wants": [
+        "Register through NASA's STEM Gateway"
+      ],
+      "offers": [
+        "Answers from NASA internship staff and current interns"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-12-03",
+      "starts_on": "2026-12-03",
+      "ends_on": "2026-12-03",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://www.nasa.gov/learning-resources/internship-programs/",
+      "source_name": "NASA",
+      "source_url": "https://www.nasa.gov/learning-resources/internship-programs/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "nih-summer-internship-2027",
+      "kind": "research",
+      "title": "NIH Summer Internship Program",
+      "org_name": "National Institutes of Health",
+      "summary": "Full-time summer research in an NIH lab, somewhere between May 10 and August 31, 2027, for community college, college and graduate students exploring research and health careers. It's in person only.",
+      "who_for": [
+        "U.S. citizen or permanent resident",
+        "18 or older by September 30, 2027",
+        "Enrolled at least half time at a community college, college or university when you apply"
+      ],
+      "wants": [
+        "Reference letters, due February 2, 2027"
+      ],
+      "offers": [
+        "A stipend based on your school level",
+        "Free parking on NIH campuses"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-26",
+      "starts_on": null,
+      "ends_on": null,
+      "location": "Bethesda, Maryland, and other NIH campuses",
+      "online": false,
+      "cost": "paid",
+      "url": "https://www.training.nih.gov/research-training/pb/sip/",
+      "source_name": "NIH Office of Intramural Training & Education",
+      "source_url": "https://www.training.nih.gov/research-training/pb/sip/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "noaa-hollings-scholarship-2027",
+      "kind": "scholarship",
+      "title": "Ernest F. Hollings Undergraduate Scholarship",
+      "org_name": "NOAA",
+      "summary": "Two years of tuition help plus a paid 10-week summer internship at a NOAA site, for students in ocean, atmospheric and environmental science and related fields, including math, engineering and computer science.",
+      "who_for": [
+        "U.S. citizen",
+        "Community college students must show they've applied to a four-year school",
+        "Cumulative GPA of 3.0 or higher",
+        "A major that supports NOAA's work"
+      ],
+      "wants": [],
+      "offers": [
+        "Up to $9,500 a year for two years",
+        "A paid summer internship at $700 a week",
+        "Travel to NOAA's orientation and science symposium"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-31",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://www.noaa.gov/office-education/hollings-scholarship",
+      "source_name": "National Oceanic and Atmospheric Administration",
+      "source_url": "https://www.noaa.gov/office-education/hollings-scholarship",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "goldwater-scholarship-2027",
+      "kind": "scholarship",
+      "title": "Goldwater Scholarship",
+      "org_name": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+      "summary": "A national scholarship for sophomores and juniors at two- or four-year schools who plan research careers in the natural sciences, math or engineering. You apply through your college's Goldwater campus representative.",
+      "who_for": [
+        "Sophomore or junior at an accredited two- or four-year U.S. school",
+        "Planning a research career in natural science, math or engineering",
+        "College GPA of 3.0 or higher",
+        "Meets the foundation's U.S. citizenship rules",
+        "Your college's own deadline comes weeks earlier"
+      ],
+      "wants": [
+        "A nomination from your college's campus representative",
+        "A research essay",
+        "Recommendation letters"
+      ],
+      "offers": [
+        "Up to $7,500 a year toward tuition, fees, books and housing"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-29",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://goldwaterscholarship.gov/students/overview/",
+      "source_name": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+      "source_url": "https://goldwaterscholarship.gov/students/overview/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "smart-scholarship-2027",
+      "kind": "scholarship",
+      "title": "SMART Scholarship-for-Service",
+      "org_name": "U.S. Department of War",
+      "summary": "Full tuition, a yearly stipend and paid summer internships for STEM students. In return you work as a civilian at the Department of War after graduating, one year for each year of funding.",
+      "who_for": [
+        "Citizen of the U.S., Australia, Canada, New Zealand or the U.K.",
+        "Cumulative GPA of 3.0 or higher",
+        "18 or older by January 1, 2028",
+        "Working toward a bachelor's or higher in a SMART field from fall 2027",
+        "Able to get a security clearance"
+      ],
+      "wants": [],
+      "offers": [
+        "Full tuition",
+        "A yearly stipend",
+        "Summer internships at a Department of War site",
+        "A civilian job after graduation"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2026-12-04",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://www.smartscholarship.org/smart/en?id=smart_eligibility",
+      "source_name": "SMART Scholarship-for-Service Program",
+      "source_url": "https://www.smartscholarship.org/smart/en?id=smart_eligibility",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "apia-scholarship-2027-28",
+      "kind": "scholarship",
+      "title": "APIA Scholarship",
+      "org_name": "APIA Scholars",
+      "summary": "Scholarships from $2,500 for one year up to $20,000 over several years for undergraduates, including community college students. APIA Scholars focuses on students living at or below the poverty line and the first in their family to go to college. The application opens November 15, 2026.",
+      "who_for": [
+        "U.S. citizen, national or permanent resident (or of the Marshall Islands, Micronesia or Palau)",
+        "Enrolled or enrolling as an undergraduate for 2027-28"
+      ],
+      "wants": [],
+      "offers": [
+        "$2,500 to $20,000"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-15",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://apiascholars.org/scholarships/",
+      "source_name": "APIA Scholars",
+      "source_url": "https://apiascholars.org/scholarships/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "comap-mcm-icm-2027",
+      "kind": "competition",
+      "title": "Mathematical Contest in Modeling (MCM/ICM)",
+      "org_name": "COMAP",
+      "summary": "An international four-day contest where teams of up to three students choose a real-world problem, build a math model and write up their solution. Data, policy and sustainability problems are among the six choices.",
+      "who_for": [
+        "Undergraduate (high school students can enter too)",
+        "Teammates enrolled at the same school"
+      ],
+      "wants": [
+        "A faculty advisor to register the team by 3 p.m. Eastern on January 28",
+        "A $100 registration fee per team"
+      ],
+      "offers": [
+        "International recognition and certificates",
+        "Scholarship awards for the top six teams"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-01-28",
+      "starts_on": "2027-01-28",
+      "ends_on": "2027-02-01",
+      "location": null,
+      "online": true,
+      "cost": "fee",
+      "url": "https://www.contest.comap.com/undergraduate/contests/",
+      "source_name": "COMAP",
+      "source_url": "https://comap.org/contests/mcm-icm",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "amatyc-student-math-league-spring-2027",
+      "kind": "competition",
+      "title": "AMATYC Student Mathematics League, spring round",
+      "org_name": "American Mathematical Association of Two-Year Colleges",
+      "summary": "A one-hour, 20-question multiple-choice math contest for two-year college students, taken at your own college. Your score counts on its own, and your college's top five make its team.",
+      "who_for": [
+        "Your college has to take part (ask your math department)"
+      ],
+      "wants": [],
+      "offers": [
+        "A national ranking for you and your college"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-03-12",
+      "starts_on": "2027-02-26",
+      "ends_on": "2027-03-12",
+      "location": "Your community college",
+      "online": false,
+      "cost": "free",
+      "url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
+      "source_name": "American Mathematical Association of Two-Year Colleges",
+      "source_url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "treehacks-2027",
+      "kind": "competition",
+      "title": "TreeHacks 2027",
+      "org_name": "TreeHacks, Stanford University",
+      "summary": "Stanford's 36-hour student hackathon. Admitted hackers build a project over the weekend with workshops, prizes and recruiters on site. First-timers are welcome to apply.",
+      "who_for": [
+        "Enrolled college student, undergraduate or graduate"
+      ],
+      "wants": [
+        "An application; admission is selective"
+      ],
+      "offers": [
+        "Free for admitted hackers",
+        "Food and travel covered",
+        "Prizes"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": null,
+      "starts_on": "2027-02-12",
+      "ends_on": "2027-02-14",
+      "location": "Stanford",
+      "online": false,
+      "cost": "free",
+      "url": "https://treehacks.com/",
+      "source_name": "TreeHacks",
+      "source_url": "https://treehacks.com/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "sf-hacks-2027",
+      "kind": "competition",
+      "title": "SF Hacks 2027",
+      "org_name": "SF Hacks, San Francisco State University",
+      "summary": "San Francisco State's student-run hackathon: about 36 hours to form a team and build a project, with mentors and beginner workshops. Applications haven't opened yet.",
+      "who_for": [
+        "Any student, high school through university"
+      ],
+      "wants": [
+        "An application once they open"
+      ],
+      "offers": [
+        "Mentors and beginner workshops",
+        "Optional tracks and sponsor prizes"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": null,
+      "starts_on": "2027-02-19",
+      "ends_on": "2027-02-21",
+      "location": "San Francisco",
+      "online": false,
+      "cost": "free",
+      "url": "https://www.sfhacks.io/",
+      "source_name": "SF Hacks",
+      "source_url": "https://www.sfhacks.io/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "cruzhacks-2027",
+      "kind": "competition",
+      "title": "CruzHacks 2027",
+      "org_name": "CruzHacks, UC Santa Cruz",
+      "summary": "UC Santa Cruz's student-run hackathon, with tracks on themes like sustainability and education, workshops for every level and a prize category for first-time hackers.",
+      "who_for": [
+        "Any college or university student (bootcamps count)"
+      ],
+      "wants": [],
+      "offers": [
+        "Meals during the event",
+        "Workshops and prizes"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": null,
+      "starts_on": "2027-01-15",
+      "ends_on": "2027-01-17",
+      "location": "Santa Cruz",
+      "online": false,
+      "cost": "free",
+      "url": "https://cruzhacks.com/",
+      "source_name": "CruzHacks",
+      "source_url": "https://cruzhacks.com/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "imagine-cup-2027",
+      "kind": "competition",
+      "title": "Imagine Cup 2027",
+      "org_name": "Microsoft",
+      "summary": "Microsoft's global startup competition. It's open to early-stage startups, with a Student Startup category for student founders. Teams of up to four build a product on Azure and compete for cash prizes and cloud credits.",
+      "who_for": [
+        "18 or older",
+        "A student founder, for the Student Startup category"
+      ],
+      "wants": [
+        "An application on Award Force",
+        "By February 28, a working product using at least 10 paid Azure services"
+      ],
+      "offers": [
+        "A Student Prize for the top student startup",
+        "Cash awards and Azure credits for top startups"
+      ],
+      "audience": "any",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "deadline": "2027-02-28",
+      "starts_on": null,
+      "ends_on": null,
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://imaginecup.microsoft.com/en-us",
+      "source_name": "Microsoft Imagine Cup",
+      "source_url": "https://imaginecup.microsoft.com/en-us",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "codepath-spring-2027",
+      "kind": "program",
+      "title": "CodePath courses, spring 2027",
+      "org_name": "CodePath",
+      "summary": "Free, live online courses for college computer science students in web and mobile development, cybersecurity, applied AI and technical interview prep. Each runs 10 weeks at about 5 to 9 hours a week.",
+      "who_for": [
+        "A college student taking computer science"
+      ],
+      "wants": [],
+      "offers": [
+        "No cost",
+        "Classes taught by working engineers"
+      ],
+      "audience": "any",
+      "major_slugs": [
+        "computer-science"
+      ],
+      "systems": [],
+      "terms": [],
       "deadline": null,
       "starts_on": null,
       "ends_on": null,
       "location": null,
       "online": true,
       "cost": "free",
-      "url": "https://example.org/transfer-scholarship",
-      "source_name": "Example Foundation",
-      "source_url": "https://example.org/transfer-scholarship",
+      "url": "https://www.codepath.org/courses",
+      "source_name": "CodePath",
+      "source_url": "https://www.codepath.org/courses",
       "academic_year": "2026-27",
-      "retrieved_at": "",
-      "todo": "Example row showing every field. Replace it with a real opportunity from its official page, or delete it."
+      "retrieved_at": "2026-11-07"
+    },
+    {
+      "slug": "ucla-transfer-admission-presentation-dec-2026",
+      "kind": "event",
+      "title": "UCLA virtual transfer admission presentation",
+      "org_name": "UCLA Undergraduate Admission",
+      "summary": "An online session with a UCLA admission representative on how transfer admission works, with time for questions. It's built mainly for California community college students.",
+      "who_for": [],
+      "wants": [],
+      "offers": [
+        "Answers from a UCLA admission representative"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [
+        "UC"
+      ],
+      "terms": [],
+      "deadline": "2026-12-10",
+      "starts_on": "2026-12-10",
+      "ends_on": "2026-12-10",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://admission.ucla.edu/visit/events",
+      "source_name": "UCLA Undergraduate Admission",
+      "source_url": "https://admission.ucla.edu/visit/events",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-07"
     }
   ]
 }
