@@ -1321,8 +1321,6 @@
       ],
       "systems": [],
       "terms": [],
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08",
       "deadline": null,
       "starts_on": "2027-04-09",
       "ends_on": "2027-04-12",
@@ -1331,7 +1329,9 @@
       "cost": "fee",
       "url": "https://www.deca.org/collegiate",
       "source_name": "DECA Inc.",
-      "source_url": "https://www.deca.org/collegiate"
+      "source_url": "https://www.deca.org/collegiate",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     },
     {
       "slug": "point-foundation-community-college-scholarship-2027",
@@ -1344,6 +1344,7 @@
         "Enrolled at least half time at a community college, not in a fully online program",
         "Cumulative GPA of 2.5 or higher"
       ],
+      "wants": [],
       "offers": [
         "$4,800 for fall 2027 through spring 2028"
       ],
@@ -1351,17 +1352,17 @@
       "major_slugs": [],
       "systems": [],
       "terms": [],
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08",
       "deadline": "2027-04-08",
+      "starts_on": null,
+      "ends_on": null,
       "location": null,
       "online": true,
       "cost": "free",
       "url": "https://pointfoundation.org/scholarships/community-college",
       "source_name": "Point Foundation",
       "source_url": "https://pointfoundation.org/scholarships/community-college",
-      "starts_on": null,
-      "ends_on": null
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     },
     {
       "slug": "amatyc-student-math-league-fall-2026",
@@ -1372,6 +1373,7 @@
       "who_for": [
         "Your college has to take part (ask your math department)"
       ],
+      "wants": [],
       "offers": [
         "A national ranking for you and your college"
       ],
@@ -1379,8 +1381,6 @@
       "major_slugs": [],
       "systems": [],
       "terms": [],
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08",
       "deadline": "2026-11-13",
       "starts_on": "2026-10-30",
       "ends_on": "2026-11-13",
@@ -1389,7 +1389,9 @@
       "cost": "free",
       "url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
       "source_name": "American Mathematical Association of Two-Year Colleges",
-      "source_url": "https://www.amatyc.org/student-leagues/student-mathematics-league/"
+      "source_url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     }
   ]
 }
