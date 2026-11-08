@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it.",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it. Third pass (2026-11-08): Collegiate DECA ICDC, Point Foundation Community College Scholarship (its page gives January 27 to April 8 without a year; the funding period is fall 2027, so the dates are read as 2027) and the AMATYC fall round.",
   "opportunities": [
     {
       "slug": "cooke-undergraduate-transfer-scholarship-2027",
@@ -1298,6 +1298,98 @@
       "source_url": "https://tacobellfoundation.org/live-mas-scholarship/",
       "academic_year": "2026-27",
       "retrieved_at": "2026-11-08"
+    },
+    {
+      "slug": "collegiate-deca-icdc-2027",
+      "kind": "competition",
+      "title": "Collegiate DECA International Career Development Conference",
+      "org_name": "DECA Inc.",
+      "summary": "Collegiate DECA's yearly conference, where members compete in 25 business case study and prepared presentation events. Students without a campus chapter can join as independent members.",
+      "who_for": [
+        "A Collegiate DECA member, through a campus chapter or as an independent member"
+      ],
+      "wants": [
+        "DECA membership: $10 plus your association's dues"
+      ],
+      "offers": [
+        "Business case competitions judged by industry professionals"
+      ],
+      "audience": "any",
+      "major_slugs": [
+        "business-administration",
+        "economics"
+      ],
+      "systems": [],
+      "terms": [],
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "deadline": null,
+      "starts_on": "2027-04-09",
+      "ends_on": "2027-04-12",
+      "location": null,
+      "online": false,
+      "cost": "fee",
+      "url": "https://www.deca.org/collegiate",
+      "source_name": "DECA Inc.",
+      "source_url": "https://www.deca.org/collegiate"
+    },
+    {
+      "slug": "point-foundation-community-college-scholarship-2027",
+      "kind": "scholarship",
+      "title": "Point Foundation Community College Scholarship",
+      "org_name": "Point Foundation",
+      "summary": "A $4,800 scholarship for LGBTQ+ and ally students at a community college who are earning an associate degree or working toward transfer, for fall 2027 through spring 2028. The application opens January 27.",
+      "who_for": [
+        "LGBTQ+ or an ally",
+        "Enrolled at least half time at a community college, not in a fully online program",
+        "Cumulative GPA of 2.5 or higher"
+      ],
+      "offers": [
+        "$4,800 for fall 2027 through spring 2028"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "deadline": "2027-04-08",
+      "location": null,
+      "online": true,
+      "cost": "free",
+      "url": "https://pointfoundation.org/scholarships/community-college",
+      "source_name": "Point Foundation",
+      "source_url": "https://pointfoundation.org/scholarships/community-college",
+      "starts_on": null,
+      "ends_on": null
+    },
+    {
+      "slug": "amatyc-student-math-league-fall-2026",
+      "kind": "competition",
+      "title": "AMATYC Student Mathematics League, fall round",
+      "org_name": "American Mathematical Association of Two-Year Colleges",
+      "summary": "The fall round of a one-hour, 20-question math contest for two-year college students, taken at your own college. Your college's top five scores make its team.",
+      "who_for": [
+        "Your college has to take part (ask your math department)"
+      ],
+      "offers": [
+        "A national ranking for you and your college"
+      ],
+      "audience": "community_college",
+      "major_slugs": [],
+      "systems": [],
+      "terms": [],
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "deadline": "2026-11-13",
+      "starts_on": "2026-10-30",
+      "ends_on": "2026-11-13",
+      "location": "Your community college",
+      "online": false,
+      "cost": "free",
+      "url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
+      "source_name": "American Mathematical Association of Two-Year Colleges",
+      "source_url": "https://www.amatyc.org/student-leagues/student-mathematics-league/"
     }
   ]
 }
