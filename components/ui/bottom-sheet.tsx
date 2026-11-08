@@ -70,7 +70,7 @@ export function BottomSheet({ open, onClose, labelledBy, locked, children }: Bot
           <motion.div
             aria-hidden
             data-scrim
-            className="absolute inset-0 bg-[rgba(5,16,66,.4)]"
+            className="absolute inset-0 bg-[rgba(16,25,74,.4)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -84,12 +84,13 @@ export function BottomSheet({ open, onClose, labelledBy, locked, children }: Bot
             role="dialog"
             aria-modal="true"
             aria-labelledby={labelledBy}
-            className="relative w-full max-w-[480px] rounded-t-sheet bg-surface px-6 pt-6"
+            className="relative w-full max-w-[480px] rounded-t-hero bg-surface px-6 pt-6"
             style={{ paddingBottom: "calc(24px + var(--safe-bottom))" }}
             initial={fadeOnly ? { opacity: 0 } : { y: "100%" }}
             animate={fadeOnly ? { opacity: 1, transition: { duration: 0.2 } } : { y: 0, transition: { duration: 0.28, ease: EASE_OUT } }}
             exit={fadeOnly ? { opacity: 0, transition: { duration: 0.2 } } : { y: "100%", transition: { duration: 0.2, ease: EASE_OUT } }}
           >
+            <span aria-hidden className="absolute left-1/2 top-2 h-[5px] w-10 -translate-x-1/2 rounded-full bg-border" />
             {children}
           </motion.div>
         </div>

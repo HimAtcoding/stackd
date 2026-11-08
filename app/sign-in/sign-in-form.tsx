@@ -14,7 +14,7 @@ import { InlineError } from "@/components/ui/inline-error";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
 import { getCarriedEmail, setCarriedEmail } from "@/lib/auth/email-store";
 import { emailError, emailNotConfirmed, inlineErrorCopy, oauthErrorCopy, returnedOAuthCopy, type ErrorCopy } from "@/lib/auth/messages";
@@ -123,7 +123,7 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
         spellCheck={false}
         enterKeyHint="next"
         placeholder="you@example.com"
-        icon={<EnvelopeIcon size={22} />}
+        icon={<EnvelopeIcon weight="bold" size={22} />}
         value={email}
         readOnly={busy}
         error={errors.email}
@@ -152,7 +152,7 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
         autoCapitalize="off"
         spellCheck={false}
         enterKeyHint="go"
-        icon={<LockIcon size={22} />}
+        icon={<LockIcon weight="bold" size={22} />}
         value={password}
         readOnly={busy}
         error={errors.password}
@@ -178,9 +178,9 @@ export function SignInForm({ appleLogo, googleLogo }: SignInFormProps) {
                 body={authError.body}
                 action={
                   authError.sendCode ? (
-                    <TintedButton onClick={sendCode}>
+                    <SecondaryButton onClick={sendCode}>
                       {pending === "code" ? "Sending…" : "Send code"}
-                    </TintedButton>
+                    </SecondaryButton>
                   ) : undefined
                 }
               />

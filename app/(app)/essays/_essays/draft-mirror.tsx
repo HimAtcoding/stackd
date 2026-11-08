@@ -31,7 +31,7 @@ export const DraftMirror = forwardRef<HTMLDivElement, DraftMirrorProps>(function
           <mark
             key={i}
             data-start={r.start}
-            className="bg-tint-indigo text-transparent underline decoration-indigo-600 decoration-2 underline-offset-[3px] [text-decoration-skip-ink:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]"
+            className="bg-yellow-50 text-transparent underline decoration-indigo-600 decoration-2 underline-offset-[3px] [text-decoration-skip-ink:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]"
           >
             {r.text}
           </mark>

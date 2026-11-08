@@ -24,7 +24,7 @@ export function SaveButton({ slug, name }: { slug: string; name: string }) {
       }}
       icon={
         <span ref={scope} className="flex">
-          {saved ? <HeartIcon weight="fill" size={22} className="text-coral-500" /> : <HeartIcon size={22} />}
+          {saved ? <HeartIcon weight="fill" size={22} className="text-coral-500" /> : <HeartIcon weight="bold" size={22} />}
         </span>
       }
     />

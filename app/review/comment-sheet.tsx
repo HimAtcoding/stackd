@@ -51,8 +51,8 @@ export function CommentComposer({ quote, body, onBody, savedName, name, onName, 
         placeholder="Your comment…"
         onChange={(e) => onBody(e.target.value)}
         className={cn(
-          "mt-4 block w-full resize-none overflow-hidden rounded-sm border border-field-border bg-surface px-4 py-3 text-navy-900 caret-blue-600 outline-none type-body-md placeholder:text-slate-600",
-          "field-focus:border-blue-600 field-focus:shadow-[inset_0_0_0_1px_var(--blue-600),0_0_0_4px_rgba(3,100,250,.15)]",
+          "mt-4 block w-full resize-none overflow-hidden rounded-md border-2 border-field-border bg-surface px-4 py-3 text-navy-900 caret-blue-600 outline-none type-body-md placeholder:text-slate-600",
+          "field-focus:border-blue-600 field-focus:shadow-[0_0_0_4px_rgba(30,94,255,.18)]",
         )}
       />
       <p id="comment-count" className="mt-1 text-right text-slate-600 tabular-nums type-caption">
@@ -84,7 +84,7 @@ export function CommentComposer({ quote, body, onBody, savedName, name, onName, 
           {error}
         </p>
       )}
-      <PrimaryButton loading={busy} chevron={false} onClick={onAdd} className="mt-6">
+      <PrimaryButton loading={busy} onClick={onAdd} className="mt-6">
         Add comment
       </PrimaryButton>
     </>

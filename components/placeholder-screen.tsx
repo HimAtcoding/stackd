@@ -8,7 +8,7 @@ import { hasSession, subscribeSession } from "@/lib/session";
 import { BackButton } from "./back-button";
 import { EmptyState } from "./ui/empty-state";
 import { HAS_TAB_BAR, TAB_PAGE_BOTTOM, TabBar, type TabId } from "./ui/tab-bar";
-import { TintedButton } from "./ui/tinted-button";
+import { SecondaryButton } from "./ui/secondary-button";
 import { PageTransition } from "./page-transition";
 
 // "auto" picks signed in or signed out from the session (Terms, Privacy).
@@ -30,27 +30,27 @@ export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
     "signed-out": {
       title: "This part isn't built yet",
       body: "It's on the list. You can still sign in.",
-      action: <TintedButton href="/sign-in">Back to sign in</TintedButton>,
+      action: <SecondaryButton href="/sign-in">Back to sign in</SecondaryButton>,
       fallback: "/sign-in",
     },
     "signed-in": {
       title: "This part isn't built yet",
       body: "It's on the list. Your plan is still on the home screen.",
-      action: <TintedButton href="/">Back to home</TintedButton>,
+      action: <SecondaryButton href="/">Back to home</SecondaryButton>,
       fallback: "/",
     },
     home: {
       title: "Home isn't built yet",
       body: "You're signed in. Sign out to test the sign-in flow again.",
       action: (
-        <TintedButton
+        <SecondaryButton
           onClick={async () => {
             await auth.signOut();
             router.replace("/sign-in");
           }}
         >
           Sign out
-        </TintedButton>
+        </SecondaryButton>
       ),
       fallback: "/",
     },

@@ -32,7 +32,7 @@ export function Switch({ checked, onChange, disabled, ...rest }: SwitchProps) {
       <span
         aria-hidden
         className={cn(
-          "absolute left-0.5 top-0.5 size-[27px] rounded-full bg-white shadow-float transition-transform duration-200 ease-out",
+          "absolute left-0.5 top-0.5 size-[27px] rounded-full bg-white transition-transform duration-200 ease-out",
           checked && "translate-x-5",
         )}
       />

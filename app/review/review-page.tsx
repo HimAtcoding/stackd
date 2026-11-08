@@ -8,7 +8,7 @@ import { Art } from "@/components/art";
 import { CompactButton } from "@/components/ui/compact-button";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { cn } from "@/lib/cn";
@@ -139,7 +139,7 @@ export function ReviewPage() {
 
   return (
     <main
-      className="mx-auto min-h-dvh max-w-[688px] bg-sky-50"
+      className="mx-auto min-h-dvh max-w-[688px] bg-page"
       style={{ paddingTop: "calc(var(--safe-top) + 24px)", paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
     >
       <div className="px-6">
@@ -156,14 +156,14 @@ export function ReviewPage() {
             title="Couldn't open this answer"
             body="Check your connection, then try again."
             action={
-              <TintedButton
+              <SecondaryButton
                 onClick={() => {
                   setState({ status: "loading" });
                   setAttempt((n) => n + 1);
                 }}
               >
                 Try again
-              </TintedButton>
+              </SecondaryButton>
             }
           />
         </div>
@@ -418,7 +418,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
 
   return (
     <main
-      className="min-h-dvh bg-sky-50"
+      className="min-h-dvh bg-page"
       style={{
         paddingTop: "calc(var(--safe-top) + 24px)",
         paddingBottom: wide ? "calc(var(--safe-bottom) + 24px)" : `calc(var(--safe-bottom) + ${BAR_HEIGHT + 24}px)`,
@@ -435,8 +435,8 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
             <p className="mt-2 max-w-[520px] text-slate-700 type-body">On a UC personal insight answer. Select any sentence to comment on it.</p>
           </div>
 
-          {/* The same band as the editor's strip, so the page looks like the app */}
-          <section aria-labelledby="question" className="mt-6 bg-tint-indigo px-6 py-4">
+          {/* The question on a quiet neutral band, set apart from the answer under it */}
+          <section aria-labelledby="question" className="mt-6 bg-surface-pressed px-6 py-4">
             <div className="flex items-baseline gap-3">
               <h2 id="question" className="min-w-0 flex-1 text-navy-900 type-title-3">
                 {page.short_name}
@@ -467,7 +467,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
                       }
                     }}
                     className={cn(
-                      "scroll-my-24 rounded-[2px] bg-tint-indigo text-navy-900 underline decoration-indigo-600 decoration-2 underline-offset-[3px] [text-decoration-skip-ink:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]",
+                      "scroll-my-24 rounded-[2px] bg-yellow-50 text-navy-900 underline decoration-indigo-600 decoration-2 underline-offset-[3px] [text-decoration-skip-ink:none] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]",
                       "outline-2 outline-offset-2",
                       outlinedSpan && outlinedSpan.start < r.end && r.start < outlinedSpan.end ? "outline outline-indigo-600" : "outline-transparent",
                     )}
@@ -484,7 +484,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => commentOnSelection(selection.text)}
-                className="absolute z-10 -translate-x-1/2 -translate-y-full rounded-full bg-indigo-600 px-4 py-2 text-white shadow-float type-label"
+                className="absolute z-10 -translate-x-1/2 -translate-y-full rounded-sm bg-indigo-600 px-4 py-2 text-white type-label edge-sm edge-indigo-800"
                 style={{ top: selection.top - 8, left: selection.left + 24 }}
               >
                 Comment
@@ -505,7 +505,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
             className="sticky top-6 flex max-h-[calc(100dvh-48px)] w-[320px] shrink-0 flex-col"
           >
             {composer && draft?.open && (
-              <section aria-labelledby="composer-title" className="mb-6 shrink-0 rounded-md border border-border bg-surface p-4">
+              <section aria-labelledby="composer-title" className="mb-6 shrink-0 rounded-lg border-2 border-border bg-surface p-4">
                 <div className="flex items-baseline gap-3">
                   <h2 id="composer-title" className="min-w-0 flex-1 text-navy-900 type-title-3">
                     {draft.quote === null ? "Comment on the whole answer" : "Comment on this part"}
@@ -518,7 +518,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
               </section>
             )}
             <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">{comments}</div>
-            <div className="flex h-[60px] shrink-0 items-center justify-between gap-3 border-t border-border px-2">
+            <div className="flex h-[60px] shrink-0 items-center justify-between gap-3 border-t-2 border-border px-2">
               {barButton}
               {finishSlot}
             </div>
@@ -529,7 +529,7 @@ function LiveReview({ page, token, onChange }: { page: Live; token: string; onCh
       {!wide && (
         <>
           {/* The pinned bar (20 → Pinned bar) */}
-          <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface" style={{ paddingBottom: "var(--safe-bottom)" }}>
+          <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-border bg-surface" style={{ paddingBottom: "var(--safe-bottom)" }}>
             <div className="mx-auto flex h-[59px] max-w-[688px] items-center justify-between gap-3 px-6 py-2">
               {barButton}
               {finishSlot}

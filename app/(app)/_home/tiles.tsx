@@ -9,11 +9,11 @@ type Fill = { subtitle: string; unread?: boolean; transitionTypes?: string[] };
 // setup card above it, so with no other tile there are none (13 → Home).
 // Essays has no tile: Home reaches it through its own row under Get ready (17 → Entry points).
 export function homeTiles(fill: { requirements: Fill & { href: string }; mentors: Fill; events: Fill }): HomeTile[] {
-  const icon = (Icon: typeof FileTextIcon) => <Icon weight="fill" size={28} className="text-blue-600" />;
+  const icon = (Icon: typeof FileTextIcon) => <Icon weight="fill" size={22} />;
   const others = [
-    { title: "Mentors", icon: icon(UsersThreeIcon), tint: "sky" as const, href: unbuiltHref("mentors"), ...fill.mentors },
-    { title: "Events", icon: icon(CalendarDotsIcon), tint: "indigo" as const, href: unbuiltHref("events"), ...fill.events },
+    { title: "Mentors", icon: icon(UsersThreeIcon), tone: "blue" as const, href: unbuiltHref("mentors"), ...fill.mentors },
+    { title: "Events", icon: icon(CalendarDotsIcon), tone: "indigo" as const, href: unbuiltHref("events"), ...fill.events },
   ].flatMap((t) => (t.href ? [{ ...t, href: t.href }] : []));
   if (!others.length) return [];
-  return [{ title: "Requirements", icon: icon(FileTextIcon), tint: "sky", ...fill.requirements }, ...others];
+  return [{ title: "Requirements", icon: icon(FileTextIcon), tone: "green", ...fill.requirements }, ...others];
 }

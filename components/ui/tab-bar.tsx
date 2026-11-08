@@ -20,16 +20,17 @@ const TABS = [
 // A tab bar with one tab isn't navigation, so with only Home switched on there's none (13 → Home)
 export const HAS_TAB_BAR = TABS.length > 1;
 
-// A tab screen's bottom padding: the capsule (64), its 12 above the safe area, and 16 more so the last row clears it
-export const TAB_PAGE_BOTTOM = HAS_TAB_BAR ? "calc(92px + var(--safe-bottom))" : "calc(24px + var(--safe-bottom))";
+// A tab screen's bottom padding: the capsule (68), its 12 above the safe area, and 16 more so the last row clears it
+export const TAB_PAGE_BOTTOM = HAS_TAB_BAR ? "calc(96px + var(--safe-bottom))" : "calc(24px + var(--safe-bottom))";
 
 // A toast on a tab screen sits 12 above the capsule
-export const TAB_TOAST_BOTTOM = HAS_TAB_BAR ? "calc(88px + var(--safe-bottom))" : "calc(12px + var(--safe-bottom))";
+export const TAB_TOAST_BOTTOM = HAS_TAB_BAR ? "calc(92px + var(--safe-bottom))" : "calc(12px + var(--safe-bottom))";
 
 // Where the pill was on the last tab screen, so it can slide from there to this one
 let lastIndex: number | null = null;
 
-// The floating capsule (22 → 1). Each tab screen renders its own; the pill starts where the last screen left it and
+// The floating capsule (00 → Tab bar): white, 2 px border, its own edge, and a solid blue pill under the active tab.
+// Each tab screen renders its own; the pill starts where the last screen left it and
 // slides to this tab. `still` renders it in the page flow for /dev/components.
 export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
   const index = TABS.findIndex((t) => t.id === active);
@@ -49,7 +50,7 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
     <nav
       aria-label="Main"
       className={cn(
-        "z-30 h-16 rounded-full border border-border bg-surface shadow-float supports-[backdrop-filter]:bg-surface/92 supports-[backdrop-filter]:backdrop-blur-[20px]",
+        "z-30 h-17 rounded-hero border-2 border-border bg-surface edge-md",
         !still && "fixed inset-x-4 mx-auto max-w-[420px]",
       )}
       style={still ? undefined : { bottom: "calc(var(--safe-bottom) + 12px)" }}
@@ -58,7 +59,7 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
         {pill >= 0 && (
           <span
             aria-hidden
-            className="absolute inset-y-1.5 rounded-full bg-surface-pressed transition-[left] duration-200 ease-out motion-reduce:transition-none"
+            className="absolute top-1 h-[54px] rounded-[18px] bg-blue-600 transition-[left] duration-200 ease-out edge-sm edge-blue-700 motion-reduce:transition-none"
             style={{ left: `calc(${pill * width}% + 6px)`, width: `calc(${width}% - 12px)` }}
           />
         )}
@@ -69,10 +70,10 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
               key={id}
               href={href}
               aria-current={isActive ? "page" : undefined}
-              className="relative flex min-h-11 flex-1 flex-col items-center justify-center gap-1 rounded-full focus-ring:-outline-offset-4"
+              className="relative my-1 flex h-[54px] flex-1 flex-col items-center justify-center gap-0.5 rounded-[18px] focus-ring:outline-offset-1"
             >
-              <Icon size={24} weight={isActive ? "fill" : "regular"} aria-hidden className={isActive ? "text-blue-700" : "text-slate-600"} />
-              <span className={cn("type-tab", isActive ? "text-blue-700" : "text-slate-600")}>{label}</span>
+              <Icon size={24} weight={isActive ? "fill" : "bold"} aria-hidden className={isActive ? "text-white" : "text-slate-600"} />
+              <span className={cn("type-tab", isActive ? "font-black text-white" : "text-slate-600")}>{label}</span>
             </Link>
           );
         })}

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { BarricadeIcon, BellIcon } from "@phosphor-icons/react/ssr";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { fillDue } from "@/lib/due";
 import { unbuiltHref } from "@/lib/features";
@@ -36,7 +36,7 @@ export function DemoRequirements({ slug, university, journeySteps }: DemoRequire
           icon={<BarricadeIcon weight="fill" size={32} />}
           title="No requirements loaded for this school"
           body="We don't have this school's requirements yet."
-          action={<TintedButton href="/">Back to home</TintedButton>}
+          action={<SecondaryButton href="/">Back to home</SecondaryButton>}
         />
       )}
 
@@ -47,8 +47,8 @@ export function DemoRequirements({ slug, university, journeySteps }: DemoRequire
       )}
 
       {showReminder && (
-        <div role="note" className="mx-4 mt-4 flex gap-4 rounded-md bg-amber-50 px-5 py-4">
-          <BellIcon weight="fill" size={28} aria-hidden className="shrink-0 text-amber-500" />
+        <div role="note" className="mx-4 mt-4 flex gap-4 rounded-md bg-yellow-50 px-5 py-4">
+          <BellIcon weight="fill" size={28} aria-hidden className="shrink-0 text-amber-700" />
           <div className="min-w-0">
             <p className="text-navy-900 type-headline">{reminder.title}</p>
             <p className="mt-1 text-slate-700 type-body">{fillDue(reminder.body, reminder.dueInDays)}</p>

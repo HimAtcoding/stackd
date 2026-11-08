@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree } from "next/font/google";
+import { Nunito } from "next/font/google";
 import { TouchActive } from "@/components/touch-active";
 import "./globals.css";
 
-const figtree = Figtree({
+const nunito = Nunito({
   subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-figtree",
+  variable: "--font-nunito",
 });
 
 export const metadata: Metadata = {
@@ -20,12 +21,12 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#EAF6FE",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={figtree.variable}>
+    <html lang="en" className={nunito.variable}>
       <body className="min-h-dvh antialiased">
         <TouchActive />
         {children}

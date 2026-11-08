@@ -6,7 +6,7 @@ import { MajorRoute } from "../_explore/major-screen";
 export default function MajorPage() {
   return (
     <PageTransition>
-      <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+      <Suspense fallback={<div className="min-h-dvh bg-page" />}>
         <MajorRoute />
       </Suspense>
     </PageTransition>

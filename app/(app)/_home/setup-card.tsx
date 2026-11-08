@@ -9,7 +9,7 @@ import { onboardingUrl } from "@/lib/onboarding";
 export function SetupCard() {
   const router = useRouter();
   return (
-    <div className="rounded-lg bg-surface p-4 shadow-lift">
+    <div className="rounded-lg border-2 border-border bg-surface p-4">
       <h2 className="text-navy-900 type-title-2">No plan yet</h2>
       <p className="mt-1 text-slate-600 type-body">Pick your college, the schools you want, and your major. It takes about a minute.</p>
       <PrimaryButton className="mt-4" onClick={() => router.push(onboardingUrl("college", { from: "home" }))}>

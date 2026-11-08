@@ -9,7 +9,7 @@ type AuthScreenProps = {
   clouds?: boolean;
 };
 
-// Shared background for the three auth screens: --sky-100 → --sky-50 over 320, then --sky-50.
+// Shared white page for the three auth screens (00 rev 2).
 export function AuthScreen({ children, clouds }: AuthScreenProps) {
   return (
     <PageTransition>

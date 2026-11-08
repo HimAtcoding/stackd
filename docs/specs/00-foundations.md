@@ -1,61 +1,89 @@
 # 00 · Foundations
 
-Status: baseline rev 1 (September 2026). Source: team mockups in `docs/mockup/` (`mockup-4-screens.png`, `mockup-task-complete.png`, `mockup-sign-in.png`), measured in pixels and converted to points. Every screen spec (01–08) uses these tokens. If a screen spec and this file disagree, this file wins, unless the screen spec names the exception.
+Status: **rev 2, "Chunky and playful" (November 2026).** Rev 1 (September 2026) was measured from the team mockups in `docs/mockup/`. Rev 2 replaces its color, type, radius, elevation and component looks with direction A from the design board ("Stackd design directions", A row: Home, Explore, Opportunities), picked by Ryan over "Trail map" and "Bold numbers". Layouts in the screen specs stay; how things look comes from here. The rollout, screen by screen, is in `23-chunky-reskin.md`. Every screen spec uses these tokens. If a screen spec and this file disagree on a look (color, font, radius, edge), this file wins. If they disagree on layout, the screen spec wins.
+
+### The rev 2 idea in one line
+
+Things you can tap have a solid bottom edge and press down into it. Things you can't tap are flat. Color carries status and section, never decoration.
 
 ## How to read these numbers
 
 - All sizes are CSS px. On iOS Safari 1 CSS px = 1 pt, so a value here is the same on a phone.
 - Design viewport is 393 × 852 (iPhone 15/16). The mockup phones measured 422 px wide, so 1 mockup px = 0.931 pt. Values below are measured, then snapped to a 4 px grid.
-- Layouts are fluid from 320 to 480 wide. Above 480, content stays 480 wide and centers on a `--sky-50` page.
+- Layouts are fluid from 320 to 480 wide. Above 480, content stays 480 wide and centers on the white `--page`.
 - Vertical positions are given relative to the safe-area top (`env(safe-area-inset-top)`), never the physical top of the screen. The mockups have no status bar; the real app does.
 - "Normalized" means the mockup drew the same thing two different ways, and this spec picks one. Every normalization is listed at the end of this file so it can be reversed.
 
 ## Color
 
-Sampled from the mockups (±3 per channel from compression), then cleaned. Four values were darkened to pass WCAG contrast. Those are marked, with the drawn value kept for reference.
+Rev 2 palette, from direction A of the design board. Contrast was checked against WCAG for every pairing used; where a bright color fails with white, it gets a darker partner for text.
+
+### Core
 
 | Token | Hex | Use |
 |---|---|---|
-| `--blue-600` | #0364FA | Primary buttons, links, progress fill, "+" button |
-| `--blue-700` | #0252D1 | Pressed primary, text on `--blue-50` (4.31:1 fails with blue-600), the active tab (22), UC school tiles |
-| `--blue-100` | #D9EBFA | Progress track |
-| `--blue-50` | #E2F0FD | Tinted button fill |
-| `--blue-50-border` | #CFE3FA | Tinted button border |
-| `--sky-200` | #B8E7FD | Top of welcome and celebration gradients |
-| `--sky-100` | #D3EFFD | Top of home gradient |
-| `--sky-50` | #EAF6FE | Page background |
-| `--surface` | #FAFCFE | Cards, sheets, tab bar, floating circle buttons |
-| `--white` | #FFFFFF | Essays header zone, celebration chip |
-| `--navy-900` | #051042 | Primary text, headlines, wordmark |
-| `--slate-700` | #3F4A6E | Body text on amber banner (7.7:1) |
-| `--slate-600` | #5E6B96 | Secondary text, inactive tab labels. Drawn #7B88B2 (3.4:1, fails). Now 5.1:1 on surface |
-| `--slate-400` | #8590AC | Inactive tab icons, empty status ring. Drawn #A5B0C6 (2.1:1, fails 3:1 for controls). Now 3.1:1 |
-| `--border` | #E3ECF7 | Dividers, list container border, the tab bar capsule's edge |
-| `--border-strong` | #CFDAEC | Social button borders, "or" divider rules |
-| `--field-border` | #8090B8 | Text field border at rest. Drawn #C7D4EA (1.5:1, fails 3:1 for control edges). Now 3.1:1 |
-| `--surface-pressed` | #F1F6FC | Pressed rows and cards |
-| `--tint-sky` | #E4F4FD | Icon tiles: Requirements, Mentors, panel event, review card |
-| `--tint-indigo` | #EAEDFD | Icon tiles: Essays, Events |
-| `--node-empty` | #E9F3FC | Unfilled journey steps |
-| `--green-600` | #40A459 | Done: journey checks, "Complete" status. White check on it is 3.15:1 (passes 3:1 non-text) |
-| `--mint-100` | #D2F3EC | "In progress" pill background |
-| `--mint-800` | #0A6C44 | "In progress" pill text (5.5:1) |
-| `--coral-500` | #FC5E3C | Unread dots, calendar icon in deadline tile |
-| `--coral-700` | #B8361B | "In 2 weeks" pill text. Drawn #FC5E3C (2.5:1, fails). Now 4.8:1 |
-| `--coral-50` | #FEE3E0 | Deadline pill background |
-| `--coral-25` | #FCEBEC | Deadline icon tile |
-| `--amber-50` | #FCF1D2 | Deadline banner background |
-| `--amber-500` | #EAA005 | Bell in deadline banner (decorative, `aria-hidden`) |
-| `--yellow-400` | #FDC940 | Sparkle dashes, confetti, balloon |
-| `--confetti-sky` | #4FA8F7 | Confetti only |
-| `--indigo-600` | #4F55E0 | Essays section color, the writing step's icon (`16-color-pass.md`) |
-| `--amber-700` | #A86A00 | The activities step's icon (16) |
-| `--amber-800` | #8A5600 | Cal State school tiles (white text 6.16:1), small amber text on `--yellow-50` (22) |
-| `--yellow-50` | #FFF6D6 | The Opportunities band (16, 22) |
-| `--mint-600` | #12946A | Explore section color, the courses step's icon (16) |
-| `--mint-pressed` | #085A38 | Pressed state of a solid `--mint-800` panel (21) |
+| `--blue-600` | #1E5EFF | Primary buttons, links, active tab pill, Home hero, the "taking now" ring. White on it 5.1:1 |
+| `--blue-700` | #1747C7 | Edge under `--blue-600`, pressed fill on links, UC school tiles, the hero's progress track |
+| `--yellow-400` | #FFC226 | Honey: progress on a blue fill, taking-now segments, the empty-state circle, the step burst, toast actions. `--navy-900` on it 10:1. Never text on white |
+| `--yellow-700` | #D89A00 | Edge under `--yellow-400` |
+| `--green-600` | #22A565 | Done: status icons, done segments and progress fill on white. White check on it 3.2:1 (passes 3:1 for icons) |
+| `--green-700` | #178049 | Edge under `--green-600`, done text ("Done", "Counts for UC and Cal State"), Explore section color and its hero. White on it 5.0:1 |
+| `--green-800` | #0F5E35 | Edge under a `--green-700` hero |
+| `--navy-900` | #10194A | Primary text, headlines, wordmark, toast fill, text on `--yellow-400` |
+| `--slate-700` | #3F4A6E | Body text on pale status fills (pills, banners) |
+| `--slate-600` | #5B6585 | Secondary text, inactive tab labels and icons. 5.8:1 on white |
+| `--slate-400` | #8A93AE | Empty status rings, field borders, disabled icons. 3.1:1, so graphics only, never text |
+| `--border` | #E5E8F0 | 2 px container borders, dividers, the edge under white buttons and cards, progress tracks |
+| `--border-strong` | #D3D8E4 | Social button borders, "or" divider rules |
+| `--field-border` | #8A93AE | Text field border at rest (same value as `--slate-400`, 3.1:1 for control edges) |
+| `--surface` | #FFFFFF | Cards, sheets, tab bar, buttons that aren't solid |
+| `--page` | #FFFFFF | Page background everywhere. Rev 1's `--sky-50` page is gone |
+| `--surface-pressed` | #F1F3F8 | Pressed rows inside a list, segmented control track, neutral pill |
 
-Feature panels, the step tile and the step burst are specified in `16-color-pass.md`. The date tile, the link line (which replaces 16's outside-link row) and the step sheet are specified in `18-list-link-steps.md`; the Deadlines list has no timeline spine or nodes since 18. The section colors above mark features and never carry status: the status colors below stay fixed everywhere.
+### Section colors
+
+Each section owns one solid color for its hero panel and its icon circles. They mark features and never carry status.
+
+| Token | Hex | Edge partner | Section |
+|---|---|---|---|
+| `--blue-600` | #1E5EFF | `--blue-700` | Home, Deadlines, the plan step |
+| `--green-700` | #178049 | `--green-800` | Explore, the courses step |
+| `--indigo-600` | #4F55E0 | `--indigo-800` #3A3FB0 | Essays, the writing step. White on it 5.7:1 |
+| `--amber-700` | #A86A00 | `--amber-800` #8A5600 | Activities step. White icon on it 4.4:1 |
+| `--yellow-400` | #FFC226 | `--yellow-700` | Opportunities (with `--navy-900` icons and text) |
+
+### Status fills (pills, banners, errors)
+
+| Token | Hex | Use |
+|---|---|---|
+| `--coral-700` | #B8361B | Due within 14 days, errors, destructive button. 4.8:1 on white |
+| `--coral-800` | #8E2812 | Edge under a `--coral-700` hero or button |
+| `--coral-500` | #FC5E3C | Unread dots only |
+| `--coral-50` | #FEE3E0 | Due pill fill |
+| `--coral-25` | #FCEBEC | Inline error card |
+| `--yellow-50` | #FFF4D6 | "Soon" pill fill and the amber reminder banner |
+| `--amber-900` | #7A5200 | Text on `--yellow-50` (7.2:1) |
+| `--mint-100` | #E3F6EC | "In progress" and "Fits you" pill fill |
+| `--mint-800` | #1A6E45 | Text on `--mint-100` (5.6:1) |
+| `--amber-800` | #8A5600 | Cal State school tiles (white 6.16:1) |
+| `--slate-700` on `--surface-pressed` | | Neutral pill ("Jan 6, 59 days left") |
+
+### Art only
+
+`--sky-200` #B8E7FD, `--sky-100` #D3EFFD and `--confetti-sky` #4FA8F7 stay for the Welcome scene, the celebration and confetti. They never fill a button, tile, card or page.
+
+### Removed in rev 2
+
+These pale tints made buttons and tiles look washed out. Each use moves to the replacement on the right; `23-chunky-reskin.md` lists every place.
+
+| Removed | Replace with |
+|---|---|
+| `--blue-50`, `--blue-50-border` (tinted button) | Secondary button: white, 2 px `--border`, `--border` edge, `--blue-600` label |
+| `--tint-sky`, `--tint-indigo`, `--node-empty`, `--amber-50` and `--mint-100` as icon tiles | Solid icon circles in the section color, white icon (navy on yellow) |
+| `--blue-100` (progress track, ring track) | `--border` |
+| `--sky-50` (page) | `--page` white |
+| `--sky-100` home gradient | White page; the hero carries the color |
+| `--mint-600`, `--mint-pressed` | `--green-700`, `--green-800` |
 
 ### Status colors
 
@@ -63,47 +91,47 @@ The palette carries status. These pairings are fixed across the app:
 
 | Status | Icon | Text | Where |
 |---|---|---|---|
-| Done | `--green-600` circle, white check | `--slate-600` "Complete" | Requirement rows, journey tracker |
-| In progress | Ring, `--blue-600` arc on `--blue-100` track | `--slate-600` "In progress", or mint pill | Requirement rows, essay card |
-| Not started | Ring, 2 px `--slate-400` | `--slate-600` "Not started" | Requirement rows |
-| Due within 14 days | Coral pill | `--coral-700` | Upcoming card |
-| Reminder | Amber banner, bell | `--navy-900` / `--slate-700` | University screen |
+| Done | `--green-600` circle, white check, `--green-700` edge when it's a control | `--green-700` "Done" or `--slate-600` | Requirement rows, steps, Home path |
+| Taking now / in progress | 3 px `--blue-600` ring with `HourglassMedium` (or a `--blue-600` arc on a `--border` track) | `--blue-600` "Taking now" | Requirement rows, essay card |
+| Not started | 2.5 px `--slate-400` ring, or the item's section-color circle when it's a step | `--slate-600` | Requirement rows, steps |
+| Due within 14 days | Coral pill, or the hero turns `--coral-700` | `--coral-700` | Up next, opportunity rows |
+| Soon (15 to 60 days) | `--yellow-50` pill | `--amber-900` | Opportunity rows, deadline rows |
+| Reminder | `--yellow-50` banner, `Bell` fill `--amber-700` | `--navy-900` / `--slate-700` | University screen |
 | Unread | 8 px `--coral-500` dot | none | Tiles, cards |
 | Error | `WarningCircle` fill `--coral-700`, or 2 px `--coral-700` field border | `--coral-700` / `--slate-700` | Field errors, inline error |
 
+Green means done and nothing else. Blue means "you" (where you are, what you're taking, what you tap). Honey means progress and reward.
+
 ## Type
 
-**Figtree** for everything, weights 400, 500, 600, 700, 800, 900. The mockup lettering is AI-rendered, so there is no real font to copy. Figtree was picked by rendering six candidates (Figtree, Nunito, Plus Jakarta Sans, Outfit, Onest, Rethink Sans) next to mockup crops. It matched the heavy geometric headlines and the softer body text in one family, which the project rules prefer over two.
+**Nunito** for everything, weights 600, 700, 800, 900 (rev 2; rev 1 used Figtree). Nunito's rounded ends match the husky and the rounded edges. It is set heavier than a usual app: nothing below 600, headlines at 900. Load with `next/font/google`, `display: "swap"`. Fallback stack: `ui-rounded, -apple-system, "Segoe UI", Roboto, sans-serif`. Use `font-variant-numeric: tabular-nums` on any count ("3 of 6", "642 words", "31 days left").
 
-Load with `next/font/google`, `display: "swap"`. Fallback stack: `-apple-system, "Segoe UI", Roboto, sans-serif`. Use `font-variant-numeric: tabular-nums` on any count ("3 of 6", "642 words", "1h ago").
-
-Sizes were fitted by matching the rendered width of each mockup string in Figtree, then grouped.
-
-| Token | Size / line | Weight | Tracking | Measured from |
+| Token | Size / line | Weight | Tracking | Example |
 |---|---|---|---|---|
 | `celebrate` | 72 / 68 | 900 | -0.02em | "Great job!" |
-| `display` | 38 / 42 | 900 | -0.02em | "Transfer plans, made simple." (37.8) |
-| `title-1` | 36 / 40 | 900 | -0.02em | "Hi, Alex!" (34.2), "UC Davis" (36.4), "Your essays" (40.1) |
-| `title-2` | 20 / 26 | 800 | -0.01em | "Your transfer journey" (19.6), "Upcoming" (19.1), "Transfer requirements" (20.8) |
-| `title-3` | 18 / 24 | 700 | 0 | "Leadership through community" (17.4), "Peer mentor feedback" (17.7) |
-| `headline` | 16 / 22 | 700 | 0 | "Application deadline" (15.5), "Deadline coming soon" (15.3) |
-| `row-title` | 16 / 22 | 600 | 0 | "Transferable units" (15.6) |
-| `body-lg` | 18 / 24 | 400 | 0 | Welcome body (18.2), essays intro (18.9) |
-| `body` | 15 / 20 | 400 | 0 | Card descriptions (14.1–15.2), "642 words" (14.3) |
-| `body-md` | 16 / 22 | 400 | 0 | Text field input and placeholder (16 stops iOS zoom on focus), sign-in subtitle (16.4) |
-| `label` | 14 / 18 | 600 | 0 | Tile titles (13.5) |
-| `pill` | 14 / 18 | 600 | 0 | "In 2 weeks", "In progress" |
-| `caption` | 13 / 16 | 400 | 0 | "3 of 6 complete" (13.2), tile subtitles (11.8), timestamps |
-| `tab` | 13 / 16 | 600 | 0 | Tab bar labels (13.2) |
-| `button-lg` | 20 / 24 | 700 | 0 | "Track application" (19.3), "Keep going" (18.3), "Get started" (23.6) |
-| `button` | 16 / 20 | 700 | 0 | "Edit draft" (15.9) |
-| `link` | 15 / 20 | 700 | 0 | "View feedback", "View progress" |
-| `segment` | 16 / 20 | 600 | 0 | Underline tabs on university and essays screens |
-| `demo` | 12 / 16 | 600 | 0.01em | Demo strip, footer disclaimer (400) |
+| `hero-number` | 64 / 56 | 900 | -0.02em | "22" days left on the Home hero |
+| `display` | 38 / 42 | 900 | -0.01em | Welcome headline |
+| `title-1` | 34 / 38 | 900 | -0.01em | "Hi, Sam!", "Explore", "Opportunities" |
+| `title-2` | 21 / 26 | 900 | 0 | "Your application", "Still needed", "Opportunities for you" |
+| `title-3` | 18 / 24 | 900 | 0 | Card titles, empty-state titles |
+| `headline` | 17 / 22 | 900 | 0 | Opportunity names, the current step, field labels |
+| `row-title` | 16 / 22 | 800 | 0 | List rows, steps, requirement names |
+| `body-lg` | 18 / 26 | 600 | 0 | Welcome body, essays intro |
+| `body` | 15 / 21 | 600 | 0 | Descriptions, secondary lines |
+| `body-md` | 16 / 22 | 700 | 0 | Text field input and placeholder (16 stops iOS zoom) |
+| `label` | 14 / 18 | 800 | 0 | Tile titles, small links, segment labels |
+| `pill` | 13 / 18 | 900 | 0 | "Fits you", "Dec 9, 31 days left" |
+| `caption` | 13 / 17 | 700 | 0 | Counts under titles, timestamps, sources |
+| `tab` | 12 / 16 | 800 (900 active) | 0 | Tab bar labels |
+| `button-lg` | 18 / 24 | 900 | 0 | "Keep going", "Get started" |
+| `button` | 16 / 20 | 900 | 0 | Secondary and compact buttons |
+| `link` | 15 / 20 | 900 | 0 | "See all 9" |
+| `segment` | 16 / 20 | 800 | 0 | Underline tabs |
+| `demo` | 12 / 16 | 700 | 0.01em | Demo strip, footer disclaimer |
 
-`type-code` is the one type style outside Figtree: 13 / 16, weight 400, in `--font-code` (`ui-monospace, "SF Mono", Menlo, Consolas, monospace`). It's for real course codes such as COMP 122 or MATH 210, and nothing else (21).
+`type-code` is the one style outside Nunito: 13 / 16, weight 500, in `--font-code` (`ui-monospace, "SF Mono", Menlo, Consolas, monospace`), for real course codes such as COMP 122, and nothing else (21).
 
-Sentence case everywhere. No text smaller than 12.
+Sentence case everywhere. No text smaller than 12. Body lines stay under 80 characters.
 
 ## Spacing
 
@@ -121,215 +149,233 @@ Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48.
 
 ## Radius
 
-Radius varies by hierarchy. Measured corner offsets were 13 (journey card), 11 (tiles, upcoming), 8 (icon tiles), scaled for the blur of the render.
+Radius goes up with importance.
 
 | Token | Value | Use |
 |---|---|---|
-| `--r-sm` | 12 | Icon tiles |
-| `--r-md` | 16 | Shortcut tiles, list container, tinted button, amber banner, toast |
-| `--r-lg` | 20 | Content cards (journey, upcoming, essays) |
-| `--r-sheet` | 24 | Top corners of the university content sheet |
-| `--r-full` | 999 | Primary buttons, pills, circle buttons, avatars, progress bars |
+| `--r-sm` | 12 | School tiles, filter chips, compact buttons, the date tile, pills use 10 |
+| `--r-md` | 16 | Primary and secondary buttons, text fields, list containers, toasts, banners |
+| `--r-lg` | 20 | Cards |
+| `--r-hero` | 24 | The one hero per screen, the tab bar capsule, sheet top corners |
+| `--r-full` | 999 | Circles (icon circles, status icons, avatars, circle buttons), progress bars |
 
-## Elevation
+Rev 1's pill-shaped primary button (`--r-full`) becomes `--r-md`: a chunky block, like the board.
 
-The mockup's shadows are faint (1–2 levels of RGB below cards). Three levels, by hierarchy:
+## Edges (replaces Elevation)
 
-| Token | Value | Use |
+Rev 2 has no soft drop shadows on content. Depth is a solid edge drawn under the element with `box-shadow: 0 <edge> 0 <edge color>`. The edge color is the element's dark partner: `--blue-700` under blue, `--yellow-700` under honey, `--green-700` under `--green-600`, `--green-800` under `--green-700`, `--indigo-800`, `--amber-800`, `--coral-800`, and `--border` under anything white.
+
+| Token | Edge | Use |
 |---|---|---|
-| `--shadow-card` | `0 1px 2px rgba(5,16,66,.04), 0 6px 16px rgba(5,16,66,.05)` | Cards, tiles, list container |
-| `--shadow-float` | `0 4px 12px rgba(5,16,66,.10)` | Circle buttons over art (back, heart, bell) |
-| `--shadow-cta` | `0 8px 20px rgba(3,100,250,.28)` | Primary pill buttons, "+" button |
-| `--shadow-lift` | `0 2px 4px rgba(5,16,66,.05), 0 12px 28px rgba(5,16,66,.09)` | Tier 1 only: the one hero on Home or Deadlines (`15-home-deadlines-rev2.md`) |
+| `--edge-sm` | 3 px | Chips, compact buttons, circle buttons, icon circles that are controls, the active tab pill |
+| `--edge-md` | 4 px | Primary and secondary buttons, tappable cards, the tab bar |
+| `--edge-lg` | 6 px | The hero |
 
-**Container tiers** (from `15-home-deadlines-rev2.md`): on Home and Deadlines, "Card" means one of the tiers there (1 hero, 2 list, 3 ask, or plain on the page). The route, segmented bar, cycle bar and compact tinted button are specified there too. Other screens keep Card until they're next touched.
+**The rule:** an edge means "you can tap this". Anything that isn't a control is flat: a passive card or list container gets a 2 px `--border` and no edge, and a plain row gets neither. Rows inside a list container are controls but don't get their own edge (the container groups them); they show `--surface-pressed` on press.
 
-The tab bar is a floating capsule with `--shadow-float` (22 → 1).
+**Press:** the element moves down by its edge (`translateY(4px)` for `--edge-md`) and the edge drops to 0, so it sinks into its own shadow. 80 ms ease-out in, 120 ms back. No scale, no color change. This stays on under reduced motion: it moves 3 to 6 px and is direct feedback, not travel.
+
+**Layout:** reserve the edge in the layout (margin-bottom equal to the edge, or count it in the gap) so pressing never shifts neighbours.
+
+**Container tiers** (from `15-home-deadlines-rev2.md`), in rev 2 terms: tier 1 hero is a solid section color, `--r-hero`, `--edge-lg`; tier 2 list is white, 2 px `--border`, `--r-lg`, no edge; tier 3 ask is white, 2 px `--border`, `--r-lg`, with a honey icon circle and its own button.
+
+Two soft shadows remain, both for things floating over other content: the bottom sheet (over its scrim, no shadow needed) and the toast (`0 6px 16px rgba(16,25,74,.18)`).
 
 ## Icons
 
-Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, regular for inactive tabs, bold for arrows and chevrons. No icon marks a link that leaves the app: a link line shows its domain instead (18), and a button that opens an outside page says so in its label (22).
+Phosphor (`@phosphor-icons/react`). Rev 2 is chunkier: **bold** at rest, **fill** for the active tab and inside solid icon circles. No `regular` weight. No icon marks a link that leaves the app (no `ArrowSquareOut`, ever): a link line shows its domain instead (18), and a button that opens an outside page says so in its label (22).
 
 | Where | Icon | Weight | Size |
 |---|---|---|---|
-| Tab: Home / Explore / Essays / You | `House` / `Compass` / `PencilLine` / `UserCircle` | fill when active, regular when not | 24 (22) |
-| Bell (home header) | `Bell` | regular | 24 |
-| Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 28 (matches the mockup) |
-| Upcoming: deadline / panel | `CalendarDots` / `UsersThree` | fill | 24 |
-| Chevrons | `CaretRight` | bold | 16 in tiles, 20 in cards and rows |
-| Back / save | `ArrowLeft` / `Heart` (fill when saved) | bold / regular | 22 |
+| Tab: Home / Explore / Essays / You | `House` / `Compass` / `PencilLine` / `UserCircle` | fill when active, bold when not | 24 |
+| Icon circles (steps, shortcuts, opportunities) | per screen spec | fill | 22 in a 44 circle, 20 in 40 |
+| Chevrons | `CaretRight` | bold | 16 in tiles, 20 in rows; never on a solid button |
+| Back / save | `ArrowLeft` / `Heart` (fill when saved) | bold | 22 |
 | New essay | `Plus` | bold | 24 |
-| Edit draft | `PencilSimple` | fill | 20 |
-| Deadline banner | `Bell` | fill | 28 |
-| Status check | `Check` | bold | 16 |
-| Field icons: email / password | `Envelope` / `Lock` | regular | 22 |
-| Show / hide password | `Eye` / `EyeSlash` | regular | 22 |
+| Status check | `Check` | bold | 16 (24 in a 48 step circle) |
+| Field icons: email / password | `Envelope` / `Lock` | bold | 22 |
+| Show / hide password | `Eye` / `EyeSlash` | bold | 22 |
 | Errors | `WarningCircle` | fill | 16 in field messages, 24 in inline error |
 
 ## Shared components
 
+Rev 2 looks. Sizes not listed here are unchanged from the screen specs.
+
 ### Primary button
 
-Height 56. Full width minus 2 × `--gutter-card`. `--r-full`. Background `--blue-600`, text white `button-lg` centered, `--shadow-cta`. The trailing chevron from the mockup is kept: `CaretRight` bold 20, white, absolutely positioned 24 from the right edge, vertically centered. It doesn't shift the label's centering.
+Height 56. Full width minus 2 × `--gutter-card`, or hugging its label (padding 0 20) inside a hero. `--r-md`. Fill `--blue-600`, `--edge-md` `--blue-700`. Label `button-lg` white, centered. **No chevron** (rev 2 drops rev 1's trailing chevron).
 
-- Pressed: background `--blue-700`, `scale(0.97)`, 120 ms ease-out. Release 200 ms.
-- Focus-visible: `outline: 2px solid var(--blue-600); outline-offset: 3px`.
-- Disabled: opacity 0.4, no shadow, `aria-disabled="true"`.
-- Loading: label and chevron fade to 0 in 120 ms, and a 20 px white ring spinner (2 px stroke, 800 ms linear rotation) takes their place. Width does not change.
+- Pressed: sinks into its edge (see Edges). 80 ms in, 120 ms out.
+- On a blue hero: white fill, `--blue-600` label, `--edge-md` `--blue-700` (never a pale edge).
+- Focus-visible: `outline: 2px solid var(--blue-600); outline-offset: 3px` (white outline on a blue hero).
+- Disabled: fill `--border`, label `--slate-600`, no edge, `aria-disabled="true"`.
+- Loading: label fades to 0 in 120 ms and a 20 px white ring spinner takes its place. Width doesn't change.
 
-### Tinted button
+### Secondary button
 
-Height 48. `--r-md`. Background `--blue-50`, 1 px `--blue-50-border`. Content centered: icon 20 + 8 gap + label `button`, both `--blue-700`. Pressed: background `--blue-100`, `scale(0.98)`.
+Replaces rev 1's tinted button everywhere. Height 48, `--r-md`, `--surface`, 2 px `--border`, `--edge-md` `--border`. Icon 20 bold + 8 + label `button`, both `--blue-600`. Pressed: sinks. No pale blue fill, ever.
+
+### Compact button
+
+From 16 → 7 (Mark done). Looks 36 tall (44 tap area), padding 0 14, `--r-sm`, `--blue-600` fill, `--edge-sm` `--blue-700`, white `Check` bold 16 + 6 + `label` white.
+
+### Text button
+
+No fill or border. Icon 16 bold + 6 + `label` `--blue-600`, 44 tap area. For quiet actions like Remind me.
 
 ### Circle button
 
-44 × 44, `--r-full`, `--surface`, `--shadow-float`, icon `--navy-900` centered. Pressed: `scale(0.94)`, 120 ms. Used for back, save, and bell. The "+" variant is `--blue-600` with a white icon and `--shadow-cta`.
+44 × 44, `--r-full`, `--surface`, 2 px `--border`, `--edge-sm` `--border`, icon bold 22 `--navy-900`. Back, save, bell. The "+" variant is `--blue-600` with a white icon and `--blue-700` edge.
 
 ### Card
 
-`--surface`, `--r-lg`, `--shadow-card`, padding `--card-pad`. A tappable card gets `--surface-pressed` background on press and no scale. The whole card is the hit target, and the chevron is decorative (`aria-hidden`).
+`--surface`, 2 px `--border`, `--r-lg`, padding 16. Passive: no edge. Tappable (the whole card is the button): `--edge-md` `--border` and sinks on press. A chevron, if any, is decorative.
+
+### Hero
+
+The tier 1 panel, one per screen at most. Solid section color (`--blue-600` on Home, `--coral-700` when due in 14 days or less, `--green-700` on Explore), `--r-hero`, `--edge-lg` in the partner color, padding 18 18 20. All text white. Big number `hero-number`. Progress inside it: track `--blue-700` (or the partner color), fill `--yellow-400`, height 12. The husky may overlap its bottom-right corner (per screen spec).
+
+### Icon circle
+
+Replaces rev 1's pale icon tiles. 44 (40 in dense lists), `--r-full`, solid section color, icon fill white (navy on `--yellow-400`). When the circle is a control (the step check), it gets `--edge-sm` in the partner color; otherwise flat.
 
 ### Shortcut tile
 
-Height 72, `--r-md`, `--surface`, `--shadow-card`, padding 0 8 0 12 (12 left, 8 right). Row: icon tile 44 (`--r-sm`) + 12 gap + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`, 2 gap), filling the rest of the tile. When a tile has an unread dot, only the title line leaves room for it; the subtitle uses the full width (see `02-home.md`). **No chevron** (rev 2): the whole tile is the button, and the press state shows it. Text ends with an ellipsis only if it still doesn't fit. Pressed: `scale(0.98)` + `--surface-pressed`.
+A tappable card at height 72: icon circle 44 + 12 + text block (title `label` `--navy-900`, subtitle `caption` `--slate-600`). No chevron.
 
 ### Pill
 
-Height 28, padding 0 12, `--r-full`, `pill` type. Variants: `due` (`--coral-50` / `--coral-700`), `progress` (`--mint-100` / `--mint-800`).
+Height 28, padding 0 10, radius 10, `pill` type. Variants: `due` (`--coral-50` / `--coral-700`), `soon` (`--yellow-50` / `--amber-900`), `good` (`--mint-100` / `--mint-800`, for "Fits you", "Paid", "Free", "In progress"), `neutral` (`--surface-pressed` / `--slate-700`). Pills are labels, not controls: no edge.
+
+### Filter chip
+
+For the Opportunities filters (22). Height 40, padding 0 14, `--r-sm`, `label`. Off: `--surface`, 2 px `--border`, `--edge-sm` `--border`, `--navy-900` label. On: `--blue-600` fill, `--edge-sm` `--blue-700`, white label. Sinks on press. `aria-pressed`.
 
 ### Status icon
 
-28 × 28.
-- Done: filled `--green-600` circle with white `Check` bold 16.
-- In progress: 2.5 px ring, `--blue-100` track, `--blue-600` arc covering 50%, starting at 12 o'clock and running counter-clockwise, round caps.
-- Not started: 2 px `--slate-400` ring.
-
-When the icon is also the control that marks a row done (see 03), the hit area is 44 × 44 centered on the icon.
-
-### Progress bar
-
-Height 8, `--r-full`, track `--blue-100`, fill `--blue-600`. Width animates 320 ms ease-out when the value changes, and only then.
-
-### Underline tabs
-
-Row height 44, bottom 1 px `--border` spanning full width. Label `segment`, active `--blue-600`, inactive `--navy-900`. Indicator: 3 px `--blue-600` bar, radius 2, sitting on the divider, width = label width + 28, centered under the active label. On change the indicator slides and resizes, 200 ms `--ease-out`. `role="tablist"` / `role="tab"` / `aria-selected`.
-
-On a tinted band (`onTint`), the active label and bar are `--blue-700`, because `--blue-600` is only 4.2:1 on `--mint-100` (21).
-
-### Segmented control
-
-Pick one of a few values on the spot, such as a status (21). Height 44, track `--surface-pressed` with a 1 px `--border` and `--r-md`, padding 3. Selected thumb `--surface`, `--r-sm`, `--shadow-card`. Labels `label`: selected `--navy-900`, others `--slate-600`. The thumb slides 200 ms `--ease-out`, instantly under reduced motion. `role="radiogroup"`, arrow keys move between options. Neutral on purpose: it isn't a primary action, and the Tab bar and underline tabs already use blue for where you are.
-
-### Section band
-
-A quiet band in a section's color, from the physical top across the full width (21). On a tab: 24 under the safe area, title `title-1`, subtitle `body` `--slate-700` 8 below. On a pushed screen: the back button 8 under the safe area, title 24 under it, subtitle 4 below. What sits at the bottom of the band (a search field, or tabs) comes after.
+28 × 28. Done: `--green-600` circle, white `Check` bold 16. In progress: 3 px ring, `--border` track, `--blue-600` arc covering 50% from 12 o'clock counter-clockwise, round caps. Not started: 2.5 px `--slate-400` ring. When it is also the control that marks a row done, the hit area is 44 and it gets `--edge-sm`.
 
 ### Status tile
 
-40, `--r-sm`, hit area 44, three states: not yet (the item's own icon on its tint), taking now (`HourglassMedium` `--blue-600` on `--surface` with a 1.5 px inset `--blue-600` ring), done (white `Check` on `--green-600`, with the step burst). The step tile (16) is this tile with no "taking now". As a control it's `role="checkbox"` with `aria-checked` true, "mixed" or false (21).
+40 circle, hit area 44, three states: not yet (icon circle in the item's section color), taking now (`HourglassMedium` bold `--blue-600` on white with a 3 px `--blue-600` ring, `--edge-sm` `--blue-700`), done (white `Check` on `--green-600`, `--edge-sm` `--green-700`, plus the step burst). `role="checkbox"` with `aria-checked` true, "mixed" or false (21).
+
+### Step path
+
+The Home application checklist (02, 15, 16), drawn as the board's A Home. A column of step circles, 48, with a 4 × 10 `--border` bar (radius 4) between them, centered under each circle. Done: `--green-600`, white `Check` 24, `--green-700` edge. Current: 56, `--blue-600`, white section icon, `--blue-700` edge, its text `headline` with a `caption` line under it ("1 of 4 written"). Not yet: white, 3 px `--border` ring, `--border` edge, `--slate-400` icon. Done step text `--slate-600`; the rest `--navy-900`. Steps are a real sequence, so the path is allowed (no numbers needed: the order is the path).
+
+### Progress bar
+
+Height 12, `--r-full`. On white: track `--border`, fill `--green-600`. On a hero: track the hero's partner color, fill `--yellow-400`. Width animates 320 ms ease-out when the value changes, and only then.
+
+### Segmented bar
+
+One segment per item (requirements, steps), height 10, 5 apart, `--r-full`. On white: done `--green-600`, taking now `--yellow-400`, not yet `--border`. On a hero: done white, taking now `--yellow-400`, not yet the partner color.
+
+### Underline tabs
+
+Row height 44, bottom 2 px `--border`. Label `segment`, active `--blue-600`, inactive `--slate-600`. Indicator 4 px `--blue-600`, radius 2, width = label + 28, slides 200 ms `--ease-out`. `role="tablist"` / `role="tab"` / `aria-selected`.
+
+### Segmented control
+
+Track `--surface-pressed`, `--r-md`, padding 3, height 44. Selected thumb `--surface`, `--r-sm`, 2 px `--blue-600` border, label `label` `--blue-600`; others `--slate-600` on the track. Slides 200 ms (instant under reduced motion). `role="radiogroup"`, arrow keys move.
+
+### Section band
+
+Rev 2: no tinted band. A tab screen's top is white: title `title-1` 24 under the safe area, subtitle `body` `--slate-600` 8 below, then the search field or tabs. The section's color moves into that screen's hero.
 
 ### Requirement row
 
-Min height 64, padding 12 24: a status tile, then name `row-title` `--navy-900` up to 2 lines, and one line of detail `caption` `--slate-600`, with `Intersect` + "Counts for both" when that applies. The tile and the text are separate controls (21).
+Min height 64, padding 12 16: status tile, then name `row-title` up to 2 lines, detail `caption`: `--green-700` "Counts for UC and Cal State" when it counts for both (rev 2 spells it out; `Intersect` icon dropped), `--slate-600` otherwise. The tile and the text are separate controls (21).
 
 ### Major row
 
-Min height 64, padding 12 16, the whole row a button: icon tile 40 (`--surface`, 1 px `--border-strong`, icon fill 22 `--mint-800`, no pale tint), name `row-title`, one line of detail `caption` `--slate-600`. The student's own major has a 60-wide, 4-tall segmented bar (2 apart) before its count. No chevron, no dividers, rows 4 apart (21, 22).
+Min height 64, padding 12 16, the whole row a button inside a list container: icon circle 40 `--green-700` with a white icon, name `row-title`, detail `caption` `--slate-600`. The student's own major shows a 60 wide segmented bar before its count. No chevron.
 
 ### School tile
 
-A school's own short name ("UCSD", "SJSU", "LPC") in white on its system's color: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. 48 wide and 40 tall everywhere, so names line up in every list; `--r-sm`; weight 800, tracking 0, 15 for 2–3 letters and 12 for 4–5 (the widest, "MTSAC", is 43 at 12). Never a logo. `aria-hidden`; nothing when the school has no abbreviation (22 → 2).
+The school's short name in white on its system's color (UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`), 48 × 40, `--r-sm`, weight 900 (was 800), 15 for 2–3 letters and 12 for 4–5. Flat (not a control). Never a logo. `aria-hidden`.
 
-### Date tile, rolling
+### Date tile
 
-18's date tile for something with no deadline: `--surface`, 1 px `--border-strong`, `Infinity` bold 24 `--slate-600` in place of the month and day (22).
+18's date tile in rev 2: 52 × 56, `--r-md`, `--yellow-400` with month `caption` and day 22 / 22 900 in `--navy-900`, flat. Due in 14 days or less: `--coral-700` with white text. Rolling (no deadline): `--surface`, 2 px `--border`, `Infinity` bold 24 `--slate-600`.
 
 ### Source block
 
-Goes under every list of facts. "From {source}. Checked {date}." `caption` `--slate-600`, a link line (18) to the source, then "Report a problem" (`caption` size, `--blue-700`), a mailto to joinstackd@gmail.com that names what's being reported (21).
+Unchanged in content: "From {source}. Checked {date}." `caption` `--slate-600`, a link line to the source, then "Report a problem" (`caption`, weight 900, `--blue-600`).
 
 ### Ask card
 
-Tier 3 (15 → Reminders ask): `--blue-50` fill, its border, `--r-md`, padding 16, a 24 `--blue-600` icon inline at the left, no shadow, no icon tile. Asks the student for one thing.
+Tier 3: card (passive), honey icon circle 40 with a navy icon at the left, text, and its own secondary or compact button. No pale fill.
 
 ### Tab bar
 
-A floating capsule (22 → 1), replacing the full-width bar. Centered, inset 16 from each side (max width 420), 64 tall, `--r-full`, `--surface` at 92% with a 20 px background blur (solid without blur support), 1 px `--border`, `--shadow-float`, 12 above the bottom safe area. Tabs: Home, Explore (with `explore` on), Essays (with `essays` on), You (Settings; not in demo mode), only those switched on, and none with only Home. Equal widths; icon 24 over label `tab`, 4 apart. Inactive: icon regular `--slate-600`, label `--slate-600`. Active: icon fill and label `--blue-700`, on a `--surface-pressed` pill that fills the tab minus 6 on each side and slides between tabs over 200 ms (instant under reduced motion). A tab screen's bottom padding is 64 + 12 + safe area + 16, and its toasts sit 12 above the capsule. Essays and Settings are tab screens with no back button. Hidden on pushed screens and on the celebration.
+Floating, inset 16 each side (max width 420), 68 tall, radius 24, `--surface`, 2 px `--border`, `--edge-md` `--border`, 12 above the bottom safe area. No blur, no soft shadow. Tabs: Home, Explore (with `explore` on), Essays (with `essays` on), You (Settings; not in demo mode); only those switched on, none with only Home. Equal widths; icon 24 over label `tab`, 2 apart. Inactive: icon bold and label `--slate-600`. **Active: a solid `--blue-600` pill (tab width minus 6 each side, 54 tall, radius 18, `--edge-sm` `--blue-700`), icon fill and label white.** The pill slides between tabs over 200 ms (instant under reduced motion). The board's pale blue active pill is replaced by this solid one. A tab screen's bottom padding is 68 + 12 + safe area + 16; toasts sit 12 above it. Hidden on pushed screens and on the celebration.
 
 ### Text field
 
-Label above, field below, optional message line under the field.
+- Label above: `headline` `--navy-900`, a real `<label for>`, 8 above the field.
+- Field: height 52, `--r-md`, `--surface`, 2 px `--field-border`, no edge (it isn't a button). Padding 0 16; leading icon 22 at left 14 with text padding-left 50; trailing 44 button at right 2 with padding-right 48.
+- Text `body-md` `--navy-900`, placeholder `--slate-600`, caret `--blue-600`.
+- Focus: border `--blue-600` plus `0 0 0 4px rgba(30,94,255,.18)`, 120 ms.
+- Hint: 6 below, `caption` `--slate-600`, `aria-describedby`.
+- Error: border `--coral-700`; message 6 below with `WarningCircle` fill 16, 6 gap, 14/18 800 `--coral-700`, expands over 200 ms. `aria-invalid="true"`.
+- Read-only 0.6 opacity; disabled 0.4.
 
-- **Label**: `headline` (16/22 700) `--navy-900`, a real `<label for>`. 8 below it, the field.
-- **Field**: height 48, `--r-sm` (12), background `--surface`, 1 px `--field-border`. Padding 0 16. With a leading icon: icon 22 `--slate-600` at left 14, vertically centered, `aria-hidden`, and text padding-left 52. With a trailing control (e.g. show/hide): a 44 × 44 button at right 2, and text padding-right 48.
-- **Text**: `body-md` (16/22) `--navy-900`. Placeholder `--slate-600`. Caret `--blue-600`.
-- **Focus**: border becomes 2 px `--blue-600` plus `0 0 0 4px rgba(3,100,250,.15)`. Draw the 2 px border with `box-shadow: inset 0 0 0 1px var(--blue-600)` on top of the 1 px border, so the text doesn't shift. 120 ms color transition.
-- **Hint**: an optional line 6 below the field, `label` size at weight 400 (14/18) `--slate-600`, linked with `aria-describedby`. On a failed check, the error message takes its place.
-- **Error**: 2 px `--coral-700` (same inset method). Message line 6 below the field: `WarningCircle` fill 16 `--coral-700`, 6 gap, text 14/18 500 `--coral-700`. It expands from height 0 with opacity over 200 ms. `aria-invalid="true"` and `aria-describedby` pointing at the message.
-- **Read-only** (while submitting): opacity 0.6, no focus ring change.
-- **Disabled**: opacity 0.4.
+### Search field
+
+A text field without a label, `MagnifyingGlass` bold 22 `--slate-600` leading, placeholder names what it searches ("Majors, scholarships, programs").
 
 ### Code field
 
-For 6-digit email codes. One real input (`inputmode="numeric"`, `autocomplete="one-time-code"`, `maxlength="6"`, font-size 16) laid invisibly over six boxes, so iOS autofill and paste both work. Label as the text field. Boxes: six equal columns, gap 8, height 56, `--r-sm`, `--surface`, 1 px `--field-border`, digit `title-2` `--navy-900` tabular-nums, centered. The box for the next digit takes the text field's focus style plus a 2 × 24 `--blue-600` caret (blinks at 1 s; steady under reduced motion). Error: 2 px `--coral-700` on all six boxes and the text field's message line under the row. Read-only: opacity 0.6. Full behavior in `09-enter-code.md`.
+Six boxes, gap 8, height 56, `--r-md`, 2 px `--field-border`, digit `title-2` tabular-nums. Focus and error as the text field. Behavior in `09-enter-code.md`.
 
 ### Choice circle
 
-24 circle at the start of a choice row (`10-onboarding.md`). Not chosen: 2 px `--slate-400` ring. Chosen: `--blue-600` fill, white `Check` bold 14. Swap over 120 ms. Decorative (`aria-hidden`); the row carries `role="radio"` or `role="checkbox"`. Blue on purpose: green means done.
+26, 2.5 px `--slate-400` ring. Chosen: `--blue-600` fill, white `Check` bold 14. Decorative; the row carries the role. Blue on purpose: green means done.
 
 ### Settings row
 
-Height 56, padding 0 16, 1 px `--border` between rows, inside a list container. Label `row-title` `--navy-900` left; value `body` `--slate-600` right, single line, max 60%; `CaretRight` bold 20 only when the row opens a screen. Pressed `--surface-pressed`. See `11-settings.md`.
+Height 56, padding 0 16, inside a list container (2 px `--border`, `--r-lg`), 2 px `--border` between rows. Label `row-title`, value `body` `--slate-600`, `CaretRight` bold 20 only when the row opens a screen. Pressed `--surface-pressed`.
 
 ### Bottom sheet
 
-Over a `rgba(5,16,66,.4)` scrim. `--surface`, `--r-sheet` top corners, padding 24 24 `calc(24px + env(safe-area-inset-bottom))`. In: translateY 100% → 0, 280 ms `--ease-out`; out 200 ms; fade only under reduced motion. `role="dialog"`, `aria-modal="true"`, focus trapped, Escape and scrim tap close it.
+Scrim `rgba(16,25,74,.4)`. `--surface`, `--r-hero` top corners, a 40 × 5 `--border` grabber 8 from the top, padding 24 24 `calc(24px + env(safe-area-inset-bottom))`. In: translateY 100% → 0, 280 ms `--ease-out`; out 200 ms; fade only under reduced motion. `role="dialog"`, `aria-modal="true"`, focus trapped, Escape and scrim close it.
 
 ### Destructive button
 
-Primary button shape (56, `--r-full`, `button-lg` white, centered) with `--coral-700` fill, no chevron, no shadow. Only for deleting the account (`11-settings.md`).
+Primary button shape with `--coral-700` fill and `--coral-800` edge. Only for deleting the account (11).
 
 ### Social button
 
-Height 48, `--r-sm`, background `--white` (Apple and Google both require their logo on white), 1 px `--border-strong`. Content is one centered group: logo, 12 gap, label `button` (16/20 700) `--navy-900`. Pressed: `scale(0.98)` and a `--surface-pressed` overlay at 60% opacity, so the logo's white background rule still holds, 120 ms. Disabled: opacity 0.4. Logos come from the providers' official kits and keep their own colors and proportions.
+Height 52, `--r-md`, white (Apple and Google require it), 2 px `--border-strong`, `--edge-sm` `--border-strong`. Logo, 12, label `button` `--navy-900`. Sinks on press. Logos from the providers' kits.
 
 ### Labelled divider
 
-Row height 24. Two 1 px `--border-strong` rules filling the space on each side of a centered label (`body` `--slate-600`) with 16 between each rule and the label. Decorative: `aria-hidden="true"`.
+Row height 24, two 2 px `--border` rules either side of a `body` `--slate-600` label, 16 apart. `aria-hidden`.
 
 ### Text link
 
-Inline text action. `link` (15/20 700) `--blue-600`, or `label` (14/18 600) `--blue-600` for small links, `--blue-700` on a tinted fill. No underline at rest; underline on press and on keyboard focus. The hit area is at least 44 tall, made with vertical padding and a matching negative margin so the layout doesn't move.
+`link` `--blue-600` (`label` size for small links). No underline at rest; underline on press and focus. 44 tall hit area via padding and matching negative margin.
 
 ### Toast
 
-Bottom-anchored, 12 above the tab bar, or 12 above the primary button if there's no tab bar. `--navy-900`, `--r-md`, padding 12 16, text white `body` 500, optional action `link` in #9CC6FF on the right. Enters translateY 16 → 0 and opacity 0 → 1 over 200 ms. Exits over 160 ms. Auto-dismisses at 4000 ms. `role="status"`.
+12 above the tab bar (or the primary button). `--navy-900`, `--r-md`, padding 12 16, `0 6px 16px rgba(16,25,74,.18)`, text white `body` 700, optional action `link` in `--yellow-400`. In: translateY 16 → 0 with opacity, 200 ms; out 160 ms; auto-dismiss 4000 ms. `role="status"`.
 
 ### Demo strip
 
-Required by project rule 6 until real data replaces demo data. Height 24, full width, `--navy-900`, text white `demo` centered: "Demo data". Sits directly under the safe-area top and pushes content down 24. On the university screen it overlays the hero. Controlled by `NEXT_PUBLIC_DEMO_STRIP` (default on).
-
-**Only on screens that show demo records**: Home (02), University (03), Essays (04), and the celebration (05). Not on Welcome, the three auth screens, or placeholder screens, since they show no student data. On those screens, measurements that say "below the strip" start from the safe-area top instead.
+Unchanged: 24 tall, `--navy-900`, white `demo` text "Demo data", only on screens with demo records, controlled by `NEXT_PUBLIC_DEMO_STRIP`.
 
 ### Unofficial footer line
 
-`demo` style at weight 400, `--slate-600`, centered, max-width 320: "Unofficial planning tool. Not affiliated with UC, CSU, ASSIST, or any college." Appears on the welcome screen and the university screen. Required by `06-trust-and-provenance.md`.
+`demo` `--slate-600`, centered, max-width 320: "Unofficial planning tool. Not affiliated with UC, CSU, ASSIST, or any college." On Welcome and the university screen (06-trust).
 
 ### Empty state
 
-This is also used for every screen the mockup didn't draw. Centered column, max-width 280, 48 above and below:
-- icon 32 in a 72 circle of `--tint-sky`
-- 16 gap, title `title-3` `--navy-900`
-- 8 gap, body `body` `--slate-600`
-- 20 gap, tinted button naming the next action
+Centered column, max-width 280, 48 above and below: icon 32 fill `--navy-900` in a 72 `--yellow-400` circle (flat), 16, title `title-3`, 8, body `body` `--slate-600`, 20, a secondary button naming the next action. The husky may replace the circle where a screen spec says so.
 
 ### Placeholder screen
 
-The empty state above, used for every destination that isn't built yet. It must never trap the student: every version has a way out.
-
-- **Back button**: circle button (00) with `ArrowLeft`, top = safe-area top + 8, left 16, `aria-label="Back"`. It uses history back, and when there's no history it goes to the fallback in the table below.
-- The empty-state icon's top edge sits 120 below the back button's bottom edge.
-- The version depends on where the student is:
+As rev 1, built from the empty state above. Back button is the circle button; the table of versions is unchanged:
 
 | Where | Tab bar | Title | Body | Button → goes to |
 |---|---|---|---|---|
@@ -337,22 +383,22 @@ The empty state above, used for every destination that isn't built yet. It must 
 | Signed in, any route except `/` | Yes, with the matching tab active | This part isn't built yet | It's on the list. Your plan is still on the home screen. | Back to home → `/` |
 | `/` while Home isn't built | Yes, Home active | Home isn't built yet | You're signed in. Sign out to test the sign-in flow again. | Sign out → clears `stackd.session` (keeps `stackd.seenWelcome`), then `/sign-in` |
 
-The back button's fallback is the same as the button's destination. On `/`, where there's nothing to go back to, the back button is hidden.
+The back button's fallback is the button's destination. On `/` the back button is hidden.
 
 ### Inline error
 
-Card with background `--coral-25`, `--r-md`, padding 16. `WarningCircle` fill 24 `--coral-700`, 12 gap, text column: title `headline` `--navy-900`, body `body` `--slate-700` 4 below. A tinted button "Try again" 12 below the body when retrying makes sense; no button when the fix is in the student's hands (e.g. a wrong password). Copy names what broke and the fix, e.g. "Couldn't load requirements" / "Check your connection, then try again." No apologies.
+`--coral-25` fill, `--r-lg`, padding 16, flat. `WarningCircle` fill 24 `--coral-700`, 12, title `headline` and body `body` `--slate-700`. A secondary "Try again" button 12 below when retrying makes sense. Copy names what broke and the fix. No apologies.
 
 ### Loading
 
-Waits under 600 ms show nothing. Longer waits show the husky run loop, 72 × 72, centered, with `caption` `--slate-600` below it naming what's loading ("Loading requirements"). See `art-assets.md` for the frames. Until real frames exist, use the 2-pose fallback in `05-task-complete.md`. Reduced motion shows a single still frame.
+Waits under 600 ms show nothing. Longer waits show the husky run loop, 72 × 72, with `caption` `--slate-600` naming what's loading. Reduced motion shows one still frame.
 
 ## Interaction states (all tappable elements)
 
 | State | Treatment |
 |---|---|
-| Pressed | Per component above. 120 ms ease-out in, 200 ms out |
-| Focus-visible | 2 px `--blue-600` outline, offset 2 (3 on blue fills), radius follows the element |
+| Pressed | Things with an edge sink into it (80 ms in, 120 ms out). Rows in a list show `--surface-pressed` |
+| Focus-visible | 2 px `--blue-600` outline, offset 2 (white outline, offset 3, on solid fills), radius follows the element |
 | Disabled | Opacity 0.4, `aria-disabled` |
 | Hit area | Minimum 44 × 44, even when the visible element is smaller (chevrons, 8 px dots are never targets alone) |
 
@@ -360,6 +406,7 @@ Waits under 600 ms show nothing. Longer waits show the husky run loop, 72 × 72,
 
 | Token | Value |
 |---|---|
+| `--dur-press` | 80 ms (press into an edge) |
 | `--dur-fast` | 120 ms |
 | `--dur-base` | 200 ms |
 | `--dur-slow` | 320 ms |
@@ -399,3 +446,5 @@ No copy that describes the student's academic situation lives in a component. Na
 | N9 | Requirements tile "2 in progress", university list shows 1 | Count derived from the same data (1) | Data rule. Not a drawing change |
 | N10 | Four colors failed contrast | Darkened values in the color table | Quality floor |
 | N11–N15 | Sign-in screen | See `06-sign-in.md → Normalizations` | Listed with the screen they come from |
+| R2 | Rev 1 look (Figtree, pale tints, soft shadows, pill buttons) | Rev 2 "Chunky and playful" | Ryan picked direction A of the design board, Nov 2026. Rev 1 values are in git history (this file before PR for step 29) |
+| R3 | Board A: white text on bright green #2BB673, pale blue active tab and "Taking now" fill, `--slate-400` small text | `--green-700` hero, solid blue active tab, white fills, `--slate-600` text | Contrast and the no-pale-tint rule |

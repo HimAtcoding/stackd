@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type TintedButtonProps = {
+type SecondaryButtonProps = {
   children: ReactNode;
   icon?: ReactNode;
   href?: string;
@@ -18,13 +18,11 @@ type TintedButtonProps = {
 };
 
 const classes = cn(
-  "flex h-12 w-full items-center justify-center gap-2 rounded-md border border-blue-50-border bg-blue-50 text-blue-700 type-button",
-  "transition-[background-color,transform] duration-200 ease-out",
-  "pressed:bg-blue-100 pressed:duration-120 motion-safe:pressed:scale-[0.98]",
+  "flex h-12 w-full items-center justify-center gap-2 rounded-md border-2 border-border bg-surface text-blue-600 type-button edge-md",
 );
 
-// Icon 20 + 8 gap + label, both --blue-700.
-export function TintedButton({ children, icon, href, external, onClick, className, ...rest }: TintedButtonProps) {
+// White with a 2 px border and its --border edge; icon 20 + 8 + label, both --blue-600 (00 → Secondary button).
+export function SecondaryButton({ children, icon, href, external, onClick, className, ...rest }: SecondaryButtonProps) {
   const content = (
     <>
       {icon}

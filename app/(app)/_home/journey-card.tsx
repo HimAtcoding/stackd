@@ -23,7 +23,7 @@ export function JourneyCard({ statuses }: { statuses: RequirementStatus[] }) {
       </div>
       <div role="img" aria-label={`${done} of ${total} steps complete`} className="relative mt-3 h-7.5">
         {/* Track and fill share the circles' center line: 6 tall at top 12 in a 30 row. Square ends: each one is under a circle */}
-        <span data-track className="absolute inset-x-[15px] top-3 h-1.5 bg-node-empty" />
+        <span data-track className="absolute inset-x-[15px] top-3 h-1.5 bg-border" />
         {run > 1 && (
           <span
             data-fill
@@ -36,7 +36,7 @@ export function JourneyCard({ statuses }: { statuses: RequirementStatus[] }) {
             <span
               key={i}
               data-node={s === "done" ? "done" : "remaining"}
-              className={`flex size-7.5 items-center justify-center rounded-full ${s === "done" ? "bg-green-600" : "bg-node-empty"}`}
+              className={`flex size-7.5 items-center justify-center rounded-full ${s === "done" ? "bg-green-600" : "bg-border"}`}
             >
               {s === "done" && <CheckIcon weight="bold" size={16} className="text-white" />}
             </span>

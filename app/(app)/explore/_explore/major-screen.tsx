@@ -10,7 +10,7 @@ import { RequirementRow } from "@/components/ui/requirement-row";
 import { SectionBand } from "@/components/ui/section-band";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { SourceBlock } from "@/components/ui/source-block";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { UnderlineTabs } from "@/components/ui/underline-tabs";
 import { GoHome } from "@/components/unbuilt-route";
@@ -65,12 +65,12 @@ function MajorLoad() {
   if (major) return <MajorScreen key={major.slug} major={major} wantedTab={params.get("tab")} />;
   if (missing) return null;
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]">
         <SectionBand title="Explore" subtitle="What to take before you transfer." back={<BackButton fallback={exploreHref()!} slideBack />} />
         {state.status === "error" ? (
           <div className="mx-4 mt-4">
-            <InlineError title="Couldn't load this major" body="Check your connection, then try again." action={<TintedButton onClick={retryExplore}>Try again</TintedButton>} />
+            <InlineError title="Couldn't load this major" body="Check your connection, then try again." action={<SecondaryButton onClick={retryExplore}>Try again</SecondaryButton>} />
           </div>
         ) : (
           <div className="mt-12">
@@ -113,18 +113,18 @@ function MajorScreen({ major, wantedTab }: { major: ExploreMajor; wantedTab: str
     setToast((t) => ({ key: (t?.key ?? 0) + 1, topic, before }));
   }
 
-  // The same course type in the other system, for "Counts for both"
+  // The same course type in the other system, for "Counts for UC and Cal State"
   const other = sheet && shared.has(sheet.row.topic) ? pathwayOn(major, tab === "uc" ? "cal-state" : "uc")?.requirements.find((r) => r.topic === sheet.row.topic) : undefined;
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
         <SectionBand
           title={major.name}
           subtitle={tabs.length > 1 ? "What to take before you transfer." : tab === "uc" ? "UC Transfer Pathway" : "Cal State degree for transfer"}
           back={<BackButton fallback={exploreHref()!} slideBack />}
         >
-          {tabs.length > 1 ? <UnderlineTabs tabs={tabs} value={tab} onChange={changeTab} aria-label={`${major.name} by system`} fit onTint className="mt-4 px-2.5" /> : <div className="h-4" />}
+          {tabs.length > 1 ? <UnderlineTabs tabs={tabs} value={tab} onChange={changeTab} aria-label={`${major.name} by system`} fit className="mt-4 px-2.5" /> : <div className="h-4" />}
         </SectionBand>
 
         <div role={tabs.length > 1 ? "tabpanel" : undefined} aria-label={tabs.find((t) => t.id === tab)?.label}>

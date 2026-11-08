@@ -14,7 +14,7 @@ import { SectionBand } from "@/components/ui/section-band";
 import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { TAB_PAGE_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { TextLink } from "@/components/ui/text-link";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { GoHome } from "@/components/unbuilt-route";
 import { ASSIST_HOME } from "@/lib/about";
 import { retryExplore, useAgreement, useMajors } from "@/lib/data/explore";
@@ -113,7 +113,7 @@ function ExploreScreen() {
       : undefined;
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: TAB_PAGE_BOTTOM }}>
         <SectionBand title="Explore" subtitle="What to take for your major, at UC and Cal State.">
           <div className="px-4 pb-4 pt-4">
@@ -123,7 +123,7 @@ function ExploreScreen() {
 
         {state.status === "error" ? (
           <div className="mx-4 mt-4">
-            <InlineError title="Couldn't load majors" body="Check your connection, then try again." action={<TintedButton onClick={retryExplore}>Try again</TintedButton>} />
+            <InlineError title="Couldn't load majors" body="Check your connection, then try again." action={<SecondaryButton onClick={retryExplore}>Try again</SecondaryButton>} />
           </div>
         ) : state.status === "loading" ? (
           <div className="mt-12">
@@ -137,18 +137,18 @@ function ExploreScreen() {
             {!searching && mine && <StillNeeded major={mine.major} tab={tab} statuses={statuses} onOpen={(row) => setSheet({ row, open: true })} />}
             {!searching && <OpportunitiesForYou />}
             {!searching && noMajor && (
-              <AskCard labelledBy="pick-major-title" icon={<GraduationCapIcon weight="fill" size={24} aria-hidden />} className="mx-4 mt-4">
+              <AskCard labelledBy="pick-major-title" icon={<GraduationCapIcon weight="fill" size={20} aria-hidden />} className="mx-4 mt-4">
                 <h2 id="pick-major-title" className="text-navy-900 type-headline">
                   Pick your major to see what to take.
                 </h2>
-                <TextLink href="/settings/" size="label" onTint className="mt-1">
+                <TextLink href="/settings/" size="label" className="mt-1">
                   Choose your major
                 </TextLink>
               </AskCard>
             )}
             {!searching && planState.status === "error" && (
               <div className="mx-4 mt-4">
-                <InlineError title="Couldn't load your plan" body="Check your connection, then try again." action={<TintedButton onClick={retryPlan}>Try again</TintedButton>} />
+                <InlineError title="Couldn't load your plan" body="Check your connection, then try again." action={<SecondaryButton onClick={retryPlan}>Try again</SecondaryButton>} />
               </div>
             )}
 

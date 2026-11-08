@@ -1,12 +1,12 @@
 // Makes the iOS app icon, the web icons and the launch image: `npm run ios:assets`.
 // Every icon is cut from the approved logo, assets/branding/Stackd-AppIcon-1024.png, resized only: no crop, no
 // padding, no color change. The App Store icon is 1024 × 1024 with no transparency. The launch image is the wordmark
-// on --sky-50.
+// on the white --page.
 import { mkdir, writeFile } from "node:fs/promises";
 import sharp from "sharp";
 
 const SOURCE = "assets/branding/Stackd-AppIcon-1024.png";
-const SKY_50 = "#EAF6FE";
+const PAGE = "#FFFFFF";
 const ASSETS = "ios/App/App/Assets.xcassets";
 
 const resized = (size) => sharp(SOURCE).resize(size, size, { kernel: "lanczos3" }).removeAlpha().png();
@@ -48,7 +48,7 @@ async function favicon() {
 // 2732 maps to the screen height; 800 wide is about Welcome's 252-point wordmark.
 async function splash() {
   const wordmark = await sharp("public/art/brand/wordmark.png").trim().resize({ width: 800 }).toBuffer();
-  const image = await sharp({ create: { width: 2732, height: 2732, channels: 3, background: SKY_50 } })
+  const image = await sharp({ create: { width: 2732, height: 2732, channels: 3, background: PAGE } })
     .composite([{ input: wordmark, gravity: "center" }])
     .removeAlpha()
     .png()

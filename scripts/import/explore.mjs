@@ -192,7 +192,7 @@ export function validateExploreFile(file) {
   return { payload: problems.length ? null : payload, problems };
 }
 
-// The topics a major's two pathways share: what the app shows as "Counts for both"
+// The topics a major's two pathways share: what the app shows as "Counts for UC and Cal State"
 export function sharedTopics(requirements) {
   const uc = new Set(requirements.filter((r) => r.kind === "uc_pathway").map((r) => r.topic));
   return [...new Set(requirements.filter((r) => r.kind === "tmc" && uc.has(r.topic)).map((r) => r.topic))];

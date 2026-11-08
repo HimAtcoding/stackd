@@ -1,5 +1,5 @@
 // Checks Explore's rules (lib/explore.ts) on the real Computer Science file, plus made-up rows for what it doesn't cover:
-// majors, progress, "Counts for both", search, the source line and the links (spec 21 → Test). `npm run test:explore`
+// majors, progress, "Counts for UC and Cal State", search, the source line and the links (spec 21 → Test). `npm run test:explore`
 import fs from "node:fs";
 import type { PlanTarget } from "../lib/data/plan";
 import {

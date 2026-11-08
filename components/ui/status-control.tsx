@@ -19,7 +19,7 @@ type StatusControlProps = {
 const BOUNCY = { type: "spring", stiffness: 260, damping: 16 } as const;
 const OUT = { duration: 0.12, ease: [0.2, 0.8, 0.2, 1] } as const;
 
-// The status icon as a checkbox, 44 × 44 around the 28 icon (03 → Status control).
+// The status icon as a checkbox, 44 × 44 around the 28 icon (03 → Status control), with its edge (00 → Status icon).
 // To done: ring fades out over 120, the fill springs 0.6 → 1, the check draws over 180. Back: all reversed in 120.
 export function StatusControl({ done, restStatus, label, onToggle, size = 28, className }: StatusControlProps) {
   return (
@@ -32,7 +32,8 @@ export function StatusControl({ done, restStatus, label, onToggle, size = 28, cl
         onClick={onToggle}
         className={cn("flex size-11 items-center justify-center rounded-full", className)}
       >
-        <span aria-hidden className={cn("relative size-7", size === 24 && "scale-[0.857]")}>
+        <span aria-hidden className={cn("flex items-center justify-center rounded-full edge-sm edge-face", size === 24 ? "size-6" : "size-7", done ? "edge-green-700" : "edge-border")}>
+        <span className={cn("relative size-7 shrink-0", size === 24 && "scale-[0.857]")}>
           <motion.span initial={false} animate={{ opacity: done ? 0 : 1 }} transition={OUT} className="absolute inset-0">
             <StatusIcon status={restStatus} />
           </motion.span>
@@ -55,6 +56,7 @@ export function StatusControl({ done, restStatus, label, onToggle, size = 28, cl
               transition={done ? { pathLength: { duration: 0.18, ease: "easeOut" }, opacity: { duration: 0.01 } } : OUT}
             />
           </svg>
+        </span>
         </span>
       </button>
     </MotionConfig>

@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { CaretRightIcon } from "@phosphor-icons/react/ssr";
 import { InlineError } from "@/components/ui/inline-error";
 import { StatusControl } from "@/components/ui/status-control";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { claimCelebration } from "@/lib/celebration";
 import { unbuiltHref } from "@/lib/features";
@@ -64,12 +64,12 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
             role="alert"
             title="Changes won't be saved on this device"
             body="Private browsing blocks saving. Your checkmarks will reset when you close this tab."
-            action={<TintedButton onClick={() => setStorageBlocked(false)}>Dismiss</TintedButton>}
+            action={<SecondaryButton onClick={() => setStorageBlocked(false)}>Dismiss</SecondaryButton>}
           />
         </div>
       )}
 
-      <ul className="mx-4 mt-4 overflow-hidden rounded-md border border-border bg-surface shadow-card">
+      <ul className="mx-4 mt-4 overflow-hidden rounded-lg border-2 border-border bg-surface">
         {requirements.map((r) => {
           const status = statuses[r.id] ?? r.status;
           // Requirement detail isn't built: with its flag off the row has no link and no chevron
@@ -95,7 +95,7 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
             </>
           );
           return (
-            <li key={r.id} className="relative h-13 border-b border-border last:border-b-0">
+            <li key={r.id} className="relative h-13 border-b-2 border-border last:border-b-0">
               {/* The circle marks the row done; the rest of the row opens the detail. Two targets, side by side */}
               <StatusControl
                 done={status === "done"}

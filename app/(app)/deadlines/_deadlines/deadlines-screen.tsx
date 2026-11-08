@@ -2,7 +2,7 @@
 
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { BellIcon, BellRingingIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { RemindersAsk } from "@/components/deadlines/reminders-ask";
@@ -12,9 +12,10 @@ import { CompactButton } from "@/components/ui/compact-button";
 import { CycleBar } from "@/components/ui/cycle-bar";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
+import { TONE } from "@/components/ui/icon-circle";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
@@ -185,15 +186,18 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
     FEATURES.reminders && reminders.supported && !reminders.everOn && !reminders.dismissed && reminders.permission !== "denied";
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       {ok?.view.demo && <DemoStrip />}
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
-        {/* The Deadlines panel (16 → Deadlines panel) continues Home's hero: blue, or coral when the next date is 14 days
-            or less away, the screen's full width with 28 bottom corners, every word white. It holds the term, what's
-            next and the year bar, and ends 24 below the bar's labels. Focus outlines are white on it. */}
-        <header className="relative pb-6 text-white" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
-          <span aria-hidden className={cn("absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-[28px]", panel === "coral" ? "bg-coral-700" : "bg-blue-600")} />
-          <div className="relative px-4 [&_a:focus-visible]:outline-white [&_button:focus-visible]:outline-white">
+        {/* The Deadlines hero (23) continues Home's: blue, or coral when the next date is 14 days or less away, the
+            screen's full width with --r-hero bottom corners and its 6 px edge, every word white. It holds the term,
+            what's next and the year bar, and ends 24 below the bar's labels. Focus outlines are white on it. */}
+        <header
+          className="on-fill relative pb-6 text-white"
+          style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)", "--partner": TONE[panel].partner } as CSSProperties}
+        >
+          <span aria-hidden className={cn("absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-hero edge-lg", TONE[panel].fill, TONE[panel].edge)} />
+          <div className="relative px-4">
             <BackButton fallback="/" slideBack />
           </div>
           <h1 className="relative mt-6 px-6 type-title-1">Deadlines</h1>
@@ -204,7 +208,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
                 type="button"
                 onClick={() => setTermSheet(true)}
                 aria-label={`Change transfer term, now ${cycle}`}
-                className="-my-[13px] py-[13px] underline type-label focus-ring:outline-white"
+                className="-my-[13px] py-[13px] underline type-label"
               >
                 Change
               </button>
@@ -245,14 +249,14 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
               title="Couldn't load deadlines"
               body="Check your connection, then try again."
               action={
-                <TintedButton
+                <SecondaryButton
                   onClick={() => {
                     retryPlan();
                     retryDeadlines();
                   }}
                 >
                   Try again
-                </TintedButton>
+                </SecondaryButton>
               }
             />
           </div>
@@ -261,14 +265,14 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
         {ok && (
           <MotionConfig reducedMotion="user">
             {!ok.scope && (
-              <section aria-labelledby="no-plan-title" className="mx-4 mt-6 rounded-md border border-border bg-surface p-4">
+              <section aria-labelledby="no-plan-title" className="mx-4 mt-6 rounded-lg border-2 border-border bg-surface p-4">
                 <h2 id="no-plan-title" className="text-navy-900 type-headline">
                   See only your dates
                 </h2>
                 <p className="mt-1 text-slate-600 type-body">Pick your schools and Stackd shows just their deadlines.</p>
-                <TintedButton href={onboardingUrl("college", { from: "home" })} className="mt-3">
+                <SecondaryButton href={onboardingUrl("college", { from: "home" })} className="mt-3">
                   Set up your plan
-                </TintedButton>
+                </SecondaryButton>
               </section>
             )}
 

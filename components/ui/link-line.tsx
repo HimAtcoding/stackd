@@ -36,7 +36,7 @@ export function LinkLine({ href, label, detail, className }: LinkLineProps) {
         aria-label={`${label}, ${under}, opens outside the app`}
         className={cn("group inline-flex min-h-11 max-w-full flex-col rounded-sm py-1", className)}
       >
-        <span aria-hidden className="text-blue-700 type-label group-pressed:underline">
+        <span aria-hidden className="text-blue-600 type-label group-pressed:underline">
           {label}
         </span>
         <span aria-hidden className="mt-0.5 text-slate-600 [overflow-wrap:anywhere] type-caption">
@@ -47,7 +47,7 @@ export function LinkLine({ href, label, detail, className }: LinkLineProps) {
   }
   return (
     <Link href={href} className={cn("group inline-flex min-h-11 max-w-full items-center gap-1 rounded-sm", className)}>
-      <span className="text-blue-700 type-label group-pressed:underline">{label}</span>
+      <span className="text-blue-600 type-label group-pressed:underline">{label}</span>
       <CaretRightIcon weight="bold" size={20} aria-hidden className="shrink-0 text-slate-600" />
     </Link>
   );

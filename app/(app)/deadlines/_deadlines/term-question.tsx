@@ -25,7 +25,7 @@ function TermChips({ chosen, onChoose }: { chosen: string | null | undefined; on
 // Asked once, the first time, in place of the term line (14 → Term question)
 export function TermQuestion({ onChoose }: { onChoose: (term: string | null) => void }) {
   return (
-    <section aria-labelledby="term-question-title" className="rounded-lg bg-surface p-4 shadow-card">
+    <section aria-labelledby="term-question-title" className="rounded-lg border-2 border-border bg-surface p-4 text-navy-900">
       <h2 id="term-question-title" className="text-navy-900 type-headline">
         When do you plan to transfer?
       </h2>

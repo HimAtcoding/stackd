@@ -12,20 +12,19 @@ type CircleButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   "data-focus"?: boolean;
 };
 
-// 44 circle for back, save, bell. The "plus" variant is the blue new-essay button.
+// 44 circle for back, save, bell: white, 2 px border, --border edge. The "plus" variant is the blue new-essay button.
 export function CircleButton({ icon, variant = "surface", className, ...props }: CircleButtonProps) {
   return (
     <button
       type="button"
       {...props}
       className={cn(
-        "flex size-11 items-center justify-center rounded-full transition-transform duration-200 ease-out",
-        "pressed:duration-120 motion-safe:pressed:scale-[0.94]",
+        "flex size-11 items-center justify-center rounded-full edge-sm focus-ring:outline-offset-3",
         variant === "plus"
-          ? "bg-blue-600 text-white shadow-cta focus-ring:outline-offset-3"
+          ? "bg-blue-600 text-white edge-blue-700"
           : variant === "done"
-            ? "bg-green-600 text-white shadow-float"
-            : "bg-surface text-navy-900 shadow-float",
+            ? "bg-green-600 text-white edge-green-700"
+            : "border-2 border-border bg-surface text-navy-900",
         className,
       )}
     >

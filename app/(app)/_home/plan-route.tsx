@@ -20,7 +20,7 @@ export function PlanRoute({ plan }: { plan: Plan }) {
   const sentence = major.endsWith(".") ? major : `${major}.`;
 
   return (
-    <div className="relative rounded-md border border-border bg-surface">
+    <div className="relative rounded-lg border-2 border-border bg-surface">
       <Link
         href={universityHref(first.slug)}
         transitionTypes={["push"]}

@@ -1,28 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { AfterWait } from "@/components/deadlines/after-wait";
 import { CountdownBlock } from "@/components/deadlines/countdown-block";
+import { TONE } from "@/components/ui/icon-circle";
 import { TextLink } from "@/components/ui/text-link";
 import type { DeadlinesState } from "@/lib/data/deadlines";
 import { cycleLabel, shortDate, SOON_DAYS, stackLabel, type Deadline } from "@/lib/deadlines";
 import { cn } from "@/lib/cn";
 import { deadlinesHref } from "@/lib/features";
 
-const PEEK_SHADOW = "shadow-[0_1px_2px_rgba(5,16,66,.02),0_6px_16px_rgba(5,16,66,.025)]";
-
-// A layer behind the top one: only its bottom 24 shows, with the date and title on its edge
+// A layer behind the top one: only its bottom 24 shows, with the date and title on its edge. White and flat.
 function Peek({ deadline, layer }: { deadline: Deadline; layer: 2 | 3 }) {
   return (
     <span
       aria-hidden
       className={cn(
-        "relative -mt-5 flex h-11 items-end gap-2 rounded-lg px-4 pb-1 type-caption transition-transform duration-200 ease-out group-pressed:duration-120",
-        layer === 2 ? `z-2 mx-3 bg-stack-2 ${PEEK_SHADOW} motion-safe:group-pressed:translate-y-1` : "z-1 mx-6 border border-border bg-stack-3 motion-safe:group-pressed:translate-y-2",
+        "relative flex h-11 items-end gap-2 rounded-lg border-2 border-border bg-surface px-4 pb-1 type-caption",
+        // The first starts 6 lower, so the hero's edge never covers its words (00 → Edges, Layout)
+        layer === 2 ? "z-2 -mt-[14px] mx-3" : "z-1 -mt-5 mx-6",
       )}
     >
-      <span className="shrink-0 font-semibold text-navy-900">{shortDate(deadline.due_at)}</span>
+      <span className="shrink-0 font-black text-navy-900">{shortDate(deadline.due_at)}</span>
       <span className="min-w-0 truncate text-slate-600">{deadline.title}</span>
     </span>
   );
@@ -33,9 +33,9 @@ function StackOutline() {
   return (
     <AfterWait>
       <div aria-hidden className="mx-4 mt-3">
-        <div className="h-[146px] rounded-lg bg-stack-2" />
-        <div className="-mt-5 mx-3 h-11 rounded-lg bg-stack-2" />
-        <div className="-mt-5 mx-6 h-11 rounded-lg bg-stack-3" />
+        <div className="relative z-3 h-[146px] rounded-hero bg-surface-pressed" />
+        <div className="relative z-2 -mt-[14px] mx-3 h-11 rounded-lg border-2 border-border bg-surface" />
+        <div className="relative z-1 -mt-5 mx-6 h-11 rounded-lg border-2 border-border bg-surface" />
       </div>
     </AfterWait>
   );
@@ -73,17 +73,16 @@ export function UpNext({ state }: { state: DeadlinesState }) {
       {state.status === "ok" && top && (
         <>
           <Stack href={href} label={stackLabel(items, Boolean(href))} filled={Boolean(state.scope)}>
-            {/* With a plan, the solid hero: blue, or coral at 14 days or less (16). With none, the setup card is the
-                hero, so this steps down to a border (15 → Up next) */}
+            {/* With a plan, the hero: blue, or coral at 14 days or less, sinking into its edge on press. With none,
+                the setup card is the hero, so this steps down to a white tappable card (15 → Up next) */}
             <div
               className={cn(
-                "relative z-3 rounded-lg p-4 transition-colors duration-200 ease-out group-pressed:duration-120",
+                "relative z-3 p-4 edge-face",
                 !state.scope
-                  ? "border border-border bg-surface group-pressed:bg-surface-pressed"
-                  : top.daysLeft <= SOON_DAYS
-                    ? "bg-coral-700 shadow-hero-coral group-pressed:bg-coral-pressed"
-                    : "bg-blue-600 shadow-hero-blue group-pressed:bg-blue-700",
+                  ? "rounded-lg border-2 border-border bg-surface edge-md"
+                  : cn("rounded-hero text-white edge-lg", TONE[top.daysLeft <= SOON_DAYS ? "coral" : "blue"].fill, TONE[top.daysLeft <= SOON_DAYS ? "coral" : "blue"].edge),
               )}
+              style={state.scope ? ({ "--partner": TONE[top.daysLeft <= SOON_DAYS ? "coral" : "blue"].partner } as CSSProperties) : undefined}
             >
               <CountdownBlock deadline={top} now={state.now} scope={state.scope} quiet={!state.scope} onFill={Boolean(state.scope)} />
             </div>
@@ -101,11 +100,7 @@ export function UpNext({ state }: { state: DeadlinesState }) {
 
 // One link around every layer. Without the Deadlines screen (its flag off) the stack is still read as one item.
 function Stack({ href, label, filled, children }: { href: string | null; label: string; filled: boolean; children: ReactNode }) {
-  // On the solid hero the ring is white, with a 2 px blue ring outside it so it shows on blue (16)
-  const className = cn(
-    "group mx-4 mt-3 block rounded-lg",
-    filled ? "focus-ring:outline-white focus-ring:outline-offset-0 focus-ring:shadow-[0_0_0_4px_var(--blue-600)]" : "focus-ring:outline-offset-2",
-  );
+  const className = cn("group mx-4 mt-3 block", filled ? "rounded-hero focus-ring:outline-offset-3" : "rounded-lg focus-ring:outline-offset-2");
   if (!href) {
     return (
       <div role="group" aria-label={label} className={className}>

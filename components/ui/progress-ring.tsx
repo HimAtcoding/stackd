@@ -7,7 +7,7 @@ type ProgressRingProps = {
   size: 56 | 40;
 };
 
-// Progress ring (14 → Get ready): --blue-600 arc from 12 o'clock, clockwise, on a --blue-100 track.
+// Progress ring (14 → Get ready): --blue-600 arc from 12 o'clock, clockwise, on a --border track.
 // All done: a filled --green-600 circle with a white check. Decorative; the card's words carry the count.
 export function ProgressRing({ done, total, size }: ProgressRingProps) {
   if (total > 0 && done >= total) {
@@ -24,7 +24,7 @@ export function ProgressRing({ done, total, size }: ProgressRingProps) {
   return (
     <span aria-hidden className="relative flex shrink-0 items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 -rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--blue-100)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border)" strokeWidth={stroke} />
         {fraction > 0 && (
           <circle
             cx={size / 2}

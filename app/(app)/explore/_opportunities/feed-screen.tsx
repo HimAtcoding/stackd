@@ -8,7 +8,7 @@ import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { SectionBand } from "@/components/ui/section-band";
 import { Switch } from "@/components/ui/switch";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { GoHome } from "@/components/unbuilt-route";
 import { retryOpportunities, useOpportunities } from "@/lib/data/opportunities";
 import { exploreHref } from "@/lib/features";
@@ -36,10 +36,9 @@ function FeedScreen() {
   const groups = state.status === "ok" && today ? feedGroups(state.rows, { kind, fitsOnly, student, today }) : [];
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
         <SectionBand
-          tone="yellow"
           title="Opportunities"
           subtitle="Research programs, scholarships and competitions for transfer students."
           back={<BackButton fallback={exploreHref()!} slideBack />}
@@ -66,7 +65,7 @@ function FeedScreen() {
 
         {state.status === "error" ? (
           <div className="mx-4 mt-6">
-            <InlineError title="Couldn't load opportunities" body="Check your connection, then try again." action={<TintedButton onClick={retryOpportunities}>Try again</TintedButton>} />
+            <InlineError title="Couldn't load opportunities" body="Check your connection, then try again." action={<SecondaryButton onClick={retryOpportunities}>Try again</SecondaryButton>} />
           </div>
         ) : state.status === "loading" || !today ? (
           <div className="mt-12">

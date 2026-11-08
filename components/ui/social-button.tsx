@@ -12,8 +12,8 @@ type SocialButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 // White, because Apple and Google both require their logo on white. Logo, 12 gap, label.
-// Pressed tints the whole button through a multiply overlay, so the logo's white box tints with it
-// and the label stays dark. While pending, a navy spinner takes the logo's place and the label stays.
+// It sinks into its --border-strong edge on press. While pending, a navy spinner takes the logo's place and the
+// label stays.
 export function SocialButton({ logo, loading, children, disabled, className, ...props }: SocialButtonProps) {
   return (
     <button
@@ -23,10 +23,7 @@ export function SocialButton({ logo, loading, children, disabled, className, ...
       aria-disabled={disabled || undefined}
       aria-busy={loading || undefined}
       className={cn(
-        "relative flex h-12 w-full items-center justify-center gap-3 overflow-hidden rounded-sm border border-border-strong bg-white text-navy-900 type-button",
-        "transition-[transform,opacity] duration-200 ease-out pressed:duration-120 motion-safe:pressed:scale-[0.98]",
-        "after:pointer-events-none after:absolute after:inset-0 after:bg-surface-pressed after:opacity-0 after:mix-blend-multiply after:transition-opacity after:duration-200",
-        "pressed:after:opacity-60 pressed:after:duration-120",
+        "relative flex h-13 w-full items-center justify-center gap-3 rounded-md border-2 border-border-strong bg-white text-navy-900 type-button edge-sm edge-border-strong",
         "disabled:opacity-40",
         className,
       )}

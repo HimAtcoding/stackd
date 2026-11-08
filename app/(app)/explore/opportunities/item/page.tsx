@@ -6,7 +6,7 @@ import { OpportunityRoute } from "../../_opportunities/opportunity-screen";
 export default function OpportunityPage() {
   return (
     <PageTransition>
-      <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+      <Suspense fallback={<div className="min-h-dvh bg-page" />}>
         <OpportunityRoute />
       </Suspense>
     </PageTransition>

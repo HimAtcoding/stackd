@@ -11,7 +11,7 @@ type InlineErrorProps = {
 
 export function InlineError({ title, body, action, role }: InlineErrorProps) {
   return (
-    <div role={role} className="flex gap-3 rounded-md bg-coral-25 p-4">
+    <div role={role} className="flex gap-3 rounded-lg bg-coral-25 p-4">
       <WarningCircleIcon weight="fill" size={24} aria-hidden className="shrink-0 text-coral-700" />
       <div className="min-w-0 flex-1">
         <p className="text-navy-900 type-headline">{title}</p>

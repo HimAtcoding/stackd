@@ -54,12 +54,12 @@ export function CodeField({ id, label, value, onChange, onComplete, error, readO
               <span
                 key={i}
                 className={cn(
-                  "flex h-14 items-center justify-center rounded-sm border bg-surface text-navy-900 tabular-nums type-title-2",
+                  "flex h-14 items-center justify-center rounded-md border-2 bg-surface text-navy-900 tabular-nums type-title-2",
                   "transition-[border-color,box-shadow] duration-120 ease-out",
                   error
-                    ? cn("border-coral-700 shadow-[inset_0_0_0_1px_var(--coral-700)]", active && "shadow-[inset_0_0_0_1px_var(--coral-700),0_0_0_4px_rgba(3,100,250,.15)]")
+                    ? cn("border-coral-700", active && "shadow-[0_0_0_4px_rgba(30,94,255,.18)]")
                     : active
-                      ? "border-blue-600 shadow-[inset_0_0_0_1px_var(--blue-600),0_0_0_4px_rgba(3,100,250,.15)]"
+                      ? "border-blue-600 shadow-[0_0_0_4px_rgba(30,94,255,.18)]"
                       : "border-field-border",
                 )}
               >
@@ -94,7 +94,7 @@ export function CodeField({ id, label, value, onChange, onComplete, error, readO
         />
       </div>
       <Expand open={Boolean(error)}>
-        <p id={error ? messageId : undefined} className="flex items-start gap-1.5 pt-1.5 font-medium text-coral-700 type-label">
+        <p id={error ? messageId : undefined} className="flex items-start gap-1.5 pt-1.5 text-coral-700 type-label">
           <WarningCircleIcon weight="fill" size={16} aria-hidden className="mt-px shrink-0" />
           <span>{error}</span>
         </p>

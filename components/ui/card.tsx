@@ -12,15 +12,12 @@ type CardProps = {
   "data-focus"?: boolean;
 };
 
+// Passive: white, 2 px --border, flat. Tappable: the same with its --border edge, and it sinks on press (00 → Card).
 export function Card({ children, href, className, ...rest }: CardProps) {
-  const base = "block rounded-lg bg-surface p-4 shadow-card";
+  const base = "block rounded-lg border-2 border-border bg-surface p-4";
   if (href) {
     return (
-      <Link
-        href={href}
-        {...rest}
-        className={cn(base, "transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120", className)}
-      >
+      <Link href={href} {...rest} className={cn(base, "edge-md", className)}>
         {children}
       </Link>
     );

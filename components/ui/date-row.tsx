@@ -10,12 +10,12 @@ export type DateStatus = "soon" | "open" | "later" | "done" | "missed" | "rollin
 
 const TILE: Record<DateStatus, string> = {
   soon: "bg-coral-700 text-white",
-  // An inset shadow, since browsers round a 1.5 border down to 1
-  open: "bg-tint-sky text-blue-700 shadow-[inset_0_0_0_1.5px_var(--blue-600)]",
-  later: "bg-surface text-slate-600 border border-border-strong",
-  done: "bg-green-600 text-white",
-  missed: "bg-surface text-slate-400 border border-border",
-  rolling: "bg-surface text-slate-600 border border-border-strong",
+  open: "bg-yellow-400 text-navy-900",
+  later: "bg-surface text-slate-600 border-2 border-border",
+  // --green-700, since 13 px white text fails on --green-600 (3.2:1)
+  done: "bg-green-700 text-white",
+  missed: "bg-surface text-slate-600 border-2 border-border",
+  rolling: "bg-surface text-slate-600 border-2 border-border",
 };
 
 // The date tile (18 → Date tiles): month over day in a 48 square whose color carries the status. Done swaps the
@@ -23,13 +23,13 @@ const TILE: Record<DateStatus, string> = {
 // the date.
 export function DateTile({ month, day, status }: { month?: string; day?: string; status: DateStatus }) {
   return (
-    <span aria-hidden className={cn("flex size-12 shrink-0 flex-col items-center justify-center rounded-md tabular-nums", TILE[status])}>
+    <span aria-hidden className={cn("flex h-14 w-13 shrink-0 flex-col items-center justify-center rounded-md tabular-nums", TILE[status])}>
       {status === "rolling" ? (
         <InfinityIcon weight="bold" size={24} />
       ) : (
         <>
-          <span className="type-caption font-semibold">{month}</span>
-          {status === "done" ? <CheckIcon weight="bold" size={20} /> : <span className="type-title-3 font-extrabold">{day}</span>}
+          <span className="type-caption">{month}</span>
+          {status === "done" ? <CheckIcon weight="bold" size={20} /> : <span className="text-[22px] leading-[22px] font-black">{day}</span>}
         </>
       )}
     </span>

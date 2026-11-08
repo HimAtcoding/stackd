@@ -275,7 +275,7 @@ export function EnterCodeFlow({ huskies }: { huskies: Record<CodePurpose, ReactN
                 autoCapitalize="off"
                 spellCheck={false}
                 enterKeyHint="done"
-                icon={<LockIcon size={22} />}
+                icon={<LockIcon weight="bold" size={22} />}
                 hint="At least 8 characters."
                 value={password}
                 readOnly={saving}

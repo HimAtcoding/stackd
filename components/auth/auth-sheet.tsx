@@ -23,7 +23,7 @@ export function AuthSheet({ className, children, ...props }: FormHTMLAttributes<
       onFocus={keepFieldInView}
       {...props}
       className={cn(
-        "relative z-[1] mx-4 flex flex-1 flex-col rounded-t-lg bg-surface px-4 pt-5 shadow-[0_-8px_24px_rgba(5,16,66,.06)]",
+        "relative z-[1] mx-4 flex flex-1 flex-col rounded-t-lg bg-surface px-4 pt-5",
         className,
       )}
       style={{ paddingBottom: "calc(16px + var(--safe-bottom))" }}

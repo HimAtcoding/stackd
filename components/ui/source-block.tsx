@@ -17,7 +17,7 @@ export function SourceBlock({ line, link, report, className }: SourceBlockProps)
     <section aria-label="Source" className={className}>
       <p className="text-slate-600 tabular-nums type-caption">{line}</p>
       <LinkLine href={link.href} label={link.label} detail={link.detail} className="mt-2" />
-      <a href={report} className="mt-1 block w-fit py-3.5 text-blue-700 type-caption pressed:underline focus-ring:underline">
+      <a href={report} className="mt-1 block w-fit py-3.5 font-black text-blue-600 type-caption pressed:underline focus-ring:underline">
         Report a problem
       </a>
     </section>

@@ -521,7 +521,7 @@ check("explore: the report spells out C-ID numbers, options and campus majors",
   JSON.stringify(majorRows.map((r) => r.record)));
 const majorMd = fs.readFileSync(`${out.report}.md`, "utf8");
 check("explore: the report sets each topic's UC and Cal State rows side by side",
-  majorMd.includes("## Counts for both: example-major") && majorMd.includes("1 of 2 UC course types also count for Cal State") &&
+  majorMd.includes("## Counts for UC and Cal State: example-major") && majorMd.includes("1 of 2 UC course types also count for Cal State") &&
     majorMd.includes("| t-shared | 1. Shared course | 1. Shared course [TEST 101] | yes |") && majorMd.includes("| t-uc | 2. UC-only course |  | no |") &&
     majorMd.includes("| t-pick |  | 2. Pick one [3 options] | no |"),
   majorMd.slice(majorMd.indexOf("## Counts")));

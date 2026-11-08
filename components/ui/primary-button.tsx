@@ -1,19 +1,19 @@
 "use client";
 
 import type { ButtonHTMLAttributes } from "react";
-import { CaretRightIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
 import { Spinner } from "./spinner";
 
 type PrimaryButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
-  // The trailing chevron shows only when the button goes to another screen (20 → Small fixes)
-  chevron?: boolean;
+  // On a blue hero: white fill, blue label, the same --blue-700 edge (00 → Primary button)
+  onHero?: boolean;
   "data-pressed"?: boolean;
   "data-focus"?: boolean;
 };
 
-export function PrimaryButton({ children, loading, chevron = true, disabled, className, onClick, ...props }: PrimaryButtonProps) {
+// 56 tall, --r-md, blue with its --blue-700 edge. No chevron in rev 2.
+export function PrimaryButton({ children, loading, onHero, disabled, className, onClick, ...props }: PrimaryButtonProps) {
   return (
     <button
       type="button"
@@ -29,24 +29,15 @@ export function PrimaryButton({ children, loading, chevron = true, disabled, cla
         onClick?.(e);
       }}
       className={cn(
-        "relative flex h-14 w-full items-center justify-center rounded-full bg-blue-600 text-white shadow-cta type-button-lg",
-        "transition-[background-color,transform,opacity] duration-200 ease-out",
-        "pressed:bg-blue-700 pressed:duration-120 motion-safe:pressed:scale-[0.97]",
+        "relative flex h-14 w-full items-center justify-center rounded-md px-5 type-button-lg edge-md edge-blue-700",
+        onHero ? "bg-white text-blue-600" : "bg-blue-600 text-white",
         "focus-ring:outline-offset-3",
-        "disabled:opacity-40 disabled:shadow-none",
+        "disabled:bg-border disabled:text-slate-600 disabled:[box-shadow:none]",
         className,
       )}
     >
       <span className={cn("transition-opacity duration-120", loading && "opacity-0")}>{children}</span>
-      {chevron && (
-        <CaretRightIcon
-          weight="bold"
-          size={20}
-          aria-hidden
-          className={cn("absolute right-6 top-1/2 -translate-y-1/2 transition-opacity duration-120", loading && "opacity-0")}
-        />
-      )}
-      {loading && <Spinner className="absolute left-1/2 top-1/2 -mt-2.5 -ml-2.5" />}
+      {loading && <Spinner className={cn("absolute left-1/2 top-1/2 -mt-2.5 -ml-2.5", onHero && "text-blue-600")} />}
     </button>
   );
 }

@@ -47,7 +47,7 @@ export function StillNeeded({ major, tab, statuses, onOpen }: StillNeededProps) 
                   aria-label={taking ? `${r.name}, taking now` : r.name}
                   className="flex min-h-14 w-full items-center gap-3 rounded-md px-4 py-2 text-left transition-colors duration-200 ease-out pressed:bg-surface-pressed pressed:duration-120"
                 >
-                  <StatusTile status={statusOf(statuses, r.topic)} name={r.name} icon={topicIcon(r.topic)} tile="bg-mint-100" color="text-mint-600" size={32} />
+                  <StatusTile status={statusOf(statuses, r.topic)} name={r.name} icon={topicIcon(r.topic)} tone="green" size={32} />
                   <span aria-hidden className="line-clamp-2 min-w-0 flex-1 text-navy-900 type-row-title">
                     {r.name}
                   </span>

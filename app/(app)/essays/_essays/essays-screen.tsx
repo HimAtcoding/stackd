@@ -1,19 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { DownloadSimpleIcon } from "@phosphor-icons/react/ssr";
 import { InlineError } from "@/components/ui/inline-error";
 import { LinkLine } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
+import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
 import { useDeadlines, useScope, useTerm } from "@/lib/data/deadlines";
 import { retryEssays, saveDraft, useEssays } from "@/lib/data/essays";
-import { cn } from "@/lib/cn";
 import { checkedDate, cycleLabel, shortDate } from "@/lib/deadlines";
 import { ANSWERS, CHOOSE, choose, chosenKeys, draftKey, progress, splitPrompts, WORD_LIMIT, type Prompt, type Segment } from "@/lib/essays";
 import { essaysHref } from "@/lib/features";
@@ -30,21 +30,9 @@ export function EssaysRoute() {
   return <EssaysScreen />;
 }
 
-// The 4-segment bar on the indigo panel: done white, drafting 60% white, empty 25% white (17 → Essays screen)
+// The 4-segment bar on the indigo hero: done white, drafting honey, empty the hero's partner color (00 → Segmented bar)
 function PanelBar({ segments }: { segments: Segment[] }) {
-  return (
-    <div aria-hidden className="mx-6 mt-3 flex gap-1">
-      {segments.map((s, i) => (
-        <span
-          key={i}
-          className={cn(
-            "h-1.5 flex-1 rounded-full transition-colors duration-200 ease-out motion-reduce:transition-none",
-            s === "done" ? "bg-white" : s === "drafting" ? "bg-white/60" : "bg-white/25",
-          )}
-        />
-      ))}
-    </div>
-  );
+  return <SegmentedBar steps={segments.map((s) => (s === "done" ? true : s === "drafting" ? "taking" : false))} onFill className="mx-6 mt-3" />;
 }
 
 // "Questions summarized from UC Admissions, checked Oct 19, 2026."
@@ -103,13 +91,16 @@ function EssaysScreen() {
   }
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: TAB_PAGE_BOTTOM }}>
-        {/* The Essays panel (16 → Feature panels): solid indigo from the physical top, the full width, 28 bottom
-            corners, every word white. It ends 24 below the bar. A tab (22 → 1), so no back button: the title is 24 under
-            the safe area. */}
-        <header className="relative pb-6 text-white" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)" }}>
-          <span aria-hidden className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-[28px] bg-indigo-600" />
+        {/* The Essays hero (23): solid indigo from the physical top, the full width, --r-hero bottom corners and its
+            --indigo-800 edge, every word white. It ends 24 below the bar. A tab (22 → 1), so no back button: the title is
+            24 under the safe area. */}
+        <header
+          className="on-fill relative pb-6 text-white"
+          style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)", "--partner": "var(--indigo-800)" } as CSSProperties}
+        >
+          <span aria-hidden className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-hero bg-indigo-600 edge-lg edge-indigo-800" />
           <h1 className="relative px-6 type-title-1">Personal insight answers</h1>
           <p className="relative mt-1 px-6 tabular-nums type-body">
             {done} of {ANSWERS} done
@@ -130,7 +121,7 @@ function EssaysScreen() {
             <InlineError
               title="Couldn't load your answers"
               body="Check your connection, then try again."
-              action={<TintedButton onClick={retryEssays}>Try again</TintedButton>}
+              action={<SecondaryButton onClick={retryEssays}>Try again</SecondaryButton>}
             />
           </div>
         )}
@@ -150,7 +141,7 @@ function EssaysScreen() {
             </div>
 
             <h2 className="mt-6 px-6 text-slate-600 type-label">Required</h2>
-            <ul className="mx-4 mt-2 divide-y divide-border rounded-md border border-border bg-surface">
+            <ul className="mx-4 mt-2 divide-y-2 divide-border overflow-hidden rounded-lg border-2 border-border bg-surface">
               {required.map((p) => (
                 <QuestionRow key={p.key} prompt={p} draft={ok.drafts[draftKey(p.cycle, p.key)]} onOpen={() => open(p)} />
               ))}
@@ -159,7 +150,7 @@ function EssaysScreen() {
             <h2 className="mt-6 px-6 text-slate-600 tabular-nums type-label">
               Choose {CHOOSE} ({chosen} chosen)
             </h2>
-            <ul className="mx-4 mt-2 divide-y divide-border rounded-md border border-border bg-surface">
+            <ul className="mx-4 mt-2 divide-y-2 divide-border overflow-hidden rounded-lg border-2 border-border bg-surface">
               {optional.map((p) => {
                 const isChosen = Boolean(ok.drafts[draftKey(p.cycle, p.key)]?.chosen);
                 return (

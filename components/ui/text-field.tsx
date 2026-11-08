@@ -44,13 +44,13 @@ export function TextField({ id, label, icon, trailing, hint, error, className, d
           aria-describedby={hasMessage ? messageId : undefined}
           {...inputProps}
           className={cn(
-            "block h-12 w-full rounded-sm border bg-surface px-4 text-navy-900 caret-blue-600 outline-none type-body-md placeholder:text-slate-600",
+            "block h-13 w-full rounded-md border-2 bg-surface px-4 text-navy-900 caret-blue-600 outline-none type-body-md placeholder:text-slate-600",
             "transition-[border-color,box-shadow] duration-120 ease-out",
-            Boolean(icon) && "pl-13",
+            Boolean(icon) && "pl-[50px]",
             Boolean(trailing) && "pr-12",
             error
-              ? "border-coral-700 shadow-[inset_0_0_0_1px_var(--coral-700)] field-focus:shadow-[inset_0_0_0_1px_var(--coral-700),0_0_0_4px_rgba(3,100,250,.15)]"
-              : "border-field-border field-focus:border-blue-600 field-focus:shadow-[inset_0_0_0_1px_var(--blue-600),0_0_0_4px_rgba(3,100,250,.15)]",
+              ? "border-coral-700 field-focus:shadow-[0_0_0_4px_rgba(30,94,255,.18)]"
+              : "border-field-border field-focus:border-blue-600 field-focus:shadow-[0_0_0_4px_rgba(30,94,255,.18)]",
           )}
         />
         {trailing && <span className="absolute right-0.5 top-1/2 flex -translate-y-1/2">{trailing}</span>}
@@ -59,14 +59,14 @@ export function TextField({ id, label, icon, trailing, hint, error, className, d
         // With a hint the line is always there; a failed check swaps the hint for the error.
         <p
           id={messageId}
-          className={cn("flex items-start gap-1.5 pt-1.5 type-label", error ? "font-medium text-coral-700" : "font-normal text-slate-600")}
+          className={cn("flex items-start gap-1.5 pt-1.5", error ? "text-coral-700 type-label" : "text-slate-600 type-caption")}
         >
           {error && <WarningCircleIcon weight="fill" size={16} aria-hidden className="mt-px shrink-0" />}
           <span>{error ?? hint}</span>
         </p>
       ) : (
         <Expand open={Boolean(error)}>
-          <p id={error ? messageId : undefined} className="flex items-start gap-1.5 pt-1.5 text-coral-700 type-label font-medium">
+          <p id={error ? messageId : undefined} className="flex items-start gap-1.5 pt-1.5 text-coral-700 type-label">
             <WarningCircleIcon weight="fill" size={16} aria-hidden className="mt-px shrink-0" />
             <span>{error}</span>
           </p>

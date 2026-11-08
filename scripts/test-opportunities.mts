@@ -143,7 +143,7 @@ const statuses: Statuses = { cs1: "done", calc: "done", cs2: "in_progress" };
 const needed = stillNeeded(major.uc!, statuses);
 check("Still needed: taking now first, then not yet in order, 4 at most", needed.map((r) => r.topic).join() === "cs2,org,multi,discrete", needed.map((r) => r.topic));
 check("all done: nothing still needed", stillNeeded(major.uc!, Object.fromEntries(uc.reqs.map((r) => [r.topic, "done" as const]))).length === 0);
-check("major detail with both systems", majorDetail(major) === "3 UC campuses, 2 count for both", majorDetail(major));
+check("major detail with both systems", majorDetail(major) === "3 UC campuses, 2 count for UC and Cal State", majorDetail(major));
 check("Cal State only", majorDetail({ ...major, uc: null }) === "Cal State only");
 check("UC only", majorDetail({ ...major, calState: null }) === "3 UC campuses");
 

@@ -41,17 +41,17 @@ export function Toast({ message, action, bottom, within, onDone, still, overShee
       role="status"
       className={
         still
-          ? "flex items-center gap-4 rounded-md bg-navy-900 px-4 py-3"
-          : `${within ? "absolute inset-x-0" : "fixed inset-x-4"} ${overSheet ? "z-60" : "z-40"} mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 text-left ${leaving ? "toast-out" : "toast-in"}`
+          ? "flex items-center gap-4 rounded-md bg-navy-900 px-4 py-3 shadow-toast"
+          : `${within ? "absolute inset-x-0" : "fixed inset-x-4"} ${overSheet ? "z-60" : "z-40"} mx-auto flex max-w-[448px] items-center gap-4 rounded-md bg-navy-900 px-4 py-3 text-left shadow-toast ${leaving ? "toast-out" : "toast-in"}`
       }
       style={still ? undefined : { bottom }}
     >
-      <p className="flex-1 text-white type-body font-medium">{message}</p>
+      <p className="flex-1 text-white type-body font-bold">{message}</p>
       {action && (
         <button
           type="button"
           onClick={action.onClick}
-          className="-my-3 py-3 text-[#9CC6FF] type-link pressed:underline focus-ring:underline"
+          className="-my-3 py-3 text-yellow-400 type-link pressed:underline focus-ring:underline"
         >
           {action.label}
         </button>

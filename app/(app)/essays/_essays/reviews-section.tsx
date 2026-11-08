@@ -56,12 +56,12 @@ export function ReviewsSection({ links, text, flash, onSelectQuote, onToast }: R
   const newCount = links.reduce((n, l) => n + l.comments.filter((c) => fresh.has(c.id)).length, 0);
 
   return (
-    <section aria-labelledby="reviews-title" className="mt-6 border-t border-border px-6 pt-6">
+    <section aria-labelledby="reviews-title" className="mt-6 border-t-2 border-border px-6 pt-6">
       <div className="flex items-center gap-3">
         <h2 id="reviews-title" className="text-navy-900 type-title-3">
           Reviews
         </h2>
-        {newCount > 0 && <Pill variant="progress">{newCount} new</Pill>}
+        {newCount > 0 && <Pill variant="good">{newCount} new</Pill>}
       </div>
 
       <ul className="mt-4 space-y-6">
@@ -139,7 +139,7 @@ export function ReviewsSection({ links, text, flash, onSelectQuote, onToast }: R
         <h2 id="comment-menu-title" tabIndex={-1} className="truncate text-navy-900 type-title-2 focus:outline-none">
           Comment from {menu?.comment.reviewer_name}
         </h2>
-        <ul className="-mx-6 mt-3 divide-y divide-border border-y border-border">
+        <ul className="-mx-6 mt-3 divide-y-2 divide-border border-y-2 border-border">
           <li>
             <MenuButton onClick={() => commentAction(menu?.comment.resolved_at ? "unresolve" : "resolve")}>
               {menu?.comment.resolved_at ? "Mark not resolved" : "Mark resolved"}
@@ -208,7 +208,7 @@ function Comment({ comment, snapshot, text, flash, onSelectQuote, onMenu }: Comm
   return (
     <li
       id={`comment-${comment.id}`}
-      className={cn("-mx-3 flex gap-2 rounded-sm px-3 py-2 motion-safe:transition-colors motion-safe:duration-200", flash ? "bg-tint-indigo" : "bg-transparent")}
+      className={cn("-mx-3 flex gap-2 rounded-sm px-3 py-2 motion-safe:transition-colors motion-safe:duration-200", flash ? "bg-yellow-50" : "bg-transparent")}
     >
       <div className="min-w-0 flex-1">
         {quote &&

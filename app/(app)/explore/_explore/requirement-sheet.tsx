@@ -48,7 +48,7 @@ function BothLine({ other, tab }: { other: RequirementRecord; tab: SystemTab }) 
   const groups = cIdGroups(other);
   return (
     <p className="mt-1 flex gap-1.5 text-slate-700 type-body">
-      <IntersectIcon weight="bold" size={16} aria-hidden className="mt-0.5 shrink-0 text-mint-600" />
+      <IntersectIcon weight="bold" size={16} aria-hidden className="mt-0.5 shrink-0 text-green-700" />
       <span>
         {tab === "uc" && groups.length > 0 ? (
           <>
@@ -77,7 +77,7 @@ function Content({ row, other, tab, status, agreement }: Omit<RequirementSheetPr
   return (
     <div className="-mx-6 -mt-6 max-h-[calc(100dvh-var(--safe-top)-72px)] overflow-y-auto px-6 pt-6">
       <div className="flex items-center gap-3">
-        <StatusTile status={status} name={row.name} icon={topicIcon(row.topic)} tile="bg-mint-100" color="text-mint-600" burst={burst} />
+        <StatusTile status={status} name={row.name} icon={topicIcon(row.topic)} tone="green" burst={burst} />
         <h2 id="requirement-sheet-title" tabIndex={-1} className="min-w-0 flex-1 text-navy-900 type-title-2 focus:outline-none">
           {row.name}
         </h2>
@@ -114,7 +114,7 @@ function Content({ row, other, tab, status, agreement }: Omit<RequirementSheetPr
 
       {other && (
         <>
-          <h3 className="mt-5 text-navy-900 type-headline">Counts for both</h3>
+          <h3 className="mt-5 text-navy-900 type-headline">Counts for UC and Cal State</h3>
           <BothLine other={other} tab={tab} />
         </>
       )}

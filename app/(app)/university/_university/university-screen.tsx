@@ -8,7 +8,7 @@ import { BackButton } from "@/components/back-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineError } from "@/components/ui/inline-error";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { UnderlineTabs } from "@/components/ui/underline-tabs";
 import { FEATURES } from "@/lib/features";
 import { SaveButton } from "./save-button";
@@ -55,7 +55,7 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
         {/* Hero runs under the status bar; the scrim keeps the status bar legible on busy art */}
         <div className="relative h-[248px] overflow-hidden bg-sky-100">
           {hero}
-          <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(5,16,66,.28)_0,rgba(5,16,66,0)_96px)]" />
+          <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(16,25,74,.28)_0,rgba(16,25,74,0)_96px)]" />
           <div className="absolute inset-x-4 flex justify-between" style={{ top: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
             <BackButton fallback="/" slideBack />
             {university && FEATURES.savedSchools && <SaveButton slug={slug} name={university.name} />}
@@ -63,7 +63,7 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
         </div>
 
         <section
-          className="relative -mt-6 flex-1 rounded-t-sheet bg-surface shadow-[0_-8px_24px_rgba(5,16,66,.06)]"
+          className="relative -mt-6 flex-1 rounded-t-hero bg-surface"
           style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
         >
           {university ? (
@@ -100,7 +100,7 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
                     icon={<BarricadeIcon weight="fill" size={32} />}
                     title="This part isn't built yet"
                     body="It's on the list. Your plan is still on the home screen."
-                    action={<TintedButton href="/">Back to home</TintedButton>}
+                    action={<SecondaryButton href="/">Back to home</SecondaryButton>}
                   />
                 )}
               </div>
@@ -122,7 +122,7 @@ export function LoadError({ onRetry }: { onRetry: () => void }) {
     <InlineError
       title="Couldn't load requirements"
       body="Check your connection, then try again."
-      action={<TintedButton onClick={onRetry}>Try again</TintedButton>}
+      action={<SecondaryButton onClick={onRetry}>Try again</SecondaryButton>}
     />
   );
 }

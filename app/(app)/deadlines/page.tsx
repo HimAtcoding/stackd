@@ -7,7 +7,7 @@ import { DeadlinesRoute } from "./_deadlines/deadlines-screen";
 export default function DeadlinesPage() {
   return (
     <PageTransition>
-      <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+      <Suspense fallback={<div className="min-h-dvh bg-page" />}>
         <DeadlinesRoute husky={<Art id="husky-wave" width={56} />} />
       </Suspense>
     </PageTransition>

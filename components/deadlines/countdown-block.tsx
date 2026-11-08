@@ -31,7 +31,7 @@ export function CountdownBlock({ deadline: d, now, scope, quiet, onFill }: Count
           {d.daysLeft <= 0 ? (
             <p className={cn("type-title-1", onFill ? "text-white" : "text-coral-700")}>Today</p>
           ) : (
-            <p className={cn(quiet ? "type-title-1" : "type-countdown", onFill ? "text-white" : soon ? "text-coral-700" : "text-navy-900")}>
+            <p className={cn(quiet ? "type-title-1" : "type-hero-number", onFill ? "text-white" : soon ? "text-coral-700" : "text-navy-900")}>
               {d.daysLeft}
             </p>
           )}

@@ -12,7 +12,7 @@ import { domainOf } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
 import { SectionBand } from "@/components/ui/section-band";
 import { SourceBlock } from "@/components/ui/source-block";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { GoHome } from "@/components/unbuilt-route";
 import { SUPPORT_EMAIL } from "@/lib/about";
@@ -62,12 +62,12 @@ function OpportunityLoad() {
   if (found) return <OpportunityScreen key={found.slug} o={found} />;
   if (missing) return null;
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]">
-        <SectionBand tone="yellow" title="Opportunities" subtitle="Research programs, scholarships and competitions for transfer students." back={<BackButton fallback={exploreHref("opportunities/")!} slideBack />} />
+        <SectionBand title="Opportunities" subtitle="Research programs, scholarships and competitions for transfer students." back={<BackButton fallback={exploreHref("opportunities/")!} slideBack />} />
         {state.status === "error" ? (
           <div className="mx-4 mt-4">
-            <InlineError title="Couldn't load this opportunity" body="Check your connection, then try again." action={<TintedButton onClick={retryOpportunities}>Try again</TintedButton>} />
+            <InlineError title="Couldn't load this opportunity" body="Check your connection, then try again." action={<SecondaryButton onClick={retryOpportunities}>Try again</SecondaryButton>} />
           </div>
         ) : (
           <div className="mt-12">
@@ -84,7 +84,7 @@ function Rule({ row }: { row: RuleRow }) {
   const Icon = row.state === "met" ? CheckCircleIcon : CircleIcon;
   return (
     <li className="flex gap-3 py-2">
-      <Icon weight={row.state === "met" ? "fill" : "regular"} size={20} aria-hidden className={cn("mt-px shrink-0", row.state === "met" ? "text-green-600" : "text-slate-400")} />
+      <Icon weight={row.state === "met" ? "fill" : "bold"} size={20} aria-hidden className={cn("mt-px shrink-0", row.state === "met" ? "text-green-600" : "text-slate-400")} />
       <span className="min-w-0">
         <span className="block text-navy-900 type-body">
           {row.text}
@@ -164,9 +164,9 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
   const report = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`Problem with ${o.title} in Opportunities`)}&body=${encodeURIComponent(`Opportunity: ${o.slug}\n\nWhat's wrong:\n`)}`;
 
   return (
-    <div className="min-h-dvh overflow-x-clip bg-sky-50">
+    <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
-        <SectionBand tone="yellow" title={o.title} subtitle={o.org_name} back={<BackButton fallback={exploreHref("opportunities/")!} slideBack />}>
+        <SectionBand title={o.title} subtitle={o.org_name} back={<BackButton fallback={exploreHref("opportunities/")!} slideBack />}>
           <div className="flex items-center gap-3 px-6 pb-4 pt-4">
             {today && <DateTile month={date?.month} day={date?.day} status={tileStatus(o, today)} />}
             <div className="min-w-0">
@@ -197,7 +197,7 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
             target="_blank"
             rel="noopener"
             aria-label={`Open the official page, ${domainOf(o.url)}, opens outside the app`}
-            className="flex h-14 w-full items-center justify-center rounded-full bg-blue-600 text-white shadow-cta transition-[background-color,transform] duration-200 ease-out type-button-lg pressed:bg-blue-700 pressed:duration-120 focus-ring:outline-offset-3 motion-safe:pressed:scale-[0.97]"
+            className="flex h-14 w-full items-center justify-center rounded-md bg-blue-600 px-5 text-white type-button-lg edge-md edge-blue-700 focus-ring:outline-offset-3"
           >
             Open the official page
           </a>
@@ -210,7 +210,7 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
                 aria-pressed={chosen}
                 className="mx-auto mt-2 flex min-h-11 items-center gap-2 px-2 text-blue-600 type-link pressed:underline focus-ring:underline"
               >
-                <BellIcon weight={chosen ? "fill" : "regular"} size={20} aria-hidden />
+                <BellIcon weight={chosen ? "fill" : "bold"} size={20} aria-hidden />
                 {chosen ? "Reminders set" : `Remind me before ${shortDay(o.deadline)}`}
               </button>
             ) : (

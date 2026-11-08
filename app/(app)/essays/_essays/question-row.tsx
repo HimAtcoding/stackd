@@ -2,6 +2,7 @@
 
 import { CheckCircleIcon, PencilLineIcon } from "@phosphor-icons/react/ssr";
 import { ChoiceCircle } from "@/components/ui/choice-row";
+import { IconCircle } from "@/components/ui/icon-circle";
 import { cn } from "@/lib/cn";
 import { rowStatus, type Draft, type Prompt } from "@/lib/essays";
 
@@ -49,9 +50,9 @@ export function QuestionRow({ prompt, draft, choice, onOpen }: QuestionRowProps)
             </span>
           </button>
         ) : (
-          <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-tint-indigo text-indigo-600">
-            <PencilLineIcon weight="duotone" size={20} />
-          </span>
+          <IconCircle tone="indigo" size={36}>
+            <PencilLineIcon weight="fill" size={18} />
+          </IconCircle>
         )}
         <span aria-hidden className="min-w-0 flex-1">
           <span className="block text-navy-900 type-row-title">{prompt.short_name}</span>
