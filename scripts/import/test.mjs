@@ -744,7 +744,7 @@ check("no two schools share one", new Set(abbrOf.values()).size === abbrOf.size)
 check("the spec's examples: UCSD, UCLA, SJSU, SLO, LPC, DVC, and UCB for Berkeley",
   JSON.stringify(["uc-san-diego", "uc-los-angeles", "san-jose-state", "cal-poly-san-luis-obispo", "las-positas", "diablo-valley", "uc-berkeley"].map((s) => abbrOf.get(s))) ===
     JSON.stringify(["UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC", "UCB"]));
-check("every todo is on an abbreviation a person still has to pick", instTodos.length > 0 && instTodos.every((r) => typeof r.todo === "string" && r.todo.length > 20));
+check("every abbreviation todo has been picked and deleted", instTodos.length === 0, instTodos.map((r) => r.slug));
 check("the UC campuses carry no todo", !instTodos.some((r) => r.system === "UC"));
 check("the stored abbreviation matches the file", (await db.query("select abbreviation from institutions where slug = 'uc-san-diego'")).rows[0]?.abbreviation === "UCSD");
 
@@ -930,11 +930,11 @@ try {
   check("opportunities: a signed-in student can't run an import", /permission denied/.test(e.message), e.message);
 }
 
-// The real file: two made-up examples, stopped by their todos until replaced
+// The real file: the first batch, checked on each official page
 const realOpps = () => JSON.parse(fs.readFileSync("data/raw/opportunities/2026-27.json", "utf8"));
 const oppsAsIs = validateOpportunitiesFile(realOpps()).problems;
-check("2026-27.json is refused only for its todos and empty dates", oppsAsIs.length > 0 && oppsAsIs.every((p) => /still has a todo|retrieved_at is empty/.test(p)), JSON.stringify(oppsAsIs));
-check("…and every row in it has a todo", realOpps().opportunities.every((o) => o.todo));
+check("2026-27.json passes as checked", oppsAsIs.length === 0, JSON.stringify(oppsAsIs));
+check("…with no todo left", realOpps().opportunities.every((o) => o.todo === undefined));
 const oppsFilled = validateOpportunitiesFile(fillIn(realOpps(), "2026-11-07"));
 check("2026-27.json passes once its todos are cleared", oppsFilled.problems.length === 0, JSON.stringify(oppsFilled.problems));
 const examples = realOpps().opportunities;
