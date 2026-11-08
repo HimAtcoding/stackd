@@ -240,7 +240,7 @@ Settings gets a link to it too, in its footer with Terms, Privacy and Support. I
 | Where | Change |
 |---|---|
 | Tab bar | Explore turns on (`explore: true` at release) |
-| University page, Requirements tab (03, real accounts) | Under the official agreement card, a link line "See what to take for {major}" / "Explore", opening the major page on the UC or Cal State tab, when the plan's major has Explore data |
+| University page, Requirements tab (03, real accounts) | Under the official agreement card, a link line inside the app "See what to take for {major}" with `CaretRight` (18), opening the major page on the UC or Cal State tab, when the plan's major has Explore data |
 | Home | No change in v1.4 |
 
 ## Data

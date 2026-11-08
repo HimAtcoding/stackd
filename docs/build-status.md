@@ -563,6 +563,8 @@ Spec `22-explore-hub-opportunities-tabs.md` parts 1 to 6, on branch `explore-hub
 - Stand-in checks, 393 and 320: every tile 48 × 40 with letters that fit, onboarding names lined up, campus rows clear, Settings values never cut, and the full run again: 104 checks (the first round's 100, plus the official-page button and outside links having no icon at 393 and 320). Screenshots 62 and 64 retaken.
 - "Before Explore turns on" is now one checklist near the top of this file.
 
+**Second review round (same day):** link lines that stay inside the app ("See your plan", "Write them in Stackd", "See what to take for {major}") are the label and a `CaretRight` bold 20 `--slate-600` 4 to its right, with no icon before and no second line; a long label wraps. Link lines that leave the app keep the domain under the label and no icon. Spec 18 says so, and 21's university-page line matches. Stand-in checks at 393 and 320: the university page's link (caret 20, `--slate-600`, 4 from the label, 44 tall, opens the major page), every outside link with its domain and no icon, and the 104 checks again. The step sheet's links use the same component; the stand-in has no checklist rows, so they weren't opened in a browser.
+
 ## Explore hub data, PR A (step 27, 2026-11-07)
 
 Spec `22-explore-hub-opportunities-tabs.md`, Data section and PR A, on branch `explore-hub-data-a`. **The migration isn't pushed and nothing is imported.** Abyan picks the abbreviations still marked todo, then Ryan pushes, reopens, imports and verifies (After merge, below).

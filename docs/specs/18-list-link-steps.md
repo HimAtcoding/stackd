@@ -60,7 +60,11 @@ The source line and footer are unchanged.
 
 Replaces the outside-link row from 16 everywhere it's used.
 
-**Link line**: a text button with no icon (22 rev): the label in `label` (14/18 600) `--blue-700`, and under it, 2 below and aligned with the label, the domain in `caption` `--slate-600` (no "www."). The domain says the link leaves the app. 44-tall hit area covering both lines. Accessible name: "{label}, {domain}, opens outside the app". A link line to a screen inside Stackd may keep a small icon before its label (the step sheet's "Write them in Stackd").
+**Link line**: a text button, no box, no icon before the label. Two kinds (22 rev):
+- **Leaves the app**: the label in `label` (14/18 600) `--blue-700`, and under it, 2 below and aligned with the label, the domain in `caption` `--slate-600` (no "www."). The domain says where it goes. Accessible name: "{label}, {domain}, opens outside the app".
+- **Stays inside the app** ("Write them in Stackd", "See your plan"): the label in `label` `--blue-700`, then `CaretRight` bold 20 `--slate-600` at its right, 4 apart, centered on the label. No second line; a long label wraps, as "See what to take for Computer Science" does at 320. Accessible name: the label.
+
+Either way the hit area is at least 44 tall.
 
 | Where | Label | Below it |
 |---|---|---|
@@ -89,8 +93,7 @@ Tapping a step's text (on Home or in the steps sheet) opens a **step sheet** ins
 │ • Which three optional        │
 │   questions you picked        │
 │                               │
-│ ✎ Write them in Stackd        │  link line (when a tool exists)
-│   Personal insight answers    │
+│ Write them in Stackd ›        │  link line inside the app (when a tool exists)
 │                               │
 │ [       ✓ Mark done        ]  │  primary, 48
 │ Step 3 of 6                   │  caption, centered
@@ -102,7 +105,7 @@ Tapping a step's text (on Home or in the steps sheet) opens a **step sheet** ins
 | Header | The step's icon tile at 40 (16), 12 gap, title `title-2` `--navy-900`, up to 2 lines. Done: the tile is green |
 | Summary | The step's stored summary, `body` `--slate-700`, 8 below |
 | What you'll need | `headline` `--navy-900`, 20 below. Then 2 to 4 items, `body` `--navy-900`, each with a 6 px `--slate-400` dot at the left, 8 apart. Written in our own words from UC Admissions' "Filling out the application" and Cal State Apply's Transfer Application Guide, checked against the page before build, and kept in a code map keyed by step slug next to the icons (`lib/step-content.ts`) with the source URL in a comment |
-| Do it in Stackd | A link line (2) only when Stackd has the tool: Pick your campuses → "See your plan" (Settings → schools); Write your personal insight answers → "Write them in Stackd" (`/essays/`, once `essays` is on); Submit → "Open the UC application" (outside). Other steps have none |
+| Do it in Stackd | A link line inside the app (2: the label and `CaretRight`, no second line) only when Stackd has the tool: Pick your campuses → "See your plan" (Settings → schools); Write your personal insight answers → "Write them in Stackd" (`/essays/`, once `essays` is on); Submit → "Open the UC application" (outside). Other steps have none |
 | Mark done | Primary-style solid button (48, `--r-full`, `--blue-600`, white `Check` + "Mark done"), 24 below. When done: "Mark not done" as a text button instead |
 | Position | "Step {n} of {total}", `caption` `--slate-600`, centered, 8 below |
 
