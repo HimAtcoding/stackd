@@ -20,7 +20,7 @@ export function reportRows(payload, stored) {
   const rows = [];
   for (const r of payload.institutions) {
     const s = inst.get(r.slug);
-    if (s) rows.push({ table: "institutions", ...s, record: `${s.name} (${s.slug})` });
+    if (s) rows.push({ table: "institutions", ...s, record: `${s.name} (${s.slug})${s.abbreviation ? `, ${s.abbreviation}` : ""}` });
   }
   for (const r of payload.majors) {
     const s = stored.majors.find((m) => byId.get(m.institution_id) === r.institution && m.slug === r.slug);
@@ -113,6 +113,30 @@ export function exploreReportRows(payload, stored) {
     if (!s) continue;
     const p = pathwayOf.get(s.pathway_id);
     rows.push({ table: "pathway_campuses", ...s, cycle: p.effective_term ?? "", record: `${p.slug}, ${label(p)} at ${r.institution}: ${s.major_names.join("; ")}` });
+  }
+  return finish(rows);
+}
+
+// The opportunities file's rows as the database now holds them. The record column has everything the reviewer checks
+// on the official page: who runs it, the dates, who it's for, what they want and give, the cost and the link.
+export function opportunityReportRows(payload, stored) {
+  const day = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : d);
+  const list = (label, l) => (l.length ? ` ${label}: ${l.join("; ")}.` : "");
+  const rows = [];
+  for (const r of payload.opportunities) {
+    const s = stored.opportunities.find((o) => o.slug === r.slug);
+    if (!s) continue;
+    const deadline = s.deadline ? `apply by ${day(s.deadline)}` : "rolling";
+    const dates = s.starts_on || s.ends_on ? `, runs ${day(s.starts_on) ?? "?"} to ${day(s.ends_on) ?? "?"}` : "";
+    const where = s.online ? "online" : (s.location ?? "no place given");
+    const majors = s.major_slugs.length ? s.major_slugs.join(", ") : "any major";
+    const systems = s.systems.length ? s.systems.join(", ") : "any system";
+    const terms = s.terms.length ? `, for ${s.terms.join(", ")}` : "";
+    rows.push({
+      table: "opportunities", ...s,
+      record: `${s.title} (${s.org_name}) [${s.kind}, ${s.cost}, ${where}]: ${deadline}${dates}. For ${s.audience}, ${majors}, ${systems}${terms}. ${s.summary}` +
+        `${list("Check yourself", s.who_for)}${list("Wants", s.wants)}${list("Offers", s.offers)} Opens ${s.url}`,
+    });
   }
   return finish(rows);
 }

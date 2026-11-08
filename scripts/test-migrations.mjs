@@ -571,6 +571,65 @@ await expectRows("a student sees only their own", () => as("authenticated", B, "
 await expectError("status is not_started, in_progress or done", () =>
   as("authenticated", B, "insert into user_topic_status (user_id, topic, status) values ($1, 'cs2', 'maybe')", [B]), /invalid input value/);
 
+// Explore hub (22): a school's abbreviation, and opportunities written only by the import, readable once verified
+const abbr = (value) => as("service_role", null, "update institutions set abbreviation = $1 where id = $2", [value, uniId]);
+await as("service_role", null, "update institutions set verification_status = 'unverified', verified_at = null where id = $1", [uniId]);
+await expectOk("an abbreviation like UCSD", () => abbr("UCSD"));
+await expectOk("…or letters and digits, like CSU2", () => abbr("CSU2"));
+await expectError("an abbreviation is in capitals", () => abbr("Ucsd"), /abbreviation_check/);
+await expectError("an abbreviation is 2 to 5 characters", () => abbr("CALSTA"), /abbreviation_check/);
+await expectError("…not 1", () => abbr("U"), /abbreviation_check/);
+await expectError("…with no spaces or dots", () => abbr("MT.S"), /abbreviation_check/);
+await expectRows("anon reads a school's abbreviation", () => as("anon", null, "select abbreviation from institutions where abbreviation = 'CSU2'"), 1);
+
+const addOpportunity = (slug, columns = {}) => {
+  const row = {
+    slug, kind: "research", title: "Test program", org_name: "Test University", summary: "A made-up program.", audience: "community_college",
+    cost: "paid", url: "https://example.org/apply", source_name: "Test source", source_url: "https://example.org/program", academic_year: "2026-27",
+    ...columns,
+  };
+  const entries = Object.entries(row).filter(([, v]) => v !== undefined);
+  return as("service_role", null, `insert into opportunities (${entries.map(([k]) => k).join(", ")}, retrieved_at)
+    values (${entries.map((_, i) => `$${i + 1}`).join(", ")}, now()) returning id`, entries.map(([, v]) => v));
+};
+await expectError("anon can't add an opportunity", () => as("anon", null, "insert into opportunities (slug) values ('x')"), /permission denied/);
+await expectError("a student can't add an opportunity", () => as("authenticated", A, "insert into opportunities (slug) values ('x')"), /permission denied/);
+const oppId = (await expectOk("service role adds an opportunity", () =>
+  addOpportunity("test-program", { who_for: ["GPA 3.0 or higher"], major_slugs: ["computer-science"], systems: ["UC"], terms: ["fall-2027"],
+    deadline: "2027-02-01", starts_on: "2027-06-21", ends_on: "2027-08-13" })))?.rows[0].id;
+const rolling = (await expectOk("a rolling opportunity has no deadline, and lists default to empty", () => addOpportunity("rolling-program", { online: true })))?.rows[0].id;
+check("lists start empty and online is stored", (await db.query("select wants, systems, online from opportunities where id = $1", [rolling])).rows[0]?.online === true &&
+  (await db.query("select cardinality(wants) + cardinality(systems) as n from opportunities where id = $1", [rolling])).rows[0]?.n === 0);
+await expectRows("an unverified opportunity is hidden from anon", () => as("anon", null, "select * from opportunities"), 0);
+await expectRows("…and from students", () => as("authenticated", A, "select * from opportunities"), 0);
+await verifyRow("opportunities", oppId);
+await expectRows("a verified opportunity is readable by anon", () => as("anon", null, "select * from opportunities"), 1);
+await expectRows("…and by students", () => as("authenticated", A, "select * from opportunities"), 1);
+await expectError("a student can't change an opportunity", () => as("authenticated", A, "update opportunities set title = 'x'"), /permission denied/);
+await expectError("a verified opportunity can't be changed by an import", () =>
+  as("service_role", null, "update opportunities set title = 'Changed' where id = $1", [oppId]), /refusing to update verified/);
+await expectError("a verified opportunity can't be deleted", () =>
+  as("service_role", null, "delete from opportunities where id = $1", [oppId]), /refusing to delete verified/);
+await expectError("one opportunity per slug", () => addOpportunity("test-program"), /duplicate key/);
+await expectError("kind is one of the six", () => addOpportunity("bad-kind", { kind: "job" }), /invalid input value/);
+await expectError("audience is one of the three", () => addOpportunity("bad-audience", { audience: "transfer" }), /invalid input value/);
+await expectError("cost is free, paid or fee", () => addOpportunity("bad-cost", { cost: "cheap" }), /invalid input value/);
+await expectError("url must be https", () => addOpportunity("bad-url", { url: "http://example.org/apply" }), /url_check/);
+await expectError("source_url must be https", () => addOpportunity("bad-source", { source_url: "http://example.org" }), /source_url_check/);
+await expectError("systems are UC or CSU", () => addOpportunity("bad-system", { systems: ["UC", "CCC"] }), /systems_check/);
+await expectError("terms look like fall-2027", () => addOpportunity("bad-term", { terms: ["Fall 2027"] }), /terms_check/);
+await expectError("major_slugs are slugs", () => addOpportunity("bad-major", { major_slugs: ["Computer Science"] }), /major_slugs_check/);
+await expectError("no empty entries in a list", () => addOpportunity("empty-entry", { wants: ["An essay", ""] }), /wants_check/);
+await expectError("a title can't be blank", () => addOpportunity("blank-title", { title: "  " }), /title_check/);
+await expectError("it can't end before it starts", () => addOpportunity("bad-dates", { starts_on: "2027-08-13", ends_on: "2027-06-21" }), /check/);
+const oppReopen = await expectOk("the service role reopens an opportunity", () =>
+  as("service_role", null, "select reopen_verified_row($1, 'tester', 'new deadline', false) as r", [oppId]));
+check("the reopen names the opportunity", oppReopen?.rows[0].r.table === "opportunities" && oppReopen.rows[0].r.record === "test-program: Test program", oppReopen?.rows[0].r);
+await expectRows("a reopened opportunity is hidden again", () => as("anon", null, "select * from opportunities"), 0);
+await expectError("students can't run the opportunities import", () =>
+  as("authenticated", A, "select import_opportunities_batch('{}'::jsonb, 'x', false)"), /permission denied/);
+await expectError("students can't call the batch directly", () => as("authenticated", A, "select apply_opportunities_batch('{}'::jsonb)"), /permission denied/);
+
 // Deleting an account: only the caller's, with every per-student row
 const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);

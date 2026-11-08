@@ -1,10 +1,11 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Every California public college and university as a school (spec 21 → Data, batch 1). Names, city, website and system only. Community colleges: the Chancellor's Office alphabetical listing (118 entries) minus its 2 noncredit continuing-education schools (North Orange Continuing Education, San Diego College of Continuing Education) = 116, including Calbright. Changes from that listing: names written in normal case instead of capitals (DEANZA → De Anza, MIRACOSTA → MiraCosta); websites given https:// and lower case (www.ClovisCollege.edu → https://www.cloviscollege.edu); Laney's website is printed www.laneyedu, entered as https://www.laney.edu; Lake Tahoe's city So. Lake Tahoe → South Lake Tahoe; Calbright has no address, so no city. Cities are the listing's mailing-address city (Clovis Community College's is Fresno). Cal State: the 22 university cards on calstate.edu/attend/campuses, with their short names and website links (http links entered as https). Cal Maritime has no card (it is now part of Cal Poly San Luis Obispo) and isn't listed. UC: the 9 undergraduate campuses on universityofcalifornia.edu (UCSF has no undergraduates). las-positas and uc-san-diego are copied unchanged from las-positas-ucsd-cs.json so the import reports them unchanged. Spot-check 10 community colleges and every Cal State and UC row against the source_url, fill in retrieved_at with the date you checked, then run: npm run import -- data/raw/planning/california-institutions.json --dry-run Checked by Abyan on 2026-10-31. Every Cal State row against calstate.edu/attend/campuses, every UC row against universityofcalifornia.edu/about-uc/campuses-locations, and all 116 community colleges (not just 10) against the Chancellor's Office listing: names, cities and websites match, apart from the Lake Tahoe and Laney fixes above. Every website loads. No rows changed. las-positas and uc-san-diego keep their 2026-10-04 retrieved_at so they stay identical to las-positas-ucsd-cs.json.",
+  "notes": "Every California public college and university as a school (spec 21 → Data, batch 1). Names, city, website and system only. Community colleges: the Chancellor's Office alphabetical listing (118 entries) minus its 2 noncredit continuing-education schools (North Orange Continuing Education, San Diego College of Continuing Education) = 116, including Calbright. Changes from that listing: names written in normal case instead of capitals (DEANZA → De Anza, MIRACOSTA → MiraCosta); websites given https:// and lower case (www.ClovisCollege.edu → https://www.cloviscollege.edu); Laney's website is printed www.laneyedu, entered as https://www.laney.edu; Lake Tahoe's city So. Lake Tahoe → South Lake Tahoe; Calbright has no address, so no city. Cities are the listing's mailing-address city (Clovis Community College's is Fresno). Cal State: the 22 university cards on calstate.edu/attend/campuses, with their short names and website links (http links entered as https). Cal Maritime has no card (it is now part of Cal Poly San Luis Obispo) and isn't listed. UC: the 9 undergraduate campuses on universityofcalifornia.edu (UCSF has no undergraduates). las-positas and uc-san-diego are copied unchanged from las-positas-ucsd-cs.json so the import reports them unchanged. Spot-check 10 community colleges and every Cal State and UC row against the source_url, fill in retrieved_at with the date you checked, then run: npm run import -- data/raw/planning/california-institutions.json --dry-run Checked by Abyan on 2026-10-31. Every Cal State row against calstate.edu/attend/campuses, every UC row against universityofcalifornia.edu/about-uc/campuses-locations, and all 116 community colleges (not just 10) against the Chancellor's Office listing: names, cities and websites match, apart from the Lake Tahoe and Laney fixes above. Every website loads. No rows changed. las-positas and uc-san-diego keep their 2026-10-04 retrieved_at so they stay identical to las-positas-ucsd-cs.json. Abbreviations (spec 22, 2026-11-07): drafted by Claude Code from each school's own common short name, often its web address (dvc.edu, sjsu.edu); UC Berkeley is UCB, Ryan's call. A todo marks every school in a clash (two schools sharing one short name) and every school with no common short form, with a draft to start from; Abyan picks those and deletes each todo, then the rows are reopened, imported and verified. las-positas and uc-san-diego carry the same abbreviations in las-positas-ucsd-cs.json.",
   "institutions": [
     {
       "slug": "allan-hancock",
       "name": "Allan Hancock College",
+      "abbreviation": "AHC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Maria",
@@ -17,6 +18,7 @@
     {
       "slug": "american-river",
       "name": "American River College",
+      "abbreviation": "ARC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Sacramento",
@@ -29,6 +31,7 @@
     {
       "slug": "antelope-valley",
       "name": "Antelope Valley College",
+      "abbreviation": "AVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Lancaster",
@@ -41,6 +44,7 @@
     {
       "slug": "bakersfield",
       "name": "Bakersfield College",
+      "abbreviation": "BC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Bakersfield",
@@ -53,6 +57,7 @@
     {
       "slug": "barstow",
       "name": "Barstow Community College",
+      "abbreviation": "BARCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Barstow",
@@ -60,11 +65,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "BCC is also used by Berkeley City College (berkeley-city). Pick a different one for each"
     },
     {
       "slug": "berkeley-city",
       "name": "Berkeley City College",
+      "abbreviation": "BCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Berkeley",
@@ -72,11 +79,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "BCC is also used by Barstow Community College (barstow). Pick a different one for each"
     },
     {
       "slug": "butte",
       "name": "Butte College",
+      "abbreviation": "BUTTE",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oroville",
@@ -84,11 +93,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Butte College\". Pick one, or keep this draft"
     },
     {
       "slug": "cabrillo",
       "name": "Cabrillo College",
+      "abbreviation": "CAB",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Aptos",
@@ -96,22 +107,26 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cabrillo College\". Pick one, or keep this draft"
     },
     {
       "slug": "calbright",
       "name": "Calbright College",
+      "abbreviation": "CALB",
       "institution_type": "community_college",
       "system": "CCC",
       "website": "https://www.calbright.org",
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Calbright College\". Pick one, or keep this draft"
     },
     {
       "slug": "canada",
       "name": "Cañada College",
+      "abbreviation": "CAN",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Redwood City",
@@ -119,11 +134,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cañada College\". Pick one, or keep this draft"
     },
     {
       "slug": "cerritos",
       "name": "Cerritos College",
+      "abbreviation": "CER",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Norwalk",
@@ -131,11 +148,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cerritos College\". Pick one, or keep this draft"
     },
     {
       "slug": "cerro-coso",
       "name": "Cerro Coso Community College",
+      "abbreviation": "CCCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Ridgecrest",
@@ -143,11 +162,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cerro Coso Community College\". Pick one, or keep this draft"
     },
     {
       "slug": "chabot",
       "name": "Chabot College",
+      "abbreviation": "CHB",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Hayward",
@@ -155,11 +176,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Chabot College\". Pick one, or keep this draft"
     },
     {
       "slug": "chaffey",
       "name": "Chaffey College",
+      "abbreviation": "CHAF",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Rancho Cucamonga",
@@ -167,11 +190,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Chaffey College\". Pick one, or keep this draft"
     },
     {
       "slug": "citrus",
       "name": "Citrus College",
+      "abbreviation": "CIT",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Glendora",
@@ -179,11 +204,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Citrus College\". Pick one, or keep this draft"
     },
     {
       "slug": "city-college-of-san-francisco",
       "name": "City College of San Francisco",
+      "abbreviation": "CCSF",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Francisco",
@@ -196,6 +223,7 @@
     {
       "slug": "clovis",
       "name": "Clovis Community College",
+      "abbreviation": "CLCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fresno",
@@ -203,11 +231,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "CCC is also used by Contra Costa College (contra-costa), and reads as California Community Colleges. Pick a different one for each"
     },
     {
       "slug": "coalinga",
       "name": "Coalinga College",
+      "abbreviation": "WHCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Coalinga",
@@ -215,11 +245,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "Drafted from the district's name, West Hills College Coalinga; check the college uses it"
     },
     {
       "slug": "coastline",
       "name": "Coastline College",
+      "abbreviation": "CLC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fountain Valley",
@@ -227,11 +259,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Coastline College\". Pick one, or keep this draft"
     },
     {
       "slug": "college-of-alameda",
       "name": "College of Alameda",
+      "abbreviation": "COA",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Alameda",
@@ -244,6 +278,7 @@
     {
       "slug": "college-of-marin",
       "name": "College of Marin",
+      "abbreviation": "COM",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Kentfield",
@@ -256,6 +291,7 @@
     {
       "slug": "college-of-san-mateo",
       "name": "College of San Mateo",
+      "abbreviation": "CSM",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Mateo",
@@ -268,6 +304,7 @@
     {
       "slug": "college-of-the-canyons",
       "name": "College of the Canyons",
+      "abbreviation": "COC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Clarita",
@@ -280,6 +317,7 @@
     {
       "slug": "college-of-the-desert",
       "name": "College of the Desert",
+      "abbreviation": "COD",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Palm Desert",
@@ -292,6 +330,7 @@
     {
       "slug": "college-of-the-redwoods",
       "name": "College of the Redwoods",
+      "abbreviation": "CR",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Eureka",
@@ -304,6 +343,7 @@
     {
       "slug": "college-of-the-sequoias",
       "name": "College of the Sequoias",
+      "abbreviation": "COS",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Visalia",
@@ -311,11 +351,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "COS is also used by College of the Siskiyous (college-of-the-siskiyous). Pick a different one for each"
     },
     {
       "slug": "college-of-the-siskiyous",
       "name": "College of the Siskiyous",
+      "abbreviation": "COTS",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Weed",
@@ -323,11 +365,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "COS is also used by College of the Sequoias (college-of-the-sequoias). Pick a different one for each"
     },
     {
       "slug": "columbia",
       "name": "Columbia College",
+      "abbreviation": "COL",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Sonora",
@@ -335,11 +379,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Columbia College\". Pick one, or keep this draft"
     },
     {
       "slug": "compton",
       "name": "Compton College",
+      "abbreviation": "COMP",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Compton",
@@ -347,11 +393,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Compton College\". Pick one, or keep this draft"
     },
     {
       "slug": "contra-costa",
       "name": "Contra Costa College",
+      "abbreviation": "CCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Pablo",
@@ -359,11 +407,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "CCC is also used by Clovis Community College (clovis), and reads as California Community Colleges. Pick a different one for each"
     },
     {
       "slug": "copper-mountain",
       "name": "Copper Mountain College",
+      "abbreviation": "CMC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Joshua Tree",
@@ -376,6 +426,7 @@
     {
       "slug": "cosumnes-river",
       "name": "Cosumnes River College",
+      "abbreviation": "CRC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Sacramento",
@@ -388,6 +439,7 @@
     {
       "slug": "crafton-hills",
       "name": "Crafton Hills College",
+      "abbreviation": "CHC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Yucaipa",
@@ -400,6 +452,7 @@
     {
       "slug": "cuesta",
       "name": "Cuesta College",
+      "abbreviation": "CUE",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Luis Obispo",
@@ -407,11 +460,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cuesta College\". Pick one, or keep this draft"
     },
     {
       "slug": "cuyamaca",
       "name": "Cuyamaca College",
+      "abbreviation": "CUY",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "El Cajon",
@@ -419,11 +474,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cuyamaca College\". Pick one, or keep this draft"
     },
     {
       "slug": "cypress",
       "name": "Cypress College",
+      "abbreviation": "CYP",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Cypress",
@@ -431,11 +488,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Cypress College\". Pick one, or keep this draft"
     },
     {
       "slug": "de-anza",
       "name": "De Anza College",
+      "abbreviation": "DAC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Cupertino",
@@ -448,6 +507,7 @@
     {
       "slug": "diablo-valley",
       "name": "Diablo Valley College",
+      "abbreviation": "DVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Pleasant Hill",
@@ -460,6 +520,7 @@
     {
       "slug": "east-los-angeles",
       "name": "East Los Angeles College",
+      "abbreviation": "ELAC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Monterey Park",
@@ -472,6 +533,7 @@
     {
       "slug": "el-camino",
       "name": "El Camino College",
+      "abbreviation": "ECC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Torrance",
@@ -484,6 +546,7 @@
     {
       "slug": "evergreen-valley",
       "name": "Evergreen Valley College",
+      "abbreviation": "EVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Jose",
@@ -496,6 +559,7 @@
     {
       "slug": "feather-river",
       "name": "Feather River College",
+      "abbreviation": "FRC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Quincy",
@@ -508,6 +572,7 @@
     {
       "slug": "folsom-lake",
       "name": "Folsom Lake College",
+      "abbreviation": "FLC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Folsom",
@@ -520,6 +585,7 @@
     {
       "slug": "foothill",
       "name": "Foothill College",
+      "abbreviation": "FH",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Los Altos Hills",
@@ -527,11 +593,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Foothill College\". Pick one, or keep this draft"
     },
     {
       "slug": "fresno-city",
       "name": "Fresno City College",
+      "abbreviation": "FCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fresno",
@@ -544,6 +612,7 @@
     {
       "slug": "fullerton",
       "name": "Fullerton College",
+      "abbreviation": "FC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fullerton",
@@ -556,6 +625,7 @@
     {
       "slug": "gavilan",
       "name": "Gavilan College",
+      "abbreviation": "GAV",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Gilroy",
@@ -563,11 +633,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Gavilan College\". Pick one, or keep this draft"
     },
     {
       "slug": "glendale",
       "name": "Glendale Community College",
+      "abbreviation": "GCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Glendale",
@@ -580,6 +652,7 @@
     {
       "slug": "golden-west",
       "name": "Golden West College",
+      "abbreviation": "GWC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Huntington Beach",
@@ -592,6 +665,7 @@
     {
       "slug": "grossmont",
       "name": "Grossmont College",
+      "abbreviation": "GC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "El Cajon",
@@ -599,11 +673,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Grossmont College\". Pick one, or keep this draft"
     },
     {
       "slug": "hartnell",
       "name": "Hartnell College",
+      "abbreviation": "HC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Salinas",
@@ -611,11 +687,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Hartnell College\". Pick one, or keep this draft"
     },
     {
       "slug": "imperial-valley",
       "name": "Imperial Valley College",
+      "abbreviation": "IMPVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Imperial",
@@ -623,11 +701,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "IVC is also used by Irvine Valley College (irvine-valley). Pick a different one for each"
     },
     {
       "slug": "irvine-valley",
       "name": "Irvine Valley College",
+      "abbreviation": "IVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Irvine",
@@ -635,11 +715,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "IVC is also used by Imperial Valley College (imperial-valley). Pick a different one for each"
     },
     {
       "slug": "lake-tahoe",
       "name": "Lake Tahoe Community College",
+      "abbreviation": "LTCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "South Lake Tahoe",
@@ -652,6 +734,7 @@
     {
       "slug": "laney",
       "name": "Laney College",
+      "abbreviation": "LAN",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oakland",
@@ -659,11 +742,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Laney College\". Pick one, or keep this draft"
     },
     {
       "slug": "las-positas",
       "name": "Las Positas College",
+      "abbreviation": "LPC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Livermore",
@@ -676,6 +761,7 @@
     {
       "slug": "lassen",
       "name": "Lassen College",
+      "abbreviation": "LAS",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Susanville",
@@ -683,11 +769,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Lassen College\". Pick one, or keep this draft"
     },
     {
       "slug": "lemoore",
       "name": "Lemoore College",
+      "abbreviation": "WHCL",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Lemoore",
@@ -695,11 +783,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "Drafted from the district's name, West Hills College Lemoore; check the college uses it"
     },
     {
       "slug": "long-beach-city",
       "name": "Long Beach City College",
+      "abbreviation": "LBCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Long Beach",
@@ -712,6 +802,7 @@
     {
       "slug": "los-angeles-city",
       "name": "Los Angeles City College",
+      "abbreviation": "LACC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Los Angeles",
@@ -724,6 +815,7 @@
     {
       "slug": "los-angeles-harbor",
       "name": "Los Angeles Harbor College",
+      "abbreviation": "LAHC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Wilmington",
@@ -736,6 +828,7 @@
     {
       "slug": "los-angeles-mission",
       "name": "Los Angeles Mission College",
+      "abbreviation": "LAMC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Sylmar",
@@ -748,6 +841,7 @@
     {
       "slug": "los-angeles-pierce",
       "name": "Los Angeles Pierce College",
+      "abbreviation": "LAPC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Woodland Hills",
@@ -760,6 +854,7 @@
     {
       "slug": "los-angeles-southwest",
       "name": "Los Angeles Southwest College",
+      "abbreviation": "LASC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Los Angeles",
@@ -772,6 +867,7 @@
     {
       "slug": "los-angeles-trade-tech",
       "name": "Los Angeles Trade-Tech College",
+      "abbreviation": "LATTC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Los Angeles",
@@ -784,6 +880,7 @@
     {
       "slug": "los-angeles-valley",
       "name": "Los Angeles Valley College",
+      "abbreviation": "LAVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Valley Glen",
@@ -796,6 +893,7 @@
     {
       "slug": "los-medanos",
       "name": "Los Medanos College",
+      "abbreviation": "LMC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Pittsburg",
@@ -808,6 +906,7 @@
     {
       "slug": "madera",
       "name": "Madera Community College",
+      "abbreviation": "MDCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Madera",
@@ -815,11 +914,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "MCC is also used by MiraCosta College (miracosta). Pick a different one for each"
     },
     {
       "slug": "mendocino",
       "name": "Mendocino College",
+      "abbreviation": "MEN",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Ukiah",
@@ -827,11 +928,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Mendocino College\". Pick one, or keep this draft"
     },
     {
       "slug": "merced",
       "name": "Merced College",
+      "abbreviation": "MERC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Merced",
@@ -839,11 +942,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Merced College\". Pick one, or keep this draft"
     },
     {
       "slug": "merritt",
       "name": "Merritt College",
+      "abbreviation": "MRT",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oakland",
@@ -851,11 +956,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Merritt College\". Pick one, or keep this draft"
     },
     {
       "slug": "miracosta",
       "name": "MiraCosta College",
+      "abbreviation": "MCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oceanside",
@@ -863,11 +970,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "MCC is also used by Madera Community College (madera). Pick a different one for each"
     },
     {
       "slug": "mission",
       "name": "Mission College",
+      "abbreviation": "MSN",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Clara",
@@ -875,11 +984,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Mission College\". Pick one, or keep this draft"
     },
     {
       "slug": "modesto-junior",
       "name": "Modesto Junior College",
+      "abbreviation": "MJC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Modesto",
@@ -892,6 +1003,7 @@
     {
       "slug": "monterey-peninsula",
       "name": "Monterey Peninsula College",
+      "abbreviation": "MPC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Monterey",
@@ -904,6 +1016,7 @@
     {
       "slug": "moorpark",
       "name": "Moorpark College",
+      "abbreviation": "MPK",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Moorpark",
@@ -911,11 +1024,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Moorpark College\". Pick one, or keep this draft"
     },
     {
       "slug": "moreno-valley",
       "name": "Moreno Valley College",
+      "abbreviation": "MVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Moreno Valley",
@@ -928,6 +1043,7 @@
     {
       "slug": "mt-san-antonio",
       "name": "Mt. San Antonio College",
+      "abbreviation": "MTSAC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Walnut",
@@ -940,6 +1056,7 @@
     {
       "slug": "mt-san-jacinto",
       "name": "Mt. San Jacinto College",
+      "abbreviation": "MSJC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Jacinto",
@@ -952,6 +1069,7 @@
     {
       "slug": "napa-valley",
       "name": "Napa Valley College",
+      "abbreviation": "NVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Napa",
@@ -964,6 +1082,7 @@
     {
       "slug": "norco",
       "name": "Norco College",
+      "abbreviation": "NOR",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Norco",
@@ -971,11 +1090,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Norco College\". Pick one, or keep this draft"
     },
     {
       "slug": "ohlone",
       "name": "Ohlone College",
+      "abbreviation": "OHL",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fremont",
@@ -983,11 +1104,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Ohlone College\". Pick one, or keep this draft"
     },
     {
       "slug": "orange-coast",
       "name": "Orange Coast College",
+      "abbreviation": "OCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Costa Mesa",
@@ -1000,6 +1123,7 @@
     {
       "slug": "oxnard",
       "name": "Oxnard College",
+      "abbreviation": "OXC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oxnard",
@@ -1007,11 +1131,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Oxnard College\". Pick one, or keep this draft"
     },
     {
       "slug": "palo-verde",
       "name": "Palo Verde College",
+      "abbreviation": "PVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Blythe",
@@ -1024,6 +1150,7 @@
     {
       "slug": "palomar",
       "name": "Palomar College",
+      "abbreviation": "PAL",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Marcos",
@@ -1031,11 +1158,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Palomar College\". Pick one, or keep this draft"
     },
     {
       "slug": "pasadena-city",
       "name": "Pasadena City College",
+      "abbreviation": "PCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Pasadena",
@@ -1048,6 +1177,7 @@
     {
       "slug": "porterville",
       "name": "Porterville College",
+      "abbreviation": "PTC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Porterville",
@@ -1055,11 +1185,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Porterville College\". Pick one, or keep this draft"
     },
     {
       "slug": "reedley",
       "name": "Reedley College",
+      "abbreviation": "RC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Reedley",
@@ -1067,11 +1199,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Reedley College\". Pick one, or keep this draft"
     },
     {
       "slug": "rio-hondo",
       "name": "Rio Hondo College",
+      "abbreviation": "RHC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Whittier",
@@ -1084,6 +1218,7 @@
     {
       "slug": "riverside-city",
       "name": "Riverside City College",
+      "abbreviation": "RCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Riverside",
@@ -1096,6 +1231,7 @@
     {
       "slug": "sacramento-city",
       "name": "Sacramento City College",
+      "abbreviation": "SCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Sacramento",
@@ -1103,11 +1239,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "SCC is also used by Santiago Canyon College (santiago-canyon) and Solano Community College (solano). Pick a different one for each"
     },
     {
       "slug": "saddleback",
       "name": "Saddleback College",
+      "abbreviation": "SADD",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Mission Viejo",
@@ -1115,11 +1253,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Saddleback College\". Pick one, or keep this draft"
     },
     {
       "slug": "san-bernardino-valley",
       "name": "San Bernardino Valley College",
+      "abbreviation": "SBVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Bernardino",
@@ -1132,6 +1272,7 @@
     {
       "slug": "san-diego-city",
       "name": "San Diego City College",
+      "abbreviation": "SDCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Diego",
@@ -1144,6 +1285,7 @@
     {
       "slug": "san-diego-mesa",
       "name": "San Diego Mesa College",
+      "abbreviation": "MESA",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Diego",
@@ -1151,11 +1293,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "SDMC is also used by San Diego Miramar College (san-diego-miramar). Pick a different one for each"
     },
     {
       "slug": "san-diego-miramar",
       "name": "San Diego Miramar College",
+      "abbreviation": "SDMC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Diego",
@@ -1163,11 +1307,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "SDMC is also used by San Diego Mesa College (san-diego-mesa). Pick a different one for each"
     },
     {
       "slug": "san-joaquin-delta",
       "name": "San Joaquin Delta College",
+      "abbreviation": "SJDC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Stockton",
@@ -1180,6 +1326,7 @@
     {
       "slug": "san-jose-city",
       "name": "San Jose City College",
+      "abbreviation": "SJCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Jose",
@@ -1192,6 +1339,7 @@
     {
       "slug": "santa-ana",
       "name": "Santa Ana College",
+      "abbreviation": "SAC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Ana",
@@ -1204,6 +1352,7 @@
     {
       "slug": "santa-barbara-city",
       "name": "Santa Barbara City College",
+      "abbreviation": "SBCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Barbara",
@@ -1216,6 +1365,7 @@
     {
       "slug": "santa-monica",
       "name": "Santa Monica College",
+      "abbreviation": "SMC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Monica",
@@ -1228,6 +1378,7 @@
     {
       "slug": "santa-rosa-junior",
       "name": "Santa Rosa Junior College",
+      "abbreviation": "SRJC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Santa Rosa",
@@ -1240,6 +1391,7 @@
     {
       "slug": "santiago-canyon",
       "name": "Santiago Canyon College",
+      "abbreviation": "STCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Orange",
@@ -1247,11 +1399,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "SCC is also used by Sacramento City College (sacramento-city) and Solano Community College (solano). Pick a different one for each"
     },
     {
       "slug": "shasta",
       "name": "Shasta College",
+      "abbreviation": "SHAS",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Redding",
@@ -1259,11 +1413,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Shasta College\". Pick one, or keep this draft"
     },
     {
       "slug": "sierra",
       "name": "Sierra College",
+      "abbreviation": "SIER",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Rocklin",
@@ -1271,11 +1427,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Sierra College\". Pick one, or keep this draft"
     },
     {
       "slug": "skyline",
       "name": "Skyline College",
+      "abbreviation": "SKY",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "San Bruno",
@@ -1283,11 +1441,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Skyline College\". Pick one, or keep this draft"
     },
     {
       "slug": "solano",
       "name": "Solano Community College",
+      "abbreviation": "SOLCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Fairfield",
@@ -1295,11 +1455,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "SCC is also used by Sacramento City College (sacramento-city) and Santiago Canyon College (santiago-canyon). Pick a different one for each"
     },
     {
       "slug": "southwestern",
       "name": "Southwestern College",
+      "abbreviation": "SWC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Chula Vista",
@@ -1312,6 +1474,7 @@
     {
       "slug": "taft",
       "name": "Taft College",
+      "abbreviation": "TAFT",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Taft",
@@ -1319,11 +1482,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Taft College\". Pick one, or keep this draft"
     },
     {
       "slug": "ventura",
       "name": "Ventura College",
+      "abbreviation": "VC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Ventura",
@@ -1331,11 +1496,13 @@
       "source_name": "California Community Colleges Chancellor's Office",
       "source_url": "https://www.cccco.edu/Students/Find-a-College/College-Alphabetical-Listing",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "No common short name found; the school calls itself \"Ventura College\". Pick one, or keep this draft"
     },
     {
       "slug": "victor-valley",
       "name": "Victor Valley College",
+      "abbreviation": "VVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Victorville",
@@ -1348,6 +1515,7 @@
     {
       "slug": "west-los-angeles",
       "name": "West Los Angeles College",
+      "abbreviation": "WLAC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Culver City",
@@ -1360,6 +1528,7 @@
     {
       "slug": "west-valley",
       "name": "West Valley College",
+      "abbreviation": "WVC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Saratoga",
@@ -1372,6 +1541,7 @@
     {
       "slug": "woodland",
       "name": "Woodland Community College",
+      "abbreviation": "WCC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Woodland",
@@ -1384,6 +1554,7 @@
     {
       "slug": "yuba",
       "name": "Yuba College",
+      "abbreviation": "YC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Marysville",
@@ -1396,6 +1567,7 @@
     {
       "slug": "csu-bakersfield",
       "name": "CSU Bakersfield",
+      "abbreviation": "CSUB",
       "institution_type": "university",
       "system": "CSU",
       "city": "Bakersfield",
@@ -1408,6 +1580,7 @@
     {
       "slug": "csu-channel-islands",
       "name": "CSU Channel Islands",
+      "abbreviation": "CSUCI",
       "institution_type": "university",
       "system": "CSU",
       "city": "Camarillo",
@@ -1420,6 +1593,7 @@
     {
       "slug": "chico-state",
       "name": "Chico State",
+      "abbreviation": "CSUC",
       "institution_type": "university",
       "system": "CSU",
       "city": "Chico",
@@ -1427,11 +1601,13 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "The university calls itself Chico State; CSUC is also used. Confirm, or pick another"
     },
     {
       "slug": "csu-dominguez-hills",
       "name": "CSU Dominguez Hills",
+      "abbreviation": "CSUDH",
       "institution_type": "university",
       "system": "CSU",
       "city": "Carson",
@@ -1444,6 +1620,7 @@
     {
       "slug": "csu-east-bay",
       "name": "CSU East Bay",
+      "abbreviation": "CSUEB",
       "institution_type": "university",
       "system": "CSU",
       "city": "Hayward",
@@ -1456,6 +1633,7 @@
     {
       "slug": "fresno-state",
       "name": "Fresno State",
+      "abbreviation": "FRES",
       "institution_type": "university",
       "system": "CSU",
       "city": "Fresno",
@@ -1463,11 +1641,13 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "The university calls itself Fresno State, and CSUF is CSU Fullerton's. Pick one"
     },
     {
       "slug": "csu-fullerton",
       "name": "CSU Fullerton",
+      "abbreviation": "CSUF",
       "institution_type": "university",
       "system": "CSU",
       "city": "Fullerton",
@@ -1480,6 +1660,7 @@
     {
       "slug": "cal-poly-humboldt",
       "name": "Cal Poly Humboldt",
+      "abbreviation": "CPH",
       "institution_type": "university",
       "system": "CSU",
       "city": "Arcata",
@@ -1487,11 +1668,13 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "The university calls itself Cal Poly Humboldt; CPH is a draft. Confirm, or pick another"
     },
     {
       "slug": "csu-long-beach",
       "name": "CSU Long Beach",
+      "abbreviation": "CSULB",
       "institution_type": "university",
       "system": "CSU",
       "city": "Long Beach",
@@ -1504,6 +1687,7 @@
     {
       "slug": "cal-state-la",
       "name": "Cal State LA",
+      "abbreviation": "CSULA",
       "institution_type": "university",
       "system": "CSU",
       "city": "Los Angeles",
@@ -1516,6 +1700,7 @@
     {
       "slug": "csu-monterey-bay",
       "name": "CSU Monterey Bay",
+      "abbreviation": "CSUMB",
       "institution_type": "university",
       "system": "CSU",
       "city": "Seaside",
@@ -1528,6 +1713,7 @@
     {
       "slug": "csun",
       "name": "CSUN",
+      "abbreviation": "CSUN",
       "institution_type": "university",
       "system": "CSU",
       "city": "Northridge",
@@ -1540,6 +1726,7 @@
     {
       "slug": "cal-poly-pomona",
       "name": "Cal Poly Pomona",
+      "abbreviation": "CPP",
       "institution_type": "university",
       "system": "CSU",
       "city": "Pomona",
@@ -1552,6 +1739,7 @@
     {
       "slug": "sacramento-state",
       "name": "Sacramento State",
+      "abbreviation": "CSUS",
       "institution_type": "university",
       "system": "CSU",
       "city": "Sacramento",
@@ -1564,6 +1752,7 @@
     {
       "slug": "csu-san-bernardino",
       "name": "CSU San Bernardino",
+      "abbreviation": "CSUSB",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Bernardino",
@@ -1576,6 +1765,7 @@
     {
       "slug": "san-diego-state",
       "name": "San Diego State",
+      "abbreviation": "SDSU",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Diego",
@@ -1588,6 +1778,7 @@
     {
       "slug": "san-francisco-state",
       "name": "San Francisco State",
+      "abbreviation": "SFSU",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Francisco",
@@ -1600,6 +1791,7 @@
     {
       "slug": "san-jose-state",
       "name": "San José State",
+      "abbreviation": "SJSU",
       "institution_type": "university",
       "system": "CSU",
       "city": "San José",
@@ -1612,6 +1804,7 @@
     {
       "slug": "cal-poly-san-luis-obispo",
       "name": "Cal Poly San Luis Obispo",
+      "abbreviation": "SLO",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Luis Obispo",
@@ -1624,6 +1817,7 @@
     {
       "slug": "csu-san-marcos",
       "name": "CSU San Marcos",
+      "abbreviation": "CSUSM",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Marcos",
@@ -1636,6 +1830,7 @@
     {
       "slug": "sonoma-state",
       "name": "Sonoma State",
+      "abbreviation": "SSU",
       "institution_type": "university",
       "system": "CSU",
       "city": "Rohnert Park",
@@ -1648,6 +1843,7 @@
     {
       "slug": "stanislaus-state",
       "name": "Stanislaus State",
+      "abbreviation": "STAN",
       "institution_type": "university",
       "system": "CSU",
       "city": "Turlock",
@@ -1655,11 +1851,13 @@
       "source_name": "The California State University",
       "source_url": "https://www.calstate.edu/attend/campuses",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-10-31"
+      "retrieved_at": "2026-10-31",
+      "todo": "The university calls itself Stan State; CSUS is Sacramento State's. Pick one"
     },
     {
       "slug": "uc-berkeley",
       "name": "UC Berkeley",
+      "abbreviation": "UCB",
       "institution_type": "university",
       "system": "UC",
       "city": "Berkeley",
@@ -1672,6 +1870,7 @@
     {
       "slug": "uc-davis",
       "name": "UC Davis",
+      "abbreviation": "UCD",
       "institution_type": "university",
       "system": "UC",
       "city": "Davis",
@@ -1684,6 +1883,7 @@
     {
       "slug": "uc-irvine",
       "name": "UC Irvine",
+      "abbreviation": "UCI",
       "institution_type": "university",
       "system": "UC",
       "city": "Irvine",
@@ -1696,6 +1896,7 @@
     {
       "slug": "uc-los-angeles",
       "name": "UCLA",
+      "abbreviation": "UCLA",
       "institution_type": "university",
       "system": "UC",
       "city": "Los Angeles",
@@ -1708,6 +1909,7 @@
     {
       "slug": "uc-merced",
       "name": "UC Merced",
+      "abbreviation": "UCM",
       "institution_type": "university",
       "system": "UC",
       "city": "Merced",
@@ -1720,6 +1922,7 @@
     {
       "slug": "uc-riverside",
       "name": "UC Riverside",
+      "abbreviation": "UCR",
       "institution_type": "university",
       "system": "UC",
       "city": "Riverside",
@@ -1732,6 +1935,7 @@
     {
       "slug": "uc-san-diego",
       "name": "UC San Diego",
+      "abbreviation": "UCSD",
       "institution_type": "university",
       "system": "UC",
       "city": "La Jolla",
@@ -1744,6 +1948,7 @@
     {
       "slug": "uc-santa-barbara",
       "name": "UC Santa Barbara",
+      "abbreviation": "UCSB",
       "institution_type": "university",
       "system": "UC",
       "city": "Santa Barbara",
@@ -1756,6 +1961,7 @@
     {
       "slug": "uc-santa-cruz",
       "name": "UC Santa Cruz",
+      "abbreviation": "UCSC",
       "institution_type": "university",
       "system": "UC",
       "city": "Santa Cruz",

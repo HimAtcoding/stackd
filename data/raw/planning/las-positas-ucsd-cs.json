@@ -5,6 +5,7 @@
     {
       "slug": "las-positas",
       "name": "Las Positas College",
+      "abbreviation": "LPC",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Livermore",
@@ -17,6 +18,7 @@
     {
       "slug": "uc-san-diego",
       "name": "UC San Diego",
+      "abbreviation": "UCSD",
       "institution_type": "university",
       "system": "UC",
       "city": "La Jolla",

@@ -1,16 +1,17 @@
 // End-to-end test of the import pipeline on an in-memory database (PGlite). Uses made-up schools, dates and majors
-// (Example College, Example University, "Test application", example-major), plus checked copies of the real Explore and
-// school files in section 17; nothing touches the real project. `npm run test:import`
+// (Example College, Example University, "Test application", example-major, made-up opportunities), plus checked copies of
+// the real Explore, school and opportunities files in sections 17 and 19; nothing touches the real project. `npm run test:import`
 import fs from "node:fs";
 import path from "node:path";
 import { asRole, createTestDatabase } from "../test-db.mjs";
-import { CONTACT_EMAIL } from "./config.mjs";
+import { CONTACT_EMAIL, SOCIAL_HOSTS } from "./config.mjs";
 import { validateDeadlinesFile } from "./deadlines.mjs";
 import { validateEssaysFile } from "./essays.mjs";
 import { sharedTopics, validateExploreFile } from "./explore.mjs";
 import { fetchSource } from "./fetch.mjs";
+import { validateOpportunitiesFile } from "./opportunities.mjs";
 import { validatePlanningFile } from "./planning.mjs";
-import { reopenRow } from "./reopen.mjs";
+import { reopenFromReport, reopenRow } from "./reopen.mjs";
 import { readReportCsv } from "./report.mjs";
 import { runImport } from "./run.mjs";
 import { verifyFromCsv } from "./verify.mjs";
@@ -56,6 +57,13 @@ const testDatabase = {
   async exploreRowsFor() {
     const q = async (t) => (await asRole(db, "service_role", null, `select * from ${t}`)).rows;
     return { pathways: await q("pathways"), pathway_requirements: await q("pathway_requirements"), pathway_campuses: await q("pathway_campuses"), institutions: await q("institutions") };
+  },
+  async importOpportunities(payload, sourceFile, dryRun) {
+    const r = await asRole(db, "service_role", null, "select import_opportunities_batch($1::jsonb, $2, $3) as r", [JSON.stringify(payload), sourceFile, dryRun]);
+    return r.rows[0].r;
+  },
+  async opportunityRowsFor() {
+    return { opportunities: (await asRole(db, "service_role", null, "select * from opportunities")).rows };
   },
   async logFailure(sourceFile, dryRun, error) {
     await asRole(db, "service_role", null, "insert into import_runs (source_file, dry_run, status, error) values ($1, $2, 'failed', $3)", [sourceFile, dryRun, error]);
@@ -605,7 +613,9 @@ const fillIn = (data, date) => {
     }
   };
   strip(data);
-  for (const row of [...(data.pathways ?? []), ...(data.institutions ?? []), ...(data.majors ?? [])]) if (row.retrieved_at === "") row.retrieved_at = date;
+  for (const row of [...(data.pathways ?? []), ...(data.institutions ?? []), ...(data.majors ?? []), ...(data.opportunities ?? [])]) {
+    if (row.retrieved_at === "") row.retrieved_at = date;
+  }
   return data;
 };
 const realCs = () => JSON.parse(fs.readFileSync("data/raw/explore/computer-science.json", "utf8"));
@@ -639,7 +649,7 @@ for (const slug of BATCH_2A) {
   check(`${slug}.json is refused only for its todos and dates`, exploreOpen.length === 0, JSON.stringify(exploreOpen));
   const filled = validateExploreFile(fillIn(readRaw(explore), "2026-10-31"));
   check(`${slug}.json passes once checked`, filled.problems.length === 0, JSON.stringify(filled.problems));
-  const majorsOpen = validatePlanningFile(readRaw(planning)).problems.filter((p) => !/retrieved_at is empty|todo isn't a field/.test(p));
+  const majorsOpen = validatePlanningFile(readRaw(planning)).problems.filter((p) => !/retrieved_at is empty|still has a todo/.test(p));
   check(`${slug}-majors.json is refused only for its todos and dates`, majorsOpen.length === 0, JSON.stringify(majorsOpen));
   const majorsFilled = validatePlanningFile(fillIn(readRaw(planning), "2026-10-31"));
   check(`${slug}-majors.json passes once checked`, majorsFilled.problems.length === 0, JSON.stringify(majorsFilled.problems));
@@ -654,7 +664,9 @@ check("UC Santa Cruz's Business Management Economics: both pathways list it, one
 
 const realInst = () => JSON.parse(fs.readFileSync("data/raw/planning/california-institutions.json", "utf8"));
 const instAsIs = validatePlanningFile(realInst()).problems;
-check("california-institutions.json is checked (every row has retrieved_at)", instAsIs.length === 0, `${instAsIs.length}: ${instAsIs[0]}`);
+const instTodos = realInst().institutions.filter((r) => r.todo);
+check("california-institutions.json is refused only for its abbreviation todos",
+  instAsIs.length === instTodos.length && instAsIs.every((p) => /still has a todo/.test(p)), `${instAsIs.length}: ${instAsIs.find((p) => !/still has a todo/.test(p))}`);
 const inst = validatePlanningFile(fillIn(realInst(), "2026-10-31"));
 check("california-institutions.json passes once checked", inst.problems.length === 0, JSON.stringify(inst.problems.slice(0, 3)));
 const bySystem = (s, type) => (inst.payload?.institutions ?? []).filter((r) => r.system === s && r.institution_type === type).length;
@@ -674,6 +686,7 @@ const instFile = path.join(RAW_PLANNING, "california-institutions.json");
 fs.writeFileSync(instFile, JSON.stringify(fillIn(realInst(), "2026-10-31"), null, 2));
 out = await runImport({ file: instFile, dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("california-institutions.json imports", out.ok && out.counts.institutions.inserted === 147, JSON.stringify(out.counts ?? out.problems));
+check("…with every school's abbreviation", (await count("institutions", "abbreviation is not null and slug not like 'example-%'")) === 147);
 out = await runImport({ file: writeMajor("computer-science", realCs()), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("computer-science.json imports", out.ok && out.counts.pathways.inserted === 2 && out.counts.pathway_requirements.inserted === 16 && out.counts.pathway_campuses.inserted === 9,
   JSON.stringify(out.counts ?? out.problems));
@@ -724,7 +737,215 @@ for (const slug of ["uc-davis", "san-jose-state"]) {
     rows.some((m) => m.name === "Computer Science" && m.degree_type === "BS" && m.verification_status === "verified"), rows);
 }
 
+// Abbreviations as drafted (22 → School tiles): the spec's examples, no clashes, and the first slice kept in step
+const abbrOf = new Map(realInst().institutions.map((r) => [r.slug, r.abbreviation]));
+check("every school in california-institutions.json has an abbreviation", realInst().institutions.every((r) => /^[A-Z0-9]{2,5}$/.test(r.abbreviation ?? "")));
+check("no two schools share one", new Set(abbrOf.values()).size === abbrOf.size);
+check("the spec's examples: UCSD, UCLA, SJSU, SLO, LPC, DVC, and UCB for Berkeley",
+  JSON.stringify(["uc-san-diego", "uc-los-angeles", "san-jose-state", "cal-poly-san-luis-obispo", "las-positas", "diablo-valley", "uc-berkeley"].map((s) => abbrOf.get(s))) ===
+    JSON.stringify(["UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC", "UCB"]));
+check("every todo is on an abbreviation a person still has to pick", instTodos.length > 0 && instTodos.every((r) => typeof r.todo === "string" && r.todo.length > 20));
+check("the UC campuses carry no todo", !instTodos.some((r) => r.system === "UC"));
+check("the stored abbreviation matches the file", (await db.query("select abbreviation from institutions where slug = 'uc-san-diego'")).rows[0]?.abbreviation === "UCSD");
+
+// 18. Abbreviations through the planning import, and reopening every verified row in a review report (--from-report)
+const hubSchools = () => ({
+  written_by: "test",
+  institutions: [
+    { slug: "hub-college", name: "Hub College", institution_type: "community_college", system: "CCC", ...prov, source_url: "https://example.org/hub-college" },
+    { slug: "hub-university", name: "Hub University", institution_type: "university", system: "CSU", ...prov, source_url: "https://example.org/hub-university" },
+  ],
+});
+const withAbbr = () => {
+  const d = hubSchools();
+  d.institutions[0].abbreviation = "HC";
+  d.institutions[1].abbreviation = "HU";
+  return d;
+};
+out = await runImport({ file: writeFixture("hub", hubSchools()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+const hubReport = `${out.report}.csv`;
+const hubLines = fs.readFileSync(hubReport, "utf8").split("\n");
+fs.writeFileSync(hubReport, [hubLines[0], ...hubLines.slice(1).filter(Boolean).map((l) => (l.includes("hub-college") ? l.replace(/,,$/, ",tester,2026-11-07") : l))].join("\n") + "\n");
+v = await verifyFromCsv({ file: hubReport, db: testDatabase });
+check("abbreviations: one of the two schools is verified", v.ok && v.verified === 1, JSON.stringify(v));
+out = await runImport({ file: writeFixture("hub-abbr", withAbbr()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("abbreviations: adding one to a verified school stops the import", !out.ok && /institution hub-college is verified and the file would change it/.test(out.problems[0]), JSON.stringify(out));
+check("abbreviations: nothing from that file applied", (await count("institutions", "slug like 'hub-%' and abbreviation is not null")) === 0);
+
+const logged = async () => count("reopen_log");
+const logBefore = await logged();
+let bulk = await reopenFromReport({ file: hubReport, by: "", reason: "", apply: true, db: testDatabase });
+check("from-report: refused without who and why", !bulk.ok && bulk.problems.length === 2, JSON.stringify(bulk));
+bulk = await reopenFromReport({ file: `${REVIEW}/no-such-report.csv`, by: "tester", reason: "x", apply: true, db: testDatabase });
+check("from-report: refused without a report", !bulk.ok && /must be a review report CSV/.test(bulk.problems[0]), JSON.stringify(bulk));
+const badIdReport = `${REVIEW}/bad-id.csv`;
+fs.writeFileSync(badIdReport, `${hubLines[0]}\ninstitutions,not-an-id,Nowhere\n`);
+bulk = await reopenFromReport({ file: badIdReport, by: "tester", reason: "x", apply: true, db: testDatabase });
+check("from-report: a row without a valid id is refused", !bulk.ok && /no valid id/.test(bulk.problems[0]), JSON.stringify(bulk));
+const unknownReport = `${REVIEW}/unknown-id.csv`;
+fs.writeFileSync(unknownReport, `${fs.readFileSync(hubReport, "utf8")}institutions,00000000-0000-4000-8000-000000000000,Nowhere\n`);
+bulk = await reopenFromReport({ file: unknownReport, by: "tester", reason: "add abbreviations", apply: true, db: testDatabase });
+check("from-report: an unknown row stops the run before anything is reopened",
+  !bulk.ok && /no academic row has id/.test(bulk.problems[0]) && (await logged()) === logBefore && (await count("institutions", "slug = 'hub-college' and verification_status = 'verified'")) === 1, JSON.stringify(bulk));
+
+bulk = await reopenFromReport({ file: hubReport, by: "tester", reason: "add abbreviations", apply: false, db: testDatabase });
+check("from-report: a dry run lists the verified rows and skips the rest",
+  bulk.ok && bulk.status === "dry_run" && bulk.rows.length === 1 && bulk.rows[0].record === "hub-college: Hub College" && bulk.skipped.length === 1 && /hub-university/.test(bulk.skipped[0].record), JSON.stringify(bulk));
+check("from-report: a dry run changes nothing", (await logged()) === logBefore && (await count("institutions", "slug = 'hub-college' and verification_status = 'verified'")) === 1);
+bulk = await reopenFromReport({ file: hubReport, by: "tester", reason: "add abbreviations", apply: true, db: testDatabase });
+check("from-report: --apply reopens only the verified rows", bulk.ok && bulk.status === "reopened" && bulk.rows.length === 1 && bulk.skipped.length === 1 &&
+  (await count("institutions", "slug like 'hub-%' and verification_status = 'verified'")) === 0, JSON.stringify(bulk));
+check("from-report: each reopen is logged with who and why",
+  (await logged()) === logBefore + 1 && (await count("reopen_log", "record = 'hub-college: Hub College' and reopened_by = 'tester' and reason = 'add abbreviations'")) === 1);
+check("from-report: other verified rows stay verified", (await count("institutions", "slug = 'example-college' and verification_status = 'verified'")) === 1);
+check("from-report: schools stay readable while reopened", (await asRole(db, "anon", null, "select id from institutions where slug like 'hub-%'")).rows.length === 2);
+
+out = await runImport({ file: writeFixture("hub-abbr", withAbbr()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("abbreviations: after the reopen the import applies", out.ok && out.counts.institutions.updated === 2, JSON.stringify(out.counts ?? out.problems));
+const abbrReport = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("abbreviations: the review report shows them", abbrReport.some((r) => r.record === "Hub College (hub-college), HC"), JSON.stringify(abbrReport.map((r) => r.record)));
+out = await runImport({ file: writeFixture("hub-abbr", withAbbr()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("abbreviations: re-importing changes nothing", out.ok && out.counts.institutions.unchanged === 2, JSON.stringify(out.counts));
+v = out.ok ? await verifyReport(`${out.report}.csv`) : { ok: false };
+check("abbreviations: verified from the report, and readable by anon", v.ok && v.verified === 2 &&
+  (await asRole(db, "anon", null, "select abbreviation from institutions where slug = 'hub-college'")).rows[0]?.abbreviation === "HC", JSON.stringify(v));
+
+const badSchools = (name, mutate, pattern) => {
+  const data = withAbbr();
+  mutate(data);
+  const problems = validatePlanningFile(data).problems;
+  check(`abbreviations: refused: ${name}`, problems.some((p) => pattern.test(p)), JSON.stringify(problems));
+};
+badSchools("lower case", (d) => (d.institutions[0].abbreviation = "Hc"), /2 to 5 capital letters/);
+badSchools("too long", (d) => (d.institutions[0].abbreviation = "HUBCOL"), /2 to 5 capital letters/);
+badSchools("with a dot", (d) => (d.institutions[0].abbreviation = "H.C"), /2 to 5 capital letters/);
+badSchools("two schools with one", (d) => (d.institutions[1].abbreviation = "HC"), /HC is already another school's/);
+badSchools("a todo", (d) => (d.institutions[0].todo = "pick one"), /still has a todo \("pick one"\)/);
+badSchools("on a major", (d) => d.majors = [{ institution: "hub-university", slug: "x-ba", name: "X", abbreviation: "X", ...prov, source_url: "https://example.org/x" }], /abbreviation isn't a field/);
+check("abbreviations: a school can still leave it out", validatePlanningFile(hubSchools()).problems.length === 0);
+
+// 19. Opportunities (22), made up: the same pipeline, the same rules
+const RAW_OPPS = "data/raw/opportunities/.test-import";
+fs.mkdirSync(RAW_OPPS, { recursive: true });
+const oppProv = { source_name: "Test University", academic_year: "2026-27", retrieved_at: "2026-11-07" };
+const opps = () => ({
+  written_by: "test",
+  opportunities: [
+    {
+      slug: "test-research", kind: "research", title: "Test research program", org_name: "Test University", summary: "Made-up paid summer research.",
+      who_for: ["GPA 3.0 or higher"], wants: ["A short statement"], offers: ["$5,000 stipend"], audience: "community_college",
+      major_slugs: ["computer-science"], systems: [], terms: [], deadline: "2027-02-01", starts_on: "2027-06-21", ends_on: "2027-08-13",
+      location: "Testville", online: false, cost: "paid", url: "https://example.org/research/apply", source_url: "https://example.org/research", ...oppProv,
+    },
+    {
+      slug: "test-scholarship", kind: "scholarship", title: "Test scholarship", org_name: "Test Foundation", summary: "Made-up rolling award.",
+      who_for: [], wants: ["An essay"], offers: ["$1,000"], audience: "any", major_slugs: [], systems: ["UC", "CSU"], terms: ["fall-2027"],
+      deadline: null, starts_on: null, ends_on: null, location: null, online: true, cost: "free",
+      url: "https://example.org/scholarship", source_url: "https://example.org/scholarship", ...oppProv,
+    },
+  ],
+});
+function writeOpps(name, data) {
+  const file = path.join(RAW_OPPS, `${name}.json`);
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  return file;
+}
+const anonOpps = async () => (await asRole(db, "anon", null, "select id from opportunities where slug like 'test-%'")).rows.length;
+
+out = await runImport({ file: writeOpps("opps", opps()), dryRun: true, db: testDatabase, reportDir: REVIEW });
+check("opportunities: a dry run reports what it would insert", out.ok && out.status === "dry_run" && out.counts.opportunities.inserted === 2, JSON.stringify(out));
+check("opportunities: a dry run keeps nothing", (await count("opportunities")) === 0);
+out = await runImport({ file: writeOpps("opps", opps()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("opportunities: an import applies, unverified", out.ok && out.status === "applied" && (await count("opportunities", "verification_status = 'unverified'")) === 2, JSON.stringify(out));
+const stored = (await db.query("select * from opportunities where slug = 'test-scholarship'")).rows[0];
+check("opportunities: lists, nulls and flags are stored as written",
+  stored?.deadline === null && stored.location === null && stored.online === true && stored.systems.join() === "UC,CSU" && stored.terms.join() === "fall-2027" && stored.who_for.length === 0, JSON.stringify(stored));
+check("opportunities: nothing shows before it's verified", (await anonOpps()) === 0);
+const oppReport = `${out.report}.csv`;
+const oppRows = readReportCsv(oppReport);
+check("opportunities: the review report lists each one, spelled out",
+  oppRows.length === 2 && oppRows.every((r) => r.table === "opportunities" && r.source_url.startsWith("https://")) &&
+    oppRows.some((r) => r.record.includes("apply by 2027-02-01, runs 2027-06-21 to 2027-08-13") && r.record.includes("Check yourself: GPA 3.0 or higher.") && r.record.includes("Opens https://example.org/research/apply")) &&
+    oppRows.some((r) => r.record.includes("[scholarship, free, online]: rolling") && r.record.includes("any major, UC, CSU, for fall-2027")),
+  JSON.stringify(oppRows.map((r) => r.record)));
+out = await runImport({ file: writeOpps("opps", opps()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("opportunities: re-importing the same file changes nothing", out.ok && out.counts.opportunities.unchanged === 2, JSON.stringify(out.counts));
+v = await verifyReport(oppReport);
+check("opportunities: checked rows become verified and readable", v.ok && v.verified === 2 && (await anonOpps()) === 2, JSON.stringify(v));
+
+const moved = opps();
+moved.opportunities[0].deadline = "2027-02-15";
+out = await runImport({ file: writeOpps("moved", moved), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("opportunities: changing a verified row stops the import", !out.ok && /opportunity test-research is verified and the file would change it/.test(out.problems[0]), JSON.stringify(out));
+const researchId = (await db.query("select id from opportunities where slug = 'test-research'")).rows[0].id;
+const oppReopened = await reopenRow({ id: researchId, by: "tester", reason: "the deadline moved", apply: true, db: testDatabase });
+check("opportunities: one can be reopened, and it's hidden", oppReopened.ok && oppReopened.table === "opportunities" && oppReopened.record === "test-research: Test research program" && (await anonOpps()) === 1, JSON.stringify(oppReopened));
+out = await runImport({ file: writeOpps("moved", moved), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("opportunities: then the corrected file applies", out.ok && out.counts.opportunities.updated === 1 && out.counts.opportunities.unchanged === 1, JSON.stringify(out.counts ?? out.problems));
+v = out.ok ? await verifyReport(`${out.report}.csv`) : { ok: false };
+check("opportunities: verified again, with the new deadline", v.ok && v.verified === 1 &&
+  (await asRole(db, "anon", null, "select deadline::text as d from opportunities where slug = 'test-research'")).rows[0]?.d === "2027-02-15", JSON.stringify(v));
+bulk = await reopenFromReport({ file: oppReport, by: "tester", reason: "recheck all", apply: true, db: testDatabase });
+check("opportunities: --from-report reopens them all and hides them", bulk.ok && bulk.rows.length === 2 && (await anonOpps()) === 0, JSON.stringify(bulk));
+
+const beforeOpps = await count("import_runs");
+const badOpps = (name, mutate, pattern) => {
+  const data = opps();
+  mutate(data);
+  return runImport({ file: writeOpps(name, data), dryRun: false, db: testDatabase, reportDir: REVIEW }).then((o) =>
+    check(`opportunities: refused: ${name}`, !o.ok && o.stage === "validate" && o.problems.some((p) => pattern.test(p)), JSON.stringify(o.problems)),
+  );
+};
+const first = (d) => d.opportunities[0];
+await badOpps("a todo left", (d) => (first(d).todo = "check the deadline"), /still has a todo \("check the deadline"\)/);
+await badOpps("an empty retrieved_at", (d) => (first(d).retrieved_at = ""), /retrieved_at is empty/);
+await badOpps("a placeholder", (d) => (first(d).title = "TODO title"), /placeholder/);
+await badOpps("an unknown kind", (d) => (first(d).kind = "job"), /kind must be one of/);
+await badOpps("an unknown audience", (d) => (first(d).audience = "transfer"), /audience must be one of/);
+await badOpps("an unknown cost", (d) => (first(d).cost = "cheap"), /cost must be one of/);
+await badOpps("a system that isn't UC or CSU", (d) => (first(d).systems = ["CCC"]), /systems can hold UC and CSU only/);
+await badOpps("a term with a space", (d) => (first(d).terms = ["fall 2027"]), /terms must look like fall-2027/);
+await badOpps("a major Explore doesn't have", (d) => (first(d).major_slugs = ["underwater-basket-weaving"]), /isn't an Explore major/);
+await badOpps("a date that doesn't exist", (d) => (first(d).deadline = "2027-02-30"), /deadline isn't a real date/);
+await badOpps("a date written another way", (d) => (first(d).deadline = "Feb 1, 2027"), /deadline must be a date like/);
+await badOpps("ending before it starts", (d) => (first(d).starts_on = "2027-09-01"), /starts_on must be on or before ends_on/);
+await badOpps("an http link", (d) => (first(d).url = "http://example.org/apply"), /url must be an https:\/\/ link/);
+await badOpps("an Instagram post as the link", (d) => (first(d).url = "https://www.instagram.com/p/abc123/"), /url is a social media link/);
+await badOpps("an Instagram post as the source", (d) => (first(d).source_url = "https://instagram.com/testuniversity"), /source_url is a social media link/);
+await badOpps("a TikTok source", (d) => (first(d).source_url = "https://www.tiktok.com/@test"), /social media link/);
+await badOpps("a missing list", (d) => delete first(d).who_for, /who_for must be a list/);
+await badOpps("an empty list entry", (d) => (first(d).wants = ["An essay", " "]), /no empty entries/);
+await badOpps("a missing date", (d) => delete first(d).ends_on, /ends_on must be a date like 2027-02-01, or null/);
+await badOpps("online left out", (d) => delete first(d).online, /online must be true or false/);
+await badOpps("an empty location", (d) => (first(d).location = ""), /location must be text, or null/);
+await badOpps("a field it doesn't take", (d) => (first(d).caption = "Copied from a post"), /caption isn't a field/);
+await badOpps("setting verified", (d) => (first(d).verification_status = "verified"), /can't be set by an import/);
+await badOpps("a slug twice", (d) => d.opportunities.push({ ...first(d) }), /appears twice/);
+await badOpps("a bad academic year", (d) => (first(d).academic_year = "2026-28"), /two years in a row/);
+check("opportunities: validation failures never reach the database", (await count("import_runs")) === beforeOpps);
+try {
+  await asRole(db, "authenticated", "00000000-0000-0000-0000-00000000000a", "select import_opportunities_batch('{}'::jsonb, 'x', false)");
+  check("opportunities: a signed-in student can't run an import", false);
+} catch (e) {
+  check("opportunities: a signed-in student can't run an import", /permission denied/.test(e.message), e.message);
+}
+
+// The real file: two made-up examples, stopped by their todos until replaced
+const realOpps = () => JSON.parse(fs.readFileSync("data/raw/opportunities/2026-27.json", "utf8"));
+const oppsAsIs = validateOpportunitiesFile(realOpps()).problems;
+check("2026-27.json is refused only for its todos and empty dates", oppsAsIs.length > 0 && oppsAsIs.every((p) => /still has a todo|retrieved_at is empty/.test(p)), JSON.stringify(oppsAsIs));
+check("…and every row in it has a todo", realOpps().opportunities.every((o) => o.todo));
+const oppsFilled = validateOpportunitiesFile(fillIn(realOpps(), "2026-11-07"));
+check("2026-27.json passes once its todos are cleared", oppsFilled.problems.length === 0, JSON.stringify(oppsFilled.problems));
+const examples = realOpps().opportunities;
+const nullable = ["deadline", "starts_on", "ends_on", "location"];
+check("the examples show every field, each nullable one both set and empty",
+  examples.every((o) => ["slug", "kind", "title", "org_name", "summary", "who_for", "wants", "offers", "audience", "major_slugs", "systems", "terms", ...nullable, "online", "cost", "url", "source_name", "source_url", "academic_year", "retrieved_at"].every((k) => k in o)) &&
+    nullable.every((k) => examples.some((o) => o[k] === null) && examples.some((o) => o[k] !== null)));
+check("no social media link in any row", examples.every((o) => [o.url, o.source_url].every((u) => !SOCIAL_HOSTS.some((h) => new URL(u).hostname.endsWith(h)))));
+
 fs.rmSync(RAW, { recursive: true, force: true });
+fs.rmSync(RAW_OPPS, { recursive: true, force: true });
 fs.rmSync(RAW_EXPLORE, { recursive: true, force: true });
 fs.rmSync(RAW_PLANNING, { recursive: true, force: true });
 fs.rmSync(RAW_ESSAYS, { recursive: true, force: true });
