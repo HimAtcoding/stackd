@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Economics majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's economics. UC: every campus major the Economics Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. UC Santa Cruz's Business Management Economics is in this pathway, and economics.json lists it in the campus rows, but its majors row is in business-administration-majors.json: a major has one explore_slug, and a second import would overwrite the first. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/economics-majors.json --dry-run",
+  "notes": "Economics majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's economics. UC: every campus major the Economics Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. UC Santa Cruz's Business Management Economics is in this pathway, and economics.json lists it in the campus rows, but its majors row is in business-administration-majors.json: a major has one explore_slug, and a second import would overwrite the first. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/economics-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 17 rows; 2 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major.",
   "majors": [
     {
       "institution": "uc-berkeley",
@@ -190,6 +190,195 @@
       "source_url": "https://catalog.calpoly.edu/business/undergraduate/economics-bs/",
       "academic_year": "2026-27",
       "retrieved_at": ""
+    },
+    {
+      "institution": "csu-bakersfield",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "CSU Bakersfield catalog",
+      "source_url": "https://catalog.csub.edu/academic-degrees-programs/undergraduate-majors/economics-bs/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-channel-islands",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "CSU Channel Islands catalog",
+      "source_url": "https://catalog.csuci.edu/preview_program.php?catoid=64&poid=16781",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "chico-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Chico State catalog",
+      "source_url": "https://catalog.csuchico.edu/colleges-departments/college-behavioral-social-sciences/economics/economics-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-east-bay",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "CSU East Bay catalog",
+      "source_url": "https://catalog.csueastbay.edu/preview_program.php?catoid=44&poid=20454",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "fresno-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Fresno State catalog",
+      "source_url": "https://catalog.fresnostate.edu/preview_program.php?catoid=7&poid=3659",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-fullerton",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "CSU Fullerton catalog",
+      "source_url": "https://fullerton.catalog.acalog.com/preview_program.php?catoid=101&poid=47307",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-humboldt",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Cal Poly Humboldt catalog",
+      "source_url": "https://catalog.humboldt.edu/preview_program.php?catoid=15&poid=8912",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-long-beach",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "CSU Long Beach catalog",
+      "source_url": "https://catalog.csulb.edu/preview_program.php?catoid=12&poid=6363",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-state-la",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Cal State LA catalog",
+      "source_url": "https://ecatalog.calstatela.edu/preview_program.php?catoid=77&poid=35263",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-pomona",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "Cal Poly Pomona catalog",
+      "source_url": "https://catalog.cpp.edu/preview_program.php?catoid=78&poid=24215",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "No umbrella page: the catalog lists this degree only by subplan (Applied Economics, General Economics, Quantitative Economics); source_url is the General Economics one. Confirm this is one degree."
+    },
+    {
+      "institution": "san-diego-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "San Diego State catalog",
+      "source_url": "https://catalog.sdsu.edu/preview_program.php?catoid=12&poid=11981",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "san-jose-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "San José State catalog",
+      "source_url": "https://catalog.sjsu.edu/preview_program.php?catoid=23&poid=18803",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "san-jose-state",
+      "slug": "economics-bs",
+      "name": "Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "San José State catalog",
+      "source_url": "https://catalog.sjsu.edu/preview_program.php?catoid=23&poid=18804",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-san-marcos",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "CSU San Marcos catalog",
+      "source_url": "https://catalog.csusm.edu/preview_program.php?catoid=12&poid=2830",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "sonoma-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Sonoma State catalog",
+      "source_url": "https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6029",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "stanislaus-state",
+      "slug": "economics-ba",
+      "name": "Economics",
+      "degree_type": "BA",
+      "explore_slug": "economics",
+      "source_name": "Stanislaus State catalog",
+      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8349",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "stanislaus-state",
+      "slug": "quantitative-economics-bs",
+      "name": "Quantitative Economics",
+      "degree_type": "BS",
+      "explore_slug": "economics",
+      "source_name": "Stanislaus State catalog",
+      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8537",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "The catalog names this Quantitative Economics, beside the Economics B.A. Confirm it belongs under Economics (like CSU San Bernardino's Quantitative Economics)."
     }
   ]
 }
