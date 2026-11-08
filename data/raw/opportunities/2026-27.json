@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over.",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day.",
   "opportunities": [
     {
       "slug": "cooke-undergraduate-transfer-scholarship-2027",
@@ -190,9 +190,9 @@
       "major_slugs": [],
       "systems": [],
       "terms": [],
-      "deadline": "2027-03-01",
-      "starts_on": null,
-      "ends_on": null,
+      "deadline": "2027-02-26",
+      "starts_on": "2027-06-07",
+      "ends_on": "2027-08-13",
       "location": "NASA centers",
       "online": false,
       "cost": "paid",
