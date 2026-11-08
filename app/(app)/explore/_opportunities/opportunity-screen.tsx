@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowSquareOutIcon, BellIcon, CheckCircleIcon, CircleIcon } from "@phosphor-icons/react/ssr";
+import { BellIcon, CheckCircleIcon, CircleIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { RemindersAsk } from "@/components/deadlines/reminders-ask";
 import { TurnOnConfirm } from "@/components/deadlines/turn-on-confirm";
@@ -197,9 +197,8 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
             target="_blank"
             rel="noopener"
             aria-label={`Open the official page, ${domainOf(o.url)}, opens outside the app`}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white shadow-cta transition-[background-color,transform] duration-200 ease-out type-button-lg pressed:bg-blue-700 pressed:duration-120 focus-ring:outline-offset-3 motion-safe:pressed:scale-[0.97]"
+            className="flex h-14 w-full items-center justify-center rounded-full bg-blue-600 text-white shadow-cta transition-[background-color,transform] duration-200 ease-out type-button-lg pressed:bg-blue-700 pressed:duration-120 focus-ring:outline-offset-3 motion-safe:pressed:scale-[0.97]"
           >
-            <ArrowSquareOutIcon weight="bold" size={20} aria-hidden />
             Open the official page
           </a>
           {o.deadline &&

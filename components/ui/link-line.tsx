@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowSquareOutIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
 
 // "apply.universityofcalifornia.edu". A leading "www." says nothing, so it's left off.
@@ -18,23 +17,25 @@ type LinkLineProps = {
   label: string;
   // The line under the label. An outside link shows its domain; a link inside Stackd names where it goes.
   detail?: string;
-  // A link inside Stackd shows this instead of the outside-link arrow
+  // A link inside Stackd can show an icon before its label. An outside link has none: the domain says where it goes.
   icon?: ReactNode;
   className?: string;
 };
 
 const isOutside = (href: string) => /^https?:\/\//.test(href);
 
-// A link as a text button (18 → Link lines): icon and label in --blue-700, with the domain (or where it goes) in a
-// caption under the label. No box. The 44 tall tap area covers both lines.
+// A link as a text button (18 → Link lines): the label in --blue-700, with the domain (or where it goes) in a caption
+// under it. No box, and no icon on an outside link. The 44 tall tap area covers both lines.
 export function LinkLine({ href, label, detail, icon, className }: LinkLineProps) {
   const outside = isOutside(href);
   const under = detail ?? (outside ? domainOf(href) : "");
   const body = (
     <>
-      <span aria-hidden className="flex h-[18px] shrink-0 items-center text-blue-700">
-        {outside ? <ArrowSquareOutIcon weight="bold" size={16} /> : icon}
-      </span>
+      {!outside && icon && (
+        <span aria-hidden className="flex h-[18px] shrink-0 items-center text-blue-700">
+          {icon}
+        </span>
+      )}
       <span aria-hidden className="min-w-0">
         <span className="block text-blue-700 type-label group-pressed:underline">{label}</span>
         {under && <span className="mt-0.5 block text-slate-600 [overflow-wrap:anywhere] type-caption">{under}</span>}

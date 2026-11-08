@@ -243,6 +243,17 @@ The Continue with Apple and Continue with Google buttons on Sign in (06) and Cre
 - `signInWithOAuth` returns `{ ok: true, redirecting }` (plus `newAccount` when it doesn't redirect) instead of `AuthResult`, and `Auth` has `finishOAuth(href)` for the callback page. Both screens route through `routeAfterOAuth(newAccount)`.
 - "Brand-new account" is decided by the account's age at this sign-in (under a minute). 06 doesn't say how to tell.
 
+## Before Explore turns on
+
+The release checklist for `explore: true` (`lib/features.ts`), from steps 26 to 28.
+1. Privacy page: add that Remind me keeps the chosen opportunities on the phone.
+2. Privacy page: read it again against what `user_topic_status` holds (it already covers "any progress you mark").
+3. Recheck "What this degree does" against calstate.edu's ADT page (it answered 403 to a plain request on Nov 1; the Oct 26 check in spec 21 stands).
+4. Abbreviations: Abyan's picks for the 59 with a todo, imported and verified (step 27's After merge), so real accounts show tiles.
+5. Opportunities: the first checked batch imported and verified, replacing the two examples.
+6. Remind me tried on an iPhone: the permission ask, both reminders, and a notification opening the opportunity.
+7. ~~A major's name depends on row order.~~ Fixed in step 28: the UC pathway's name, otherwise the TMC's.
+
 ## Before TestFlight
 
 Decided, and must be done before the TestFlight beta (roadmap phase 7). Custom SMTP, the code templates and Confirm email are done (2026-10-06).
@@ -509,7 +520,7 @@ Spec `22-explore-hub-opportunities-tabs.md` parts 1 to 6, on branch `explore-hub
 
 - **Floating tab bar** (`components/ui/tab-bar.tsx`): a 64-tall capsule, inset 16 (max 420), 12 above the safe area, `--surface` at 92% with a 20 px blur, `--shadow-float`. Tabs: Home, Explore (with `explore`), Essays (with `essays`), You (Settings; not in demo mode). Active: `--blue-700` on a `--surface-pressed` pill that slides from the last tab over 200 ms, instantly under reduced motion. Tab screens pad 92 plus the safe area at the bottom, and toasts sit 12 above the capsule (`TAB_PAGE_BOTTOM`, `TAB_TOAST_BOTTOM`). The release (Explore off) shows Home, Essays and You.
   - Essays and Settings are tab roots: no back button, title 24 under the safe area. Home's gear is gone. The Mentors placeholder has no tab.
-- **School tiles** (`components/ui/school-tile.tsx`): the abbreviation on `--blue-700` (UC), `--amber-800` (Cal State) or `--slate-700`, 40 everywhere, letters 15 / 11 / 10 for 2–3 / 4 / 5 letters. In onboarding's college and school rows (circle, tile, name), Settings → Your plan (College; up to 2 for Schools), Explore's campus rows and the university header. No tile without an abbreviation. The catalog, plan, Explore campus and university reads now select `abbreviation` (and the home college's `system`).
+- **School tiles** (`components/ui/school-tile.tsx`): the abbreviation on `--blue-700` (UC), `--amber-800` (Cal State) or `--slate-700`, 48 wide and 40 tall everywhere so names line up, letters 15 for 2–3 and 12 for 4–5 (review round, below). In onboarding's college and school rows (circle, tile, name), Settings → Your plan (College; up to 2 for Schools; none under 375 wide), Explore's campus rows (the tile in its own column) and the university header. No tile without an abbreviation. The catalog, plan, Explore campus and university reads now select `abbreviation` (and the home college's `system`).
 - **Search by abbreviation** in the school pickers: "sjsu", "slo", "ucsd", "csulb", "mtsac".
 - **Explore hub**: Still needed (up to 4 rows, taking now first; each opens the requirement sheet; "See all {n}" opens the major page; one line when all are done), Opportunities for you (3 soonest that fit), "Majors ({n})" with the new row (no pale tile; your major's 60-wide mini bar and "2 of 9 for UC"; others "{n} UC campuses, {k} count for both" or "Cal State only"), and one source line with "How we check this". Search hides Still needed and Opportunities.
 - **Opportunities feed** `/explore/opportunities/` and **opportunity page** `/explore/opportunities/item/?slug=…`, on a `--yellow-50` band. Chips (internships under All), "Only ones that fit me" on by default, Closing soon / Open / Rolling, past deadlines gone the day after (Pacific), the husky empty state with "Show all opportunities". The page: header with the date tile, Who it's for (green check when met, grey circle with "Check yourself" or the reason), What they want, What you get, Open the official page (leaves the app), Remind me, the source block.
@@ -527,8 +538,8 @@ Spec `22-explore-hub-opportunities-tabs.md` parts 1 to 6, on branch `explore-hub
 - Apple Games' monogram is a large circle; ours is a small square in the row.
 
 **Couldn't match exactly**:
-- Tile letters: 22's 13 for 4–5 letters overflows the 40 tile ("UCSD" 42 wide, "CSUSM" 46), and a 32 tile can't hold 3 letters at 15. Every tile is 40, with 11 for 4 letters and 10 for 5: below 00's 12, on an `aria-hidden` tile whose row names the school. Specs 22 and 00 updated.
-- Settings → Schools shows up to 2 tiles, not 3: with 3, "2 schools" doesn't fit beside them at 320.
+- Tile letters (first round): 22's 13 for 4–5 letters overflowed a 40 tile ("UCSD" 42 wide, "CSUSM" 46). Settled in the review round: 48 × 40 tiles, 12 for 4–5 letters.
+- Settings → Schools shows up to 2 tiles, not 3, and Settings shows no tiles under 375 wide: next to 48-wide tiles, "Las Positas College" and "2 schools" are cut at 320.
 - Spec 22's Still needed wireframe lists Multivariable calculus, Linear algebra and Differential equations after Data structures; with 2 of 9 done the rule (taking now, then not yet in pathway order) gives Computer organization, Multivariable calculus and Discrete math.
 - The pill slides when moving between tab screens; on a fresh load it starts in place.
 - The "For {who}" line's color isn't given; it's `--navy-900`.
@@ -545,8 +556,12 @@ Spec `22-explore-hub-opportunities-tabs.md` parts 1 to 6, on branch `explore-hub
 - Real opportunities: none are imported yet.
 - Real abbreviations: 59 still have a todo and none are imported, so real accounts show no tiles until Abyan's picks are imported (step 27's After merge).
 
-**Before Explore turns on**:
-- The privacy page doesn't mention that Remind me keeps the chosen opportunities on the phone. Read it again with this.
+**Review round (same day, Ryan's two fixes):**
+- School tiles are 48 wide and 40 tall everywhere, `--r-sm`, letters 15 for 2–3 and 12 for 4–5, weight 800, nothing below 12. Explore's campus rows give the tile its own 48 column: with the tile inside the campus column, "UC Berkeley" ran into the majors at 320. Settings shows no tiles under 375 (above).
+- No `ArrowSquareOut` anywhere: link lines are the label with the domain under it, "Open the official page" and the agreement card's "Open on ASSIST" are text only, and so is the essay editor's "Read UC's exact wording". The step sheet's link to a screen inside Stackd keeps its `Link` icon.
+- Specs 00, 18, 21 and 22 updated, plus the same arrow in 03's agreement card and 20's editor wireframe. 14 and 16 still mention it for parts 18 replaced.
+- Stand-in checks, 393 and 320: every tile 48 × 40 with letters that fit, onboarding names lined up, campus rows clear, Settings values never cut, and the full run again: 104 checks (the first round's 100, plus the official-page button and outside links having no icon at 393 and 320). Screenshots 62 and 64 retaken.
+- "Before Explore turns on" is now one checklist near the top of this file.
 
 ## Explore hub data, PR A (step 27, 2026-11-07)
 

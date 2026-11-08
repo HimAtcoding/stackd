@@ -151,7 +151,7 @@ Shown when the student's plan has an agreement link for this school (home colleg
 │││▣ Your official agreement  │││  card
 │││  ASSIST lists which Las   │││
 │││  Positas courses count…   │││
-│││ [ ↗ Open on ASSIST      ] │││  tinted button
+│││ [ Open on ASSIST        ] │││  tinted button
 │││ 2026-27 agreement. Opens  │││  caption
 │││ assist.org.               │││
 ││└───────────────────────────┘││  16
@@ -165,7 +165,7 @@ Shown when the student's plan has an agreement link for this school (home colleg
 | Icon | Icon tile 44 (`--r-sm`, `--tint-sky`), `FileText` fill 24 `--blue-600`, top-left, `aria-hidden` |
 | Title | "Your official agreement", `headline` `--navy-900`, 16 right of the icon, top-aligned |
 | Body | "ASSIST lists which {college short name} courses count for this major. Stackd can't show them here yet." `body` `--slate-600`, 4 below the title |
-| Button | Tinted button (00), full card inner width, 16 below the text: `ArrowSquareOut` bold 20 + "Open on ASSIST". Opens the stored agreement URL in the system browser (Capacitor's in-app browser on iOS; `target="_blank" rel="noopener"` on the web). `aria-label="Open on ASSIST, opens outside Stackd"` |
+| Button | Tinted button (00), full card inner width, 16 below the text: "Open on ASSIST", no icon (22 rev). Opens the stored agreement URL in the system browser (Capacitor's in-app browser on iOS; `target="_blank" rel="noopener"` on the web). `aria-label="Open on ASSIST, opens outside Stackd"` |
 | Source line | `caption` `--slate-600`, 8 below the button: "{academic year} agreement. Opens assist.org." This is the source-and-year label `06-trust-and-provenance.md` requires |
 
 With a real account, "Track application" and the reminder banner are hidden (no real data behind them yet), and the heart saves the school to the account.

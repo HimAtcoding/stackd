@@ -60,13 +60,13 @@ function termValue({ asked, term }: TermChoice): { text: string; missing?: boole
   return asked ? { text: "Not sure yet" } : { text: "Pick a term", missing: true };
 }
 
-// The first 2 target schools' tiles, 4 apart (22 → School tiles), so "2 schools" still fits beside them at 320.
-// Nothing when none has an abbreviation yet.
+// The first 2 target schools' tiles, 4 apart (22 → School tiles). Under 375 wide the value's text needs the room, so
+// Settings shows no tiles there. Nothing when none has an abbreviation yet.
 function SchoolTiles({ plan }: { plan: Plan }) {
   const shown = plan.targets.filter((t) => t.abbreviation).slice(0, 2);
   if (!FEATURES.explore || shown.length === 0) return null;
   return (
-    <span className="flex shrink-0 gap-1">
+    <span className="flex shrink-0 gap-1 max-[374px]:hidden">
       {shown.map((t) => (
         <SchoolTile key={t.institutionId} abbreviation={t.abbreviation} system={t.system} />
       ))}
@@ -170,7 +170,7 @@ export function SettingsScreen() {
               <SettingsRow
                 label="College"
                 value={plan.home?.name ?? "Not listed"}
-                tiles={plan.home && <SchoolTile abbreviation={plan.home.abbreviation} system={plan.home.system} />}
+                tiles={plan.home && <SchoolTile abbreviation={plan.home.abbreviation} system={plan.home.system} className="max-[374px]:hidden" />}
                 href={onboardingUrl("college", { edit: true })}
               />
               <SettingsRow label="Schools" value={schoolsValue(plan)} tiles={<SchoolTiles plan={plan} />} href={onboardingUrl("schools", { edit: true })} />

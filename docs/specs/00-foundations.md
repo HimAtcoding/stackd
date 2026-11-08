@@ -148,7 +148,7 @@ The tab bar is a floating capsule with `--shadow-float` (22 → 1).
 
 ## Icons
 
-Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, regular for inactive tabs, bold for arrows and chevrons.
+Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, regular for inactive tabs, bold for arrows and chevrons. No icon marks a link that leaves the app: a link line shows its domain instead (18), and a button that opens an outside page says so in its label (22).
 
 | Where | Icon | Weight | Size |
 |---|---|---|---|
@@ -238,7 +238,7 @@ Min height 64, padding 12 16, the whole row a button: icon tile 40 (`--surface`,
 
 ### School tile
 
-A school's own short name ("UCSD", "SJSU", "LPC") in white on its system's color: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. 40 × 40, `--r-sm`, weight 800, tracking 0, 15 for 2–3 letters, 11 for 4, 10 for 5, so the widest fits. Never a logo. `aria-hidden`; nothing when the school has no abbreviation (22 → 2).
+A school's own short name ("UCSD", "SJSU", "LPC") in white on its system's color: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. 48 wide and 40 tall everywhere, so names line up in every list; `--r-sm`; weight 800, tracking 0, 15 for 2–3 letters and 12 for 4–5 (the widest, "MTSAC", is 43 at 12). Never a logo. `aria-hidden`; nothing when the school has no abbreviation (22 → 2).
 
 ### Date tile, rolling
 

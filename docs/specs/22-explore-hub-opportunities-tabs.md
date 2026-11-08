@@ -27,7 +27,7 @@ School logos are trademarks, so Stackd doesn't use them. Each school gets a **mo
 
 Contrast: navy on `--yellow-50` 16.74:1; `--slate-700` on `--yellow-50` 8.03:1. `--amber-700` on `--yellow-50` is only 4.11:1, so small text there uses `--amber-800`.
 
-Type: Figtree, existing scale. Monograms: weight 800, tracking 0, 15 for 2–3 letters, 11 for 4, 10 for 5. (Drafted as 13 for 4–5, which overflows a 40 tile: "UCSD" is 42 wide at 13 and "CSUSM" 46. The tile is `aria-hidden`, so the 12 floor in 00 doesn't apply to it; the name beside it carries the school.)
+Type: Figtree, existing scale. Monograms: weight 800, tracking 0, 15 for 2–3 letters, 12 for 4–5; nothing below 12. (At 13, 4–5 letters overflowed the first 40-wide tile: "UCSD" is 42 at 13 and "CSUSM" 46. The tile is now 48 wide: "MTSAC", the widest, is 43 at 12.)
 
 **Layout.** Tabs float 12 above the safe area in a capsule. Explore reads top to bottom: band and search, your major, what you still need, opportunities for you, then all majors, with one source line at the very bottom.
 
@@ -84,8 +84,8 @@ A monogram tile replaces the generic icon wherever a school is listed: onboardin
 
 | Part | Spec |
 |---|---|
-| Tile | 40 × 40 everywhere, `--r-sm`, solid fill by system: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. White letters, centered. (Drafted as 32 in compact rows; a 32 tile can't hold 3 letters at 15, so every tile is 40, which fits the 48 to 64 rows below) |
-| Where | Onboarding's college and school rows: the choice circle, then the tile, then the name. Settings → Your plan: the College row's tile before its value; the Schools row's first 2 tiles, 4 apart, before "{n} schools" (3 don't fit beside it at 320). Explore's campus rows: the tile before the campus name. University page: the tile left of the name, on its first line |
+| Tile | 48 wide and 40 tall everywhere, so the names after it line up in every list; `--r-sm`, solid fill by system: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. White letters, centered. (Drafted as 40 × 40, and 32 in compact rows; neither holds 4–5 letters at 12) |
+| Where | Onboarding's college and school rows: the choice circle, then the tile, then the name. Settings → Your plan: the College row's tile before its value, and the Schools row's first 2 tiles, 4 apart, before "{n} schools"; under 375 wide Settings shows no tiles, because "Las Positas College" and "2 schools" don't fit beside them. Explore's campus rows: the tile in its own 48 column before the campus name (a campus without an abbreviation leaves it empty, so names line up). University page: the tile left of the name, on its first line |
 | No abbreviation | No tile; the row looks as it did before. Behind the `explore` flag with the rest of Explore |
 | Letters | The school's `abbreviation` (Data): "UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC". Never a logo, seal or mascot |
 | Accessibility | `aria-hidden`; the row's name carries it |
@@ -192,11 +192,11 @@ Route `/explore/opportunities/item/?slug=…`. Pushed, `--yellow-50` band.
  What you get                                    title-3
  • $5,000 stipend, 8 weeks in summer 2027
 
- [ ↗ Open the official page ]                    primary, 56
+ [ Open the official page ]                      primary, 56
  🔔 Remind me before Nov 20                      text button
 
  From UC Davis, checked Nov 8, 2026.             source block (21)
- ↗ ucdavis.edu
+ ucdavis.edu
  Report a problem
 ```
 
@@ -205,7 +205,7 @@ Route `/explore/opportunities/item/?slug=…`. Pushed, `--yellow-50` band.
 | Header | Title `title-1`, organization `body` `--slate-700`, then the date tile 48 with "Apply by {date}" `label` `--navy-900` and a `caption` `--slate-700` line: kind, cost, where (`location`, or "Online"): "Research, paid, Davis". Cost words: Free, Paid, Has a fee. With no deadline: the rolling tile and "Open now, no deadline" |
 | Who it's for | `title-3`. One row per rule: `CheckCircle` fill `--green-600` when Stackd checked it against the student ("Computer Science or Mathematics majors (you: Computer Science)"); `Circle` `--slate-400` with "Check yourself" `caption` for anything it can't check. Text `body` `--navy-900`. A rule the student doesn't meet gets the grey `Circle` and the reason, never a red cross: "For admitted transfers; you're at a community college", "For Biological Sciences majors; your major is Computer Science", "For students transferring to Cal State; your plan has none". Audience `any` adds no row |
 | What they want / What you get | `title-3` then bullets (`body`, 6 px `--slate-400` dot), from the data, in Stackd's words |
-| Open the official page | Primary button with `ArrowSquareOut`, opens `url` outside the app. This is the screen's one bold thing |
+| Open the official page | Primary button, text only (no icon, no chevron), opens `url` outside the app. This is the screen's one bold thing |
 | Remind me | Text button with `Bell`, "Remind me before {Nov 20}": schedules local reminders at 9 a.m. 7 days and 1 day before the deadline through the existing reminders code (only the ones still ahead). Toast "Reminder set for Nov 13 and Nov 19." iOS's permission is asked first if it hasn't been (the Deadlines soft ask), and "Turn on reminders?" comes first if Settings has them off. Once set the button reads "Reminders set" with `Bell` fill; tapping it again turns them off, toast "Reminders off". Tapping the notification opens this page. On the web: "Reminders work in the Stackd iPhone app." in `caption` `--slate-600` instead. Hidden for rolling opportunities and when no reminder day is still ahead |
 | Source block | 21's pattern: "From {source_name}, checked {date}." then a link line whose label is the source's domain (no second line), then Report a problem |
 

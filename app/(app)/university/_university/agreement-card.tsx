@@ -1,4 +1,4 @@
-import { ArrowSquareOutIcon, FileTextIcon } from "@phosphor-icons/react/ssr";
+import { FileTextIcon } from "@phosphor-icons/react/ssr";
 import { Card } from "@/components/ui/card";
 import { TintedButton } from "@/components/ui/tinted-button";
 import { ASSIST_HOME } from "@/lib/about";
@@ -33,7 +33,6 @@ export function AgreementCard({ link, college }: AgreementCardProps) {
         external
         href={link ? link.url : ASSIST_HOME}
         aria-label={`${link ? "Open on ASSIST" : "Open ASSIST"}, opens outside Stackd`}
-        icon={<ArrowSquareOutIcon weight="bold" size={20} aria-hidden />}
         className="mt-4"
       >
         {link ? "Open on ASSIST" : "Open ASSIST"}

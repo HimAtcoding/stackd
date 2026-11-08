@@ -60,7 +60,7 @@ The source line and footer are unchanged.
 
 Replaces the outside-link row from 16 everywhere it's used.
 
-**Link line**: a text button. `ArrowSquareOut` bold 16 `--blue-700`, 6 gap, label `label` (14/18 600) `--blue-700`. Under it, 2 below and aligned with the label, the domain in `caption` `--slate-600` (no "www."). 44-tall hit area covering both lines. Accessible name: "{label}, {domain}, opens outside the app".
+**Link line**: a text button with no icon (22 rev): the label in `label` (14/18 600) `--blue-700`, and under it, 2 below and aligned with the label, the domain in `caption` `--slate-600` (no "www."). The domain says the link leaves the app. 44-tall hit area covering both lines. Accessible name: "{label}, {domain}, opens outside the app". A link line to a screen inside Stackd may keep a small icon before its label (the step sheet's "Write them in Stackd").
 
 | Where | Label | Below it |
 |---|---|---|

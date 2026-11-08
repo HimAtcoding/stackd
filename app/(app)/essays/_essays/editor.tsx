@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type FocusEvent } from "react";
 import { useReducedMotion } from "motion/react";
-import { ArrowSquareOutIcon, CheckIcon, ClipboardTextIcon, DotsThreeIcon, FileArrowUpIcon } from "@phosphor-icons/react/ssr";
+import { CheckIcon, ClipboardTextIcon, DotsThreeIcon, FileArrowUpIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
 import { CircleButton } from "@/components/ui/circle-button";
 import { Expand } from "@/components/ui/expand";
@@ -535,9 +535,8 @@ function Editor({ prompt, saved }: EditorProps) {
                   target="_blank"
                   rel="noopener"
                   aria-label="Read UC's exact wording, opens outside the app"
-                  className="-my-[13px] inline-flex items-center gap-1.5 py-[13px] text-blue-700 type-label pressed:underline focus-ring:underline"
+                  className="-my-[13px] inline-flex items-center py-[13px] text-blue-700 type-label pressed:underline focus-ring:underline"
                 >
-                  <ArrowSquareOutIcon weight="bold" size={16} aria-hidden />
                   Read UC&apos;s exact wording
                 </a>
               </div>
