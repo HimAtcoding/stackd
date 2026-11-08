@@ -32,10 +32,15 @@ export function ChoiceChip({ checked, onSelect, children, ...data }: ChoiceChipP
   );
 }
 
-// Chips in a row that wraps, 8 apart
-export function ChoiceChips({ "aria-label": label, children }: { "aria-label": string; children: ReactNode }) {
+// Chips in a row that wraps, 8 apart. `scroll`: one row that scrolls sideways instead (22 → 4); the screen sets its
+// padding so the first and last chips line up with the page.
+export function ChoiceChips({ "aria-label": label, scroll, className, children }: { "aria-label": string; scroll?: boolean; className?: string; children: ReactNode }) {
   return (
-    <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className={cn("flex gap-2", scroll ? "overflow-x-auto [scrollbar-width:none] [&>*]:shrink-0 [&::-webkit-scrollbar]:hidden" : "flex-wrap", className)}
+    >
       {children}
     </div>
   );

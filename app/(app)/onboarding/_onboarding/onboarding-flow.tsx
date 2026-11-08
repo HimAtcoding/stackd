@@ -6,6 +6,7 @@ import { WarningCircleIcon } from "@phosphor-icons/react/ssr";
 import { BackButton, canGoBack } from "@/components/back-button";
 import { FlashToast } from "@/components/flash-toast";
 import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
+import { SchoolTile } from "@/components/ui/school-tile";
 import { Expand } from "@/components/ui/expand";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
@@ -236,13 +237,22 @@ export function OnboardingFlow() {
       </div>
     );
   } else if (step === "college" && colleges.status === "ok") {
-    const rows = colleges.data.filter((c) => matchesSearch(query, c.name, c.city));
+    const rows = colleges.data.filter((c) => matchesSearch(query, c.name, c.city, c.abbreviation));
     lists = (
       <>
         {rows.length === 0 && noMatch}
         <ChoiceList role="radiogroup" aria-label="Your college" readOnly={saving} className="mx-4 mt-3">
           {rows.map((c) => (
-            <ChoiceRow key={c.id} role="radio" checked={college === c.id} name={c.name} detail={c.city} readOnly={saving} onSelect={() => choose(() => setCollege(c.id))} />
+            <ChoiceRow
+              key={c.id}
+              role="radio"
+              checked={college === c.id}
+              name={c.name}
+              detail={c.city}
+              tile={<SchoolTile abbreviation={c.abbreviation} system={c.system} />}
+              readOnly={saving}
+              onSelect={() => choose(() => setCollege(c.id))}
+            />
           ))}
           <ChoiceRow role="radio" checked={college === NOT_LISTED} name="My college isn't listed" readOnly={saving} onSelect={() => choose(() => setCollege(NOT_LISTED))} />
         </ChoiceList>
@@ -250,7 +260,7 @@ export function OnboardingFlow() {
       </>
     );
   } else if (step === "schools" && universities.status === "ok") {
-    const rows = universities.data.filter((u) => matchesSearch(query, u.name, u.city));
+    const rows = universities.data.filter((u) => matchesSearch(query, u.name, u.city, u.abbreviation));
     lists = (
       <>
         {rows.length === 0 ? (
@@ -264,6 +274,7 @@ export function OnboardingFlow() {
                 checked={schools.some((s) => s.id === u.id)}
                 name={u.name}
                 detail={u.city}
+                tile={<SchoolTile abbreviation={u.abbreviation} system={u.system} />}
                 readOnly={saving}
                 onSelect={() => toggleSchool({ id: u.id, name: u.name })}
               />

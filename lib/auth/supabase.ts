@@ -40,6 +40,8 @@ const PER_ACCOUNT_KEYS = [
   "stackd.topicQueue",
   // Reminder switch, default days and the card's dismissal (lib/reminders)
   "stackd.reminders",
+  // Opportunities with Remind me on (lib/reminders/opportunities.ts)
+  "stackd.opportunityReminders",
 ];
 
 // 09 → Supabase mapping. No response, or anything unexpected, is "network"; in development the real code is logged.

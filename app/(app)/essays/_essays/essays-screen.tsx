@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DownloadSimpleIcon } from "@phosphor-icons/react/ssr";
-import { BackButton } from "@/components/back-button";
 import { InlineError } from "@/components/ui/inline-error";
 import { LinkLine } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
 import { TintedButton } from "@/components/ui/tinted-button";
+import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
@@ -22,7 +22,7 @@ import { shareTextFile } from "@/lib/share";
 import { QuestionRow } from "./question-row";
 import { RemoveSheet } from "./remove-sheet";
 
-const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
+const TOAST_BOTTOM = TAB_TOAST_BOTTOM;
 
 // The Essays screen exists only with its flag on; otherwise the address goes Home (13: no dead ends)
 export function EssaysRoute() {
@@ -104,15 +104,13 @@ function EssaysScreen() {
 
   return (
     <div className="min-h-dvh overflow-x-clip bg-sky-50">
-      <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
+      <main className="mx-auto max-w-[480px]" style={{ paddingBottom: TAB_PAGE_BOTTOM }}>
         {/* The Essays panel (16 → Feature panels): solid indigo from the physical top, the full width, 28 bottom
-            corners, every word white. It ends 24 below the bar. */}
-        <header className="relative pb-6 text-white" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)" }}>
+            corners, every word white. It ends 24 below the bar. A tab (22 → 1), so no back button: the title is 24 under
+            the safe area. */}
+        <header className="relative pb-6 text-white" style={{ paddingTop: "calc(var(--safe-top) + var(--strip-h) + 24px)" }}>
           <span aria-hidden className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 rounded-b-[28px] bg-indigo-600" />
-          <div className="relative px-4 [&_button:focus-visible]:outline-white">
-            <BackButton fallback="/" slideBack />
-          </div>
-          <h1 className="relative mt-6 px-6 type-title-1">Personal insight answers</h1>
+          <h1 className="relative px-6 type-title-1">Personal insight answers</h1>
           <p className="relative mt-1 px-6 tabular-nums type-body">
             {done} of {ANSWERS} done
           </p>
@@ -210,6 +208,7 @@ function EssaysScreen() {
         }}
       />
 
+      <TabBar active="essays" />
       {toast && <Toast key={toast.key} message={toast.text} bottom={TOAST_BOTTOM} onDone={() => setToast(null)} />}
     </div>
   );

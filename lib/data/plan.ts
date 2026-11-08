@@ -12,6 +12,8 @@ export type PlanTarget = {
   name: string;
   // institutions.system (UC, CSU). Undefined in a copy saved before it was read.
   system?: string | null;
+  // The school's tile (22 → School tiles). Undefined in a copy saved before it was read.
+  abbreviation?: string | null;
   majorId: string | null;
   majorName: string | null;
   degreeType: string | null;
@@ -23,7 +25,7 @@ export type PlanTarget = {
 
 export type Plan = {
   firstName: string | null;
-  home: { id: string; slug: string; name: string } | null;
+  home: { id: string; slug: string; name: string; system?: string | null; abbreviation?: string | null } | null;
   targets: PlanTarget[];
 };
 
@@ -35,10 +37,13 @@ export const PLAN_KEY = "stackd.plan";
 const LOADING: PlanState = { status: "loading" };
 const FAILED: PlanState = { status: "error" };
 
-type ProfileRow = { first_name: string | null; home: { id: string; slug: string; name: string } | null };
+type ProfileRow = {
+  first_name: string | null;
+  home: { id: string; slug: string; name: string; system: string | null; abbreviation: string | null } | null;
+};
 type TargetRow = {
   major_not_listed: boolean | null;
-  institution: { id: string; slug: string; name: string; system: string | null } | null;
+  institution: { id: string; slug: string; name: string; system: string | null; abbreviation: string | null } | null;
   major: { id: string; name: string; degree_type: string | null; explore_slug: string | null } | null;
 };
 
@@ -47,10 +52,10 @@ export async function fetchPlan(): Promise<Plan> {
   const supabase = getSupabase();
   if (!supabase) throw new Error("Supabase isn't configured");
   const [profile, targets] = await Promise.all([
-    supabase.from("profiles").select("first_name, home:institutions!home_institution_id(id, slug, name)").maybeSingle(),
+    supabase.from("profiles").select("first_name, home:institutions!home_institution_id(id, slug, name, system, abbreviation)").maybeSingle(),
     supabase
       .from("user_targets")
-      .select("major_not_listed, institution:institutions!institution_id(id, slug, name, system), major:majors!major_id(id, name, degree_type, explore_slug)")
+      .select("major_not_listed, institution:institutions!institution_id(id, slug, name, system, abbreviation), major:majors!major_id(id, name, degree_type, explore_slug)")
       .order("position"),
   ]);
   if (profile.error) throw profile.error;
@@ -67,6 +72,7 @@ export async function fetchPlan(): Promise<Plan> {
               slug: t.institution.slug,
               name: t.institution.name,
               system: t.institution.system,
+              abbreviation: t.institution.abbreviation,
               majorId: t.major?.id ?? null,
               majorName: t.major?.name ?? null,
               degreeType: t.major?.degree_type ?? null,

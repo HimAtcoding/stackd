@@ -42,6 +42,10 @@
   /* Section colors (16): Essays, Deadlines and Explore, also used by the step icons */
   --indigo-600: #4f55e0;
   --amber-700: #a86a00;
+  /* Cal State school tiles, and small amber text on --yellow-50 (22) */
+  --amber-800: #8a5600;
+  /* The Opportunities band (16, 22) */
+  --yellow-50: #fff6d6;
   --mint-600: #12946a;
   /* The Up next hero pressed at 14 days or less (16) */
   --coral-pressed: #9c2d16;
@@ -132,6 +136,8 @@
   --color-yellow-400: var(--yellow-400);
   --color-indigo-600: var(--indigo-600);
   --color-amber-700: var(--amber-700);
+  --color-amber-800: var(--amber-800);
+  --color-yellow-50: var(--yellow-50);
   --color-mint-600: var(--mint-600);
   --color-coral-pressed: var(--coral-pressed);
   --color-mint-pressed: var(--mint-pressed);

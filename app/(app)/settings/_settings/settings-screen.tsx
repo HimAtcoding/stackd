@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BackButton } from "@/components/back-button";
 import { OpenSettingsLink } from "@/components/deadlines/open-settings-link";
 import { FlashToast } from "@/components/flash-toast";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -16,6 +15,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { TextLink } from "@/components/ui/text-link";
 import { TintedButton } from "@/components/ui/tinted-button";
+import { SchoolTile } from "@/components/ui/school-tile";
+import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { DEVELOPER_CREDIT } from "@/lib/about";
@@ -35,7 +36,7 @@ import { REMINDER_LABELS, remindersSummary, setDefaultReminders, toggleDay, turn
 import { markWelcomeSeen } from "@/lib/session";
 import { TermSheet } from "../../deadlines/_deadlines/term-question";
 
-const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
+const TOAST_BOTTOM = TAB_TOAST_BOTTOM;
 const HOW_WE_CHECK = aboutDataHref();
 const SHEET_TITLE = "delete-account-title";
 
@@ -57,6 +58,20 @@ function majorValue(plan: Plan): { text: string; missing?: boolean } {
 function termValue({ asked, term }: TermChoice): { text: string; missing?: boolean } {
   if (term) return { text: cycleLabel(term) };
   return asked ? { text: "Not sure yet" } : { text: "Pick a term", missing: true };
+}
+
+// The first 2 target schools' tiles, 4 apart (22 → School tiles), so "2 schools" still fits beside them at 320.
+// Nothing when none has an abbreviation yet.
+function SchoolTiles({ plan }: { plan: Plan }) {
+  const shown = plan.targets.filter((t) => t.abbreviation).slice(0, 2);
+  if (!FEATURES.explore || shown.length === 0) return null;
+  return (
+    <span className="flex shrink-0 gap-1">
+      {shown.map((t) => (
+        <SchoolTile key={t.institutionId} abbreviation={t.abbreviation} system={t.system} />
+      ))}
+    </span>
+  );
 }
 
 // 11: the student's plan answers, their account, sign out, and deleting the account.
@@ -142,20 +157,23 @@ export function SettingsScreen() {
   return (
     <main
       className="mx-auto min-h-dvh max-w-[480px] bg-sky-50"
-      style={{ paddingTop: "calc(var(--safe-top) + 8px)", paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
+      style={{ paddingTop: "calc(var(--safe-top) + 24px)", paddingBottom: TAB_PAGE_BOTTOM }}
     >
-      <div className="px-4">
-        <BackButton fallback="/" slideBack />
-      </div>
-      <h1 className="mt-6 px-6 text-navy-900 type-title-1">Settings</h1>
+      {/* The tab bar's You (22 → 1): a tab, so no back button */}
+      <h1 className="px-6 text-navy-900 type-title-1">Settings</h1>
 
       <h2 className="mt-6 px-6 text-navy-900 type-title-3">Your plan</h2>
       {plan ? (
         <SettingsGroup className="mx-4 mt-3">
           {major ? (
             <>
-              <SettingsRow label="College" value={plan.home?.name ?? "Not listed"} href={onboardingUrl("college", { edit: true })} />
-              <SettingsRow label="Schools" value={schoolsValue(plan)} href={onboardingUrl("schools", { edit: true })} />
+              <SettingsRow
+                label="College"
+                value={plan.home?.name ?? "Not listed"}
+                tiles={plan.home && <SchoolTile abbreviation={plan.home.abbreviation} system={plan.home.system} />}
+                href={onboardingUrl("college", { edit: true })}
+              />
+              <SettingsRow label="Schools" value={schoolsValue(plan)} tiles={<SchoolTiles plan={plan} />} href={onboardingUrl("schools", { edit: true })} />
               <SettingsRow label="Major" value={major.text} valueTone={major.missing ? "action" : undefined} href={onboardingUrl("major", { edit: true })} />
             </>
           ) : (
@@ -323,6 +341,7 @@ export function SettingsScreen() {
         </BottomSheet>
       )}
 
+      <TabBar active="you" />
       <FlashToast bottom={TOAST_BOTTOM} />
       {toast && <Toast key={toast.key} message={toast.text} bottom={TOAST_BOTTOM} onDone={() => setToast(null)} />}
     </main>

@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { BellIcon, GearSixIcon } from "@phosphor-icons/react/ssr";
+import { useRouter } from "next/navigation";
+import { BellIcon } from "@phosphor-icons/react/ssr";
 import { FlashToast } from "@/components/flash-toast";
 import { CircleButton } from "@/components/ui/circle-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
-import { HAS_TAB_BAR, TabBar } from "@/components/ui/tab-bar";
+import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { useDeadlines, type ScopeState } from "@/lib/data/deadlines";
 import { FEATURES, unbuiltHref } from "@/lib/features";
@@ -39,8 +39,6 @@ type HomeFrameProps = {
   name: string | null | undefined;
   subtitle?: string | null;
   unread: number;
-  // The gear needs a real account (hidden in demo mode)
-  settings: boolean;
   // The card right under the greeting, which the husky sits on: journey, plan or setup
   card: ReactNode;
   // Everything under the card. Null while the account's plan is still loading or couldn't load.
@@ -49,12 +47,10 @@ type HomeFrameProps = {
   scope: ScopeState;
 };
 
-// Without a tab bar (v1), toasts and the end of the page sit on the safe area instead of above the bar
-const TAB_BAR_SPACE = HAS_TAB_BAR ? "56px + " : "";
-
 // Home's layout (02), shared by the demo screen and the real-account one. lib/features.ts decides what's on it:
-// in v1 that's the header (wordmark and gear), the greeting, the card and the footer line (13 → Home).
-export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, body, scope }: HomeFrameProps) {
+// the header (wordmark), the greeting, the card, the tiles and dates that are on, and the footer line. Settings is the
+// tab bar's You (22 → 1), so the header has no gear.
+export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope }: HomeFrameProps) {
   const router = useRouter();
   const notifications = unbuiltHref("notifications");
   const deadlines = useDeadlines(scope);
@@ -76,20 +72,12 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
         className="relative mx-auto max-w-[480px]"
         style={{
           paddingTop: "calc(var(--safe-top) + var(--strip-h) + 8px)",
-          paddingBottom: `calc(24px + ${TAB_BAR_SPACE}var(--safe-bottom))`,
+          paddingBottom: TAB_PAGE_BOTTOM,
         }}
       >
         <header className="flex h-11 items-center justify-between pl-6 pr-4">
           {art.wordmark}
           <div className="flex gap-2">
-            {settings && (
-              <CircleButton
-                aria-label="Settings"
-                icon={<GearSixIcon size={24} aria-hidden />}
-                onClick={() => router.push("/settings/", { transitionTypes: ["push"] })}
-              />
-            )}
-            {/* Without the bell (v1) the gear takes its place at the right edge */}
             {notifications && (
               <span className="relative">
                 <CircleButton
@@ -147,7 +135,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
             )}
 
             {FEATURES.upcoming && <UpNext state={deadlines} />}
-            {showGetReady && <GetReadyCard state={deadlines} toastBottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />}
+            {showGetReady && <GetReadyCard state={deadlines} toastBottom={TAB_TOAST_BOTTOM} />}
 
             {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
             <UnofficialFooter className="mt-6 px-4" />
@@ -157,7 +145,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, settings, card, b
 
       <TabBar active="home" />
       {/* A message from the screen before, e.g. "Plan saved" after onboarding (10) */}
-      <FlashToast bottom={`calc(${TAB_BAR_SPACE}var(--safe-bottom) + 12px)`} />
+      <FlashToast bottom={TAB_TOAST_BOTTOM} />
     </div>
   );
 }

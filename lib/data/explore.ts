@@ -70,7 +70,7 @@ async function fetchRecords(): Promise<ExploreRecords> {
       .eq("is_demo", false),
     supabase
       .from("pathway_campuses")
-      .select("pathway_id, major_names, institution:institutions!institution_id(id, slug, name)")
+      .select("pathway_id, major_names, institution:institutions!institution_id(id, slug, name, abbreviation)")
       .eq("verification_status", "verified")
       .eq("is_demo", false),
   ]);

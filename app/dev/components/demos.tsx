@@ -9,6 +9,8 @@ import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { DestructiveButton } from "@/components/ui/destructive-button";
 import { Loading } from "@/components/ui/loading";
 import { MajorRow } from "@/components/ui/major-row";
+import { DateTile } from "@/components/ui/date-row";
+import { SchoolTile } from "@/components/ui/school-tile";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { RequirementRow } from "@/components/ui/requirement-row";
 import { SearchField } from "@/components/ui/search-field";
@@ -52,7 +54,17 @@ export function ExploreDemo() {
         <RequirementRow name="Sample course type" howMany="One course" countsForBoth status={status} icon={CodeIcon} onToggle={next} onOpen={() => {}} />
       </div>
       <Label>Major row</Label>
-      <MajorRow href="#" name="Sample major" detail="UC and Cal State" icon={CodeIcon} />
+      <MajorRow href="#" name="Sample major" detail="9 UC campuses, 2 count for both" icon={CodeIcon} />
+      <Label>School tiles: UC, Cal State, community college, and 4 and 5 letters</Label>
+      <div className="flex gap-3">
+        <SchoolTile abbreviation="UCB" system="UC" />
+        <SchoolTile abbreviation="SJSU" system="CSU" />
+        <SchoolTile abbreviation="LPC" system="CCC" />
+        <SchoolTile abbreviation="CSUSM" system="CSU" />
+        <SchoolTile abbreviation="LATTC" system="CCC" />
+      </div>
+      <Label>Date tile with no deadline</Label>
+      <DateTile status="rolling" />
       <Label>Segmented bar on a solid panel: done, taking now, not yet</Label>
       <div className="rounded-lg bg-mint-800 p-5">
         <SegmentedBar steps={[true, "taking", false]} onFill />

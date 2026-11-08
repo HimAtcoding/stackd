@@ -7,6 +7,7 @@ export type UniversityRecord = {
   slug: string;
   name: string;
   system: string | null;
+  abbreviation: string | null;
   city: string | null;
   state: string | null;
 };
@@ -27,7 +28,7 @@ export async function getUniversityRecord(slug: string): Promise<UniversityRecor
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
   const { data, error } = await client()
     .from("institutions")
-    .select("id, slug, name, system, city, state")
+    .select("id, slug, name, system, abbreviation, city, state")
     .eq("slug", slug)
     .eq("institution_type", "university")
     .eq("is_demo", false)

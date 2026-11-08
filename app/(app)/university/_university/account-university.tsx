@@ -89,6 +89,8 @@ export function AccountUniversity({ slug }: { slug: string }) {
         university && {
           name: university.name,
           type: institutionKind(university.system),
+          abbreviation: university.abbreviation,
+          system: university.system,
           city: university.city && university.state ? `${university.city}, ${university.state}` : university.city,
         }
       }

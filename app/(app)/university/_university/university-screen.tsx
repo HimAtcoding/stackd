@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { BarricadeIcon } from "@phosphor-icons/react/ssr";
+import { SchoolTile } from "@/components/ui/school-tile";
 import { BackButton } from "@/components/back-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -23,7 +24,7 @@ const TABS: { id: TabId; label: string }[] = [
 type UniversityScreenProps = {
   slug: string;
   // Null when the school exists but couldn't be loaded
-  university: { name: string; type: string | null; city: string | null; demo?: boolean } | null;
+  university: { name: string; type: string | null; city: string | null; abbreviation?: string | null; system?: string | null; demo?: boolean } | null;
   hero: ReactNode;
   // What "Try again" does after a failed load
   onRetry: () => void;
@@ -67,7 +68,10 @@ export function UniversityScreen({ slug, university, hero, onRetry, children }: 
         >
           {university ? (
             <>
-              <h1 className="px-6 pt-6 text-navy-900 type-title-1">{university.name}</h1>
+              <div className="flex items-start gap-3 px-6 pt-6">
+                <SchoolTile abbreviation={university.abbreviation} system={university.system} />
+                <h1 className="min-w-0 text-navy-900 type-title-1">{university.name}</h1>
+              </div>
               <p className="mt-1 flex items-center px-6 text-slate-600 type-body-lg">
                 {university.type && (
                   <span>

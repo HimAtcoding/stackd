@@ -26,6 +26,8 @@ type ChoiceRowProps = {
   name: string;
   // Second line: the city, or the degree
   detail?: string | null;
+  // A school's tile, between the circle and the name (22 → School tiles)
+  tile?: ReactNode;
   // While saving: still shown, but taps do nothing
   readOnly?: boolean;
   onSelect: () => void;
@@ -34,7 +36,7 @@ type ChoiceRowProps = {
 };
 
 // The whole row is the button (10 → Choice list). 56 tall, 64 with a second line.
-export function ChoiceRow({ role, checked, name, detail, readOnly, onSelect, ...data }: ChoiceRowProps) {
+export function ChoiceRow({ role, checked, name, detail, tile, readOnly, onSelect, ...data }: ChoiceRowProps) {
   return (
     <button
       type="button"
@@ -53,6 +55,7 @@ export function ChoiceRow({ role, checked, name, detail, readOnly, onSelect, ...
       )}
     >
       <ChoiceCircle checked={checked} />
+      {tile}
       <span className="min-w-0 flex-1">
         <span className="line-clamp-2 text-navy-900 type-row-title">{name}</span>
         {detail && <span className="mt-0.5 block text-slate-600 type-caption">{detail}</span>}

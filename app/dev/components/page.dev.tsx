@@ -175,7 +175,7 @@ export default function ComponentsPage() {
       </Section>
 
       <Section title="Tab bar">
-        {(["home", "explore", "essays", "mentors"] as const).map((t) => (
+        {(["home", "explore", "essays", "you"] as const).map((t) => (
           <State key={t} name={`Active: ${t}`}>
             <TabBar active={t} still />
           </State>

@@ -7,6 +7,8 @@ type SettingsRowProps = {
   label: string;
   // Shown on the right, cut with an ellipsis before the label ever is
   value?: string;
+  // School tiles before the value (22 → School tiles)
+  tiles?: ReactNode;
   // "action": a row that asks for attention (blue). "danger": deleting (coral).
   labelTone?: "action" | "danger";
   valueTone?: "action";
@@ -24,15 +26,16 @@ type SettingsRowProps = {
 };
 
 // One row in a settings group (00 → Settings row). With neither href nor onClick it's plain text, like Email.
-export function SettingsRow({ label, value, labelTone, valueTone, href, transitionTypes, onClick, chevron, trailing, disabled, ...data }: SettingsRowProps) {
+export function SettingsRow({ label, value, tiles, labelTone, valueTone, href, transitionTypes, onClick, chevron, trailing, disabled, ...data }: SettingsRowProps) {
   const content = (
     <>
       <span className={cn("shrink-0 type-row-title", labelTone === "action" ? "text-blue-600" : labelTone === "danger" ? "text-coral-700" : "text-navy-900")}>
         {label}
       </span>
       {value && (
-        <span className={cn("ml-auto min-w-0 max-w-[60%] truncate text-right type-body", valueTone === "action" ? "text-blue-600" : "text-slate-600")}>
-          {value}
+        <span className="ml-auto flex min-w-0 max-w-[60%] items-center gap-2">
+          {tiles}
+          <span className={cn("min-w-0 truncate text-right type-body", valueTone === "action" ? "text-blue-600" : "text-slate-600")}>{value}</span>
         </span>
       )}
       {(trailing || href || chevron) && (

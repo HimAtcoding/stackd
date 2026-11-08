@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StarIcon } from "@phosphor-icons/react/ssr";
+import { SchoolTile } from "@/components/ui/school-tile";
 import type { campusRows } from "@/lib/explore";
 
 type Row = ReturnType<typeof campusRows>[number];
@@ -11,10 +12,14 @@ function CampusRow({ row }: { row: Row }) {
   const more = row.majors.length - 1;
   const grid = "grid min-h-12 w-full grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3 px-6 py-2 text-left";
 
+  // A pathway's campuses are all UC, so every tile is UC blue (22 → School tiles)
   const campus = (
-    <span className="flex items-center gap-1 text-navy-900 type-row-title">
-      {row.inPlan && <StarIcon weight="fill" size={16} aria-label="In your plan" className="shrink-0 text-yellow-400" />}
-      {row.name}
+    <span className="flex items-center gap-3">
+      <SchoolTile abbreviation={row.abbreviation} system="UC" />
+      <span className="flex min-w-0 items-center gap-1 text-navy-900 type-row-title">
+        {row.inPlan && <StarIcon weight="fill" size={16} aria-label="In your plan" className="shrink-0 text-yellow-400" />}
+        {row.name}
+      </span>
     </span>
   );
 
