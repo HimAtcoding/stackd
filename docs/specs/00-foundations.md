@@ -16,8 +16,8 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 
 | Token | Hex | Use |
 |---|---|---|
-| `--blue-600` | #0364FA | Primary buttons, active tab, links, progress fill, "+" button |
-| `--blue-700` | #0252D1 | Pressed primary, text on `--blue-50` (4.31:1 fails with blue-600) |
+| `--blue-600` | #0364FA | Primary buttons, links, progress fill, "+" button |
+| `--blue-700` | #0252D1 | Pressed primary, text on `--blue-50` (4.31:1 fails with blue-600), the active tab (22), UC school tiles |
 | `--blue-100` | #D9EBFA | Progress track |
 | `--blue-50` | #E2F0FD | Tinted button fill |
 | `--blue-50-border` | #CFE3FA | Tinted button border |
@@ -30,7 +30,7 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 | `--slate-700` | #3F4A6E | Body text on amber banner (7.7:1) |
 | `--slate-600` | #5E6B96 | Secondary text, inactive tab labels. Drawn #7B88B2 (3.4:1, fails). Now 5.1:1 on surface |
 | `--slate-400` | #8590AC | Inactive tab icons, empty status ring. Drawn #A5B0C6 (2.1:1, fails 3:1 for controls). Now 3.1:1 |
-| `--border` | #E3ECF7 | Dividers, list container border, tab bar top edge |
+| `--border` | #E3ECF7 | Dividers, list container border, the tab bar capsule's edge |
 | `--border-strong` | #CFDAEC | Social button borders, "or" divider rules |
 | `--field-border` | #8090B8 | Text field border at rest. Drawn #C7D4EA (1.5:1, fails 3:1 for control edges). Now 3.1:1 |
 | `--surface-pressed` | #F1F6FC | Pressed rows and cards |
@@ -50,6 +50,8 @@ Sampled from the mockups (±3 per channel from compression), then cleaned. Four 
 | `--confetti-sky` | #4FA8F7 | Confetti only |
 | `--indigo-600` | #4F55E0 | Essays section color, the writing step's icon (`16-color-pass.md`) |
 | `--amber-700` | #A86A00 | The activities step's icon (16) |
+| `--amber-800` | #8A5600 | Cal State school tiles (white text 6.16:1), small amber text on `--yellow-50` (22) |
+| `--yellow-50` | #FFF6D6 | The Opportunities band (16, 22) |
 | `--mint-600` | #12946A | Explore section color, the courses step's icon (16) |
 | `--mint-pressed` | #085A38 | Pressed state of a solid `--mint-800` panel (21) |
 
@@ -142,15 +144,15 @@ The mockup's shadows are faint (1–2 levels of RGB below cards). Three levels, 
 
 **Container tiers** (from `15-home-deadlines-rev2.md`): on Home and Deadlines, "Card" means one of the tiers there (1 hero, 2 list, 3 ask, or plain on the page). The route, segmented bar, cycle bar and compact tinted button are specified there too. Other screens keep Card until they're next touched.
 
-The tab bar uses a 1 px `--border` top edge plus `0 -8px 24px rgba(5,16,66,.04)`.
+The tab bar is a floating capsule with `--shadow-float` (22 → 1).
 
 ## Icons
 
-Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, regular for inactive tabs, bold for arrows and chevrons.
+Phosphor (`@phosphor-icons/react`). Filled glyphs for active and tile icons, regular for inactive tabs, bold for arrows and chevrons. No icon marks a link that leaves the app: a link line shows its domain instead (18), and a button that opens an outside page says so in its label (22).
 
 | Where | Icon | Weight | Size |
 |---|---|---|---|
-| Tab: Home / Explore / Essays / Mentors | `House` / `Compass` / `FileText` / `UsersThree` | fill when active, regular when not | 28 |
+| Tab: Home / Explore / Essays / You | `House` / `Compass` / `PencilLine` / `UserCircle` | fill when active, regular when not | 24 (22) |
 | Bell (home header) | `Bell` | regular | 24 |
 | Tiles: Requirements / Essays / Mentors / Events | `FileText` / `PencilSimple` / `UsersThree` / `CalendarDots` | fill | 28 (matches the mockup) |
 | Upcoming: deadline / panel | `CalendarDots` / `UsersThree` | fill | 24 |
@@ -232,7 +234,15 @@ Min height 64, padding 12 24: a status tile, then name `row-title` `--navy-900` 
 
 ### Major row
 
-Min height 64, padding 12 16, the whole row a button: icon tile 40, name `row-title`, one line of detail `caption` `--slate-600`. No chevron, no dividers, rows 4 apart (21).
+Min height 64, padding 12 16, the whole row a button: icon tile 40 (`--surface`, 1 px `--border-strong`, icon fill 22 `--mint-800`, no pale tint), name `row-title`, one line of detail `caption` `--slate-600`. The student's own major has a 60-wide, 4-tall segmented bar (2 apart) before its count. No chevron, no dividers, rows 4 apart (21, 22).
+
+### School tile
+
+A school's own short name ("UCSD", "SJSU", "LPC") in white on its system's color: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. 48 wide and 40 tall everywhere, so names line up in every list; `--r-sm`; weight 800, tracking 0, 15 for 2–3 letters and 12 for 4–5 (the widest, "MTSAC", is 43 at 12). Never a logo. `aria-hidden`; nothing when the school has no abbreviation (22 → 2).
+
+### Date tile, rolling
+
+18's date tile for something with no deadline: `--surface`, 1 px `--border-strong`, `Infinity` bold 24 `--slate-600` in place of the month and day (22).
 
 ### Source block
 
@@ -244,7 +254,7 @@ Tier 3 (15 → Reminders ask): `--blue-50` fill, its border, `--r-md`, padding 1
 
 ### Tab bar
 
-Fixed to the bottom. Height 56 + `env(safe-area-inset-bottom)`. `--surface`. The top edge line is drawn with `box-shadow: 0 -1px 0 var(--border), 0 -8px 24px rgba(5,16,66,.04)`, so it takes no space inside the 56. Four equal columns. Each column: 6 top padding, icon 28, 2 gap, label `tab` (16 line), which leaves 4 below the label when there's no home indicator. Active: icon fill `--blue-600`, label `--blue-600`. Inactive: icon regular `--slate-400`, label `--slate-600`. No animation on switch. Each tab keeps its own scroll position. Hidden on pushed screens (the university screen) and on the celebration.
+A floating capsule (22 → 1), replacing the full-width bar. Centered, inset 16 from each side (max width 420), 64 tall, `--r-full`, `--surface` at 92% with a 20 px background blur (solid without blur support), 1 px `--border`, `--shadow-float`, 12 above the bottom safe area. Tabs: Home, Explore (with `explore` on), Essays (with `essays` on), You (Settings; not in demo mode), only those switched on, and none with only Home. Equal widths; icon 24 over label `tab`, 4 apart. Inactive: icon regular `--slate-600`, label `--slate-600`. Active: icon fill and label `--blue-700`, on a `--surface-pressed` pill that fills the tab minus 6 on each side and slides between tabs over 200 ms (instant under reduced motion). A tab screen's bottom padding is 64 + 12 + safe area + 16, and its toasts sit 12 above the capsule. Essays and Settings are tab screens with no back button. Hidden on pushed screens and on the celebration.
 
 ### Text field
 

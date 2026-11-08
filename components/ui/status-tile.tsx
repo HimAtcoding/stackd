@@ -18,8 +18,8 @@ type StatusTileProps = {
   color: string;
   // With this the tile is its own check control, 44 to tap. Without it, the tile only shows the status.
   onToggle?: () => void;
-  // 36 on Home's Get ready, 40 everywhere else
-  size?: 36 | 40;
+  // 36 on Home's Get ready, 32 in Explore's Still needed (22), 40 everywhere else
+  size?: 32 | 36 | 40;
   // Counts up to play the burst from outside, as the requirement sheet's segmented control does
   burst?: number;
   // This tap finishes a checklist: the bigger burst (16 → All steps done)
@@ -51,7 +51,7 @@ export function StatusTile({ status, name, icon: Glyph, tile, color, onToggle, s
       transition={done && !still ? { duration: 0.16, ease: OUT } : { duration: 0 }}
       className={cn(
         "flex shrink-0 items-center justify-center rounded-sm",
-        big ? "size-10" : "size-9",
+        big ? "size-10" : size === 32 ? "size-8" : "size-9",
         done
           ? "bg-green-600 text-white transition-colors duration-160 ease-out motion-reduce:transition-none"
           : status === "in_progress"
@@ -60,11 +60,11 @@ export function StatusTile({ status, name, icon: Glyph, tile, color, onToggle, s
       )}
     >
       {done ? (
-        <CheckIcon weight="bold" size={big ? 20 : 18} />
+        <CheckIcon weight="bold" size={big ? 20 : size === 32 ? 16 : 18} />
       ) : status === "in_progress" ? (
-        <HourglassMediumIcon weight="duotone" size={big ? 22 : 20} />
+        <HourglassMediumIcon weight="duotone" size={big ? 22 : size === 32 ? 18 : 20} />
       ) : (
-        <Glyph weight="duotone" size={big ? 22 : 20} />
+        <Glyph weight="duotone" size={big ? 22 : size === 32 ? 18 : 20} />
       )}
     </motion.span>
   );

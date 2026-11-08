@@ -68,6 +68,21 @@ const records = fromFile();
 const [cs] = buildMajors(records);
 
 check("one major from two pathways", buildMajors(records).length === 1 && cs.slug === "computer-science");
+
+// The name is the UC pathway's when there is one, whichever row the database returns first
+const named = (ucName: string | null, tmcName: string | null, tmcFirst: boolean) => {
+  const rows: ExploreRecords = { pathways: [], requirements: [], campuses: [] };
+  const add = (kind: "uc_pathway" | "tmc", name: string) => {
+    rows.pathways.push({ ...records.pathways[0], id: `bio-${kind}`, slug: "biological-sciences", kind, name });
+    rows.requirements.push({ ...records.requirements[0], id: `bio-${kind}-1`, pathway_id: `bio-${kind}` });
+  };
+  const both: [("uc_pathway" | "tmc"), string | null][] = [["uc_pathway", ucName], ["tmc", tmcName]];
+  for (const [kind, name] of tmcFirst ? both.reverse() : both) if (name) add(kind, name);
+  return buildMajors(rows)[0].name;
+};
+check("UC first: the UC name", named("Biological Sciences", "Biology", false) === "Biological Sciences", named("Biological Sciences", "Biology", false));
+check("TMC first: still the UC name", named("Biological Sciences", "Biology", true) === "Biological Sciences", named("Biological Sciences", "Biology", true));
+check("no UC pathway: the TMC name", named(null, "Biology", true) === "Biology");
 check("the major shows its stored name", cs.name === "Computer Science", cs.name);
 check('the list says "UC and Cal State"', systemsLine(cs) === "UC and Cal State", systemsLine(cs));
 check("UC has 9 rows in the pathway's order", cs.uc?.requirements.length === 9 && cs.uc.requirements[0].code === "intro-programming" && cs.uc.requirements[8].code === "physics");

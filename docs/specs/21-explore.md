@@ -131,11 +131,11 @@ From UC Admissions and the CCC Chancellor's Office. How we check this
    No majors match "nursing" yet.
    Explore has {n} majors so far. Your
    counselor or ASSIST can help with others.
-   ↗ Open ASSIST
+   Open ASSIST
      assist.org
 ```
 
-Headline `title-3`, body `body` `--slate-700`, centered, then a link line. "Yet" is honest: more majors come with more data.
+Headline `title-3`, body `body` `--slate-700`, centered, then a link line. Link lines here and below have no icon: the domain under the label says the link leaves the app (18, 22 rev). "Yet" is honest: more majors come with more data.
 
 ## 2. Major page
 
@@ -159,7 +159,7 @@ Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the sec
      A one-year sequence. Counts for both ⊕
  …
 
- ↗ Find these at Las Positas
+ Find these at Las Positas
    Your 2026-27 agreement on assist.org
 
  Campuses that use this pathway (9)             title-3
@@ -171,7 +171,7 @@ Route `/explore/major/?slug=computer-science&tab=uc`. Pushed screen with the sec
 
  From UC Admissions, Computer Science
  Transfer Pathway. Checked Oct 27, 2026.
- ↗ Open UC's pathway page
+ Open UC's pathway page
    admission.universityofcalifornia.edu
  Report a problem
 ```
@@ -207,7 +207,7 @@ Counts for both                                  headline
 Your status                                      headline
 [ Not yet | Taking now | Done ]                  segmented control
 
-↗ Find it at Las Positas
+Find it at Las Positas
   Your 2026-27 agreement on assist.org
 ```
 
@@ -240,7 +240,7 @@ Settings gets a link to it too, in its footer with Terms, Privacy and Support. I
 | Where | Change |
 |---|---|
 | Tab bar | Explore turns on (`explore: true` at release) |
-| University page, Requirements tab (03, real accounts) | Under the official agreement card, a link line "See what to take for {major}" / "Explore", opening the major page on the UC or Cal State tab, when the plan's major has Explore data |
+| University page, Requirements tab (03, real accounts) | Under the official agreement card, a link line inside the app "See what to take for {major}" with `CaretRight` (18), opening the major page on the UC or Cal State tab, when the plan's major has Explore data |
 | Home | No change in v1.4 |
 
 ## Data

@@ -61,7 +61,6 @@ export function AccountHome({ art }: { art: HomeArt }) {
       name={plan?.firstName ?? cachedName}
       subtitle={subtitle}
       unread={0}
-      settings
       card={card}
       scope={scope}
       body={

@@ -7,18 +7,17 @@ import { StepIconTile } from "@/components/ui/step-tile";
 import { stepSlug, type ChecklistView } from "@/lib/deadlines";
 import { essaysHref } from "@/lib/features";
 import { stepNeeds } from "@/lib/step-content";
-import { stepLook } from "@/lib/step-icons";
 
-type StepLink = { href: string; label: string; detail?: string };
+type StepLink = { href: string; label: string };
 
 // Where Stackd can do the step itself (18 → Do it in Stackd). Other steps have no link.
 function stepLink(c: ChecklistView, title: string): StepLink | null {
   const slug = stepSlug(title);
-  if (slug === "pick-your-campuses-and-majors") return { href: "/settings/", label: "See your plan", detail: "Your schools" };
+  if (slug === "pick-your-campuses-and-majors") return { href: "/settings/", label: "See your plan" };
   if (slug === "write-your-personal-insight-answers") {
     // Only with Essays on, and only on UC's checklist: the answers are for UC applications (17 → Entry points)
     const href = c.deadline.audience === "uc" ? essaysHref() : null;
-    return href ? { href, label: "Write them in Stackd", detail: "Personal insight answers" } : null;
+    return href ? { href, label: "Write them in Stackd" } : null;
   }
   if (slug.startsWith("submit-by")) return { href: c.checklist.apply_url, label: c.checklist.apply_label };
   return null;
@@ -62,7 +61,6 @@ function Content({
 }) {
   const needs = stepNeeds(c.deadline.audience, step.title);
   const link = stepLink(c, step.title);
-  const LinkIcon = stepLook(step.title).icon;
 
   return (
     <div className="-mx-6 -mt-6 max-h-[calc(100dvh-var(--safe-top)-72px)] overflow-y-auto px-6 pt-6">
@@ -92,7 +90,7 @@ function Content({
       )}
 
       {/* The link's 4 padding counts toward the 24 above it */}
-      {link && <LinkLine {...link} icon={<LinkIcon weight="bold" size={16} />} className="mt-5" />}
+      {link && <LinkLine href={link.href} label={link.label} className="mt-5" />}
 
       <div className={link ? "mt-5" : "mt-6"}>
         {done ? (

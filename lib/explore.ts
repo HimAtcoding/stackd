@@ -46,7 +46,7 @@ export type RequirementRecord = {
 export type CampusRecord = {
   pathway_id: string;
   major_names: string[];
-  institution: { id: string; slug: string; name: string } | null;
+  institution: { id: string; slug: string; name: string; abbreviation?: string | null } | null;
 };
 
 export type ExploreRecords = { pathways: PathwayRow[]; requirements: RequirementRecord[]; campuses: CampusRecord[] };
@@ -60,7 +60,8 @@ export const SYSTEM_TABS: { id: SystemTab; label: string }[] = [
   { id: "cal-state", label: "Cal State" },
 ];
 
-// One major for each slug, A to Z. A pathway with no requirements shows nothing, so it doesn't count.
+// One major for each slug, A to Z. A pathway with no requirements shows nothing, so it doesn't count. The name is the
+// UC pathway's when there is one, otherwise the TMC's, whatever order the rows come in ("Biological Sciences", not "Biology").
 export function buildMajors({ pathways, requirements, campuses }: ExploreRecords): ExploreMajor[] {
   const full: Pathway[] = pathways.map((p) => ({
     ...p,
@@ -72,6 +73,7 @@ export function buildMajors({ pathways, requirements, campuses }: ExploreRecords
     const major = majors.get(p.slug) ?? { slug: p.slug, name: p.name, uc: null, calState: null };
     if (p.kind === "uc_pathway") major.uc = p;
     else major.calState = p;
+    major.name = (major.uc ?? major.calState ?? p).name;
     majors.set(p.slug, major);
   }
   return [...majors.values()].sort((a, b) => a.name.localeCompare(b.name));
@@ -171,7 +173,7 @@ export function campusRows(pathway: Pathway, planSchools: string[]) {
   const mine = (c: CampusRecord) => Boolean(c.institution && planSchools.includes(c.institution.id));
   return [...pathway.campuses]
     .sort((a, b) => Number(mine(b)) - Number(mine(a)) || name(a).localeCompare(name(b)))
-    .map((c) => ({ id: c.institution?.id ?? name(c), name: name(c), majors: c.major_names, inPlan: mine(c) }));
+    .map((c) => ({ id: c.institution?.id ?? name(c), name: name(c), abbreviation: c.institution?.abbreviation ?? null, majors: c.major_names, inPlan: mine(c) }));
 }
 
 // The link to a student's own agreement, or to ASSIST when Stackd has none for their path
@@ -180,4 +182,22 @@ export function agreementLine(what: "these" | "it", agreement: { url: string; ac
     return { href: agreement.url, label: `Find ${what} at ${agreement.college}`, detail: `Your ${agreement.academicYear} agreement on assist.org` };
   }
   return { href: ASSIST_HOME, label: `Find ${what} at your college`, detail: "assist.org" };
+}
+
+// The Explore hub's Still needed (22 → 3): taking now first, then not yet, each in the pathway's order
+export function stillNeeded(pathway: Pathway, statuses: Statuses, limit = 4) {
+  const open = pathway.requirements.filter((r) => statusOf(statuses, r.topic) !== "done");
+  const taking = open.filter((r) => statusOf(statuses, r.topic) === "in_progress");
+  return [...taking, ...open.filter((r) => statusOf(statuses, r.topic) === "not_started")].slice(0, limit);
+}
+
+export const systemLabel = (tab: SystemTab) => SYSTEM_TABS.find((t) => t.id === tab)!.label;
+
+// A major row's second line (22 → 3): "12 UC campuses, 2 count for both", "9 UC campuses" or "Cal State only"
+export function majorDetail(major: ExploreMajor) {
+  if (!major.uc) return "Cal State only";
+  const n = major.uc.campuses.length;
+  const campuses = `${n} UC ${n === 1 ? "campus" : "campuses"}`;
+  const both = major.calState ? sharedTopics(major).size : 0;
+  return both > 0 ? `${campuses}, ${both} ${both === 1 ? "counts" : "count"} for both` : campuses;
 }

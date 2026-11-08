@@ -11,6 +11,8 @@ export type Institution = {
   name: string;
   city: string | null;
   system: string | null;
+  // The school's own short name for its tile (22 → School tiles), null until it's imported
+  abbreviation: string | null;
 };
 
 export type Major = {
@@ -30,7 +32,7 @@ function client() {
 export async function getInstitutions(type: InstitutionType): Promise<Institution[]> {
   const { data, error } = await client()
     .from("institutions")
-    .select("id, slug, name, city, system")
+    .select("id, slug, name, city, system, abbreviation")
     .eq("institution_type", type)
     .eq("is_demo", false)
     .order("name");

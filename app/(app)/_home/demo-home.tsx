@@ -32,7 +32,6 @@ export function DemoHome({ art }: { art: HomeArt }) {
       name={firstName ?? home?.greeting?.demoName}
       subtitle={home?.greeting?.subtitle}
       unread={home?.notifications?.unread ?? 0}
-      settings={false}
       card={steps.length > 0 && <JourneyCard statuses={steps.map((s) => stepStatus(s, statuses))} />}
       scope={scope}
       body={{

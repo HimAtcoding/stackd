@@ -1,11 +1,12 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { CheckIcon } from "@phosphor-icons/react/ssr";
+import { CheckIcon, InfinityIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
 
 // soon: 14 days or less. open: the window is open. later: not open yet, or further off.
-export type DateStatus = "soon" | "open" | "later" | "done" | "missed";
+// rolling: an opportunity with no deadline (22 → 3).
+export type DateStatus = "soon" | "open" | "later" | "done" | "missed" | "rolling";
 
 const TILE: Record<DateStatus, string> = {
   soon: "bg-coral-700 text-white",
@@ -14,15 +15,23 @@ const TILE: Record<DateStatus, string> = {
   later: "bg-surface text-slate-600 border border-border-strong",
   done: "bg-green-600 text-white",
   missed: "bg-surface text-slate-400 border border-border",
+  rolling: "bg-surface text-slate-600 border border-border-strong",
 };
 
 // The date tile (18 → Date tiles): month over day in a 48 square whose color carries the status. Done swaps the
-// day for a check. Hidden from screen readers; the row's name carries the date.
-export function DateTile({ month, day, status }: { month: string; day: string; status: DateStatus }) {
+// day for a check, and a rolling one shows the infinity sign alone. Hidden from screen readers; the row's name carries
+// the date.
+export function DateTile({ month, day, status }: { month?: string; day?: string; status: DateStatus }) {
   return (
     <span aria-hidden className={cn("flex size-12 shrink-0 flex-col items-center justify-center rounded-md tabular-nums", TILE[status])}>
-      <span className="type-caption font-semibold">{month}</span>
-      {status === "done" ? <CheckIcon weight="bold" size={20} /> : <span className="type-title-3 font-extrabold">{day}</span>}
+      {status === "rolling" ? (
+        <InfinityIcon weight="bold" size={24} />
+      ) : (
+        <>
+          <span className="type-caption font-semibold">{month}</span>
+          {status === "done" ? <CheckIcon weight="bold" size={20} /> : <span className="type-title-3 font-extrabold">{day}</span>}
+        </>
+      )}
     </span>
   );
 }

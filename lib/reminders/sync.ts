@@ -2,17 +2,18 @@ import type { PluginListenerHandle } from "@capacitor/core";
 import { currentScope, loadDeadlines, readDeadlines, subscribeDeadlines } from "@/lib/data/deadlines";
 import { readPlanState, refreshPlan, subscribePlan } from "@/lib/data/plan";
 import { buildView } from "@/lib/deadlines";
-import { deadlinesHref } from "@/lib/features";
+import { deadlinesHref, exploreHref } from "@/lib/features";
 import { DEMO_MODE } from "@/lib/flags";
 import { readSessionUser } from "@/lib/profile";
 import { readPermission, readReminderSettings, refreshPermission, remindersSupported, subscribePermission, subscribeReminderSettings } from "./index";
 import { announceReminderTap } from "./choice";
 import { withNotifications, withNotificationsExclusive } from "./native";
+import { OPPORTUNITY_PREFIX, opportunityReminderItems, readOpportunityReminders, subscribeOpportunityReminders } from "./opportunities";
 import { cancelAll, planReminders, reminderItems, rescheduleIfCurrent } from "./schedule";
 
 // Keeps the phone's scheduled reminders in step with the student's dates (14 → What gets scheduled): rescheduled
 // when the app opens or comes back, and whenever the plan, the term, a done mark, a date's reminder days, the
-// default, the switch, iOS's permission or the dates themselves change. Started by the session gate.
+// default, the switch, iOS's permission, the dates themselves or the opportunities chosen with Remind me (22) change. Started by the session gate.
 
 const SETTLE_MS = 300;
 
@@ -26,11 +27,12 @@ async function apply(stillCurrent: () => boolean) {
   if (records.status !== "ok" || scope === undefined) return;
   const now = new Date();
   const view = buildView(records.data.deadlines, (id) => marks[id]?.done_at ?? null, scope, term.term, now);
-  const planned = planReminders(reminderItems(view.upcoming, marks, settings.days), now);
+  const items = [...reminderItems(view.upcoming, marks, settings.days), ...(exploreHref() ? opportunityReminderItems(readOpportunityReminders(), now) : [])];
+  const planned = planReminders(items, now);
   await withNotificationsExclusive((api) => rescheduleIfCurrent(api, planned, stillCurrent));
 }
 
-// `open` navigates inside the app; tapping a reminder opens that date's sheet on the Deadlines screen
+// `open` navigates inside the app; tapping a reminder opens that date's sheet on the Deadlines screen, or the opportunity
 export function startReminders(open: (href: string) => void): () => void {
   if (!remindersSupported()) return () => {};
   let stopped = false;
@@ -55,13 +57,24 @@ export function startReminders(open: (href: string) => void): () => void {
     reschedule();
   };
 
-  const stops = [subscribeDeadlines(reschedule), subscribePlan(reschedule), subscribeReminderSettings(reschedule), subscribePermission(reschedule)];
+  const stops = [
+    subscribeDeadlines(reschedule),
+    subscribePlan(reschedule),
+    subscribeReminderSettings(reschedule),
+    subscribePermission(reschedule),
+    subscribeOpportunityReminders(reschedule),
+  ];
   document.addEventListener("visibilitychange", onVisible);
 
   let tap: PluginListenerHandle | null = null;
   withNotifications((api) =>
     api.addListener("localNotificationActionPerformed", ({ notification }) => {
       const id = (notification.extra as { deadlineId?: string } | undefined)?.deadlineId;
+      if (id?.startsWith(OPPORTUNITY_PREFIX)) {
+        const page = exploreHref(`opportunities/item/?slug=${encodeURIComponent(id.slice(OPPORTUNITY_PREFIX.length))}`);
+        if (page) open(page);
+        return;
+      }
       const href = deadlinesHref(id ? `?id=${encodeURIComponent(id)}` : "");
       if (!href) return;
       // An open Deadlines screen opens the sheet itself; any other screen navigates there

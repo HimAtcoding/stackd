@@ -67,7 +67,7 @@ Replaces screenshot 33. It shows when the answer is empty and the text field doe
 │ ‹               Saved              ⋯   ✓   │
 │ Your major                                 │
 │ How you've prepared for your intended…     │
-│ ↗ Read UC's exact wording                  │
+│ Read UC's exact wording                    │
 │  Answer      Notes                         │  UnderlineTabs
 └────────────────────────────────────────────┘
   Start writing. It saves as you go.            placeholder (unchanged)

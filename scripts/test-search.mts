@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import { matchesSearch } from "../lib/search";
 
-type Row = { slug: string; name: string; city?: string; institution_type: string };
+type Row = { slug: string; name: string; city?: string; abbreviation?: string; institution_type: string };
 const rows: Row[] = JSON.parse(fs.readFileSync("data/raw/planning/california-institutions.json", "utf8")).institutions;
 const colleges = rows.filter((r) => r.institution_type === "community_college");
 const schools = rows.filter((r) => r.institution_type === "university");
@@ -13,7 +13,8 @@ function check(name: string, ok: boolean, detail?: unknown) {
   if (!ok) failed++;
   console.log(ok ? "ok   " : "FAIL ", name, ok ? "" : JSON.stringify(detail));
 }
-const find = (list: Row[], query: string) => list.filter((r) => matchesSearch(query, r.name, r.city)).map((r) => r.slug);
+// As onboarding searches: the name, the city and the school's abbreviation (22)
+const find = (list: Row[], query: string) => list.filter((r) => matchesSearch(query, r.name, r.city, r.abbreviation)).map((r) => r.slug);
 const finds = (list: Row[], query: string, expected: string[]) => {
   const got = find(list, query);
   check(`"${query}" finds ${expected.join(", ")}`, JSON.stringify(got) === JSON.stringify(expected), got);
@@ -39,6 +40,13 @@ check("a city finds its colleges", find(colleges, "livermore").join() === "las-p
 check("initials match the name, not the city", !find(colleges, "ph").includes("diablo-valley"));
 check("an empty search shows everything", find(colleges, "").length === 116 && find(colleges, "   ").length === 116);
 check("one letter doesn't match initials", find(colleges, "d").every((s) => colleges.find((c) => c.slug === s)!.name.toLowerCase().includes("d") || colleges.find((c) => c.slug === s)!.city?.toLowerCase().includes("d")));
+// Abbreviations (22): names whose initials don't spell them
+finds(schools, "sjsu", ["san-jose-state"]);
+finds(schools, "SLO", ["cal-poly-san-luis-obispo"]);
+finds(schools, "ucsd", ["uc-san-diego"]);
+finds(schools, "csulb", ["csu-long-beach"]);
+finds(colleges, "mtsac", ["mt-san-antonio"]);
+check("without the abbreviation, sjsu finds nothing", schools.filter((r) => matchesSearch("sjsu", r.name, r.city)).length === 0);
 check("majors match by name", matchesSearch("computer sci", "Computer Science") && matchesSearch("cs", "Computer Science"));
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");

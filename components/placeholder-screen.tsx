@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 import { hasSession, subscribeSession } from "@/lib/session";
 import { BackButton } from "./back-button";
 import { EmptyState } from "./ui/empty-state";
-import { HAS_TAB_BAR, TabBar, type TabId } from "./ui/tab-bar";
+import { HAS_TAB_BAR, TAB_PAGE_BOTTOM, TabBar, type TabId } from "./ui/tab-bar";
 import { TintedButton } from "./ui/tinted-button";
 import { PageTransition } from "./page-transition";
 
@@ -64,7 +64,7 @@ export function PlaceholderScreen({ version, tab }: PlaceholderScreenProps) {
         className="mx-auto min-h-dvh max-w-[480px] px-4"
         style={{
           paddingTop: "calc(var(--safe-top) + 8px)",
-          paddingBottom: showTabBar ? "calc(56px + var(--safe-bottom))" : "var(--safe-bottom)",
+          paddingBottom: showTabBar ? TAB_PAGE_BOTTOM : "var(--safe-bottom)",
         }}
       >
         {/* On "/" there's nothing to go back to, so the button is hidden but keeps its space */}

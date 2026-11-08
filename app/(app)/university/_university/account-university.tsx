@@ -1,6 +1,5 @@
 "use client";
 
-import { CompassIcon } from "@phosphor-icons/react/ssr";
 import { Art } from "@/components/art";
 import { GoHome } from "@/components/unbuilt-route";
 import { LinkLine } from "@/components/ui/link-line";
@@ -72,8 +71,6 @@ export function AccountUniversity({ slug }: { slug: string }) {
           <LinkLine
             href={seeWhatToTake}
             label={`See what to take for ${target.majorName}`}
-            detail="Explore"
-            icon={<CompassIcon weight="bold" size={16} />}
             className="mx-6 mt-3"
           />
         )}
@@ -89,6 +86,8 @@ export function AccountUniversity({ slug }: { slug: string }) {
         university && {
           name: university.name,
           type: institutionKind(university.system),
+          abbreviation: university.abbreviation,
+          system: university.system,
           city: university.city && university.state ? `${university.city}, ${university.state}` : university.city,
         }
       }

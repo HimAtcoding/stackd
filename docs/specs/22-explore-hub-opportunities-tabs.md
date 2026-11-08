@@ -27,7 +27,7 @@ School logos are trademarks, so Stackd doesn't use them. Each school gets a **mo
 
 Contrast: navy on `--yellow-50` 16.74:1; `--slate-700` on `--yellow-50` 8.03:1. `--amber-700` on `--yellow-50` is only 4.11:1, so small text there uses `--amber-800`.
 
-Type: Figtree, existing scale. Monograms: weight 800, 15 for 2–3 letters, 13 for 4–5, tracking 0.
+Type: Figtree, existing scale. Monograms: weight 800, tracking 0, 15 for 2–3 letters, 12 for 4–5; nothing below 12. (At 13, 4–5 letters overflowed the first 40-wide tile: "UCSD" is 42 at 13 and "CSUSM" 46. The tile is now 48 wide: "MTSAC", the widest, is 43 at 12.)
 
 **Layout.** Tabs float 12 above the safe area in a capsule. Explore reads top to bottom: band and search, your major, what you still need, opportunities for you, then all majors, with one source line at the very bottom.
 
@@ -76,6 +76,7 @@ Replaces the full-width tab bar everywhere.
 | Hit area | The whole tab, at least 44 tall. `nav` with `aria-label="Main"`, `aria-current="page"` on the active tab |
 | Page padding | Every tab screen's bottom padding grows to 64 + 12 + safe area + 16, so the last row scrolls clear of the capsule |
 | Pushed screens | No tab bar (as now) |
+| Tab roots | Essays and Settings are tabs now: no back button, the title 24 under the safe area (00 → Section band, on a tab), and the bar shows. Their own pushed screens (the essay editor, onboarding's edit steps) stay pushed with no bar. Home's gear goes away: You is Settings. Demo mode has only Home, so no bar |
 
 ## 2. School tiles
 
@@ -83,9 +84,12 @@ A monogram tile replaces the generic icon wherever a school is listed: onboardin
 
 | Part | Spec |
 |---|---|
-| Tile | 40 × 40 (32 in compact rows), `--r-sm`, solid fill by system: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. White letters, centered |
+| Tile | 48 wide and 40 tall everywhere, so the names after it line up in every list; `--r-sm`, solid fill by system: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. White letters, centered. (Drafted as 40 × 40, and 32 in compact rows; neither holds 4–5 letters at 12) |
+| Where | Onboarding's college and school rows: the choice circle, then the tile, then the name. Settings → Your plan: the College row's tile before its value, and the Schools row's first 2 tiles, 4 apart, before "{n} schools"; under 375 wide Settings shows no tiles, because "Las Positas College" and "2 schools" don't fit beside them. Explore's campus rows: the tile in its own 48 column before the campus name (a campus without an abbreviation leaves it empty, so names line up). University page: the tile left of the name, on its first line |
+| No abbreviation | No tile; the row looks as it did before. Behind the `explore` flag with the rest of Explore |
 | Letters | The school's `abbreviation` (Data): "UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC". Never a logo, seal or mascot |
 | Accessibility | `aria-hidden`; the row's name carries it |
+| Search | The school pickers also match the abbreviation: "sjsu", "slo", "ucsd" |
 
 ## 3. Explore hub
 
@@ -117,7 +121,7 @@ Replaces 21's layout below the panel.
 | Part | Spec |
 |---|---|
 | Still needed | Shows when the panel shows. Title "Still needed for UC" (or "for Cal State" when the plan has only Cal State schools), with "See all {n}" opening the major page. Up to 4 rows: taking-now first, then not-yet in pathway order. Row: status tile 32 (21's three states), name `row-title`, and "Taking now" `caption` `--blue-700` on the right when it applies. Tapping a row opens 21's requirement sheet. When everything is done: one line "Every UC course for Computer Science is marked done." in `body` `--slate-700` |
-| Opportunities for you | Up to 3 open opportunities that match the student (5), soonest deadline first. Row: 18's date tile (deadline; "Rolling" tile when there's none: `--surface`, 1 px `--border-strong`, `Infinity` icon), title `row-title`, second line `caption` `--slate-600` with the organization, third line "For {who}" in `caption`. "See all" opens the feed. With none open: the section is hidden |
+| Opportunities for you | Up to 3 open opportunities that match the student (5), soonest deadline first. Row: 18's date tile (deadline: coral at 14 days or less, the open look before that; "Rolling" tile when there's none: `--surface`, 1 px `--border-strong`, `Infinity` bold 24 `--slate-600`), title `row-title`, second line `caption` `--slate-600` with the organization, third line "For {who}" in `caption` `--navy-900`, built from the rules: "For Computer Science or Mathematics majors at community colleges", "For students at community colleges transferring to UC or Cal State". "See all" opens the feed. With none open: the section is hidden |
 | Majors | Title "Majors ({n})". Row: icon tile 40 with `--surface` fill, 1 px `--border-strong`, icon `--mint-800` (no pale tint). Name `row-title`. Your major's second line: a 4-tall segmented bar (60 wide) and "2 of 9 for UC" in `caption`. Other majors: "{n} UC campuses, {k} count for both" or "Cal State only". Rows 4 apart, no dividers |
 | Source line | One `caption` `--slate-600` line at the very bottom, 32 below the last row: "From UC Admissions and the CCC Chancellor's Office." followed by the inline link "How we check this" in `--blue-700`. Replaces 21's two-part footer |
 | Search | Unchanged (21); while searching, Still needed and Opportunities hide |
@@ -144,7 +148,7 @@ Route `/explore/opportunities/`. Pushed screen with a `--yellow-50` band (back b
 
 | Part | Spec |
 |---|---|
-| Chips | Existing choice chips (00). One kind at a time; "All" by default |
+| Chips | Existing choice chips (00), one row that scrolls sideways. One kind at a time; "All" by default. Internships have no chip and show under All |
 | Fits me | Switch (00), on by default: hides opportunities whose audience, majors or system rule out this student (5). Off shows everything open |
 | Groups | "Closing soon" (deadline 14 days or less), "Open" (later deadline), "Rolling" (no deadline). Each sorted by deadline, then title. Empty groups hidden |
 | Row | As in 3, min height 72, padding 12 16, whole row a button |
@@ -188,22 +192,22 @@ Route `/explore/opportunities/item/?slug=…`. Pushed, `--yellow-50` band.
  What you get                                    title-3
  • $5,000 stipend, 8 weeks in summer 2027
 
- [ ↗ Open the official page ]                    primary, 56
+ [ Open the official page ]                      primary, 56
  🔔 Remind me before Nov 20                      text button
 
  From UC Davis, checked Nov 8, 2026.             source block (21)
- ↗ ucdavis.edu
+ ucdavis.edu
  Report a problem
 ```
 
 | Part | Spec |
 |---|---|
-| Header | Title `title-1`, organization `body` `--slate-700`, then the date tile 48 with "Apply by {date}" `label` `--navy-900` and a `caption` line: kind, paid or free (`cost`), where (`location` or "Online") |
-| Who it's for | `title-3`. One row per rule: `CheckCircle` fill `--green-600` when Stackd checked it against the student; `Circle` `--slate-400` with "Check yourself" `caption` for anything it can't check. Text `body` `--navy-900`. Never a red cross: a student who doesn't fit by Stackd's checks still sees why, in plain words: "For admitted transfers; you're at a community college" |
+| Header | Title `title-1`, organization `body` `--slate-700`, then the date tile 48 with "Apply by {date}" `label` `--navy-900` and a `caption` `--slate-700` line: kind, cost, where (`location`, or "Online"): "Research, paid, Davis". Cost words: Free, Paid, Has a fee. With no deadline: the rolling tile and "Open now, no deadline" |
+| Who it's for | `title-3`. One row per rule: `CheckCircle` fill `--green-600` when Stackd checked it against the student ("Computer Science or Mathematics majors (you: Computer Science)"); `Circle` `--slate-400` with "Check yourself" `caption` for anything it can't check. Text `body` `--navy-900`. A rule the student doesn't meet gets the grey `Circle` and the reason, never a red cross: "For admitted transfers; you're at a community college", "For Biological Sciences majors; your major is Computer Science", "For students transferring to Cal State; your plan has none". Audience `any` adds no row |
 | What they want / What you get | `title-3` then bullets (`body`, 6 px `--slate-400` dot), from the data, in Stackd's words |
-| Open the official page | Primary button with `ArrowSquareOut`, opens `url` outside the app. This is the screen's one bold thing |
-| Remind me | Text button with `Bell`: schedules local reminders 7 days and 1 day before the deadline through the existing reminders code. Toast "Reminder set for Nov 13 and Nov 19." Hidden for rolling opportunities |
-| Source block | 21's pattern: "From {source_name}, checked {date}." link line, Report a problem |
+| Open the official page | Primary button, text only (no icon, no chevron), opens `url` outside the app. This is the screen's one bold thing |
+| Remind me | Text button with `Bell`, "Remind me before {Nov 20}": schedules local reminders at 9 a.m. 7 days and 1 day before the deadline through the existing reminders code (only the ones still ahead). Toast "Reminder set for Nov 13 and Nov 19." iOS's permission is asked first if it hasn't been (the Deadlines soft ask), and "Turn on reminders?" comes first if Settings has them off. Once set the button reads "Reminders set" with `Bell` fill; tapping it again turns them off, toast "Reminders off". Tapping the notification opens this page. On the web: "Reminders work in the Stackd iPhone app." in `caption` `--slate-600` instead. Hidden for rolling opportunities and when no reminder day is still ahead |
+| Source block | 21's pattern: "From {source_name}, checked {date}." then a link line whose label is the source's domain (no second line), then Report a problem |
 
 ## Data
 
