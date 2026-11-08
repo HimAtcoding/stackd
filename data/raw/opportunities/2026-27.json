@@ -129,8 +129,8 @@
       "online": true,
       "cost": "free",
       "url": "https://science.osti.gov/wdts/cci",
-      "source_name": "U.S. Department of Energy, Office of Science",
-      "source_url": "https://science.osti.gov/wdts/cci",
+      "source_name": "U.S. Department of Energy",
+      "source_url": "https://www.energy.gov/node/4860707",
       "academic_year": "2026-27",
       "retrieved_at": "2026-11-07"
     },
@@ -178,7 +178,8 @@
       "summary": "Internships at NASA centers in science, engineering, technology and more. Most interns get a stipend based on their school level and how long the session runs.",
       "who_for": [
         "U.S. citizen",
-        "At least 16 when the internship starts",
+        "GPA 3.0 or higher",
+        "18 or older by the start of the session",
         "Enrolled full or part time in an accredited degree or certificate program"
       ],
       "wants": [],
@@ -274,7 +275,7 @@
       "summary": "Two years of tuition help plus a paid 10-week summer internship at a NOAA site, for students in ocean, atmospheric and environmental science and related fields, including math, engineering and computer science.",
       "who_for": [
         "U.S. citizen",
-        "Community college students must show they've applied to a four-year school",
+        "Must be applying to a 4-year school (community college students send proof)",
         "Cumulative GPA of 3.0 or higher",
         "A major that supports NOAA's work"
       ],
@@ -308,6 +309,7 @@
       "summary": "A national scholarship for sophomores and juniors at two- or four-year schools who plan research careers in the natural sciences, math or engineering. You apply through your college's Goldwater campus representative.",
       "who_for": [
         "Sophomore or junior at an accredited two- or four-year U.S. school",
+        "Needs a nomination from your college's Goldwater representative",
         "Planning a research career in natural science, math or engineering",
         "College GPA of 3.0 or higher",
         "Meets the foundation's U.S. citizenship rules",
@@ -367,9 +369,9 @@
       "location": null,
       "online": true,
       "cost": "free",
-      "url": "https://www.smartscholarship.org/smart/en?id=smart_eligibility",
+      "url": "https://www.smartscholarship.org/smart",
       "source_name": "SMART Scholarship-for-Service Program",
-      "source_url": "https://www.smartscholarship.org/smart/en?id=smart_eligibility",
+      "source_url": "https://www.smartscholarship.org/smart",
       "academic_year": "2026-27",
       "retrieved_at": "2026-11-07"
     },
@@ -610,9 +612,7 @@
         "Classes taught by working engineers"
       ],
       "audience": "any",
-      "major_slugs": [
-        "computer-science"
-      ],
+      "major_slugs": [],
       "systems": [],
       "terms": [],
       "deadline": null,
