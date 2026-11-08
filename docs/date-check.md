@@ -80,6 +80,6 @@ A verified row can't be changed by an import. To correct one, reopen it, import 
 3. Find that row's `id` in the `id` column of the latest review CSV in `data/review/`.
 4. `npm run import:reopen -- --id <id> --by "<your name>" --reason "<what changed and why>"`. This is a dry run: it shows the row it would reopen and changes nothing.
 5. Run the same command again with `--apply`. The row goes back to unverified, and `reopen_log` records who, when and why. Students can't see it until step 8, and a reopened date also hides its checklist and steps, so finish the rest straight away.
-6. Run the dry run from step 2 again. If it stops at another row, repeat steps 3 to 5 for that one.
+6. Run the dry run from step 2 again. If it stops at another row, repeat steps 3 to 5 for that one. To reopen every verified row a review report lists in one go, use `--from-report data/review/<run>.csv` in place of `--id <id>`, again as a dry run first.
 7. `npm run import -- data/raw/deadlines/fall-2027.json`.
 8. In the new review CSV, fill in `checked_by` and `checked_at` for the reopened rows (rows still verified are skipped), then `npm run import:verify -- <the csv>`.

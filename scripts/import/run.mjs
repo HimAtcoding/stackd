@@ -3,6 +3,7 @@
 //   data/raw/deadlines/<file>.json  deadlines and application checklists (14)
 //   data/raw/essays/<file>.json     UC personal insight questions (17)
 //   data/raw/explore/<major>.json   one major's UC Transfer Pathway and TMC, with requirements and campuses (21)
+//   data/raw/opportunities/<year>.json  research programs, scholarships, competitions and events (22)
 //   node scripts/import/run.mjs data/raw/<folder>/<file>.json [--dry-run]
 // Stages (docs/12): raw (the file, kept untouched, with its hash) → parse → validate → upsert → review report.
 // Validation problems stop the run before the database is touched. The upsert is one transaction: all or nothing.
@@ -13,8 +14,9 @@ import { pathToFileURL } from "node:url";
 import { validateDeadlinesFile } from "./deadlines.mjs";
 import { validateEssaysFile } from "./essays.mjs";
 import { validateExploreFile } from "./explore.mjs";
+import { validateOpportunitiesFile } from "./opportunities.mjs";
 import { validatePlanningFile } from "./planning.mjs";
-import { deadlineReportRows, essayReportRows, exploreReportRows, reportRows, topicSections, writeReport } from "./report.mjs";
+import { deadlineReportRows, essayReportRows, exploreReportRows, opportunityReportRows, reportRows, topicSections, writeReport } from "./report.mjs";
 
 const KINDS = {
   planning: {
@@ -42,12 +44,19 @@ const KINDS = {
     report: async (db, payload) => exploreReportRows(payload, await db.exploreRowsFor(payload)),
     sections: topicSections,
   },
+  opportunities: {
+    validate: (file) => validateOpportunitiesFile(file),
+    counted: (p) => `${p.opportunities.length} opportunities`,
+    importBatch: (db, ...args) => db.importOpportunities(...args),
+    report: async (db, payload) => opportunityReportRows(payload, await db.opportunityRowsFor(payload)),
+  },
 };
 
 export function kindOf(rel) {
   if (rel.startsWith("data/raw/deadlines/")) return "deadlines";
   if (rel.startsWith("data/raw/essays/")) return "essays";
   if (rel.startsWith("data/raw/explore/")) return "explore";
+  if (rel.startsWith("data/raw/opportunities/")) return "opportunities";
   return "planning";
 }
 
@@ -94,7 +103,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith("--"));
   if (!file) {
-    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines|essays|explore>/<file>.json [--dry-run]");
+    console.error("usage: node scripts/import/run.mjs data/raw/<planning|deadlines|essays|explore|opportunities>/<file>.json [--dry-run]");
     process.exit(2);
   }
   const { supabaseDatabase } = await import("./db.mjs");

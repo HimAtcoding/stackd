@@ -7,7 +7,7 @@ const COURSE_MATCH_KEYS = ["courses", "requirements", "requirement_groups", "art
 const FIELDS = {
   institutions: {
     required: ["slug", "name", "institution_type", "source_name", "source_url", "academic_year", "retrieved_at"],
-    optional: ["system", "state", "city", "website"],
+    optional: ["abbreviation", "system", "state", "city", "website"],
   },
   majors: {
     required: ["institution", "slug", "name", "source_name", "source_url", "academic_year", "retrieved_at"],
@@ -20,6 +20,8 @@ const FIELDS = {
 };
 
 const SLUG = /^[a-z0-9-]+$/;
+// The school's own short name for its tile (22 → School tiles)
+const ABBREVIATION = /^[A-Z0-9]{2,5}$/;
 // Capitals only, so ordinary words can't trip it; matches inside names like PASTE_ASSIST_LINK too
 const PLACEHOLDER = /TODO|PASTE|TBD/;
 
@@ -70,13 +72,15 @@ export function validatePlanningFile(file) {
       if (!row || typeof row !== "object") return say(where, "must be an object");
       for (const key of Object.keys(row)) {
         if (key === "verification_status" || key === "verified_at") say(where, `${key} can't be set by an import; rows start unverified and are verified with verify.mjs`);
-        else if (![...required, ...optional].includes(key)) say(where, `${key} isn't a field this table takes`);
+        else if (key !== "todo" && ![...required, ...optional].includes(key)) say(where, `${key} isn't a field this table takes`);
       }
+      if (row.todo !== undefined) say(where, `still has a todo ("${row.todo}"). Confirm it against the source, then delete the todo`);
       for (const key of required) {
         if (key === "retrieved_at" && row[key] === "") say(where, "retrieved_at is empty: check this row against its source_url, then fill in the date you checked it (like 2026-10-31)");
         else if (row[key] === undefined || row[key] === null || String(row[key]).trim() === "") say(where, `${key} is missing`);
       }
       for (const [key, value] of Object.entries(row)) {
+        if (key === "todo") continue;
         if (typeof value !== "string") say(where, `${key} must be text`);
         else if (PLACEHOLDER.test(value)) say(where, `${key} still has a placeholder ("${value}")`);
       }
@@ -100,7 +104,7 @@ export function validatePlanningFile(file) {
       for (const key of ["slug", "institution", "sending", "receiving", "major", "explore_slug"]) {
         if (typeof row[key] === "string" && !PLACEHOLDER.test(row[key]) && !SLUG.test(row[key])) say(where, `${key} must be lowercase letters, numbers and dashes`);
       }
-      payload[table].push(row);
+      payload[table].push(Object.fromEntries(Object.entries(row).filter(([k]) => k !== "todo")));
     });
   }
 
@@ -112,6 +116,11 @@ export function validatePlanningFile(file) {
     dup(where, `i:${r.slug}`);
     if (!["community_college", "university"].includes(r.institution_type)) say(where, "institution_type must be community_college or university");
     if (r.state !== undefined && r.state !== "CA") say(where, "only California schools for now (state must be CA)");
+    if (typeof r.abbreviation === "string" && !PLACEHOLDER.test(r.abbreviation)) {
+      if (!ABBREVIATION.test(r.abbreviation)) say(where, "abbreviation must be 2 to 5 capital letters or digits, like UCSD");
+      else if (seen.has(`a:${r.abbreviation}`)) say(where, `abbreviation ${r.abbreviation} is already another school's in this file`);
+      else seen.add(`a:${r.abbreviation}`);
+    }
   });
   payload.majors.forEach((r, i) => dup(`majors[${i}] (${r.slug})`, `m:${r.institution}/${r.slug}`));
   const typeOf = new Map(payload.institutions.map((r) => [r.slug, r.institution_type]));
