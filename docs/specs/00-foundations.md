@@ -70,7 +70,7 @@ Each section owns one solid color for its hero panel and its icon circles. They 
 
 ### Art only
 
-`--sky-200` #B8E7FD, `--sky-100` #D3EFFD and `--confetti-sky` #4FA8F7 stay for the Welcome scene, the celebration and confetti. They never fill a button, tile, card or page.
+`--sky-100` #D3EFFD stays for the Welcome scene, the backdrop behind the university screen's art, and art placeholders. It never fills a button, tile, card or page.
 
 ### Removed in rev 2
 
@@ -154,8 +154,8 @@ Radius goes up with importance.
 | Token | Value | Use |
 |---|---|---|
 | `--r-sm` | 12 | School tiles, filter chips, compact buttons, the date tile, pills use 10 |
-| `--r-md` | 16 | Primary and secondary buttons, text fields, list containers, toasts, banners |
-| `--r-lg` | 20 | Cards |
+| `--r-md` | 16 | Primary and secondary buttons, text fields, toasts, banners |
+| `--r-lg` | 20 | Cards and list containers |
 | `--r-hero` | 24 | The one hero per screen, the tab bar capsule, sheet top corners |
 | `--r-full` | 999 | Circles (icon circles, status icons, avatars, circle buttons), progress bars |
 
@@ -171,7 +171,7 @@ Rev 2 has no soft drop shadows on content. Depth is a solid edge drawn under the
 | `--edge-md` | 4 px | Primary and secondary buttons, tappable cards, the tab bar |
 | `--edge-lg` | 6 px | The hero |
 
-**The rule:** an edge means "you can tap this". Anything that isn't a control is flat: a passive card or list container gets a 2 px `--border` and no edge, and a plain row gets neither. Rows inside a list container are controls but don't get their own edge (the container groups them); they show `--surface-pressed` on press.
+**The rule:** an edge means you can tap this. Two exceptions: the hero (the one solid block per screen) and the tab bar capsule always have their edge. Anything else that isn't a control is flat: a passive card or list container gets a 2 px `--border` and no edge, and a plain row gets neither. Rows inside a list container are controls but don't get their own edge (the container groups them); they show `--surface-pressed` on press.
 
 **Press:** the element moves down by its edge (`translateY(4px)` for `--edge-md`) and the edge drops to 0, so it sinks into its own shadow. 80 ms ease-out in, 120 ms back. No scale, no color change. This stays on under reduced motion: it moves 3 to 6 px and is direct feedback, not travel.
 

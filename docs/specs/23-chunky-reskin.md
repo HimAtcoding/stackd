@@ -65,7 +65,7 @@ Everything in `00` rev 2 applies on every screen with no screen-by-screen work:
 | Explore hub | 21, 22 | **Board change 3:** the major panel is a `--green-700` hero (see below). Still needed and Opportunities for you per the board |
 | Major page | 21 | Hero in `--green-700`. Requirement rows rev 2. The source block keeps its words |
 | Opportunities feed | 22 | Filter chips. Each opportunity is a tappable card (below) |
-| Opportunity page | 22 | The top icon circle uses the kind's color. "Apply on {domain}" is the primary button |
+| Opportunity page | 22 | The top icon circle uses the kind's color. The primary button keeps its label, Open the official page |
 | Celebration | 05 | Type and button only. Confetti and husky unchanged |
 | Settings, legal, support | 11, 12 | Settings rows in a list container with 2 px borders |
 
