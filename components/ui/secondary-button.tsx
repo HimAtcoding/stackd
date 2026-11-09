@@ -10,6 +10,8 @@ type SecondaryButtonProps = {
   href?: string;
   // With href: a link that leaves Stackd, opened outside the app
   external?: boolean;
+  // Hugs its label (padding 0 20) instead of filling the width
+  hug?: boolean;
   onClick?: () => void;
   className?: string;
   "aria-label"?: string;
@@ -17,12 +19,11 @@ type SecondaryButtonProps = {
   "data-focus"?: boolean;
 };
 
-const classes = cn(
-  "flex h-12 w-full items-center justify-center gap-2 rounded-md border-2 border-border bg-surface text-blue-600 type-button edge-md",
-);
+const base = "flex h-12 items-center justify-center gap-2 rounded-md border-2 border-border bg-surface text-blue-600 type-button edge-md";
 
 // White with a 2 px border and its --border edge; icon 20 + 8 + label, both --blue-600 (00 → Secondary button).
-export function SecondaryButton({ children, icon, href, external, onClick, className, ...rest }: SecondaryButtonProps) {
+export function SecondaryButton({ children, icon, href, external, hug, onClick, className, ...rest }: SecondaryButtonProps) {
+  const classes = cn(base, hug ? "w-fit px-5" : "w-full");
   const content = (
     <>
       {icon}

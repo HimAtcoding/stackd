@@ -12,9 +12,9 @@ import { SecondaryButton } from "@/components/ui/secondary-button";
 import { GoHome } from "@/components/unbuilt-route";
 import { retryOpportunities, useOpportunities } from "@/lib/data/opportunities";
 import { exploreHref } from "@/lib/features";
-import { feedGroups, KIND_LABELS, type OpportunityKind } from "@/lib/opportunities";
-import { OpportunityRow } from "./opportunity-row";
-import { useMajorNamer, useStudent, useToday } from "./use-student";
+import { feedGroups, fits, KIND_LABELS, type OpportunityKind } from "@/lib/opportunities";
+import { OpportunityCard } from "./opportunity-card";
+import { useStudent, useToday } from "./use-student";
 
 // The chips in 22's order; internships show under All
 const CHIPS: OpportunityKind[] = ["research", "scholarship", "competition", "program", "event"];
@@ -28,7 +28,6 @@ export function FeedRoute() {
 function FeedScreen() {
   const state = useOpportunities();
   const student = useStudent();
-  const nameOf = useMajorNamer();
   const today = useToday();
   const [kind, setKind] = useState<OpportunityKind | null>(null);
   const [fitsOnly, setFitsOnly] = useState(true);
@@ -88,10 +87,10 @@ function FeedScreen() {
                 <h2 id={`group-${g.id}`} className="mt-6 px-6 text-navy-900 type-title-3">
                   {g.title}
                 </h2>
-                <ul className="mt-2 flex flex-col gap-1 px-2">
+                <ul className="mt-3 flex flex-col gap-3 px-4">
                   {g.rows.map((o) => (
                     <li key={o.id}>
-                      <OpportunityRow opportunity={o} today={today} nameOf={nameOf} />
+                      <OpportunityCard opportunity={o} today={today} fitsYou={fits(o, student)} />
                     </li>
                   ))}
                 </ul>

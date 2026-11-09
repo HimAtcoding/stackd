@@ -6,8 +6,9 @@
   --husky-w: 176px;
   width: var(--husky-w);
 }
+/* Under 360 the husky stands beside "back!" and the subtitle, clear of the wider first line */
 @media (max-width: 359px) {
   .husky {
-    --husky-w: 144px;
+    --husky-w: 104px;
   }
 }

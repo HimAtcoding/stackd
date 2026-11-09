@@ -3,11 +3,12 @@
 import { buildMajors, majorDetail, stillNeeded, type ExploreRecords, type Statuses } from "../lib/explore";
 import {
   applyLine,
+  datePill,
   detailLine,
   feedGroups,
   fits,
-  forLine,
   forYou,
+  goodPills,
   isOpen,
   majorNamer,
   pacificToday,
@@ -84,7 +85,7 @@ const csuOnly = opp("csu", { systems: ["CSU"] });
 check("a Cal State-only program doesn't fit a UC-only plan", !fits(csuOnly, cs) && /your plan has none/.test(whoItsFor(csuOnly, cs, names)[1].text));
 check("a UC program fits, naming the school", whoItsFor(opp("uc", { systems: ["UC", "CSU"] }), cs, names)[1].text === "Transferring to UC or Cal State (you: UC San Diego)");
 check("no schools in the plan: check yourself", fits(csuOnly, noPlan));
-check("a term that matches", whoItsFor(opp("t", { terms: ["fall-2027"] }), cs, names)[1].text === "Transferring Fall 2027 (you: Fall 2027)");
+check("a term that matches", whoItsFor(opp("t", { terms: ["fall-2027"] }), cs, names)[1].text === "Transferring fall 2027 (you: fall 2027)");
 check("a term that doesn't", !fits(opp("t", { terms: ["fall-2028"] }), cs));
 check("no term in the plan: shown", fits(opp("t", { terms: ["fall-2028"] }), noPlan));
 
@@ -97,7 +98,17 @@ const all = [
   bio,
   opp("sooner", { deadline: "2026-11-10", kind: "scholarship" }),
 ];
-check("for you: the 3 soonest that fit, past and biology left out", forYou(all, cs, today).map((o) => o.slug).join() === "sooner,soon,later", forYou(all, cs, today).map((o) => o.slug));
+check("for you: the 3 soonest that fit, past and biology left out", forYou(all, cs, today, 3).map((o) => o.slug).join() === "sooner,soon,later", forYou(all, cs, today, 3).map((o) => o.slug));
+check("for you on the hub: just the soonest (23)", forYou(all, cs, today).map((o) => o.slug).join() === "sooner", forYou(all, cs, today).map((o) => o.slug));
+// The card's pills (23 → Opportunity card)
+const pill = (o: Opportunity) => datePill(o, today);
+check("date pill: 14 days is due", JSON.stringify(pill(opp("p", { deadline: "2026-11-22" }))) === JSON.stringify({ variant: "due", text: "Nov 22, 14 days left" }), pill(opp("p", { deadline: "2026-11-22" })));
+check("date pill: 15 to 60 days is soon", pill(opp("p", { deadline: "2026-11-23" })).variant === "soon" && pill(opp("p", { deadline: "2027-01-07" })).variant === "soon");
+check("date pill: beyond 60 days is neutral", pill(opp("p", { deadline: "2027-01-08" })).variant === "neutral");
+check("date pill: 1 day left, and the last day", pill(opp("p", { deadline: "2026-11-09" })).text === "Nov 9, 1 day left" && pill(opp("p", { deadline: "2026-11-08" })).text === "Nov 8, last day");
+check("date pill: an event shows its dates", pill(opp("e", { kind: "event", starts_on: "2027-02-12", ends_on: "2027-02-14" })).text === "Feb 12 to 14" && pill(opp("e", { kind: "event", starts_on: "2027-02-28", ends_on: "2027-03-02" })).text === "Feb 28 to Mar 2", pill(opp("e", { kind: "event", starts_on: "2027-02-28", ends_on: "2027-03-02" })));
+check("date pill: no deadline is Rolling", JSON.stringify(pill(opp("r"))) === JSON.stringify({ variant: "neutral", text: "Rolling" }));
+check("good pills: cost then Fits you, at most two", goodPills(opp("g", { cost: "free" }), true).join() === "Free,Fits you" && goodPills(opp("g", { cost: "fee" }), true).join() === "Fits you" && goodPills(opp("g"), false).join() === "Paid");
 const groups = feedGroups(all, { kind: null, fitsOnly: true, student: cs, today });
 check("feed groups: Closing soon, Open, Rolling", groups.map((g) => `${g.title}:${g.rows.map((o) => o.slug).join("+")}`).join() === "Closing soon:sooner+soon,Open:later,Rolling:rolling", groups);
 check("10 days out is closing soon with a coral tile", tileStatus(opp("s", { deadline: "2026-11-18" }), today) === "soon");
@@ -110,7 +121,6 @@ check("nothing that fits: no groups", feedGroups([bio], { kind: null, fitsOnly: 
 // Words
 check("apply line", applyLine(opp("a", { deadline: "2026-11-20" })) === "Apply by Nov 20, 2026" && applyLine(opp("a")) === "Open now, no deadline");
 check("detail line: kind, cost, where", detailLine(opp("a", { location: "Davis" })) === "Research, paid, Davis" && detailLine(opp("a", { online: true, cost: "fee", kind: "event" })) === "Event, has a fee, Online");
-check("for line", forLine(opp("a", { major_slugs: ["computer-science", "mathematics"] }), names) === "For Computer Science or Mathematics majors at community colleges", forLine(opp("a", { major_slugs: ["computer-science", "mathematics"] }), names));
 check("source sentence", sourceSentence(opp("a")) === "From Test University, checked Nov 8, 2026.", sourceSentence(opp("a")));
 check("an unknown major slug reads as words", names("data-science") === "Data Science");
 
