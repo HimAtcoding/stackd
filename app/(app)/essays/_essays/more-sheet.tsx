@@ -35,7 +35,7 @@ export function MoreSheet({ open, title, hasText, onAction, onClose }: MoreSheet
       <h2 id="more-title" tabIndex={-1} className="truncate text-navy-900 type-title-2 focus:outline-none">
         {title}
       </h2>
-      <ul className="-mx-6 mt-3 divide-y divide-border border-y border-border">
+      <ul className="-mx-6 mt-3 divide-y-2 divide-border border-y-2 border-border">
         {ITEMS.map((item) => {
           const off = item.needsText && !hasText;
           return (

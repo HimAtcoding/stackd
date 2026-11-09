@@ -6,7 +6,7 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 
 | File | What it holds |
 |---|---|
-| `00-foundations.md` | The only source of tokens: color, type (Figtree), spacing, radius, elevation, icons, shared components, interaction states, motion, and the list of normalizations |
+| `00-foundations.md` | The only source of tokens. Rev 2 "Chunky and playful": color, type (Nunito), spacing, radius, edges, icons, shared components, interaction states, motion, and the list of normalizations |
 | `flows-and-states.md` | Routes, navigation map, local storage keys, celebration rule, copy rules, empty and error states, trust elements |
 | `01-welcome.md` | First-launch screen (the "hero" screen) |
 | `02-home.md` | Dashboard: greeting, journey tracker, shortcut tiles, upcoming |
@@ -30,6 +30,7 @@ Build-ready specs for the Stackd demo app. Every value (color, size, spacing, ra
 | `20-essays-start-and-reviews.md` | v1.3 Essays: starter questions on an empty answer, private notes beside the draft, reviewer comments highlighted in the draft, the reviewer page rebuilt text-first, and Finish review. Replaces 19's reviewer-page layout |
 | `21-explore.md` | v1.4 Explore: the Explore tab, a major page with UC Transfer Pathway and Cal State transfer-degree requirements the student can mark, "Counts for both", campuses, sources, the data tables and import, and the standing Mobbin rule |
 | `22-explore-hub-opportunities-tabs.md` | v1.4: the floating tab bar (Home, Explore, Essays, You), school monogram tiles by system, the Explore hub (Still needed, Opportunities for you, richer major rows), the Opportunities feed and opportunity page, and the `opportunities` and `abbreviation` data. Replaces 21's layout below the panel |
+| `23-chunky-reskin.md` | v1.5 design rev 2: applies `00` rev 2 (direction A of the design board) to every built screen, with three board layout changes (Home hero and step path, Explore hero and Still needed, the opportunity card) and the new step icon circles |
 | `art-assets.md` | Every illustration, with sizes, layers, delivery rules, and placeholder behavior |
 
 The source drawings live in `docs/mockup/`, one level up. The specs expect these file names:
@@ -48,7 +49,7 @@ Temporary run-loop frames are in `public/art/husky/`.
 
 ## Rules for this phase
 
-1. **Build the mockup as drawn.** No redesigns until the baseline exists as a working demo. Where a spec picks one of two versions the mockup drew, it's listed in `00-foundations.md → Normalizations`.
+1. **Build the spec as written.** Rev 2 of `00` (step 29) is the one planned redesign; after it, looks change only through `00`. Where a spec picks one of two versions the mockup drew, it's listed in `00-foundations.md → Normalizations`.
 2. **Tokens only.** Every value comes from `00-foundations.md`. If a needed value isn't there, stop and ask; don't invent one.
 3. **Ambiguity stops the build.** If a spec is unclear or two files disagree, ask. `00-foundations.md` wins over a screen spec unless the screen spec names the exception.
 4. **Missing art never blocks.** Use the labelled placeholder from `art-assets.md` at the exact size. The layout mustn't move when the real file lands.
@@ -88,6 +89,7 @@ Each step depends on the one before it.
 | 26 | Explore screens, PR B: the Explore tab, the major page, the requirement sheet, How we check this, the university page link | `21`, `16`, `18` | The test list in `21` passes at 393 and 320 wide |
 | 27 | Explore hub data, PR A: the `abbreviation` column and the `opportunities` table, their import, abbreviations for 147 schools, the opportunities file with examples | `22`, `21` | `test:db` and `test:import` pass; after the checks and imports, every school shows its tile |
 | 28 | Explore hub screens, PR B: floating tab bar, school tiles, Explore hub, Opportunities feed and page | `22`, `21`, `18` | The test list in `22` passes at 393 and 320 wide |
+| 29 | Chunky reskin: `00` rev 2 tokens and components, then every screen, then the three board changes | `23`, `00` | The test list in `23` passes at 393 and 320 wide |
 
 ## Prompt template for Claude Code
 
@@ -126,7 +128,7 @@ These all open the placeholder screen, so nothing is a dead end while they wait:
 ## Adding a screen later
 
 1. Put its mockup in `docs/mockup/`.
-2. The design-spec chat writes the new spec (next number: `23-…`) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
+2. The design-spec chat writes the new spec (next number: `24-…`; planned: 24 My plan, 25 Where you stand, 26 Community) and returns it together with updated copies of this README and `flows-and-states.md`, plus any other spec it touches.
 3. Drag those files into `docs/specs/`, replacing the old copies.
 4. Build it as the next step in the build order.
 

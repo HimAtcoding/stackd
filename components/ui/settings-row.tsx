@@ -77,5 +77,5 @@ export function SettingsRow({ label, value, tiles, labelTone, valueTone, href, t
 
 // The list container from 03, with a line between rows
 export function SettingsGroup({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("divide-y divide-border overflow-hidden rounded-md border border-border bg-surface shadow-card", className)}>{children}</div>;
+  return <div className={cn("divide-y-2 divide-border overflow-hidden rounded-lg border-2 border-border bg-surface", className)}>{children}</div>;
 }

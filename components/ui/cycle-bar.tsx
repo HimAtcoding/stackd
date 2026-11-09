@@ -5,7 +5,7 @@ const at = (n: number) => `${n * 100}%`;
 
 type Panel = "blue" | "coral";
 
-// A date's node on the sky page: coral dot at 14 days or less, blue ring when open, slate ring when not open yet
+// A date's node on the white page: coral dot at 14 days or less, blue ring when open, slate ring when not open yet
 function SkyNode({ kind }: { kind: CycleBarNode["kind"] }) {
   return (
     <span
@@ -13,7 +13,7 @@ function SkyNode({ kind }: { kind: CycleBarNode["kind"] }) {
         "block size-3 rounded-full",
         kind === "soon" && "bg-coral-500",
         kind === "open" && "border-[2.5px] border-blue-600 bg-surface",
-        kind === "later" && "border-2 border-slate-400 bg-sky-50",
+        kind === "later" && "border-2 border-slate-400 bg-surface",
       )}
     />
   );
@@ -36,15 +36,15 @@ function PanelNode({ kind, panel }: { kind: CycleBarNode["kind"]; panel: Panel }
 }
 
 // The application year on one line (15 → Cycle bar): a 6 tall track filled up to today, a node per due date and a
-// marker for today, with the range's first and last month under it. On the Deadlines panel (`panel`), it's drawn
-// in white like Home's window bar, with a yellow today marker. No motion. Decorative: the next line and the
+// marker for today, with the range's first and last month under it. On the Deadlines hero (`panel`), it's the hero's
+// progress: 12 tall, the partner color track (--partner), honey fill and a white today marker. No motion. Decorative: the next line and the
 // timeline carry the meaning.
 export function CycleBar({ view, panel, className }: { view: CycleBarView; panel?: Panel; className?: string }) {
   return (
     <div aria-hidden className={className}>
       <div className="relative h-5">
-        <div className={cn("absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full", panel ? "bg-white/28" : "bg-blue-100")}>
-          <div className={cn("absolute inset-y-0 left-0", panel ? "bg-white" : "bg-blue-600")} style={{ width: at(view.today) }} />
+        <div className={cn("absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full", panel ? "h-3 bg-(--partner)" : "h-1.5 bg-border")}>
+          <div className={cn("absolute inset-y-0 left-0", panel ? "bg-yellow-400" : "bg-blue-600")} style={{ width: at(view.today) }} />
         </div>
         {view.nodes.map((n, i) => (
           <span key={i} className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ left: at(n.at) }}>
@@ -52,7 +52,7 @@ export function CycleBar({ view, panel, className }: { view: CycleBarView; panel
           </span>
         ))}
         <span
-          className={cn("absolute top-1/2 h-4 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-[1px]", panel ? "bg-yellow-400" : "bg-navy-900")}
+          className={cn("absolute top-1/2 h-4 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-[1px]", panel ? "bg-white" : "bg-navy-900")}
           style={{ left: at(view.today) }}
         />
       </div>

@@ -15,7 +15,7 @@ export function CommentBar({ name, body, onSeeComment, onPress }: CommentBarProp
     <section
       aria-label="Comment on this part"
       data-comment-bar
-      className="border-t border-border bg-surface px-6 py-3"
+      className="border-t-2 border-border bg-surface px-6 py-3"
       onPointerDown={onPress}
       // Keeps the caret in the answer where the browser allows it, so the bar stays put
       onMouseDown={(e) => e.preventDefault()}

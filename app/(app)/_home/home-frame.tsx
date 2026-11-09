@@ -6,6 +6,7 @@ import { BellIcon } from "@phosphor-icons/react/ssr";
 import { FlashToast } from "@/components/flash-toast";
 import { CircleButton } from "@/components/ui/circle-button";
 import { DemoStrip } from "@/components/ui/demo-strip";
+import type { Tone } from "@/components/ui/icon-circle";
 import { ShortcutTile } from "@/components/ui/shortcut-tile";
 import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
@@ -26,7 +27,7 @@ export type HomeTile = {
   subtitle: string;
   href: string;
   icon: ReactNode;
-  tint: "sky" | "indigo";
+  tone: Tone;
   unread?: boolean;
   // ["push"] for a screen that slides in (00 → Motion)
   transitionTypes?: string[];
@@ -62,7 +63,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
     ((FEATURES.upcoming && deadlines.view.demo) || (showGetReady && Boolean(deadlines.checklist?.checklist.demo)));
 
   return (
-    <div className="relative min-h-dvh bg-sky-50 bg-[linear-gradient(180deg,var(--sky-100)_0,var(--sky-50)_360px)]">
+    <div className="relative min-h-dvh bg-page">
       {(demo || demoDates) && <DemoStrip />}
       <div aria-hidden className="absolute inset-x-0 top-0 h-[300px]">
         {art.clouds}
@@ -82,7 +83,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
               <span className="relative">
                 <CircleButton
                   aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
-                  icon={<BellIcon size={24} aria-hidden />}
+                  icon={<BellIcon weight="bold" size={24} aria-hidden />}
                   onClick={() => router.push(notifications)}
                 />
                 {unread > 0 && (
@@ -123,7 +124,7 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
                   key={t.title}
                   href={t.href}
                   icon={t.icon}
-                  iconTint={t.tint}
+                  tone={t.tone}
                   title={t.title}
                   subtitle={t.subtitle}
                   unread={t.unread}

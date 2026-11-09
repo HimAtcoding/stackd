@@ -1,5 +1,5 @@
 .screen {
-  background: linear-gradient(180deg, var(--sky-100) 0, var(--sky-50) 320px) no-repeat, var(--sky-50);
+  background: var(--page);
 }
 
 .husky {

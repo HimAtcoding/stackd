@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CodeIcon, EnvelopeIcon, EyeIcon, GraduationCapIcon, LockIcon } from "@phosphor-icons/react/ssr";
+import { BellIcon, CheckIcon, CodeIcon, EnvelopeIcon, EyeIcon, GraduationCapIcon, LockIcon } from "@phosphor-icons/react/ssr";
 import { AskCard } from "@/components/ui/ask-card";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChoiceChip, ChoiceChips } from "@/components/ui/choice-chip";
@@ -9,21 +9,23 @@ import { ChoiceList, ChoiceRow } from "@/components/ui/choice-row";
 import { DestructiveButton } from "@/components/ui/destructive-button";
 import { Loading } from "@/components/ui/loading";
 import { MajorRow } from "@/components/ui/major-row";
-import { DateTile } from "@/components/ui/date-row";
+import { CompactButton } from "@/components/ui/compact-button";
+import { DateRow, DateTile } from "@/components/ui/date-row";
 import { SchoolTile } from "@/components/ui/school-tile";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { RequirementRow } from "@/components/ui/requirement-row";
 import { SearchField } from "@/components/ui/search-field";
-import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SettingsGroup, SettingsRow } from "@/components/ui/settings-row";
 import { SourceBlock } from "@/components/ui/source-block";
 import { Spinner } from "@/components/ui/spinner";
+import { StatusControl } from "@/components/ui/status-control";
 import { StatusTile, type TileStatus } from "@/components/ui/status-tile";
+import { StepPath, type PathStep } from "@/components/ui/step-path";
 import { Switch } from "@/components/ui/switch";
 import { TextField } from "@/components/ui/text-field";
 import { Toast } from "@/components/ui/toast";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { UnderlineTabs } from "@/components/ui/underline-tabs";
 
 function Label({ children }: { children: string }) {
@@ -46,15 +48,15 @@ export function ExploreDemo() {
       <Label>Status tile: not yet, taking now, done</Label>
       <div className="flex gap-3">
         {TILE_STATUSES.map((s) => (
-          <StatusTile key={s.value} status={s.value} name={s.label} icon={CodeIcon} tile="bg-mint-100" color="text-mint-600" />
+          <StatusTile key={s.value} status={s.value} name={s.label} icon={CodeIcon} tone="green" />
         ))}
       </div>
       <Label>Requirement row, the tile follows the control above</Label>
-      <div className="-mx-6">
+      <div className="-mx-4">
         <RequirementRow name="Sample course type" howMany="One course" countsForBoth status={status} icon={CodeIcon} onToggle={next} onOpen={() => {}} />
       </div>
       <Label>Major row</Label>
-      <MajorRow href="#" name="Sample major" detail="9 UC campuses, 2 count for both" icon={CodeIcon} />
+      <MajorRow href="#" name="Sample major" detail="9 UC campuses, 2 count for UC and Cal State" icon={CodeIcon} />
       <Label>School tiles: UC, Cal State, community college, and 4 and 5 letters</Label>
       <div className="flex gap-3">
         <SchoolTile abbreviation="UCB" system="UC" />
@@ -65,12 +67,8 @@ export function ExploreDemo() {
       </div>
       <Label>Date tile with no deadline</Label>
       <DateTile status="rolling" />
-      <Label>Segmented bar on a solid panel: done, taking now, not yet</Label>
-      <div className="rounded-lg bg-mint-800 p-5">
-        <SegmentedBar steps={[true, "taking", false]} onFill />
-      </div>
       <Label>Ask, tier 3</Label>
-      <AskCard labelledBy="demo-ask" icon={<GraduationCapIcon weight="fill" size={24} aria-hidden />}>
+      <AskCard labelledBy="demo-ask" icon={<GraduationCapIcon weight="fill" size={20} aria-hidden />}>
         <h3 id="demo-ask" className="text-navy-900 type-headline">
           A sample ask
         </h3>
@@ -93,7 +91,7 @@ export function ProgressDemo() {
       </div>
       <Label>Animates only on change</Label>
       <ProgressBar value={value} label="Sample progress" />
-      <TintedButton onClick={() => setValue((v) => (v >= 100 ? 0 : v + 25))}>Change value</TintedButton>
+      <SecondaryButton onClick={() => setValue((v) => (v >= 100 ? 0 : v + 25))}>Change value</SecondaryButton>
     </>
   );
 }
@@ -133,19 +131,19 @@ export function TextFieldDemo() {
   const [error, setError] = useState(true);
   const eye = (
     <button type="button" aria-label="Show password" aria-pressed={false} className="flex size-11 items-center justify-center rounded-sm text-slate-600">
-      <EyeIcon size={22} />
+      <EyeIcon weight="bold" size={22} />
     </button>
   );
   return (
     <>
-      <TextField id="tf-rest" label="Rest" placeholder="you@example.com" icon={<EnvelopeIcon size={22} />} />
-      <TextField id="tf-filled" label="Filled" defaultValue="alex@example.com" icon={<EnvelopeIcon size={22} />} />
-      <TextField id="tf-focus" label="Focus" data-focus placeholder="you@example.com" icon={<EnvelopeIcon size={22} />} />
-      <TextField id="tf-hint" label="Hint" hint="Use at least 8 characters." type="password" icon={<LockIcon size={22} />} trailing={eye} />
-      <TextField id="tf-error" label="Error" error={error ? "Enter your email." : undefined} icon={<EnvelopeIcon size={22} />} />
-      <TintedButton onClick={() => setError((e) => !e)}>Toggle error</TintedButton>
-      <TextField id="tf-readonly" label="Read-only" readOnly defaultValue="alex@example.com" icon={<EnvelopeIcon size={22} />} />
-      <TextField id="tf-disabled" label="Disabled" disabled defaultValue="alex@example.com" icon={<EnvelopeIcon size={22} />} />
+      <TextField id="tf-rest" label="Rest" placeholder="you@example.com" icon={<EnvelopeIcon weight="bold" size={22} />} />
+      <TextField id="tf-filled" label="Filled" defaultValue="alex@example.com" icon={<EnvelopeIcon weight="bold" size={22} />} />
+      <TextField id="tf-focus" label="Focus" data-focus placeholder="you@example.com" icon={<EnvelopeIcon weight="bold" size={22} />} />
+      <TextField id="tf-hint" label="Hint" hint="Use at least 8 characters." type="password" icon={<LockIcon weight="bold" size={22} />} trailing={eye} />
+      <TextField id="tf-error" label="Error" error={error ? "Enter your email." : undefined} icon={<EnvelopeIcon weight="bold" size={22} />} />
+      <SecondaryButton onClick={() => setError((e) => !e)}>Toggle error</SecondaryButton>
+      <TextField id="tf-readonly" label="Read-only" readOnly defaultValue="alex@example.com" icon={<EnvelopeIcon weight="bold" size={22} />} />
+      <TextField id="tf-disabled" label="Disabled" disabled defaultValue="alex@example.com" icon={<EnvelopeIcon weight="bold" size={22} />} />
       <TextField id="tf-plain" label="No icon" placeholder="First name" />
     </>
   );
@@ -229,7 +227,7 @@ export function BottomSheetDemo() {
   return (
     <>
       <Label>Slides up over a scrim; Escape or a tap on the scrim closes it</Label>
-      <TintedButton onClick={() => setOpen(true)}>Open sheet</TintedButton>
+      <SecondaryButton onClick={() => setOpen(true)}>Open sheet</SecondaryButton>
       <BottomSheet open={open} labelledBy="sheet-demo-title" onClose={() => setOpen(false)}>
         <h2 id="sheet-demo-title" tabIndex={-1} className="text-navy-900 outline-none type-title-2">
           Sample sheet
@@ -249,7 +247,7 @@ export function ToastDemo() {
     <>
       <Label>Specimen</Label>
       <Toast still message="Marked complete" action={{ label: "Undo", onClick: () => {} }} bottom="0" onDone={() => {}} />
-      <TintedButton onClick={() => setShown((n) => n + 1)}>Show toast</TintedButton>
+      <SecondaryButton onClick={() => setShown((n) => n + 1)}>Show toast</SecondaryButton>
       {shown > 0 && (
         <Toast
           key={shown}
@@ -271,7 +269,7 @@ export function LoadingDemo() {
       <Loading immediate label="Loading requirements" />
       <Label>Waits under 600 ms show nothing</Label>
       {run > 0 ? <Loading key={run} label="Loading requirements" /> : <p className="text-slate-600 type-caption">Not started</p>}
-      <TintedButton onClick={() => setRun((n) => n + 1)}>Start a wait</TintedButton>
+      <SecondaryButton onClick={() => setRun((n) => n + 1)}>Start a wait</SecondaryButton>
     </>
   );
 }
@@ -310,5 +308,103 @@ export function SwitchDemo() {
       <Switch checked={false} onChange={() => {}} disabled aria-label="Disabled" />
       <Switch checked onChange={() => {}} data-focus aria-label="Focus" />
     </div>
+  );
+}
+
+export function StatusTileDemo() {
+  const [status, setStatus] = useState<TileStatus>("in_progress");
+  const cycle = () => setStatus((s) => (s === "not_started" ? "in_progress" : s === "in_progress" ? "done" : "not_started"));
+  return (
+    <>
+      <Label>As a control: not yet, taking now, done (tap to cycle, with the burst)</Label>
+      <div className="flex gap-3">
+        {TILE_STATUSES.map((s) => (
+          <StatusTile key={s.value} status={s.value} name={s.label} icon={CodeIcon} tone="green" onToggle={() => {}} />
+        ))}
+        <StatusTile status={status} name="Sample" icon={CodeIcon} tone="green" onToggle={cycle} />
+      </div>
+      <Label>Pressed and focus</Label>
+      <div className="flex gap-3">
+        <StatusTile status="not_started" name="Pressed" icon={CodeIcon} tone="green" onToggle={() => {}} data-pressed />
+        <StatusTile status="done" name="Pressed, done" icon={CodeIcon} tone="green" onToggle={() => {}} data-pressed />
+        <StatusTile status="not_started" name="Focus" icon={CodeIcon} tone="green" onToggle={() => {}} data-focus />
+      </div>
+      <Label>Display only (flat): not yet, taking now, done</Label>
+      <div className="flex gap-3">
+        {TILE_STATUSES.map((s) => (
+          <StatusTile key={s.value} status={s.value} name={s.label} icon={CodeIcon} tone="green" />
+        ))}
+      </div>
+    </>
+  );
+}
+
+export function StatusControlDemo() {
+  const [done, setDone] = useState(false);
+  return (
+    <div className="flex gap-4">
+      <StatusControl done={done} restStatus="not_started" label="Sample, not started" onToggle={() => setDone((d) => !d)} />
+      <StatusControl done={false} restStatus="in_progress" label="Sample, in progress" onToggle={() => {}} />
+      <StatusControl done label="Sample, done" restStatus="not_started" onToggle={() => {}} />
+      <StatusControl done={false} restStatus="not_started" label="Sample, 24" size={24} onToggle={() => {}} />
+    </div>
+  );
+}
+
+const PATH: PathStep[] = [
+  { id: "a", title: "Pick your campuses and majors", done: true },
+  { id: "b", title: "Enter your courses and grades", done: true },
+  { id: "c", title: "Write your personal insight answers", done: false, caption: "1 of 4 written" },
+  { id: "d", title: "Add activities and awards", done: false },
+  { id: "e", title: "Submit by Nov 30", done: false },
+];
+
+export function StepPathDemo() {
+  const [steps, setSteps] = useState(PATH);
+  return (
+    <>
+      <Label>Done, current, not yet. The circle checks; the title opens the step</Label>
+      <StepPath steps={steps} onToggle={(id, done) => setSteps((all) => all.map((s) => (s.id === id ? { ...s, done } : s)))} onOpen={() => {}} />
+    </>
+  );
+}
+
+export function CompactDemo() {
+  return (
+    <>
+      <Label>Compact: rest, pressed (hold), and a text button</Label>
+      <div className="flex flex-wrap items-center gap-3">
+        <CompactButton variant="solid" icon={<CheckIcon weight="bold" size={16} aria-hidden />} onClick={() => {}}>
+          Mark done
+        </CompactButton>
+        <CompactButton variant="text" icon={<BellIcon weight="bold" size={16} aria-hidden />} onClick={() => {}}>
+          Remind me
+        </CompactButton>
+      </div>
+    </>
+  );
+}
+
+export function DateDemo() {
+  return (
+    <>
+      <Label>Date tiles: open, due in 14 days or less, not open yet, done, missed, rolling</Label>
+      <div className="flex flex-wrap gap-3">
+        <DateTile month="Dec" day="15" status="open" />
+        <DateTile month="Nov" day="30" status="soon" />
+        <DateTile month="Jan" day="31" status="later" />
+        <DateTile month="Sep" day="30" status="done" />
+        <DateTile month="Sep" day="30" status="missed" />
+        <DateTile status="rolling" />
+      </div>
+      <Label>Date rows; the third is pressed</Label>
+      <ul className="-mx-2 flex flex-col gap-1">
+        <li><DateRow month="Nov" day="30" status="soon" title="Sample deadline" detail="All UC campuses, 11:59 p.m. Pacific" onOpen={() => {}} aria-label="Sample, soon" /></li>
+        <li><DateRow month="Dec" day="15" status="open" title="Window open" detail="Financial aid" onOpen={() => {}} aria-label="Sample, open" /></li>
+        <li><DateRow month="Jan" day="31" status="later" title="Not open yet, with a longer title that wraps to two lines" detail="Opens Dec 15" onOpen={() => {}} aria-label="Sample, later" data-pressed /></li>
+        <li><DateRow month="Sep" day="30" status="done" dimmed title="Done" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, done" /></li>
+        <li><DateRow month="Sep" day="30" status="missed" dimmed title="Missed" detail="All UC campuses" onOpen={() => {}} aria-label="Sample, missed" /></li>
+      </ul>
+    </>
   );
 }

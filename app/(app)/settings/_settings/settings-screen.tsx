@@ -14,7 +14,7 @@ import { SettingsGroup, SettingsRow } from "@/components/ui/settings-row";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { TextLink } from "@/components/ui/text-link";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { SchoolTile } from "@/components/ui/school-tile";
 import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-bar";
 import { Toast } from "@/components/ui/toast";
@@ -156,7 +156,7 @@ export function SettingsScreen() {
 
   return (
     <main
-      className="mx-auto min-h-dvh max-w-[480px] bg-sky-50"
+      className="mx-auto min-h-dvh max-w-[480px] bg-page"
       style={{ paddingTop: "calc(var(--safe-top) + 24px)", paddingBottom: TAB_PAGE_BOTTOM }}
     >
       {/* The tab bar's You (22 → 1): a tab, so no back button */}
@@ -194,7 +194,7 @@ export function SettingsScreen() {
           <InlineError
             title="Couldn't load your plan"
             body="Check your connection, then try again."
-            action={<TintedButton onClick={retryPlan}>Try again</TintedButton>}
+            action={<SecondaryButton onClick={retryPlan}>Try again</SecondaryButton>}
           />
         </div>
       ) : (

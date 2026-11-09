@@ -24,7 +24,7 @@ export function SchoolTile({ abbreviation, system, className }: SchoolTileProps)
     <span
       aria-hidden
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-sm font-extrabold leading-none tracking-normal text-white",
+        "flex shrink-0 items-center justify-center rounded-sm font-black leading-none tracking-normal text-white",
         "h-10 w-12",
         LETTERS[abbreviation.length] ?? "text-[15px]",
         FILL[system?.toUpperCase() ?? ""] ?? "bg-slate-700",

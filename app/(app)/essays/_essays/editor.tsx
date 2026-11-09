@@ -9,7 +9,7 @@ import { CircleButton } from "@/components/ui/circle-button";
 import { Expand } from "@/components/ui/expand";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { UnderlineTabs } from "@/components/ui/underline-tabs";
 import { GoHome } from "@/components/unbuilt-route";
@@ -90,7 +90,7 @@ function EditorScreen() {
           <InlineError
             title="Couldn't load your answer"
             body="Check your connection, then try again."
-            action={<TintedButton onClick={retryEssays}>Try again</TintedButton>}
+            action={<SecondaryButton onClick={retryEssays}>Try again</SecondaryButton>}
           />
         </div>
       </div>
@@ -482,8 +482,8 @@ function Editor({ prompt, saved }: EditorProps) {
 
   return (
     <div className="fixed inset-x-0 top-0 flex flex-col bg-surface" style={{ height: height ?? "100dvh" }}>
-      {/* The light strip (17 → Editor): a writing screen, not a progress screen, so no solid panel */}
-      <div className="bg-tint-indigo">
+      {/* The top strip (17 → Editor): a writing screen, not a progress screen, so it stays on the quiet white page (23) */}
+      <div className="bg-surface">
         <div className="mx-auto max-w-[480px]" style={{ paddingTop: "calc(var(--safe-top) + 8px)" }}>
           {/* Equal side columns keep the save state centered between Back and the two buttons on the right */}
           <div className="grid grid-cols-[96px_1fr_96px] items-center gap-2 px-4">

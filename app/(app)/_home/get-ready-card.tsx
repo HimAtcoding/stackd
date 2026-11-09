@@ -33,7 +33,7 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
   if (state.status === "loading") {
     return (
       <AfterWait>
-        <div aria-hidden className="mx-4 mt-6 h-[221px] rounded-md bg-stack-2" />
+        <div aria-hidden className="mx-4 mt-6 h-[221px] rounded-lg bg-surface-pressed" />
       </AfterWait>
     );
   }
@@ -79,18 +79,18 @@ export function GetReadyCard({ state, toastBottom }: { state: DeadlinesState; to
       {/* Once every step is done, the list goes, after the last check has settled so its burst is seen */}
       {(!finished || settling.length > 0) && (
         <>
-          <ul className="mx-4 mt-4 divide-y divide-border rounded-md border border-border bg-surface">
+          <ul className="mx-4 mt-4 divide-y-2 divide-border rounded-lg border-2 border-border bg-surface">
             {next.map((entry) => {
               const { step, done } = entry;
               const note = caption(entry);
               return (
                 <li key={step.id} className="flex min-h-14 items-center gap-2 px-4">
-                  {/* The 36 tile sits at the row's padding inside its 44 target, so the text starts 12 after the tile */}
+                  {/* The 36 circle sits at the row's padding inside its 44 target, so the text starts 12 after it */}
                   <StepTile title={step.title} done={done} finale={finale && !done} onToggle={() => check(step.id, !done, true)} className="-mx-1" />
                   <button
                     type="button"
                     onClick={() => setStepSheet({ open: true, id: step.id })}
-                    className="min-h-11 min-w-0 flex-1 rounded-sm py-2.5 text-left text-navy-900 type-body-md pressed:text-slate-700"
+                    className="min-h-11 min-w-0 flex-1 rounded-sm py-2.5 text-left text-navy-900 type-row-title pressed:underline"
                   >
                     <span className="line-clamp-2">{step.title}</span>
                     {note && <span className="mt-0.5 block text-slate-600 tabular-nums type-caption">{note}</span>}

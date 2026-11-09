@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { usePlanScope, useTerm } from "@/lib/data/deadlines";
 import { retryPlan, usePlan } from "@/lib/data/plan";
 import { cycleLabel } from "@/lib/deadlines";
@@ -43,7 +43,7 @@ export function AccountHome({ art }: { art: HomeArt }) {
       <InlineError
         title="Couldn't load your plan"
         body="Check your connection, then try again."
-        action={<TintedButton onClick={retryPlan}>Try again</TintedButton>}
+        action={<SecondaryButton onClick={retryPlan}>Try again</SecondaryButton>}
       />
     );
   } else {

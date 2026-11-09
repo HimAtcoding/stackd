@@ -29,12 +29,12 @@ export function MajorPanel({ major, name, targets, statuses }: MajorPanelProps) 
       <Link
         href={exploreHref(`major/?slug=${major.slug}&tab=${tab}`)!}
         transitionTypes={["push"]}
-        className="relative block overflow-hidden rounded-lg bg-mint-800 p-5 text-white shadow-lift pressed:bg-mint-pressed"
+        className="on-fill relative block rounded-hero bg-green-700 p-5 text-white edge-lg edge-green-800 focus-ring:outline-offset-3 [--partner:var(--green-800)]"
       >
         {/* Runs to the panel's right edge. The title stops 112 short of it, and a one-line title still fits the husky's 111 height. */}
         <div className="relative -mx-5 px-5 pb-4 min-[340px]:min-h-[107px]">
           <div className="min-[340px]:pr-[92px]">
-            <p className="text-white/90 type-label">Your major</p>
+            <p className="text-white type-label">Your major</p>
             <p className="mt-1 wrap-break-word type-title-1">{name}</p>
           </div>
           <span aria-hidden className="absolute bottom-2 right-0 hidden min-[340px]:block">
@@ -45,7 +45,7 @@ export function MajorPanel({ major, name, targets, statuses }: MajorPanelProps) 
         <p className="mt-2 tabular-nums type-label">
           {done} of {total} done for {counted === "uc" ? "UC" : "Cal State"}
         </p>
-        {counted === "uc" && shared > 0 && <p className="mt-2 text-white/90 type-body">{shared} also count for Cal State.</p>}
+        {counted === "uc" && shared > 0 && <p className="mt-2 text-white type-body">{shared} also count for Cal State.</p>}
       </Link>
     </div>
   );

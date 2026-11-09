@@ -12,13 +12,13 @@ export function StatusIcon({ status }: { status: Status }) {
     );
   }
   if (status === "in_progress") {
-    // 2.5 ring: --blue-100 track, --blue-600 arc over the left half, from 12 o'clock counter-clockwise.
+    // 3 px ring: --border track, --blue-600 arc over the left half, from 12 o'clock counter-clockwise.
     return (
       <svg aria-hidden width={28} height={28} viewBox="0 0 28 28" className="block">
-        <circle cx="14" cy="14" r="12.75" fill="none" stroke="var(--blue-100)" strokeWidth="2.5" />
-        <path d="M14 1.25 A12.75 12.75 0 0 0 14 26.75" fill="none" stroke="var(--blue-600)" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="14" cy="14" r="12.5" fill="none" stroke="var(--border)" strokeWidth="3" />
+        <path d="M14 1.5 A12.5 12.5 0 0 0 14 26.5" fill="none" stroke="var(--blue-600)" strokeWidth="3" strokeLinecap="round" />
       </svg>
     );
   }
-  return <span aria-hidden className="block size-7 rounded-full border-2 border-slate-400" />;
+  return <span aria-hidden className="block size-7 rounded-full border-[2.5px] border-slate-400" />;
 }

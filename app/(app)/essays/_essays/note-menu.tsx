@@ -21,7 +21,7 @@ export function NoteMenu({ open, note, onAddToAnswer, onDelete, onClose }: NoteM
       <h2 id="note-menu-title" tabIndex={-1} className="line-clamp-2 text-navy-900 type-title-2 focus:outline-none">
         {starterText(note?.starter ?? null) ?? "Your note"}
       </h2>
-      <ul className="-mx-6 mt-3 divide-y divide-border border-y border-border">
+      <ul className="-mx-6 mt-3 divide-y-2 divide-border border-y-2 border-border">
         <li>
           <MenuButton onClick={onAddToAnswer} disabled={empty}>
             Add to my answer

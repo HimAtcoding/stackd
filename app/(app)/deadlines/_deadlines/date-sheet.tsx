@@ -128,7 +128,7 @@ function Content({
           <button
             type="button"
             onClick={() => onMarkDone(true)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-white type-button transition-[background-color,transform] duration-200 ease-out pressed:bg-blue-700 pressed:duration-120 motion-safe:pressed:scale-[0.98]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-md bg-blue-600 text-white type-button edge-md edge-blue-700 focus-ring:outline-offset-3"
           >
             <CheckIcon weight="bold" size={20} aria-hidden />
             Mark done

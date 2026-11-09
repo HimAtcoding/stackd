@@ -15,7 +15,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { SearchField } from "@/components/ui/search-field";
 import { TextLink } from "@/components/ui/text-link";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { getInstitutions, getMajors, type Institution, type Major } from "@/lib/data/catalog";
 import { fetchPlan, savePlan, type Plan } from "@/lib/data/plan";
 import { DEMO_MODE } from "@/lib/flags";
@@ -232,7 +232,7 @@ export function OnboardingFlow() {
         <InlineError
           title={`Couldn't load ${copy.things}`}
           body="Check your connection, then try again."
-          action={<TintedButton onClick={retry}>Try again</TintedButton>}
+          action={<SecondaryButton onClick={retry}>Try again</SecondaryButton>}
         />
       </div>
     );

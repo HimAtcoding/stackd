@@ -90,7 +90,7 @@ export const systemsLine = (major: ExploreMajor) => tabsOf(major).map((t) => t.l
 // The requested tab, or the first one this major has
 export const resolveTab = (major: ExploreMajor, wanted: string | null): SystemTab => tabsOf(major).find((t) => t.id === wanted)?.id ?? tabsOf(major)[0].id;
 
-// Topics in both the UC pathway and the Cal State degree. "Counts for both" is computed from these, never stored.
+// Topics in both the UC pathway and the Cal State degree. "Counts for UC and Cal State" is computed from these, never stored.
 export function sharedTopics(major: ExploreMajor): Set<string> {
   const calState = new Set(major.calState?.requirements.map((r) => r.topic));
   return new Set(major.uc?.requirements.map((r) => r.topic).filter((t) => calState.has(t)));
@@ -193,11 +193,11 @@ export function stillNeeded(pathway: Pathway, statuses: Statuses, limit = 4) {
 
 export const systemLabel = (tab: SystemTab) => SYSTEM_TABS.find((t) => t.id === tab)!.label;
 
-// A major row's second line (22 → 3): "12 UC campuses, 2 count for both", "9 UC campuses" or "Cal State only"
+// A major row's second line (22 → 3): "12 UC campuses, 2 count for UC and Cal State", "9 UC campuses" or "Cal State only"
 export function majorDetail(major: ExploreMajor) {
   if (!major.uc) return "Cal State only";
   const n = major.uc.campuses.length;
   const campuses = `${n} UC ${n === 1 ? "campus" : "campuses"}`;
   const both = major.calState ? sharedTopics(major).size : 0;
-  return both > 0 ? `${campuses}, ${both} ${both === 1 ? "counts" : "count"} for both` : campuses;
+  return both > 0 ? `${campuses}, ${both} ${both === 1 ? "counts" : "count"} for UC and Cal State` : campuses;
 }

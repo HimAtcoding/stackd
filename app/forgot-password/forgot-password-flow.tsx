@@ -80,7 +80,7 @@ export function ForgotPasswordFlow({ husky }: { husky: ReactNode }) {
             spellCheck={false}
             enterKeyHint="send"
             placeholder="you@example.com"
-            icon={<EnvelopeIcon size={22} />}
+            icon={<EnvelopeIcon weight="bold" size={22} />}
             value={email}
             readOnly={sending}
             error={error}

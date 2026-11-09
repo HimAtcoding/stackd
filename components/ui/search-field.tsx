@@ -31,7 +31,7 @@ export function SearchField({ id, placeholder, value, onChange, readOnly, classN
       autoCorrect="off"
       spellCheck={false}
       className={className}
-      icon={<MagnifyingGlassIcon size={22} />}
+      icon={<MagnifyingGlassIcon weight="bold" size={22} />}
       value={value}
       readOnly={readOnly}
       onChange={(e) => onChange(e.target.value)}

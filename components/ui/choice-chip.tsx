@@ -12,7 +12,8 @@ type ChoiceChipProps = {
   "data-focus"?: boolean;
 };
 
-// 44 tall pill, one of a radio group (14 → Additions to 00). Chosen: blue tint with a check before the label.
+// One of a radio group, as 00's filter chip: 40 tall (44 to tap), --r-sm, with an edge. Off: white with a 2 px border.
+// On: solid --blue-600 with a check before the label.
 export function ChoiceChip({ checked, onSelect, children, ...data }: ChoiceChipProps) {
   return (
     <button
@@ -22,8 +23,8 @@ export function ChoiceChip({ checked, onSelect, children, ...data }: ChoiceChipP
       onClick={onSelect}
       {...data}
       className={cn(
-        "inline-flex h-11 items-center gap-1.5 rounded-full border px-4 type-label transition-colors duration-120 ease-out",
-        checked ? "border-blue-50-border bg-blue-50 text-blue-700" : "border-border-strong bg-surface text-navy-900 pressed:bg-surface-pressed",
+        "relative inline-flex h-10 items-center gap-1.5 rounded-sm px-3.5 type-label edge-sm after:absolute after:inset-x-0 after:-inset-y-0.5 after:content-['']",
+        checked ? "bg-blue-600 text-white edge-blue-700 focus-ring:outline-offset-3" : "border-2 border-border bg-surface text-navy-900",
       )}
     >
       {checked && <CheckIcon weight="bold" size={16} aria-hidden />}

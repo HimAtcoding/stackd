@@ -10,7 +10,7 @@ export function ChoiceCircle({ checked }: { checked: boolean }) {
     <span
       aria-hidden
       className={cn(
-        "flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-120 ease-out",
+        "flex size-[26px] shrink-0 items-center justify-center rounded-full border-[2.5px] transition-colors duration-120 ease-out",
         checked ? "border-blue-600 bg-blue-600" : "border-slate-400",
       )}
     >
@@ -51,7 +51,6 @@ export function ChoiceRow({ role, checked, name, detail, tile, readOnly, onSelec
         "flex w-full items-center gap-4 px-4 py-2 text-left transition-colors duration-120 ease-out",
         "pressed:bg-surface-pressed focus-ring:-outline-offset-2",
         detail ? "min-h-16" : "min-h-14",
-        checked && "bg-blue-50",
       )}
     >
       <ChoiceCircle checked={checked} />
@@ -79,7 +78,7 @@ export function ChoiceList({ role, readOnly, className, children, ...rest }: Cho
       role={role}
       {...rest}
       className={cn(
-        "divide-y divide-border overflow-hidden rounded-md border border-border bg-surface shadow-card transition-opacity duration-120",
+        "divide-y-2 divide-border overflow-hidden rounded-lg border-2 border-border bg-surface transition-opacity duration-120",
         readOnly && "opacity-60",
         className,
       )}

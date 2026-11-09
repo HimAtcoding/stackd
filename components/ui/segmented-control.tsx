@@ -27,11 +27,11 @@ export function SegmentedControl<T extends string>({ options, value, onChange, c
   }
 
   return (
-    <div role="radiogroup" {...rest} onKeyDown={onKeyDown} className={cn("h-11 rounded-md border border-border bg-surface-pressed p-[3px]", className)}>
+    <div role="radiogroup" {...rest} onKeyDown={onKeyDown} className={cn("h-11 rounded-md bg-surface-pressed p-[3px]", className)}>
       <div ref={row} className="relative flex h-full">
         <span
           aria-hidden
-          className="absolute inset-y-0 left-0 rounded-sm bg-surface shadow-card transition-transform duration-200 ease-out motion-reduce:transition-none"
+          className="absolute inset-y-0 left-0 rounded-sm border-2 border-blue-600 bg-surface transition-transform duration-200 ease-out motion-reduce:transition-none"
           style={{ width: `${100 / options.length}%`, transform: `translateX(${at * 100}%)` }}
         />
         {options.map((o) => {
@@ -45,7 +45,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange, c
               aria-checked={selected}
               tabIndex={selected ? 0 : -1}
               onClick={() => onChange(o.value)}
-              className={cn("relative flex-1 rounded-sm type-label", selected ? "text-navy-900" : "text-slate-600")}
+              className={cn("relative flex-1 rounded-sm type-label", selected ? "text-blue-600" : "text-slate-600")}
             >
               {o.label}
             </button>

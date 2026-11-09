@@ -20,7 +20,7 @@ export function StarterCard({ starter, total, onTryAnother, onAnswer }: StarterC
   return (
     <section
       aria-label="Starter question"
-      className="rounded-lg bg-indigo-600 p-5 shadow-lift [&_button:focus-visible]:outline-white"
+      className="on-fill rounded-lg bg-indigo-600 p-5"
     >
       <div className="flex items-center justify-between gap-3">
         <p className="text-white/85 type-label">Start with a question</p>
@@ -28,7 +28,7 @@ export function StarterCard({ starter, total, onTryAnother, onAnswer }: StarterC
           type="button"
           onClick={onTryAnother}
           aria-label="Try another question"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/16 text-white transition-transform duration-120 ease-out motion-safe:pressed:scale-[0.94]"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-indigo-600 edge-sm edge-indigo-800"
         >
           <ArrowsClockwiseIcon weight="bold" size={20} aria-hidden />
         </button>
@@ -55,7 +55,7 @@ export function StarterCard({ starter, total, onTryAnother, onAnswer }: StarterC
         <button
           type="button"
           onClick={onAnswer}
-          className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-indigo-600 type-label transition-colors duration-120 ease-out pressed:bg-tint-indigo"
+          className="inline-flex h-11 items-center gap-2 rounded-sm bg-white px-5 text-indigo-600 type-label edge-sm edge-indigo-800"
         >
           <PencilSimpleLineIcon weight="bold" size={18} aria-hidden />
           Answer in notes

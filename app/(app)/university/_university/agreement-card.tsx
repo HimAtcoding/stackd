@@ -1,6 +1,7 @@
 import { FileTextIcon } from "@phosphor-icons/react/ssr";
 import { Card } from "@/components/ui/card";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { IconCircle } from "@/components/ui/icon-circle";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { ASSIST_HOME } from "@/lib/about";
 import type { AgreementLink } from "@/lib/data/university";
 
@@ -17,9 +18,9 @@ export function AgreementCard({ link, college }: AgreementCardProps) {
   return (
     <Card className="mx-4 mt-4">
       <div className="flex items-start gap-4">
-        <span aria-hidden className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-tint-sky text-blue-600">
-          <FileTextIcon weight="fill" size={24} />
-        </span>
+        <IconCircle tone="blue">
+          <FileTextIcon weight="fill" size={22} />
+        </IconCircle>
         <div className="min-w-0">
           <h3 className="text-navy-900 type-headline">Your official agreement</h3>
           <p className="mt-1 text-slate-600 type-body">
@@ -29,14 +30,14 @@ export function AgreementCard({ link, college }: AgreementCardProps) {
           </p>
         </div>
       </div>
-      <TintedButton
+      <SecondaryButton
         external
         href={link ? link.url : ASSIST_HOME}
         aria-label={`${link ? "Open on ASSIST" : "Open ASSIST"}, opens outside Stackd`}
         className="mt-4"
       >
         {link ? "Open on ASSIST" : "Open ASSIST"}
-      </TintedButton>
+      </SecondaryButton>
       {link && <p className="mt-2 text-slate-600 tabular-nums type-caption">{link.academicYear} agreement. Opens assist.org.</p>}
     </Card>
   );

@@ -49,7 +49,7 @@ export function Art({ id, width, height, fill, className, style, label, preload,
         data-asset={id}
         data-loaded={reveal ? "" : undefined}
         className={cn(
-          "flex items-center justify-center overflow-hidden bg-tint-sky text-center type-caption text-slate-600",
+          "flex items-center justify-center overflow-hidden bg-sky-100 text-center type-caption text-slate-600",
           fill && "absolute inset-0",
           reveal && "art-reveal",
           className,

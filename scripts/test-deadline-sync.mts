@@ -199,19 +199,19 @@ check("cycle bar: nothing upcoming, no bar", cycleBar([], oct18) === null);
 const iconName = (title: string) => ((stepLook(title).icon as { displayName?: string }).displayName ?? "").replace(/Icon$/, "");
 check("step slug", stepSlug("Pay the fee or ask for a waiver") === "pay-the-fee-or-ask-for-a-waiver", stepSlug("Pay the fee or ask for a waiver"));
 const fall2027Steps: [string, string, string][] = [
-  ["Pick your campuses and majors", "MapPinLine", "bg-tint-sky"],
-  ["Enter your courses and grades", "BookOpenText", "bg-mint-100"],
-  ["Write your personal insight answers", "PencilLine", "bg-tint-indigo"],
-  ["Add activities and awards", "Trophy", "bg-amber-50"],
-  ["Check for extra campus steps", "ListChecks", "bg-tint-indigo"],
-  ["Pay the fee or ask for a waiver", "Receipt", "bg-tint-sky"],
-  ["Submit by Nov 30", "PaperPlaneTilt", "bg-blue-600"],
+  ["Pick your campuses and majors", "MapPinLine", "blue"],
+  ["Enter your courses and grades", "BookOpenText", "green"],
+  ["Write your personal insight answers", "PencilLine", "indigo"],
+  ["Add activities and awards", "Trophy", "amber"],
+  ["Check for extra campus steps", "ListChecks", "indigo"],
+  ["Pay the fee or ask for a waiver", "Receipt", "blue"],
+  ["Submit by Nov 30", "PaperPlaneTilt", "blue"],
 ];
-for (const [title, icon, tile] of fall2027Steps) {
-  check(`step icon: ${title} → ${icon}`, iconName(title) === icon && stepLook(title).tile === tile, `${iconName(title)} ${stepLook(title).tile}`);
+for (const [title, icon, tone] of fall2027Steps) {
+  check(`step icon: ${title} → ${icon}`, iconName(title) === icon && stepLook(title).tone === tone, `${iconName(title)} ${stepLook(title).tone}`);
 }
-check("step icon: the submit step keeps its tile when the date changes", iconName("Submit by Dec 1") === "PaperPlaneTilt");
-check("step icon: an unknown step gets CheckSquare on sky", iconName("Send your transcripts") === "CheckSquare" && stepLook("Send your transcripts").tile === "bg-tint-sky");
+check("step icon: the submit step keeps its icon when the date changes", iconName("Submit by Dec 1") === "PaperPlaneTilt");
+check("step icon: an unknown step gets CheckSquare on blue", iconName("Send your transcripts") === "CheckSquare" && stepLook("Send your transcripts").tone === "blue");
 
 // Step sheets and all-done wording (18): what each step needs, steps the plan checks, and "ready" only with the signals
 check("needs: personal insight answers has two items", stepNeeds("uc", "Write your personal insight answers").length === 2);

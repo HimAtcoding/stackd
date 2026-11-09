@@ -15,12 +15,12 @@ type StepTileProps = {
   className?: string;
 };
 
-// A checklist step's icon tile, which is also its check control (16 → Step icons)
+// A checklist step's icon circle, which is also its check control (23 → Step icons)
 export function StepTile({ title, done, onToggle, size = 36, finale, className }: StepTileProps) {
   return <StatusTile {...stepLook(title)} name={title} status={done ? "done" : "not_started"} onToggle={onToggle} size={size} finale={finale} className={className} />;
 }
 
-// The same tile at 40 without the control, for the step sheet's header (18 → Step sheets). Green with a check when done.
+// The same circle at 40 without the control, for the step sheet's header (18 → Step sheets). Green with a check when done.
 export function StepIconTile({ title, done, className }: { title: string; done: boolean; className?: string }) {
   return <StatusTile {...stepLook(title)} name={title} status={done ? "done" : "not_started"} className={className} />;
 }

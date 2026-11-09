@@ -10,7 +10,7 @@ type DestructiveButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   "data-focus"?: boolean;
 };
 
-// The primary button's shape in coral, with no chevron and no shadow. Only for deleting the account (11).
+// The primary button's shape in coral with its --coral-800 edge. Only for deleting the account (11).
 export function DestructiveButton({ children, loading, className, onClick, ...props }: DestructiveButtonProps) {
   return (
     <button
@@ -25,10 +25,7 @@ export function DestructiveButton({ children, loading, className, onClick, ...pr
         onClick?.(e);
       }}
       className={cn(
-        "relative flex h-14 w-full items-center justify-center rounded-full bg-coral-700 text-white type-button-lg",
-        "transition-transform duration-200 ease-out",
-        // Pressed: darkened with a 12% black layer over the coral
-        "pressed:bg-[linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.12))] pressed:duration-120 motion-safe:pressed:scale-[0.97]",
+        "relative flex h-14 w-full items-center justify-center rounded-md bg-coral-700 text-white type-button-lg edge-md edge-coral-800",
         "focus-ring:outline-offset-3",
         className,
       )}

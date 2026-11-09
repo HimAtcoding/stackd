@@ -141,7 +141,7 @@ export function opportunityReportRows(payload, stored) {
   return finish(rows);
 }
 
-// One table per major: each topic with its UC row and its Cal State row on one line, so every "Counts for both" pair
+// One table per major: each topic with its UC row and its Cal State row on one line, so every "Counts for UC and Cal State" pair
 // is checked on purpose
 export function topicSections(payload) {
   return [...new Set(payload.pathways.map((p) => p.slug))].map((slug) => {
@@ -152,11 +152,11 @@ export function topicSections(payload) {
     const cell = (r) => (r ? `${r.sort}. ${r.name}${r.c_id?.length ? ` [${r.c_id.join(" + ")}]` : ""}${r.options?.length ? ` [${r.options.length} options]` : ""}` : "");
     const both = topics.filter((t) => uc.some((r) => r.topic === t) && tmc.some((r) => r.topic === t));
     return [
-      `## Counts for both: ${slug}`,
+      `## Counts for UC and Cal State: ${slug}`,
       "",
-      `${both.length} of ${uc.length} UC course types also count for Cal State. A topic on both sides shows "Counts for both" in the app, so check that each pair below is really the same course.`,
+      `${both.length} of ${uc.length} UC course types also count for Cal State. A topic on both sides shows "Counts for UC and Cal State" in the app, so check that each pair below is really the same course.`,
       "",
-      "| topic | UC pathway | Cal State (TMC) | counts for both |",
+      "| topic | UC pathway | Cal State (TMC) | counts for UC and Cal State |",
       "| --- | --- | --- | --- |",
       ...topics.map((t) => {
         const u = uc.find((r) => r.topic === t);

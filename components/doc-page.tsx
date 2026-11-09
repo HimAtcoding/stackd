@@ -12,7 +12,7 @@ export function DocPage({ title, updated, children }: { title: string; updated?:
   return (
     <PageTransition>
       <main
-        className="mx-auto min-h-dvh max-w-[480px] bg-sky-50"
+        className="mx-auto min-h-dvh max-w-[480px] bg-page"
         style={{ paddingTop: "calc(var(--safe-top) + 8px)", paddingBottom: "calc(var(--safe-bottom) + 24px)" }}
       >
         <div className="px-4">

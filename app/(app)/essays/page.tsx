@@ -6,7 +6,7 @@ import { EssaysRoute } from "./_essays/essays-screen";
 export default function EssaysPage() {
   return (
     <PageTransition>
-      <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+      <Suspense fallback={<div className="min-h-dvh bg-page" />}>
         <EssaysRoute />
       </Suspense>
     </PageTransition>

@@ -7,7 +7,7 @@ type WindowBarProps = {
   soon: boolean;
   start: string;
   end: string;
-  // On the solid Up next hero (16): white track and fill, a yellow today marker, white labels
+  // On a hero: 12 tall, the partner color track (--partner), honey fill, a white today marker, white labels
   onFill?: boolean;
   className?: string;
 };
@@ -18,15 +18,15 @@ export function WindowBar({ progress, soon, start, end, onFill, className }: Win
   const at = progress === null ? null : `${progress * 100}%`;
   return (
     <div aria-hidden className={className}>
-      <div className={cn("relative h-1.5 rounded-full", onFill ? "bg-white/28" : "bg-blue-100")}>
+      <div className={cn("relative rounded-full", onFill ? "h-3 bg-(--partner)" : "h-1.5 bg-border")}>
         {at && (
           <>
             <div
-              className={cn("absolute inset-y-0 left-0 rounded-full", onFill ? "bg-white" : soon ? "bg-coral-500" : "bg-blue-600")}
+              className={cn("absolute inset-y-0 left-0 rounded-full", onFill ? "bg-yellow-400" : soon ? "bg-coral-500" : "bg-blue-600")}
               style={{ width: at }}
             />
             <div
-              className={cn("absolute top-1/2 h-3.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-[1px]", onFill ? "bg-yellow-400" : "bg-navy-900")}
+              className={cn("absolute top-1/2 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-[1px]", onFill ? "h-5 bg-white" : "h-3.5 bg-navy-900")}
               style={{ left: at }}
             />
           </>

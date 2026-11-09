@@ -37,7 +37,7 @@ export function PasswordToggle({ inputRef, shown, setShown }: PasswordToggleProp
       onClick={toggle}
       className="flex size-11 items-center justify-center rounded-sm text-slate-600"
     >
-      {shown ? <EyeSlashIcon size={22} aria-hidden /> : <EyeIcon size={22} aria-hidden />}
+      {shown ? <EyeSlashIcon weight="bold" size={22} aria-hidden /> : <EyeIcon weight="bold" size={22} aria-hidden />}
     </button>
   );
 }

@@ -13,7 +13,7 @@ import { InlineError } from "@/components/ui/inline-error";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
-import { TintedButton } from "@/components/ui/tinted-button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { auth, type OAuthProvider } from "@/lib/auth";
 import { getCarriedEmail, getCarriedSignUp, setCarriedEmail, setCarriedSignUp } from "@/lib/auth/email-store";
 import { WEAK_PASSWORD, emailError, inlineErrorCopy, oauthErrorCopy, type ErrorCopy } from "@/lib/auth/messages";
@@ -139,7 +139,7 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
         autoComplete="given-name"
         autoCapitalize="words"
         enterKeyHint="next"
-        icon={<UserIcon size={22} />}
+        icon={<UserIcon weight="bold" size={22} />}
         value={firstName}
         readOnly={busy}
         error={errors.firstName}
@@ -164,7 +164,7 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
         spellCheck={false}
         enterKeyHint="next"
         placeholder="you@example.com"
-        icon={<EnvelopeIcon size={22} />}
+        icon={<EnvelopeIcon weight="bold" size={22} />}
         value={email}
         readOnly={busy}
         error={errors.email}
@@ -188,7 +188,7 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
         autoCapitalize="off"
         spellCheck={false}
         enterKeyHint="go"
-        icon={<LockIcon size={22} />}
+        icon={<LockIcon weight="bold" size={22} />}
         hint="At least 8 characters."
         value={password}
         readOnly={busy}
@@ -211,7 +211,7 @@ export function SignUpForm({ appleLogo, googleLogo }: SignUpFormProps) {
                 body={accountError.body}
                 action={
                   accountError.signIn ? (
-                    <TintedButton onClick={() => router.replace("/sign-in")}>Sign in</TintedButton>
+                    <SecondaryButton onClick={() => router.replace("/sign-in")}>Sign in</SecondaryButton>
                   ) : undefined
                 }
               />

@@ -6,54 +6,47 @@
 @custom-variant focus-ring (&:is(:focus-visible, [data-focus]));
 @custom-variant field-focus (&:is(:focus, [data-focus]):not(:read-only));
 
+/* 00 rev 2, "Chunky and playful" */
 :root {
-  --blue-600: #0364fa;
-  --blue-700: #0252d1;
-  --blue-100: #d9ebfa;
-  --blue-50: #e2f0fd;
-  --blue-50-border: #cfe3fa;
-  --sky-200: #b8e7fd;
-  --sky-100: #d3effd;
-  --sky-50: #eaf6fe;
-  --surface: #fafcfe;
-  --white: #ffffff;
-  --navy-900: #051042;
+  --blue-600: #1e5eff;
+  --blue-700: #1747c7;
+  --yellow-400: #ffc226;
+  --yellow-700: #d89a00;
+  --green-600: #22a565;
+  --green-700: #178049;
+  --green-800: #0f5e35;
+  --navy-900: #10194a;
   --slate-700: #3f4a6e;
-  --slate-600: #5e6b96;
-  --slate-400: #8590ac;
-  --border: #e3ecf7;
-  --border-strong: #cfdaec;
-  --field-border: #8090b8;
-  --surface-pressed: #f1f6fc;
-  --tint-sky: #e4f4fd;
-  --tint-indigo: #eaedfd;
-  --node-empty: #e9f3fc;
-  --green-600: #40a459;
-  --mint-100: #d2f3ec;
-  --mint-800: #0a6c44;
-  --coral-500: #fc5e3c;
+  --slate-600: #5b6585;
+  --slate-400: #8a93ae;
+  --border: #e5e8f0;
+  --border-strong: #d3d8e4;
+  --field-border: #8a93ae;
+  --surface: #ffffff;
+  --page: #ffffff;
+  --surface-pressed: #f1f3f8;
+  /* Text and icons on solid fills */
+  --white: #ffffff;
+
+  /* Section colors and their edge partners */
+  --indigo-600: #4f55e0;
+  --indigo-800: #3a3fb0;
+  --amber-700: #a86a00;
+  --amber-800: #8a5600;
+
+  /* Status fills */
   --coral-700: #b8361b;
+  --coral-800: #8e2812;
+  --coral-500: #fc5e3c;
   --coral-50: #fee3e0;
   --coral-25: #fcebec;
-  --amber-50: #fcf1d2;
-  --amber-500: #eaa005;
-  --yellow-400: #fdc940;
-  --confetti-sky: #4fa8f7;
-  /* Section colors (16): Essays, Deadlines and Explore, also used by the step icons */
-  --indigo-600: #4f55e0;
-  --amber-700: #a86a00;
-  /* Cal State school tiles, and small amber text on --yellow-50 (22) */
-  --amber-800: #8a5600;
-  /* The Opportunities band (16, 22) */
-  --yellow-50: #fff6d6;
-  --mint-600: #12946a;
-  /* The Up next hero pressed at 14 days or less (16) */
-  --coral-pressed: #9c2d16;
-  /* The Explore panel pressed (21) */
-  --mint-pressed: #085a38;
-  /* The second and third layers of the deadline stack (14) */
-  --stack-2: #f1f7fd;
-  --stack-3: #e6f0fa;
+  --yellow-50: #fff4d6;
+  --amber-900: #7a5200;
+  --mint-100: #e3f6ec;
+  --mint-800: #1a6e45;
+
+  /* Art only: the Welcome scene, the university art backdrop and art placeholders */
+  --sky-100: #d3effd;
 
   --gutter-card: 16px;
   --gutter-text: 24px;
@@ -66,18 +59,16 @@
   --r-sm: 12px;
   --r-md: 16px;
   --r-lg: 20px;
-  --r-sheet: 24px;
+  --r-hero: 24px;
   --r-full: 999px;
 
-  --shadow-card: 0 1px 2px rgba(5, 16, 66, 0.04), 0 6px 16px rgba(5, 16, 66, 0.05);
-  --shadow-float: 0 4px 12px rgba(5, 16, 66, 0.1);
-  --shadow-cta: 0 8px 20px rgba(3, 100, 250, 0.28);
-  /* Tier 1 only: the one hero on Home or Deadlines (15) */
-  --shadow-lift: 0 2px 4px rgba(5, 16, 66, 0.05), 0 12px 28px rgba(5, 16, 66, 0.09);
-  /* The solid Up next hero, in its own color (16) */
-  --shadow-hero-blue: 0 10px 24px rgba(3, 100, 250, 0.3);
-  --shadow-hero-coral: 0 10px 24px rgba(184, 54, 27, 0.3);
+  /* Edges replace shadows (00 → Edges). Only the toast keeps a soft shadow. */
+  --edge-sm: 3px;
+  --edge-md: 4px;
+  --edge-lg: 6px;
+  --shadow-toast: 0 6px 16px rgba(16, 25, 74, 0.18);
 
+  --dur-press: 80ms;
   --dur-fast: 120ms;
   --dur-base: 200ms;
   --dur-slow: 320ms;
@@ -105,14 +96,11 @@
   --color-*: initial;
   --color-blue-600: var(--blue-600);
   --color-blue-700: var(--blue-700);
-  --color-blue-100: var(--blue-100);
-  --color-blue-50: var(--blue-50);
-  --color-blue-50-border: var(--blue-50-border);
-  --color-sky-200: var(--sky-200);
-  --color-sky-100: var(--sky-100);
-  --color-sky-50: var(--sky-50);
-  --color-surface: var(--surface);
-  --color-white: var(--white);
+  --color-yellow-400: var(--yellow-400);
+  --color-yellow-700: var(--yellow-700);
+  --color-green-600: var(--green-600);
+  --color-green-700: var(--green-700);
+  --color-green-800: var(--green-800);
   --color-navy-900: var(--navy-900);
   --color-slate-700: var(--slate-700);
   --color-slate-600: var(--slate-600);
@@ -120,176 +108,203 @@
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-field-border: var(--field-border);
+  --color-surface: var(--surface);
+  --color-page: var(--page);
   --color-surface-pressed: var(--surface-pressed);
-  --color-tint-sky: var(--tint-sky);
-  --color-tint-indigo: var(--tint-indigo);
-  --color-node-empty: var(--node-empty);
-  --color-green-600: var(--green-600);
-  --color-mint-100: var(--mint-100);
-  --color-mint-800: var(--mint-800);
-  --color-coral-500: var(--coral-500);
-  --color-coral-700: var(--coral-700);
-  --color-coral-50: var(--coral-50);
-  --color-coral-25: var(--coral-25);
-  --color-amber-50: var(--amber-50);
-  --color-amber-500: var(--amber-500);
-  --color-yellow-400: var(--yellow-400);
+  --color-white: var(--white);
   --color-indigo-600: var(--indigo-600);
+  --color-indigo-800: var(--indigo-800);
   --color-amber-700: var(--amber-700);
   --color-amber-800: var(--amber-800);
+  --color-coral-700: var(--coral-700);
+  --color-coral-800: var(--coral-800);
+  --color-coral-500: var(--coral-500);
+  --color-coral-50: var(--coral-50);
+  --color-coral-25: var(--coral-25);
   --color-yellow-50: var(--yellow-50);
-  --color-mint-600: var(--mint-600);
-  --color-coral-pressed: var(--coral-pressed);
-  --color-mint-pressed: var(--mint-pressed);
-  --color-confetti-sky: var(--confetti-sky);
-  --color-stack-2: var(--stack-2);
-  --color-stack-3: var(--stack-3);
+  --color-amber-900: var(--amber-900);
+  --color-mint-100: var(--mint-100);
+  --color-mint-800: var(--mint-800);
+  --color-sky-100: var(--sky-100);
 
   --radius-*: initial;
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-lg: var(--r-lg);
-  --radius-sheet: var(--r-sheet);
+  --radius-hero: var(--r-hero);
   --radius-full: var(--r-full);
 
   --shadow-*: initial;
 
-  --font-sans: var(--font-figtree), -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-nunito), ui-rounded, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-@utility shadow-card {
-  box-shadow: var(--shadow-card);
-}
-@utility shadow-float {
-  box-shadow: var(--shadow-float);
-}
-@utility shadow-cta {
-  box-shadow: var(--shadow-cta);
-}
-@utility shadow-lift {
-  box-shadow: var(--shadow-lift);
-}
-@utility shadow-hero-blue {
-  box-shadow: var(--shadow-hero-blue);
-}
-@utility shadow-hero-coral {
-  box-shadow: var(--shadow-hero-coral);
+@utility shadow-toast {
+  box-shadow: var(--shadow-toast);
 }
 
-/* Type scale from 00-foundations */
+/* The edge (00 → Edges): edge-sm, edge-md or edge-lg for the size, edge-{color} for its color (--border by default).
+   A control sinks into its edge while pressed, also under reduced motion. Neighbours never move: the edge is a shadow. */
+@layer utilities {
+  .edge-sm {
+    --edge: var(--edge-sm);
+  }
+  .edge-md {
+    --edge: var(--edge-md);
+  }
+  .edge-lg {
+    --edge: var(--edge-lg);
+  }
+  .edge-sm,
+  .edge-md,
+  .edge-lg {
+    box-shadow: 0 var(--edge) 0 var(--edge-color, var(--border));
+  }
+  :is(.edge-sm, .edge-md, .edge-lg):is(a, button, label, [role="button"], [role="checkbox"], .edge-face) {
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+  :is(.edge-sm, .edge-md, .edge-lg):is(a, button, label, [role="button"], [role="checkbox"]):is(:active, [data-pressed]):not(
+      :disabled,
+      [aria-disabled="true"]
+    ) {
+    transform: translateY(var(--edge));
+    box-shadow: 0 0 0 var(--edge-color, var(--border));
+    transition-duration: var(--dur-press);
+  }
+  /* edge-face: the visible part inside a bigger hit area (a 40 tile in a 44 button) sinks when its control is pressed */
+  :is(a, button, label, [role="button"], [role="checkbox"]):is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"])
+    .edge-face {
+    transform: translateY(var(--edge));
+    box-shadow: 0 0 0 var(--edge-color, var(--border));
+    transition-duration: var(--dur-press);
+  }
+}
+@utility edge-* {
+  --edge-color: --value(--color-*);
+}
+
+/* Inside a solid hero or panel, focus outlines turn white (00 → Interaction states) */
+@utility on-fill {
+  & :where(*) {
+    --focus: var(--white);
+  }
+}
+
+/* Type scale from 00-foundations rev 2 (Nunito) */
 @utility type-celebrate {
   font-size: 72px;
   line-height: 68px;
   font-weight: 900;
   letter-spacing: -0.02em;
 }
-/* Day counts only (14) */
-@utility type-countdown {
-  font-size: 56px;
-  line-height: 52px;
+/* Day counts on the heroes */
+@utility type-hero-number {
+  font-size: 64px;
+  line-height: 56px;
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 @utility type-display {
   font-size: 38px;
   line-height: 42px;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 @utility type-title-1 {
-  font-size: 36px;
-  line-height: 40px;
+  font-size: 34px;
+  line-height: 38px;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 @utility type-title-2 {
-  font-size: 20px;
+  font-size: 21px;
   line-height: 26px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-weight: 900;
 }
 @utility type-title-3 {
   font-size: 18px;
   line-height: 24px;
-  font-weight: 700;
+  font-weight: 900;
 }
 @utility type-headline {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 22px;
-  font-weight: 700;
+  font-weight: 900;
 }
 @utility type-row-title {
   font-size: 16px;
   line-height: 22px;
-  font-weight: 600;
+  font-weight: 800;
 }
 @utility type-body-lg {
   font-size: 18px;
-  line-height: 24px;
-  font-weight: 400;
+  line-height: 26px;
+  font-weight: 600;
 }
 @utility type-body {
   font-size: 15px;
-  line-height: 20px;
-  font-weight: 400;
+  line-height: 21px;
+  font-weight: 600;
 }
 @utility type-body-md {
   font-size: 16px;
   line-height: 22px;
-  font-weight: 400;
+  font-weight: 700;
 }
 @utility type-label {
   font-size: 14px;
   line-height: 18px;
-  font-weight: 600;
+  font-weight: 800;
 }
 @utility type-pill {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 18px;
-  font-weight: 600;
+  font-weight: 900;
 }
 @utility type-caption {
   font-size: 13px;
-  line-height: 16px;
-  font-weight: 400;
+  line-height: 17px;
+  font-weight: 700;
 }
 /* Course codes (21): the one place monospace is allowed */
 @utility type-code {
   font-family: var(--font-code);
   font-size: 13px;
   line-height: 16px;
-  font-weight: 400;
+  font-weight: 500;
 }
 @utility type-tab {
-  font-size: 13px;
+  font-size: 12px;
   line-height: 16px;
-  font-weight: 600;
+  font-weight: 800;
 }
 @utility type-button-lg {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24px;
-  font-weight: 700;
+  font-weight: 900;
 }
 @utility type-button {
   font-size: 16px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 900;
 }
 @utility type-link {
   font-size: 15px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 900;
 }
 @utility type-segment {
   font-size: 16px;
   line-height: 20px;
-  font-weight: 600;
+  font-weight: 800;
 }
 @utility type-demo {
   font-size: 12px;
   line-height: 16px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
@@ -299,12 +314,12 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    background: var(--sky-50);
+    background: var(--page);
     color: var(--navy-900);
     font-family: var(--font-sans);
   }
   :where(:focus-visible, [data-focus]) {
-    outline: 2px solid var(--blue-600);
+    outline: 2px solid var(--focus, var(--blue-600));
     outline-offset: 2px;
   }
   button:not(:disabled),
@@ -438,17 +453,6 @@ html[data-nav="back"]::view-transition-new(root) {
   from {
     transform: translateX(-24%);
     opacity: 0.9;
-  }
-}
-
-/* The step tapped on Home, tinted as the steps sheet opens (14 → Steps sheet) */
-.tint-flash {
-  animation: tint-flash 600ms var(--ease-out) both;
-}
-@keyframes tint-flash {
-  0%,
-  60% {
-    background-color: var(--blue-50);
   }
 }
 

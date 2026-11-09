@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { IconCircle, type Tone } from "./icon-circle";
 
 type ShortcutTileProps = {
   href: string;
+  // A fill icon at 22, set in the tone's icon circle
   icon: ReactNode;
-  iconTint: "sky" | "indigo";
+  tone: Tone;
   title: string;
   subtitle: string;
   unread?: boolean;
@@ -16,32 +18,22 @@ type ShortcutTileProps = {
   "data-focus"?: boolean;
 };
 
-export function ShortcutTile({ href, icon, iconTint, title, subtitle, unread, transitionTypes, ...rest }: ShortcutTileProps) {
+// A tappable card 72 tall: icon circle 44 + 12 + title and subtitle (00 → Shortcut tile). No chevron.
+export function ShortcutTile({ href, icon, tone, title, subtitle, unread, transitionTypes, ...rest }: ShortcutTileProps) {
   return (
     <Link
       href={href}
       transitionTypes={transitionTypes}
       {...rest}
-      className={cn(
-        "relative flex h-18 items-center gap-3 rounded-md bg-surface pl-3 pr-2 shadow-card",
-        "transition-[background-color,transform] duration-200 ease-out",
-        "pressed:bg-surface-pressed pressed:duration-120 motion-safe:pressed:scale-[0.98]",
-      )}
+      className="relative flex h-18 items-center gap-3 rounded-lg border-2 border-border bg-surface pl-2.5 pr-1.5 edge-md"
     >
-      <span
-        className={cn(
-          "flex size-11 shrink-0 items-center justify-center rounded-sm",
-          iconTint === "sky" ? "bg-tint-sky" : "bg-tint-indigo",
-        )}
-      >
-        {icon}
-      </span>
-      {/* No chevron (00 rev 2): text runs to 8 from the right edge. Only the title line is level with the unread dot */}
+      <IconCircle tone={tone}>{icon}</IconCircle>
+      {/* Text runs to 8 from the right edge. Only the title line is level with the unread dot */}
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className={cn("truncate text-navy-900 type-label", unread && "pr-5")}>{title}</span>
         <span className="truncate text-slate-600 tabular-nums type-caption">{subtitle}</span>
       </span>
-      {unread && <span aria-hidden className="absolute right-3 top-4 size-2 rounded-full bg-coral-500" />}
+      {unread && <span aria-hidden className="absolute right-2.5 top-3.5 size-2 rounded-full bg-coral-500" />}
     </Link>
   );
 }

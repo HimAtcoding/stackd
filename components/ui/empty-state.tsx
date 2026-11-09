@@ -17,7 +17,7 @@ export function EmptyState({ icon, title, body, action, headingLevel = 2, top }:
   const Heading = headingLevel === 1 ? "h1" : "h2";
   return (
     <div className="mx-auto flex max-w-[280px] flex-col items-center py-12 text-center" style={top === undefined ? undefined : { paddingTop: top }}>
-      <span aria-hidden className="flex size-18 items-center justify-center rounded-full bg-tint-sky text-blue-600">
+      <span aria-hidden className="flex size-18 items-center justify-center rounded-full bg-yellow-400 text-navy-900">
         {icon}
       </span>
       <Heading className="mt-4 text-navy-900 type-title-3">{title}</Heading>

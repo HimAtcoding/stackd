@@ -21,7 +21,7 @@ export function StartersSheet({ open, starters, used, onPick, onClose }: Starter
       <h2 id="starters-title" tabIndex={-1} className="text-navy-900 type-title-2 focus:outline-none">
         Starter questions
       </h2>
-      <ul className="-mx-6 mt-3 divide-y divide-border border-y border-border">
+      <ul className="-mx-6 mt-3 divide-y-2 divide-border border-y-2 border-border">
         {starters.map((s) => {
           const inNotes = used.has(s.id);
           return (

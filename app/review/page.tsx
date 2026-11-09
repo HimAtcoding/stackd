@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 // /review/?t={token} (19 → Reviewer side): a public page on the website. No sign-in, no tab bar, never redirects.
 export default function Review() {
   return (
-    <Suspense fallback={<div className="min-h-dvh bg-sky-50" />}>
+    <Suspense fallback={<div className="min-h-dvh bg-page" />}>
       <ReviewPage />
     </Suspense>
   );
