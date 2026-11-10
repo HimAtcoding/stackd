@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline from nasa.gov (March 1, 2027); no session dates published. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it. Third pass (2026-11-08): Collegiate DECA ICDC, Point Foundation Community College Scholarship (its page gives January 27 to April 8 without a year; the funding period is fall 2027, so the dates are read as 2027) and the AMATYC fall round.",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline from nasa.gov (March 1, 2027); no session dates published. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta student awards removed on 2026-11-09: its official deadlines page couldn't be confirmed. Third pass (2026-11-08): Collegiate DECA ICDC, Point Foundation Community College Scholarship (its page gives January 27 to April 8 without a year; the funding period is fall 2027, so the dates are read as 2027) and the AMATYC fall round.",
   "opportunities": [
     {
       "slug": "cooke-undergraduate-transfer-scholarship-2027",
@@ -868,10 +868,10 @@
       "kind": "event",
       "title": "SULI alumni panel",
       "org_name": "U.S. Department of Energy, Office of Science",
-      "summary": "An hour online, 2 to 3 p.m. Eastern, with past SULI interns talking about their national lab projects and how they applied.",
+      "summary": "Past SULI interns talk about their national lab projects and how they applied.",
       "who_for": [],
       "wants": [
-        "Register on the SULI page"
+        "Register through the Zoom link in DOE's announcement"
       ],
       "offers": [
         "Advice from past interns"
@@ -886,11 +886,11 @@
       "location": null,
       "online": true,
       "cost": "free",
-      "url": "https://science.osti.gov/wdts/suli",
+      "url": "https://www.energy.gov/node/4860707",
       "source_name": "U.S. Department of Energy, Office of Science",
-      "source_url": "https://science.osti.gov/wdts/suli",
+      "source_url": "https://www.energy.gov/node/4860707",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "nih-sip-application-webinar-2026",
@@ -927,7 +927,8 @@
       "summary": "Ten weeks of full-time biomedical and biological sciences research in a UCSF lab, with a package worth over $15,000 including a stipend, travel and housing in San Francisco.",
       "who_for": [
         "Currently enrolled undergraduate, not finishing a bachelor's by spring 2027",
-        "U.S. citizen or permanent resident (DACA or AB 540 students should contact the program)"
+        "U.S. citizen or permanent resident (DACA or AB 540 students should contact the program)",
+        "Completed at least four semesters or six quarters of college before the program starts"
       ],
       "wants": [
         "An application with a personal statement",
@@ -955,7 +956,7 @@
       "source_name": "UC San Francisco Graduate Division",
       "source_url": "https://graduate.ucsf.edu/academics/srtp",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "leadership-alliance-sr-eip-2027",
@@ -966,7 +967,9 @@
       "who_for": [
         "Enrolled full time at an accredited U.S. college",
         "At least two semesters done and one left by the summer",
-        "U.S. citizen, national or permanent resident"
+        "U.S. citizen, national or permanent resident",
+        "GPA of 3.0 or higher",
+        "Committed interest in a PhD or MD-PhD"
       ],
       "wants": [
         "An online application",
@@ -991,7 +994,7 @@
       "source_name": "The Leadership Alliance",
       "source_url": "https://theleadershipalliance.org/summer-research-early-identification-program",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "chci-congressional-internship-summer-2027",
@@ -1028,51 +1031,18 @@
       "retrieved_at": "2026-11-08"
     },
     {
-      "slug": "psi-beta-student-awards-2027",
-      "kind": "scholarship",
-      "title": "Psi Beta student awards",
-      "org_name": "Psi Beta, the community college honor society in psychology",
-      "summary": "Awards for community college psychology students who are Psi Beta members, including a research award, a leadership award and a community service award. Applications open April 1.",
-      "who_for": [
-        "A registered Psi Beta member",
-        "Currently taking classes at a community college"
-      ],
-      "wants": [
-        "A personal statement or research narrative, depending on the award",
-        "A statement from your chapter advisor"
-      ],
-      "offers": [],
-      "audience": "community_college",
-      "major_slugs": [
-        "psychology"
-      ],
-      "systems": [],
-      "terms": [],
-      "deadline": "2027-06-01",
-      "starts_on": null,
-      "ends_on": null,
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://psibeta.org/awards/current-deadlines/",
-      "source_name": "Psi Beta, the community college honor society in psychology",
-      "source_url": "https://psibeta.org/awards/current-deadlines/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
       "slug": "live-mas-scholarship-2027",
       "kind": "scholarship",
       "title": "Live Más Scholarship",
       "org_name": "Taco Bell Foundation",
-      "summary": "A passion-based scholarship, not based on grades or need, for students aged 16 to 26 at any two- or four-year college, trade or vocational school. You apply with a short video about what drives you.",
+      "summary": "A passion-based scholarship for students aged 16 to 26 at any two- or four-year college, trade or vocational school. You apply with a short video or essay about what drives you.",
       "who_for": [
         "Aged 16 to 26",
         "Legal resident of the U.S. or D.C.",
         "Enrolled in, or on track for, an accredited college or trade program"
       ],
       "wants": [
-        "A 30-second to 2-minute video about your passion, in English"
+        "A 30-second to 2-minute video, or a 250 to 500 word essay"
       ],
       "offers": [
         "Scholarships, renewable up to three times",
@@ -1092,7 +1062,7 @@
       "source_name": "Taco Bell Foundation",
       "source_url": "https://tacobellfoundation.org/live-mas-scholarship/",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "collegiate-deca-icdc-2027",
@@ -1107,7 +1077,7 @@
         "DECA membership: $10 plus your association's dues"
       ],
       "offers": [
-        "Business case competitions judged by industry professionals"
+        "Business case competitions"
       ],
       "audience": "any",
       "major_slugs": [
@@ -1116,17 +1086,17 @@
       ],
       "systems": [],
       "terms": [],
-      "deadline": null,
+      "deadline": "2027-03-09",
       "starts_on": "2027-04-09",
       "ends_on": "2027-04-12",
-      "location": null,
+      "location": "Austin, Texas",
       "online": false,
       "cost": "fee",
       "url": "https://www.deca.org/collegiate",
       "source_name": "DECA Inc.",
       "source_url": "https://www.deca.org/collegiate",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "point-foundation-community-college-scholarship-2027",
@@ -1166,7 +1136,7 @@
       "org_name": "American Mathematical Association of Two-Year Colleges",
       "summary": "The fall round of a one-hour, 20-question math contest for two-year college students, taken at your own college. Your college's top five scores make its team.",
       "who_for": [
-        "Your college has to take part (ask your math department)"
+        "Your college registered by Oct 31, 2026 (students can't sign up on their own; ask your math department)"
       ],
       "wants": [],
       "offers": [
@@ -1186,7 +1156,7 @@
       "source_name": "American Mathematical Association of Two-Year Colleges",
       "source_url": "https://www.amatyc.org/student-leagues/student-mathematics-league/",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
+      "retrieved_at": "2026-11-09"
     }
   ]
 }
