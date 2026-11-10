@@ -5,7 +5,7 @@ import {
   type AuthError as SupabaseAuthError,
   type User,
 } from "@supabase/supabase-js";
-import { authorizeWithApple, isNativeApp, openForCallback } from "@/lib/capacitor";
+import { authorizeWithApple, authorizeWithGoogle, isNativeApp, openForCallback } from "@/lib/capacitor";
 import { clearPlan } from "@/lib/data/plan";
 import { clearReviews } from "@/lib/data/reviews";
 import { cancelReminders } from "@/lib/reminders/native";
@@ -86,12 +86,12 @@ function providerFirstName(meta: Record<string, unknown>): string | null {
 
 // Greets an Apple or Google student by name when there is one. A name already on the account always wins;
 // a shared one is saved to the account so other devices have it too. With none, Home says "Hi there!" (02).
-// In the iOS app, Apple's sheet hands the name over itself (appleName); it's never in Apple's identity token.
-async function rememberOAuthName(user: User, appleName: string | null = null) {
+// In the iOS app, Apple's and Google's sheets hand the name over themselves (sheetName); Apple's is never in its token.
+async function rememberOAuthName(user: User, sheetName: string | null = null) {
   const meta = user.user_metadata ?? {};
   const saved = clean(meta.first_name);
   if (saved) return cacheFirstName(saved);
-  const shared = providerFirstName(meta) ?? appleName;
+  const shared = providerFirstName(meta) ?? sheetName;
   // Never keep a name cached from someone else's session on this device
   if (!shared) return removeStorage("stackd.profile");
   cacheFirstName(shared);
@@ -172,8 +172,25 @@ async function signInWithAppleNative(): Promise<OAuthResult | Failure> {
   return { ok: true, redirecting: false, newAccount: isNewAccount(data.user) };
 }
 
-// iOS app, Google: the same PKCE sign-in as the web, in the in-app browser, returning to the app's own scheme.
-// Google's client secret stays in Supabase. Closing the browser is a cancel.
+// iOS app, Google: Google's own sheet through its iOS SDK, then Supabase checks Google's ID token (signInWithIdToken),
+// so no page names the Supabase project. The iOS client ID must be in Supabase's Google Client IDs. A build without that
+// client ID uses the in-app browser below.
+async function signInWithGoogleNative(): Promise<OAuthResult | Failure> {
+  const nonce = await createNonce();
+  const google = await authorizeWithGoogle(nonce.hashed);
+  if (!google.ok && google.reason === "not_configured") return signInInAppBrowser("google");
+  if (!google.ok) return fail(google.reason === "cancelled" ? "oauth_cancelled" : "oauth_failed");
+  const { data, error } = await client().auth.signInWithIdToken({ provider: "google", token: google.idToken, nonce: nonce.raw });
+  if (error || !data.user) {
+    if (process.env.NODE_ENV === "development" && error) console.error("Google ID token sign-in failed", error.code ?? error.name);
+    return fail(error && isAuthRetryableFetchError(error) ? "network" : "oauth_failed");
+  }
+  await rememberOAuthName(data.user, google.givenName).catch(() => {});
+  return { ok: true, redirecting: false, newAccount: isNewAccount(data.user) };
+}
+
+// iOS app, Google, without an iOS client ID: the same PKCE sign-in as the web, in the in-app browser, returning to the
+// app's own scheme. Google's client secret stays in Supabase. Closing the browser is a cancel.
 async function signInInAppBrowser(provider: OAuthProvider): Promise<OAuthResult | Failure> {
   const { data, error } = await client().auth.signInWithOAuth({
     provider,
@@ -215,7 +232,7 @@ export const supabaseAuth: Auth = {
   signInWithOAuth: (provider) =>
     run(async (): Promise<OAuthResult | Failure> => {
       if (!(await providerEnabled(provider))) return fail("oauth_failed");
-      if (isNativeApp()) return provider === "apple" ? signInWithAppleNative() : signInInAppBrowser(provider);
+      if (isNativeApp()) return provider === "apple" ? signInWithAppleNative() : signInWithGoogleNative();
       rememberOAuth(provider);
       const { data, error } = await client().auth.signInWithOAuth({
         provider,

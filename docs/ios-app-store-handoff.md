@@ -30,6 +30,21 @@ Supabase → Authentication → URL Configuration → Redirect URLs must include
 
 Apple's Client IDs (Authentication → Sign In / Providers → Apple) must stay `app.stackd.transfer.signin,app.stackd.transfer`, the Services ID first.
 
+Google's Client IDs (Authentication → Sign In / Providers → Google) must be the web client ID first, then the iOS client ID, separated by a comma. "Skip nonce checks" stays off: the app sends a nonce.
+
+### Native Google sign-in (once, from 2026-11-10)
+
+The app signs in with Google through Google's iOS SDK and hands Google's ID token to Supabase, so Google's sheet says "to continue to Stackd" instead of naming the Supabase project. Google still shows its own account sheet: there's no sign-in on iOS without one. Until the steps below are done, the app uses the old in-app browser, so nothing breaks.
+
+1. **Google Cloud**, project `stackd-508823` → APIs & Services → Credentials → Create credentials → OAuth client ID:
+   - Application type: **iOS**. Name: `Stackd iOS`.
+   - Bundle ID: `app.stackd.transfer`. Team ID: `4JNCSTKTHQ`. App Store ID: `6822523006`.
+   - Create, and copy the client ID (`<prefix>.apps.googleusercontent.com`). An iOS client has no secret.
+   - The web client and its secret stay as they are; the web still signs in through them.
+2. **Supabase** → Authentication → Sign In / Providers → Google → Client IDs: add the iOS client ID after the web one, with a comma (`<web id>,<ios id>`). Leave the secret and "Skip nonce checks" as they are, and Save.
+3. **Xcode**, App target → Build Settings → User-Defined → `GOOGLE_IOS_CLIENT_ID_PREFIX`: the part of the iOS client ID before `.apps.googleusercontent.com`, for Debug and Release. It isn't a secret (it ships inside every copy of the app), so commit `project.pbxproj` with it. Info.plist builds `GIDClientID` and Google's return URL scheme from it.
+4. Xcode fetches GoogleSignIn-iOS (9.2 or a later 9.x) the first time it resolves packages (File → Packages → Resolve Package Versions). Commit the updated `Package.resolved`.
+
 ## 1. Get the code
 
 ```bash
@@ -75,8 +90,9 @@ Sign-in:
 - [ ] Sign in with Apple, new account: Apple's own sheet (not a web page) → onboarding → Home says "Hi, {your Apple first name}!"
 - [ ] Sign in with Apple again after signing out → straight to Home, no onboarding
 - [ ] Cancel the Apple sheet → back on Sign in, no error
-- [ ] Continue with Google: Google's page opens in an in-app browser sheet, then closes by itself → onboarding (new) or Home (returning)
-- [ ] Tap Done on Google's sheet without signing in → back on Sign in, no error
+- [ ] Continue with Google: iOS asks to use "google.com" to sign in, then Google's sheet says "to continue to Stackd" (not the Supabase address) and closes by itself → onboarding (new) or Home (returning), "Hi, {your Google first name}!"
+- [ ] Cancel Google's sheet (or "Cancel" on iOS's question) → back on Sign in, no error
+- [ ] Continue with Google again after signing out → Google asks which account again, then Home
 - [ ] Email sign-up → the 6-digit code arrives (iOS may offer it above the keyboard) → onboarding
 - [ ] Wrong password → "Couldn't sign you in"
 - [ ] Forgot password → code → new password → Home with "Password saved"
@@ -119,5 +135,5 @@ Statuses after that, in order: Waiting for Review → In Review → Pending Deve
 ## Known risks for review
 
 - **Guideline 4.2 (minimum functionality).** The team decided push notifications for deadlines would be Stackd's native feature (`docs/16-open-questions.md → Decided`). They aren't built. Version 1.0 has native Sign in with Apple, but it's still mostly the web app in a native shell, so a 4.2 rejection is possible. If it happens, the plan is to build the deadline notifications and resubmit.
-- **Google sign-in returns through the app's URL scheme.** If iOS asks "Open in Stackd?" when Google finishes, that's Safari's prompt for custom schemes. Tap Open. If reviewers find it confusing, the fix is a native Google plugin (needs an iOS OAuth client in Google Cloud project `stackd-508823`).
+- **Google sign-in returns through the app's URL scheme** only in a build without `GOOGLE_IOS_CLIENT_ID_PREFIX` (see Native Google sign-in above). Then, if iOS asks "Open in Stackd?" when Google finishes, tap Open. With the iOS client ID set, Google's SDK handles the return.
 - **Expired Google sign-in.** If Google's page is left open for minutes, Supabase sends the expiry to the Site URL (`http://localhost:3000` today), which can't load inside the sheet. Done closes it. Changing Supabase's Site URL to `https://joinstackd-chi.vercel.app` fixes it, but it also changes where the local dev server's expired web sign-ins land.

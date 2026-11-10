@@ -1,10 +1,11 @@
 import UIKit
 import Capacitor
 
-// The app's web view: Capacitor's, plus Stackd's own native plugin and a router for the static export.
+// The app's web view: Capacitor's, plus Stackd's own native plugins and a router for the static export.
 class StackdBridgeViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(AppleSignInPlugin())
+        bridge?.registerPluginInstance(GoogleSignInPlugin())
     }
 
     override func router() -> Router {
