@@ -98,7 +98,8 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
           {art.wordmark}
           <div className="max-w-[200px] max-[359px]:max-w-[calc(100%-120px)]">
             <h1 className="mt-2 text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
-            {subtitle && <p className="mt-1 text-slate-600 type-body">{subtitle}</p>}
+            {/* Balanced, so the split falls between names ("Las Positas College" / "to UC San Diego") */}
+            {subtitle && <p className="mt-1 text-balance text-slate-600 type-body">{subtitle}</p>}
           </div>
         </section>
 
