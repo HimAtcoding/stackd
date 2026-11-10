@@ -249,7 +249,7 @@ The release checklist for `explore: true` (`lib/features.ts`), from steps 26 to 
 1. Privacy page: add that Remind me keeps the chosen opportunities on the phone.
 2. Privacy page: read it again against what `user_topic_status` holds (it already covers "any progress you mark").
 3. Recheck "What this degree does" against calstate.edu's ADT page (it answered 403 to a plain request on Nov 1; the Oct 26 check in spec 21 stands).
-4. Abbreviations: Abyan's picks for the 59 with a todo, imported and verified (step 27's After merge), so real accounts show tiles.
+4. ~~Abbreviations: Abyan's picks for the 59 with a todo, imported and verified, so real accounts show tiles.~~ Done 2026-11-09 (PR #37): all 147 reopened, imported and verified, after COSO (Cerro Coso), OXN (Oxnard), CPSLO (Cal Poly San Luis Obispo) and the name CSU Northridge; every tile fits in onboarding at 393 and 320.
 5. Opportunities: the first checked batch imported and verified, replacing the two examples.
 6. Remind me tried on an iPhone: the permission ask, both reminders, and a notification opening the opportunity.
 7. ~~A major's name depends on row order.~~ Fixed in step 28: the UC pathway's name, otherwise the TMC's.

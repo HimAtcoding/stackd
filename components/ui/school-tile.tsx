@@ -12,7 +12,7 @@ type SchoolTileProps = {
 };
 
 // 48 wide and 40 tall everywhere, so names line up in every list. 15 for 2 to 3 letters, 12 for 4 to 5: the widest
-// ("MTSAC", 43 at 12) fits the 48 (22 → 2).
+// ("CSUMB", 44 at 12) fits the 48 (22 → 2).
 const LETTERS: Record<number, string> = { 4: "text-[12px]", 5: "text-[12px]" };
 
 // A school's monogram tile: its own short name ("UCSD", "SJSU", "LPC") in white on its system's color. Never a logo,
