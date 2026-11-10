@@ -202,7 +202,7 @@ Route `/explore/opportunities/item/?slug=…`. Pushed, `--yellow-50` band.
 
 | Part | Spec |
 |---|---|
-| Header | Title `title-1`, organization `body` `--slate-700`, then the date tile 48 with "Apply by {date}" `label` `--navy-900` and a `caption` `--slate-700` line: kind, cost, where (`location`, or "Online"): "Research, paid, Davis". Cost words: Free, Paid, Has a fee. With no deadline: the rolling tile and "Open now, no deadline" |
+| Header | Title `title-1`, organization `body` `--slate-700`, then the date tile 48 with "Apply by {date}" `label` `--navy-900` and a `caption` `--slate-700` line: kind, cost, where (`location`, or "online"), in sentence case: "Research, paid, Davis", "Scholarship, free, online". Cost words: Free, Paid, Has a fee. With no deadline: the rolling tile and "Open now, no deadline" |
 | Who it's for | `title-3`. One row per rule: `CheckCircle` fill `--green-600` when Stackd checked it against the student ("Computer Science or Mathematics majors (you: Computer Science)"); `Circle` `--slate-400` with "Check yourself" `caption` for anything it can't check. Text `body` `--navy-900`. A rule the student doesn't meet gets the grey `Circle` and the reason, never a red cross: "For admitted transfers; you're at a community college", "For Biological Sciences majors; your major is Computer Science", "For students transferring to Cal State; your plan has none". Audience `any` adds no row |
 | What they want / What you get | `title-3` then bullets (`body`, 6 px `--slate-400` dot), from the data, in Stackd's words |
 | Open the official page | Primary button, text only (no icon, no chevron), opens `url` outside the app. This is the screen's one bold thing |

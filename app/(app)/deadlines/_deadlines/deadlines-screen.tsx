@@ -5,9 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { BellIcon, BellRingingIcon, CheckIcon } from "@phosphor-icons/react/ssr";
 import { BackButton } from "@/components/back-button";
-import { RemindersAsk } from "@/components/deadlines/reminders-ask";
+import { useReminderPrompts } from "@/components/deadlines/reminder-prompts";
 import { RemindersCard } from "@/components/deadlines/reminders-card";
-import { TurnOnConfirm } from "@/components/deadlines/turn-on-confirm";
 import { CompactButton } from "@/components/ui/compact-button";
 import { CycleBar } from "@/components/ui/cycle-bar";
 import { DemoStrip } from "@/components/ui/demo-strip";
@@ -19,14 +18,14 @@ import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { GoHome } from "@/components/unbuilt-route";
-import { markDeadline, remindersFor, retryDeadlines, saveTerm, setReminders, useDeadlines, useScope } from "@/lib/data/deadlines";
+import { markDeadline, remindersFor, retryDeadlines, saveTerm, useDeadlines, useScope } from "@/lib/data/deadlines";
 import { retryPlan } from "@/lib/data/plan";
 import { cn } from "@/lib/cn";
 import { cycleBar, cycleLabel, nextCycle, nextDueLine, SOON_DAYS, sourceLine, type Deadline } from "@/lib/deadlines";
 import { FEATURES } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
-import { dismissRemindersCard, turnOnReminders, useReminders } from "@/lib/reminders";
-import { afterReminderChoice, onReminderTap } from "@/lib/reminders/choice";
+import { dismissRemindersCard, turnOnReminders } from "@/lib/reminders";
+import { onReminderTap } from "@/lib/reminders/choice";
 import { DateSheet } from "./date-sheet";
 import { TermQuestion, TermSheet } from "./term-question";
 import { DonePast, Timeline } from "./timeline";
@@ -60,67 +59,21 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
   const [termSheet, setTermSheet] = useState(false);
   const [toast, setToast] = useState<{ key: number; text: string; undo?: string } | null>(null);
   const [settling, setSettling] = useState<string[]>([]);
-  const reminders = useReminders();
-  // The soft ask is open; `then` runs once the student has answered it (allowed or not)
-  const [asking, setAsking] = useState<{ then?: (allowed: boolean) => void } | null>(null);
-  // "Turn on reminders?" is open; `then` brings the date's sheet back
-  const [confirming, setConfirming] = useState<{ then: () => void } | null>(null);
   const still = useReducedMotion();
 
-  const remindersOnToast = () => setToast({ key: Date.now(), text: "Reminders on" });
-
-  // 14 → Permission flow, step 2: iOS's own prompt. Allowed: reminders on for every tracked date.
-  async function allowReminders() {
-    const then = asking?.then;
-    setAsking(null);
-    const allowed = (await turnOnReminders()) === "granted";
-    if (allowed) remindersOnToast();
-    then?.(allowed);
-  }
-
-  function notNow() {
-    const then = asking?.then;
-    setAsking(null);
-    then?.(false);
-  }
+  const { reminders, ask, choose, dialogs } = useReminderPrompts(() => setToast({ key: Date.now(), text: "Reminders on" }));
 
   // The reminders card's "Turn on reminders"
   async function turnOnFromCard() {
-    if (reminders.permission === "prompt") return setAsking({});
-    if ((await turnOnReminders()) === "granted") remindersOnToast();
+    if (reminders.permission === "prompt") return ask();
+    if ((await turnOnReminders()) === "granted") setToast({ key: Date.now(), text: "Reminders on" });
   }
 
   // "Remind me": the date's sheet at Reminders, after the soft ask while iOS hasn't asked yet
   function remind(id: string) {
     const openSheet = () => setSheet({ id, open: true, reminders: true });
-    if (reminders.permission === "prompt") setAsking({ then: (allowed) => allowed && openSheet() });
+    if (reminders.permission === "prompt") ask((allowed) => allowed && openSheet());
     else openSheet();
-  }
-
-  // A reminder choice saves at once. While iOS hasn't asked, the soft ask comes first; when reminders are off in
-  // Settings, adding a day asks before turning them on for every date. Either way the sheet comes back after.
-  function chooseReminders(id: string, days: number[]) {
-    const before = remindersFor(state.status === "ok" ? state.marks[id] : undefined, reminders.days);
-    setReminders(id, days);
-    const next = afterReminderChoice({ permission: reminders.permission, on: reminders.on, before, after: days });
-    if (next === "save") return;
-    const backToSheet = () => setSheet({ id, open: true, reminders: true });
-    setSheet((s) => (s ? { ...s, open: false } : s));
-    if (next === "soft-ask") setAsking({ then: backToSheet });
-    else setConfirming({ then: backToSheet });
-  }
-
-  async function confirmTurnOn() {
-    const then = confirming?.then;
-    setConfirming(null);
-    if ((await turnOnReminders()) === "granted") remindersOnToast();
-    then?.();
-  }
-
-  function declineTurnOn() {
-    const then = confirming?.then;
-    setConfirming(null);
-    then?.();
   }
 
   function markDone(id: string, done: boolean, withToast: boolean) {
@@ -317,15 +270,19 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
               defaults: reminders.days,
               denied: reminders.permission === "denied",
               onChoose: (days) => {
-                if (sheet) chooseReminders(sheet.id, days);
+                if (!sheet) return;
+                const id = sheet.id;
+                choose(id, ok.marks[id], days, {
+                  close: () => setSheet((s) => (s ? { ...s, open: false } : s)),
+                  reopen: () => setSheet({ id, open: true, reminders: true }),
+                });
               },
             }}
             onClose={() => setSheet((s) => (s ? { ...s, open: false } : s))}
             onMarkDone={(done) => sheet && markDone(sheet.id, done, false)}
           />
           <TermSheet open={termSheet} onClose={() => setTermSheet(false)} term={ok.term.term} onChoose={chooseTerm} />
-          {reminders.supported && <RemindersAsk open={asking !== null} onAllow={allowReminders} onClose={notNow} />}
-          {reminders.supported && <TurnOnConfirm open={confirming !== null} onTurnOn={confirmTurnOn} onClose={declineTurnOn} />}
+          {dialogs}
         </>
       )}
 

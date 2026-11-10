@@ -12,8 +12,7 @@ import { TAB_PAGE_BOTTOM, TAB_TOAST_BOTTOM, TabBar } from "@/components/ui/tab-b
 import { UnofficialFooter } from "@/components/ui/unofficial-footer";
 import { useDeadlines, type ScopeState } from "@/lib/data/deadlines";
 import { FEATURES, unbuiltHref } from "@/lib/features";
-import { GetReadyCard } from "./get-ready-card";
-import { UpNext } from "./up-next";
+import { NextSteps } from "./next-steps";
 
 export type HomeArt = {
   wordmark: ReactNode;
@@ -38,9 +37,11 @@ type HomeFrameProps = {
   // Demo records are on screen, so the strip shows
   demo: boolean;
   name: string | null | undefined;
+  // The route under the greeting ("Las Positas College to UC San Diego"), or what to do first
   subtitle?: string | null;
   unread: number;
-  // The card right under the greeting, which the husky sits on: journey, plan or setup
+  // A card that leads instead of the Up next hero, with the husky behind it: setup, the plan loading or failing,
+  // or the demo's journey card. Null when the plan is there, so the hero leads.
   card: ReactNode;
   // Everything under the card. Null while the account's plan is still loading or couldn't load.
   body: { tiles: HomeTile[] } | null;
@@ -48,8 +49,8 @@ type HomeFrameProps = {
   scope: ScopeState;
 };
 
-// Home's layout (02), shared by the demo screen and the real-account one. lib/features.ts decides what's on it:
-// the header (wordmark), the greeting, the card, the tiles and dates that are on, and the footer line. Settings is the
+// Home's layout (02, 23 → Home), shared by the demo screen and the real-account one. lib/features.ts decides what's
+// on it: the greeting, the hero and step path when dates are on, the tiles that are on, and the footer line. Settings is the
 // tab bar's You (22 → 1), so the header has no gear.
 export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope }: HomeFrameProps) {
   const router = useRouter();
@@ -76,49 +77,49 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
           paddingBottom: TAB_PAGE_BOTTOM,
         }}
       >
-        <header className="flex h-11 items-center justify-between pl-6 pr-4">
-          {art.wordmark}
-          <div className="flex gap-2">
-            {notifications && (
-              <span className="relative">
-                <CircleButton
-                  aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
-                  icon={<BellIcon weight="bold" size={24} aria-hidden />}
-                  onClick={() => router.push(notifications)}
-                />
-                {unread > 0 && (
-                  <span aria-hidden className="pointer-events-none absolute right-1 top-1 size-2.5 rounded-full bg-coral-500 ring-2 ring-surface" />
-                )}
-              </span>
-            )}
-          </div>
-        </header>
+        {notifications && (
+          <header className="flex h-11 items-center justify-end px-4">
+            <span className="relative">
+              <CircleButton
+                aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
+                icon={<BellIcon weight="bold" size={24} aria-hidden />}
+                onClick={() => router.push(notifications)}
+              />
+              {unread > 0 && (
+                <span aria-hidden className="pointer-events-none absolute right-1 top-1 size-2.5 rounded-full bg-coral-500 ring-2 ring-surface" />
+              )}
+            </span>
+          </header>
+        )}
 
-        <section className="mt-6 px-6">
-          {/* Text stays clear of the husky: 200 wide, or up to 8 before the 128-wide husky under 360 */}
-          <div className="max-w-[200px] max-[359px]:max-w-[calc(100%-124px)]">
-            <h1 className="text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
-            {subtitle && <p className="mt-1 text-navy-900 type-body">{subtitle}</p>}
+        {/* The greeting (23 → Home hero): the wordmark, the name, and the route. Text stays clear of the 132-wide
+            husky at the right (112 under 360) */}
+        <section className={notifications ? "px-6" : "mt-4 px-6"}>
+          {art.wordmark}
+          <div className="max-w-[200px] max-[359px]:max-w-[calc(100%-120px)]">
+            <h1 className="mt-2 text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
+            {subtitle && <p className="mt-1 text-slate-600 type-body">{subtitle}</p>}
           </div>
-          <span aria-hidden className="mt-3 block h-1 w-7 rounded-full bg-blue-600" />
         </section>
 
-        {/* The husky hangs from the first card: 12 from the screen edge, its cut edge 4 behind the card's top.
-            With no card the wrapper is empty, so the husky still ends above the tiles */}
-        <div className="relative mt-8 px-4">
-          <div className="relative">
-            <div aria-hidden className="absolute -right-1 bottom-[calc(100%-4px)] z-0 w-40 max-[359px]:w-32">
+        <NextSteps
+          state={deadlines}
+          lead={card}
+          husky={
+            <>
               {art.husky}
-              <span className="absolute left-4.5 top-3 -rotate-20">{art.burst}</span>
-            </div>
-            <div className="relative z-10">{card}</div>
-          </div>
-        </div>
+              <span className="absolute left-4 top-2.5 -rotate-20">{art.burst}</span>
+            </>
+          }
+          showUpNext={FEATURES.upcoming && body !== null}
+          showPath={showGetReady && body !== null}
+          toastBottom={TAB_TOAST_BOTTOM}
+        />
 
         {body && (
           <>
             {body.tiles.length > 0 && (
-              <nav aria-label="Shortcuts" className="mt-3 grid grid-cols-2 gap-3 px-4">
+              <nav aria-label="Shortcuts" className="mt-8 grid grid-cols-2 gap-3 px-4">
                 {body.tiles.map((t) => (
                 <ShortcutTile
                   key={t.title}
@@ -134,9 +135,6 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
                 ))}
               </nav>
             )}
-
-            {FEATURES.upcoming && <UpNext state={deadlines} />}
-            {showGetReady && <GetReadyCard state={deadlines} toastBottom={TAB_TOAST_BOTTOM} />}
 
             {/* Home names a university, so it carries the unofficial line (00), 24 below the last block */}
             <UnofficialFooter className="mt-6 px-4" />

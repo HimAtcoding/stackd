@@ -239,25 +239,10 @@ export function joinNames(names: string[]) {
   return `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
 
-// "Due Monday, Nov 30"
-export const dueOnCard = (d: Deadline) => `Due ${weekday(d.due_at)}, ${shortDate(d.due_at)}`;
-
-// "11:59 p.m. Pacific", "Date varies by campus", or nothing for a date with no stated time
-export function timeLine(d: Deadline): string | null {
-  if (d.varies_by_campus) return "Date varies by campus";
-  return d.due_has_time ? `${timeOfDay(d.due_at)} Pacific` : null;
-}
-
 const systemName = (audience: string) => audience.toUpperCase();
 
-// The card's third line, only when the plan has more than one school: "For UC San Diego", "For your 3 UC schools"
-export function cardForLine(d: Deadline, scope: Scope): string | null {
-  if (!scope || scope.length < 2) return null;
-  const schools = schoolsFor(d, scope);
-  if (schools.length === 0) return null;
-  if (schools.length === 1) return `For ${schools[0].name}`;
-  return `For your ${schools.length} ${systemName(d.audience)} schools`;
-}
+// "Due Monday, Nov 30"
+const dueOnCard = (d: Deadline) => `Due ${weekday(d.due_at)}, ${shortDate(d.due_at)}`;
 
 // The date sheet's line: "For UC San Diego and UC Davis"
 export function sheetForLine(d: Deadline, scope: Scope): string | null {
@@ -348,18 +333,6 @@ export function cycleBar(upcoming: Deadline[], now: Date): CycleBarView | null {
     else if (URGENCY[d.state] < URGENCY[seen.kind]) seen.kind = d.state;
   }
   return { start: monthYear(new Date(start).toISOString()), end: monthYear(new Date(end).toISOString()), today: at(now.getTime()), nodes: [...byDay.values()] };
-}
-
-const dueIn = (days: number) => (days <= 0 ? "due today" : days === 1 ? "due tomorrow" : `due in ${days} days`);
-
-// "Up next: UC application, due in 45 days, Monday November 30. Then Cal State Apply, November 30. … Opens all deadlines."
-// `opens`: the stack opens the Deadlines screen
-export function stackLabel(items: Deadline[], opens: boolean): string {
-  const [top, ...rest] = items;
-  const parts = [`Up next: ${top.title}, ${dueIn(top.daysLeft)}, ${weekday(top.due_at)} ${longDate(top.due_at)}.`];
-  rest.forEach((d) => parts.push(`Then ${d.title}, ${longDate(d.due_at)}.`));
-  if (opens) parts.push("Opens all deadlines.");
-  return parts.join(" ");
 }
 
 // "UC application, due Monday November 30 at 11:59 p.m. Pacific, in 45 days, window open."

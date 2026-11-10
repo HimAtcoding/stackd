@@ -157,9 +157,9 @@ export default function ComponentsPage() {
       <Section title="Primary button on a hero">
         <Hero tone="blue">
           <div className="flex flex-col items-start gap-3">
-            <PrimaryButton onHero className="w-auto">Keep going</PrimaryButton>
-            <PrimaryButton onHero data-pressed className="w-auto">Pressed</PrimaryButton>
-            <PrimaryButton onHero data-focus className="w-auto">Focus</PrimaryButton>
+            <PrimaryButton onHero>Keep going</PrimaryButton>
+            <PrimaryButton onHero data-pressed>Pressed</PrimaryButton>
+            <PrimaryButton onHero data-focus>Focus</PrimaryButton>
           </div>
         </Hero>
       </Section>

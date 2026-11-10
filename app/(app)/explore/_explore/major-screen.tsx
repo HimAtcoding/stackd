@@ -8,7 +8,6 @@ import { LinkLine } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
 import { RequirementRow } from "@/components/ui/requirement-row";
 import { SectionBand } from "@/components/ui/section-band";
-import { SegmentedBar } from "@/components/ui/segmented-bar";
 import { SourceBlock } from "@/components/ui/source-block";
 import { SecondaryButton } from "@/components/ui/secondary-button";
 import { Toast } from "@/components/ui/toast";
@@ -22,9 +21,7 @@ import {
   campusRows,
   DEGREE_NOTE,
   pathwayOn,
-  pathwayProgress,
   problemMailto,
-  progressLine,
   resolveTab,
   sharedTopics,
   sourceLine,
@@ -39,6 +36,7 @@ import {
 import { topicIcon } from "@/lib/explore-icons";
 import { exploreHref } from "@/lib/features";
 import { CampusList } from "./campus-list";
+import { MajorHero } from "./major-panel";
 import { RequirementSheet } from "./requirement-sheet";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
@@ -94,7 +92,6 @@ function MajorScreen({ major, wantedTab }: { major: ExploreMajor; wantedTab: str
   const [sheet, setSheet] = useState<{ row: RequirementRecord; open: boolean } | null>(null);
 
   const shared = sharedTopics(major);
-  const progress = pathwayProgress(pathway, statuses);
   const find = agreementLine("these", agreement);
   const units = unitsLine(pathway);
 
@@ -128,12 +125,12 @@ function MajorScreen({ major, wantedTab }: { major: ExploreMajor; wantedTab: str
         </SectionBand>
 
         <div role={tabs.length > 1 ? "tabpanel" : undefined} aria-label={tabs.find((t) => t.id === tab)?.label}>
-          <section aria-label="Your progress" className="mt-4 px-6">
-            <p className="text-navy-900 tabular-nums type-label">{progressLine(progress)}</p>
-            <SegmentedBar steps={progress.list.map((s) => s === "done")} className="mt-2" />
+          {/* Explore's green hero, passive here (23 → Major page) */}
+          <section aria-label="Your progress">
+            <MajorHero label="Your progress" pathway={pathway} tab={tab} statuses={statuses} className="mx-4 mt-4" />
           </section>
 
-          <ul className="mt-3">
+          <ul className="mt-4">
             {pathway.requirements.map((r) => (
               <li key={r.id}>
                 <RequirementRow

@@ -29,8 +29,9 @@ export function PrimaryButton({ children, loading, onHero, disabled, className, 
         onClick?.(e);
       }}
       className={cn(
-        "relative flex h-14 w-full items-center justify-center rounded-md px-5 type-button-lg edge-md edge-blue-700",
-        onHero ? "bg-white text-blue-600" : "bg-blue-600 text-white",
+        "relative flex h-14 items-center justify-center rounded-md px-5 type-button-lg edge-md edge-blue-700",
+        // Full width, or hugging its label inside a hero (00 → Primary button)
+        onHero ? "w-fit bg-white text-blue-600" : "w-full bg-blue-600 text-white",
         "focus-ring:outline-offset-3",
         "disabled:bg-border disabled:text-slate-600 disabled:[box-shadow:none]",
         className,

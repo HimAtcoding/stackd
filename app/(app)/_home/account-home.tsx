@@ -4,40 +4,39 @@ import { useSyncExternalStore } from "react";
 import { InlineError } from "@/components/ui/inline-error";
 import { Loading } from "@/components/ui/loading";
 import { SecondaryButton } from "@/components/ui/secondary-button";
-import { usePlanScope, useTerm } from "@/lib/data/deadlines";
+import { usePlanScope } from "@/lib/data/deadlines";
 import { retryPlan, usePlan } from "@/lib/data/plan";
-import { cycleLabel } from "@/lib/deadlines";
 import { universityHref } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { readFirstName } from "@/lib/profile";
 import { subscribeNoop } from "@/lib/session";
 import { HomeFrame, type HomeArt } from "./home-frame";
-import { PlanRoute } from "./plan-route";
 import { SetupCard } from "./setup-card";
 import { homeTiles } from "./tiles";
 
 const COMING_SOON = { subtitle: "Coming soon" };
 
 // Home for a real account (02 → Plan states): everything comes from the student's saved plan, never a demo record.
-// Journey data doesn't exist for real accounts yet (course matches are locked, docs/16), so it's the setup card or the plan card.
+// Journey data doesn't exist for real accounts yet (course matches are locked, docs/16).
 export function AccountHome({ art }: { art: HomeArt }) {
   const state = usePlan();
   const cachedName = useSyncExternalStore(subscribeNoop, readFirstName, () => null);
   const plan = state.status === "ok" ? state.plan : null;
   const [first, ...rest] = plan?.targets ?? [];
   const scope = usePlanScope(plan, state.status === "error");
-  const { term } = useTerm();
 
-  // With a term set, the route below names the school, so the subtitle says when instead (15 → Greeting subtitle)
+  // The route line (23 → Home hero): the student's college to their first school. It replaces 15's route card;
+  // the plan is edited in Settings.
   let subtitle: string | null = null;
   if (plan) {
+    const to = rest.length ? `${first?.name} and ${rest.length} more` : first?.name;
     if (!first) subtitle = "Let's set up your transfer plan.";
-    else if (term) subtitle = `Transferring ${cycleLabel(term).toLowerCase()}.`;
-    else subtitle = rest.length ? `Transferring to ${first.name} and ${rest.length} more.` : `Transferring to ${first.name}.`;
+    else subtitle = plan.home ? `${plan.home.name} to ${to}` : `Transferring to ${to}`;
   }
 
-  let card;
-  if (plan) card = first ? <PlanRoute plan={plan} /> : <SetupCard />;
+  // With a plan the Up next hero leads; otherwise one of these does
+  let card = null;
+  if (plan) card = first ? null : <SetupCard />;
   else if (state.status === "error") {
     card = (
       <InlineError

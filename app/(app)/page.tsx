@@ -8,7 +8,7 @@ export default function HomePage() {
     <PageTransition>
       <HomeScreen
         wordmark={<Art id="wordmark" width={100} label="Stackd" preload />}
-        husky={<Art id="husky-home" width={160} preload className="w-full" />}
+        husky={<Art id="husky-home" width={132} preload className="w-full" />}
         burst={<Art id="burst-dashes" width={28} height={28} />}
         clouds={<Art id="home-clouds" fill optional className="object-cover object-top" />}
       />

@@ -6,10 +6,11 @@ import { BellIcon, CheckCircleIcon, CircleIcon } from "@phosphor-icons/react/ssr
 import { BackButton } from "@/components/back-button";
 import { RemindersAsk } from "@/components/deadlines/reminders-ask";
 import { TurnOnConfirm } from "@/components/deadlines/turn-on-confirm";
-import { DateTile } from "@/components/ui/date-row";
+import { IconCircle } from "@/components/ui/icon-circle";
 import { InlineError } from "@/components/ui/inline-error";
 import { domainOf } from "@/components/ui/link-line";
 import { Loading } from "@/components/ui/loading";
+import { Pill } from "@/components/ui/pill";
 import { SectionBand } from "@/components/ui/section-band";
 import { SourceBlock } from "@/components/ui/source-block";
 import { SecondaryButton } from "@/components/ui/secondary-button";
@@ -22,6 +23,7 @@ import { retryOpportunities, useOpportunities } from "@/lib/data/opportunities";
 import { exploreHref } from "@/lib/features";
 import {
   applyLine,
+  datePill,
   detailLine,
   isOpen,
   pacificToday,
@@ -29,14 +31,13 @@ import {
   reminderToast,
   shortDay,
   sourceSentence,
-  tileParts,
-  tileStatus,
   whoItsFor,
   type Opportunity,
   type RuleRow,
 } from "@/lib/opportunities";
 import { turnOnReminders, useReminders } from "@/lib/reminders";
 import { setOpportunityReminder, useOpportunityReminders } from "@/lib/reminders/opportunities";
+import { kindLook } from "./opportunity-card";
 import { useMajorNamer, useStudent } from "./use-student";
 
 const TOAST_BOTTOM = "calc(var(--safe-bottom) + 12px)";
@@ -129,7 +130,8 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
   const [confirming, setConfirming] = useState(false);
 
   const rules = whoItsFor(o, student, nameOf);
-  const date = o.deadline ? tileParts(o.deadline) : null;
+  const pill = today ? datePill(o, today) : null;
+  const look = kindLook(o.kind);
   const days = o.deadline && now ? reminderDays(o.deadline, now) : [];
   const say = (text: string) => setToast((t) => ({ key: (t?.key ?? 0) + 1, text }));
 
@@ -167,11 +169,19 @@ function OpportunityScreen({ o }: { o: Opportunity }) {
     <div className="min-h-dvh overflow-x-clip bg-page">
       <main className="mx-auto max-w-[480px]" style={{ paddingBottom: "calc(var(--safe-bottom) + 24px)" }}>
         <SectionBand title={o.title} subtitle={o.org_name} back={<BackButton fallback={exploreHref("opportunities/")!} slideBack />}>
+          {/* The kind's icon circle and the card's date pill (23 → Opportunity page) */}
           <div className="flex items-center gap-3 px-6 pb-4 pt-4">
-            {today && <DateTile month={date?.month} day={date?.day} status={tileStatus(o, today)} />}
+            <IconCircle tone={look.tone}>
+              <look.icon weight="fill" size={22} />
+            </IconCircle>
             <div className="min-w-0">
-              <p className="text-navy-900 type-label">{applyLine(o)}</p>
-              <p className="mt-0.5 text-slate-700 type-caption">{detailLine(o)}</p>
+              {pill && (
+                <Pill variant={pill.variant}>
+                  <span className="sr-only">{applyLine(o)}. </span>
+                  {pill.text}
+                </Pill>
+              )}
+              <p className="mt-1 text-slate-700 type-caption">{detailLine(o)}</p>
             </div>
           </div>
         </SectionBand>

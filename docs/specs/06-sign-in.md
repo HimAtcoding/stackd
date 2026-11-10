@@ -65,7 +65,7 @@ Alignment: top block left-aligned at x 24. Sheet content left-aligned at x 32, e
 | Husky | `husky-wave`, width 176, height auto (~186). `position: absolute; right: 16px;` bottom edge 4 below the sheet's top edge, so the sheet covers the cut (sheet z-index 1, husky 0). `alt=""` |
 | Burst dashes | Painted into `husky-wave.png`. Don't draw a separate `burst-dashes` here |
 
-At viewports under 360 wide, the husky shrinks to width 144 and the headline's max-width stays 190.
+At viewports under 360 wide, the husky shrinks to width 104, so it stands beside "back!" and the subtitle with no text under it (step 29; rev 2's Nunito made "Welcome" run under the 144 husky). The headline's max-width stays 190.
 
 ## Sheet
 

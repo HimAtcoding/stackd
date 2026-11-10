@@ -105,10 +105,10 @@ export function tileParts(day: string) {
   return { month: MONTHS[m - 1], day: String(d) };
 }
 
-// fall-2027 → "Fall 2027"
+// fall-2027 → "fall 2027", for the middle of a sentence ("Transferring fall 2027")
 function termName(term: string) {
   const [season, year] = term.split("-");
-  return `${season.charAt(0).toUpperCase()}${season.slice(1)} ${year ?? ""}`.trim();
+  return `${season.toLowerCase()} ${year ?? ""}`.trim();
 }
 
 // "Computer Science or Mathematics"
@@ -167,7 +167,7 @@ export const byDeadline = (a: Opportunity, b: Opportunity) =>
   (a.deadline ?? "9999") < (b.deadline ?? "9999") ? -1 : (a.deadline ?? "9999") > (b.deadline ?? "9999") ? 1 : a.title.localeCompare(b.title);
 
 // Explore's "Opportunities for you": open, fitting, soonest first
-export function forYou(all: Opportunity[], student: Student, today: string, limit = 3) {
+export function forYou(all: Opportunity[], student: Student, today: string, limit = 1) {
   return all.filter((o) => isOpen(o, today) && fits(o, student)).sort(byDeadline).slice(0, limit);
 }
 
@@ -190,20 +190,41 @@ export function tileStatus(o: Opportunity, today: string): "soon" | "open" | "ro
   return daysFrom(today, o.deadline) <= SOON_DAYS ? "soon" : "open";
 }
 
-// "For Computer Science or Mathematics majors at community colleges"
-export function forLine(o: Opportunity, nameOf: (slug: string) => string) {
-  const majors = o.major_slugs.length ? `${orList(o.major_slugs.map(nameOf))} majors` : "students";
-  const where = o.systems.length ? ` transferring to ${orList(o.systems.map(systemName))}` : "";
-  const audience = o.audience === "community_college" ? " at community colleges" : o.audience === "admitted_transfer" ? " admitted to UC or Cal State" : "";
-  return `For ${majors}${audience}${where}`;
+export type DatePill = { variant: "due" | "soon" | "neutral"; text: string };
+
+// The card's date pill (23 → Opportunity card): due at 14 days or less, soon up to 60, neutral beyond.
+// "Dec 9, 31 days left"; an event shows its dates, "Feb 12 to 14"; no deadline, "Rolling".
+export function datePill(o: Opportunity, today: string): DatePill {
+  const day = o.deadline ?? (o.kind === "event" ? o.starts_on : null);
+  if (!day) return { variant: "neutral", text: "Rolling" };
+  const left = daysFrom(today, day);
+  const variant = left <= SOON_DAYS ? "due" : left <= 60 ? "soon" : "neutral";
+  if (!o.deadline && o.starts_on) return { variant, text: eventDays(o.starts_on, o.ends_on) };
+  const count = left <= 0 ? "last day" : `${left} ${left === 1 ? "day" : "days"} left`;
+  return { variant, text: `${shortDay(o.deadline!)}, ${count}` };
+}
+
+// "Feb 12", "Feb 12 to 14", "Feb 28 to Mar 2"
+function eventDays(start: string, end: string | null) {
+  if (!end || end === start) return shortDay(start);
+  const [, sm] = dayParts(start);
+  const [, em, ed] = dayParts(end);
+  return `${shortDay(start)} to ${sm === em ? ed : shortDay(end)}`;
+}
+
+// Up to two good pills from the data: "Paid" or "Free", then "Fits you"
+export function goodPills(o: Opportunity, fitsYou: boolean): string[] {
+  const pills = o.cost === "paid" ? ["Paid"] : o.cost === "free" ? ["Free"] : [];
+  if (fitsYou) pills.push("Fits you");
+  return pills.slice(0, 2);
 }
 
 // "Apply by Nov 20, 2026", or "Open now, no deadline"
 export const applyLine = (o: Opportunity) => (o.deadline ? `Apply by ${fullDay(o.deadline)}` : "Open now, no deadline");
 
-// "Research, paid, Davis" (22 → 6): kind, cost, and where
+// "Research, paid, Davis" (22 → 6): kind, cost, and where, in sentence case ("Scholarship, free, online")
 export function detailLine(o: Opportunity) {
-  const where = o.online || !o.location ? "Online" : o.location;
+  const where = o.online || !o.location ? "online" : o.location;
   return `${KIND_ONE[o.kind]}, ${COST_LABELS[o.cost].toLowerCase()}, ${where}`;
 }
 
