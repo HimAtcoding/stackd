@@ -18,6 +18,17 @@ Last checked 2026-10-28 02:25 PDT. No credentials in this file; the review accou
 | Status inquiry | **Sent 2026-10-27 ~09:50 PDT** (owner asked to send it now instead of waiting for Oct 29) as a Gmail reply to appreview@apple.com in the Oct 26 thread, with the prepared text below plus the Apple ID and submission id. Status was still Waiting for Review right before sending. Don't send another. |
 
 
+## 2026-11-09 (Mac 7): 1.4 with build 1.4.0 (7) on TestFlight and submitted
+
+1.4 is **Waiting for Review**. 1.3 (build 6) is live (Ready for Distribution).
+
+- **Built** from `main` at `9b6ce28` on Shikhars-MacBook-Pro-7 (Xcode 27.2). `npm ci`, prepare-assets, `next typegen`, `tsc --noEmit`, `npm test` (399 checks), lint and `npm run ios:prepare` pass; no code changes. Version 1.4.0, build 7, team 4JNCSTKTHQ, `App.entitlements` with Sign in with Apple.
+- **Signed archive:** `xcodebuild archive` with `CODE_SIGN_STYLE=Manual`, `CODE_SIGN_IDENTITY="iPhone Distribution"` and `PROVISIONING_PROFILE_SPECIFIER="Stackd App Store (Mac 2026-10-28)"` on the command line (the project stays on automatic signing). Not the unsigned method from builds 5 and 6: the archived app already carries `com.apple.developer.applesignin` Default, `get-task-allow` false and `beta-reports-active`. Export method app-store-connect, manual, `testFlightInternalTestingOnly` **false**. IPA: iPhone Distribution: Shikhar Sisodia (4JNCSTKTHQ), `ITSAppUsesNonExemptEncryption` false, `codesign --verify --deep --strict` OK.
+- **Uploaded** 19:42 PST with `altool` and the Stackd Mac API key (validate: no errors). Build id `19976d99-7b6c-40a1-a74d-87c0c10e2462`, **VALID** by 19:44, `usesNonExemptEncryption` false. Internal `IN_BETA_TESTING`; Internal team (all builds) has it. External state `READY_FOR_BETA_SUBMISSION`; not added to Stackd Transfer Beta. What to Test (en-US): "Explore (courses for your major), Opportunities and Remind me, plus sign-in, deadlines and essays as before."
+- **Version 1.4** (`d6f4d936-5d33-4265-9195-5eaf9e05c2af`) created 19:45 PST on Shikhar's go-ahead; description, keywords, URLs, copyright and review contact/demo account carried over from 1.3; promotional text copied from 1.3. What's New 1.4 and the 1.4 reviewer notes are in `docs/app-store/listing.md`. Build 7 attached (204, read back VALID).
+- **Submitted** 19:48 PST (2026-11-10 03:48 UTC): review submission `70b3aa24-da94-4c8f-aff4-c81014c61359`. Read back: version 1.4 `WAITING_FOR_REVIEW`, release Automatically after approval.
+- **Open:** Remind me on a real iPhone (build-status Before Explore turns on, item 6). One Internal team tester hasn't accepted their invite yet.
+
 ## 2026-10-29 (Mac): build 1.3.0 (6) uploaded, attached and submitted
 
 1.3 is Waiting for Review. Build 6 is in Stackd Transfer Beta; Beta App Review still refuses it (Apple-side 422).

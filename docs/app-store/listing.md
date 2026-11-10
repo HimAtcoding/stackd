@@ -6,6 +6,8 @@ Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat
 
 **Updated 2026-10-28 for version 1.3** (branch `release/v1.3-branding`, build 1.3.0 (6)): new app icon, privacy policy section Who runs Stackd, What's New 1.3, and the seller paths. Details and the App Store Connect steps: `docs/app-store/branding-privacy-seller.md`. App Privacy answers unchanged.
 
+**Updated 2026-11-09 for version 1.4** (build 1.4.0 (7), Explore on): What's New 1.4 and the 1.4 reviewer notes below, entered in App Store Connect and submitted. Description, keywords, privacy answers and screenshots unchanged.
+
 **Updated 2026-10-21 for version 1.2** (Essays, specs 17 and 19, on branch `release/v1.2`): description, privacy answers, age rating, reviewer notes, screenshots and the checklist. 1.1 was never submitted. Version 1.0 was still Waiting for Review on 2026-10-21, and Shikhar chose to withdraw it and turn that same App Store version into 1.2 with build 1.2.0 (3). That makes 1.2 the app's first public release, so App Store Connect shows no What's New field (it's kept below for the record).
 
 ## Credits
@@ -81,6 +83,12 @@ Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 ```
 
 Kept truthful on purpose: no course matches, no statewide coverage, no admission chances, no AI (`essayFeedback` is off in 1.2). Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
+
+**What's New in Version 1.4:**
+
+```
+Explore is here. See what to take for your major at UC and Cal State, with the courses you still need. Opportunities shows research, scholarships, programs and internships for transfer students, and Remind me sets reminders on your phone before a deadline. Stackd also has a fresh look and a tab bar, with Settings under You.
+```
 
 **What's New in Version 1.3:**
 
@@ -168,6 +176,14 @@ Expected result: **4+** (1.0 and 1.1). With the 1.2 user-content answer App Stor
 | Contact phone | The account holder's (App Store Connect requires one) |
 
 The review account: first name "Taylor", email confirmed, plan Las Positas College → UC San Diego, Computer Science (B.S.). Nothing personal in it. Since 2026-10-21 it also has a made-up 102-word "Your major" draft, so Essays isn't empty for the reviewer.
+
+**Notes for the reviewer** (1.4): the 1.3 notes as entered in App Store Connect, plus this paragraph before "You can also create a new account":
+
+```
+Explore (Explore in the tab bar at the bottom): shows what to take for the plan's major at UC and Cal State, with the courses still needed; Search majors finds others. Opportunities lists research, scholarships, programs and internships with their official links. Open one and tap "Remind me before <date>" to schedule local notifications; the app asks for notification permission only then, and the chosen list stays on the phone (not saved to the account).
+```
+
+and the deletion line changed to "Account deletion: tap You in the tab bar (Settings) > Delete account > Delete account. It deletes the account and all of its data right away."
 
 **Notes for the reviewer** (1.2):
 
