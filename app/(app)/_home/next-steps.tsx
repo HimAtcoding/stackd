@@ -11,6 +11,7 @@ import { TextLink } from "@/components/ui/text-link";
 import { Toast } from "@/components/ui/toast";
 import { WindowBar } from "@/components/ui/window-bar";
 import { checklistCelebrated, claimChecklistReady } from "@/lib/celebration";
+import { cn } from "@/lib/cn";
 import { markDeadline, markStep, type DeadlinesState } from "@/lib/data/deadlines";
 import { checklistSubtitle, checklistTitle, cycleLabel, shortDate, SOON_DAYS, windowProgress, type ChecklistView, type Deadline } from "@/lib/deadlines";
 import { deadlinesHref } from "@/lib/features";
@@ -182,11 +183,12 @@ function UpNextBlock({ state, quiet, onKeepGoing }: { state: DeadlinesState; qui
   const body = (
     <div className="flex flex-col items-start">
       <p className={quiet ? "text-slate-600 type-label" : "type-label"}>Up next</p>
-      <div className="mt-3 flex items-end gap-2.5">
+      {/* Under 360 the item line drops below the number row, so the date never splits */}
+      <div className="mt-3 flex flex-wrap items-end gap-x-2.5">
         {d.daysLeft > 0 && <p className={quiet ? "text-navy-900 tabular-nums type-title-1" : "type-hero-number"}>{d.daysLeft}</p>}
-        <div className="min-w-0 pb-0.5">
-          <p className={quiet ? "text-navy-900 type-headline" : "type-headline"}>{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
-          <p className={quiet ? "text-slate-600 type-label" : "type-label"}>
+        <div className="min-w-0 flex-1 pb-0.5 max-[359px]:contents">
+          <p className={cn("max-[359px]:pb-0.5", quiet ? "text-navy-900 type-headline" : "type-headline")}>{d.daysLeft <= 0 ? "Due today" : d.daysLeft === 1 ? "day left" : "days left"}</p>
+          <p className={cn("max-[359px]:mt-1 max-[359px]:basis-full", quiet ? "text-slate-600 type-label" : "type-label")}>
             {d.title}, due {shortDate(d.due_at)}
           </p>
         </div>

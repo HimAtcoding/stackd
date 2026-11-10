@@ -11,7 +11,6 @@ import {
   pathwayProgress,
   planMajor,
   problemMailto,
-  progressLine,
   resolveTab,
   searchMajors,
   sharedTopics,
@@ -112,8 +111,6 @@ const statuses = { "calculus-single": "done", cs2: "in_progress" } as const;
 const uc = pathwayProgress(cs.uc!, statuses);
 const csu = pathwayProgress(cs.calState!, statuses);
 check("a topic marked once counts on both tabs", uc.done === 1 && csu.done === 1 && uc.taking === 1 && csu.taking === 1, [uc, csu]);
-check('"1 of 9 done, 1 taking now"', progressLine(uc) === "1 of 9 done, 1 taking now", progressLine(uc));
-check('no taking now: "1 of 9 done"', progressLine({ done: 1, total: 9, taking: 0 }) === "1 of 9 done");
 check("no row is not started", statusOf({}, "cs1") === "not_started");
 check("one segment per requirement, in order", uc.list.length === 9 && uc.list[3] === "done" && uc.list[1] === "in_progress" && uc.list[0] === "not_started", uc.list);
 

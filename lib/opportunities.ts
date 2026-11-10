@@ -222,9 +222,9 @@ export function goodPills(o: Opportunity, fitsYou: boolean): string[] {
 // "Apply by Nov 20, 2026", or "Open now, no deadline"
 export const applyLine = (o: Opportunity) => (o.deadline ? `Apply by ${fullDay(o.deadline)}` : "Open now, no deadline");
 
-// "Research, paid, Davis" (22 → 6): kind, cost, and where
+// "Research, paid, Davis" (22 → 6): kind, cost, and where, in sentence case ("Scholarship, free, online")
 export function detailLine(o: Opportunity) {
-  const where = o.online || !o.location ? "Online" : o.location;
+  const where = o.online || !o.location ? "online" : o.location;
   return `${KIND_ONE[o.kind]}, ${COST_LABELS[o.cost].toLowerCase()}, ${where}`;
 }
 

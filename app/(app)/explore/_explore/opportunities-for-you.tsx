@@ -28,7 +28,7 @@ export function OpportunitiesForYou() {
         </TextLink>
       </div>
       <div className="mt-3 px-4">
-        <OpportunityCard opportunity={o} today={today} fitsYou lead="date" />
+        <OpportunityCard opportunity={o} today={today} lead="date" />
       </div>
     </section>
   );

@@ -519,15 +519,16 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 Spec `23-chunky-reskin.md` board changes 1 to 3, on branch `chunky-reskin-b` (off `main` after PR #32). Decisions from Ryan on 2026-11-09 fill what 23 left open: Keep going's target, the route line replacing the plan card, every step on the path, and the opportunity page's icon circle.
 
 - **Home** (`app/(app)/_home/next-steps.tsx`, replacing `up-next.tsx`, `get-ready-card.tsx`, `steps-sheet.tsx`, `plan-route.tsx` and `components/deadlines/countdown-block.tsx`):
-  - Greeting: "stackd" `label` `--blue-600` (in place of the wordmark art), "Hi, {name}!", and the route line ("Las Positas College to UC San Diego", "and 2 more" with more schools). The plan is edited in Settings.
+  - Greeting: the wordmark (100 wide; the board's plain "stackd" was a placeholder), "Hi, {name}!", and the route line ("Las Positas College to UC San Diego", "and 2 more" with more schools). The plan is edited in Settings.
   - "All deadlines" stays above the hero, at the left (the husky stands at the right).
-  - The hero: "Up next", the day count with "days left" and "{title}, due {date}", the window bar (honey on `--blue-700`), and "Keep going" (white, hugging its label). Coral at 14 days or less. Passive; it keeps its edge.
+  - The hero: "Up next", the day count with "days left" and "{title}, due {date}", the window bar (honey on `--blue-700`), and "Keep going" (white, hugging its label). Coral at 14 days or less. Under 360 wide, "days left" stays beside the number and the item line drops below the number row. Passive; it keeps its edge.
   - **Keep going** opens the step sheet for the first unchecked step of the hero's deadline, or that deadline's date sheet when it has no steps left.
   - The husky (132, 112 under 360) stands behind the first block with its bottom 18 hidden.
   - No plan: the setup card leads, and Up next is a white card with a secondary Keep going.
   - **Step path**: every step of the checklist under its title, count ("2 of 6 done") and subtitle. The circle checks a step, the title opens its sheet; the current step has its caption. "See all 6 steps" is gone.
-- **Explore** (`major-panel.tsx`, `still-needed.tsx`, `opportunities-for-you.tsx`): the `--green-700` hero with the major, the segmented bar, "{done} of {total} done for UC, {n} taking now", and `husky-looking` at 128 cut by the bottom-right corner. Still needed shows the next two as cards side by side (taking now with the blue border and edge), each opening the requirement sheet. Opportunities for you shows the one soonest card with its date tile.
-- **Opportunity card** (`_opportunities/opportunity-card.tsx`, replacing `opportunity-row.tsx`): icon circle in the kind's color, name and organizer, the date pill (`datePill` in `lib/opportunities.ts`: due, soon or neutral; events show their dates; "Rolling" with none) and up to two good pills (`goodPills`: "Paid" or "Free", then "Fits you"). The opportunity page leads with the same icon circle and date pill.
+- **Explore** (`major-panel.tsx`, `still-needed.tsx`, `opportunities-for-you.tsx`): the `--green-700` hero with the major, the segmented bar, "{done} of {total} done for UC," and "{n} taking now" on two lines, and `husky-looking` at 128 cut by the bottom-right corner. Still needed shows the next two as cards side by side (taking now with the blue border and edge), each opening the requirement sheet. Opportunities for you shows the one soonest card with its date tile.
+- **Major page** (`major-screen.tsx`): the same green hero (`MajorHero`), passive, in place of the progress line: "Your progress", the segmented bar and the count for the open tab. `progressLine` is gone with no callers left.
+- **Opportunity card** (`_opportunities/opportunity-card.tsx`, replacing `opportunity-row.tsx`): icon circle in the kind's color, name and organizer, the date pill (`datePill` in `lib/opportunities.ts`: due, soon or neutral; events show their dates; "Rolling" with none) and up to two good pills (`goodPills`: "Paid" or "Free", then "Fits you"; "Fits you" only in the feed with "Only ones that fit me" off). The page's detail line is sentence case ("Scholarship, free, online"). The opportunity page leads with the same icon circle and date pill.
 - **Shared**: the hero's primary button hugs its label; `SecondaryButton` takes `hug`. The date sheet's reminder prompts are one hook (`components/deadlines/reminder-prompts.tsx`) used by Home and Deadlines.
 - **Fixes**: "Transferring fall 2027" (the term name is lowercase mid-sentence). Sign in under 360: the husky is 104 wide, beside "back!" and the subtitle with no text under it (06 updated).
 - **Removed with no callers left**: `StepTile`, `cardForLine`, `timeLine`, `stackLabel`, `dueOnCard` (now private to Deadlines' next line), the opportunity `forLine`.
@@ -544,9 +545,7 @@ Spec `23-chunky-reskin.md` board changes 1 to 3, on branch `chunky-reskin-b` (of
 - 23's wireframe titles the path "Your application"; it keeps the checklist's own title ("Get your UC application ready"), which names UC or Cal State. The segmented bar under it is gone (the path shows the same thing).
 - The hero keeps the window bar's two date labels, and drops 15's time line and "For {school}" line, which the board doesn't show.
 - Home's husky is 112 under 360 wide, not about 132, so "Hi, Sam!" fits on one line at 320.
-- Every card in the feed shows "Fits you" while "Only ones that fit me" is on (the default).
 - An event with no deadline takes its pill color from its start day.
-- 23's screen table gives the major page a `--green-700` hero; neither PR built it (it's a layout change outside the three board changes).
 
 ## Chunky reskin, PR A (step 29, 2026-11-08)
 

@@ -14,7 +14,7 @@ The app looked generic: pale sky-blue tinted buttons, pale icon tiles, soft shad
 
 ```
 +--------------------------------+
-| stackd                         |
+| [stackd wordmark]              |
 | Hi, Sam!              [husky]  |
 | Las Positas to UC San Diego    |
 | +----------------------------+ |
@@ -63,7 +63,7 @@ Everything in `00` rev 2 applies on every screen with no screen-by-screen work:
 | University requirements | 03 | Requirement rows with rev 2 status tiles. The reminder banner is `--yellow-50` |
 | Essays | 17, 19, 20 | Essays hero is `--indigo-600` with `--indigo-800` edge where 16 gave Essays a panel. Answer cards are tappable cards. The editor keeps its quiet white page |
 | Explore hub | 21, 22 | **Board change 3:** the major panel is a `--green-700` hero (see below). Still needed and Opportunities for you per the board |
-| Major page | 21 | Hero in `--green-700`. Requirement rows rev 2. The source block keeps its words |
+| Major page | 21 | Explore's `--green-700` hero (same component, passive) in place of the progress line: "Your progress", the segmented bar and the count for the open tab. Requirement rows rev 2. The source block keeps its words |
 | Opportunities feed | 22 | Filter chips. Each opportunity is a tappable card (below) |
 | Opportunity page | 22 | The top icon circle uses the kind's color. The primary button keeps its label, Open the official page |
 | Celebration | 05 | Type and button only. Confetti and husky unchanged |
@@ -73,16 +73,16 @@ Everything in `00` rev 2 applies on every screen with no screen-by-screen work:
 
 `--blue-600` hero, `--edge-lg` `--blue-700`, padding 18 18 20.
 - "Up next" `label` white at 90%.
-- 12 below: the day count in `hero-number` and, 10 to its right and bottom-aligned, "days left" `headline` with the item and date under it in `label` ("UC application, due Nov 30").
+- 12 below: the day count in `hero-number` and, 10 to its right and bottom-aligned, "days left" `headline` with the item and date under it in `label` ("UC application, due Nov 30"). Under 360 wide, "days left" stays beside the number and the item line moves to its own line under the number row.
 - 12 below: a progress bar on the hero (track `--blue-700`, fill `--yellow-400`) showing how much of the window has passed, as 15's window bar.
 - 12 below: "Keep going", a primary button hugging its label, white fill, `--blue-600` label, `--blue-700` edge.
 - At 14 days or less the hero is `--coral-700` with `--coral-800` edge and the bar fill stays honey.
 
-The greeting above it: "stackd" `label` `--blue-600`, "Hi, {first name}!" `title-1`, the route line ("Las Positas to UC San Diego") `body` `--slate-600`, with Home's existing husky art at the right, about 132 wide, its feet overlapping the hero's top edge by 18 (sizes in `art-assets.md`).
+The greeting above it: the `wordmark` art (the lettering with the swoosh, 100 wide), "Hi, {first name}!" `title-1`, the route line ("Las Positas to UC San Diego") `body` `--slate-600`, with Home's existing husky art at the right, about 132 wide, its feet overlapping the hero's top edge by 18 (sizes in `art-assets.md`).
 
 ### Explore hero (board change 3)
 
-`--green-700` hero, `--edge-lg` `--green-800`, padding 18. "Your major" `label`, the major name `title-2` (max width 200 so it clears the husky), a segmented bar on the hero (done white, taking now honey, not yet `--green-800`), then "{done} of {total} done for UC, {n} taking now" `label`. `husky-looking` 128 × 127 bottom-right, overlapping the corner by 6. The whole hero is the button to the major page and sinks on press.
+`--green-700` hero, `--edge-lg` `--green-800`, padding 18. "Your major" `label`, the major name `title-2` (max width 200 so it clears the husky), a segmented bar on the hero (done white, taking now honey, not yet `--green-800`), then "{done} of {total} done for UC," and "{n} taking now" `label`, broken after "for UC," so no word sits alone. `husky-looking` 128 × 127 bottom-right, overlapping the corner by 6. The whole hero is the button to the major page and sinks on press.
 
 Under it, "Still needed" `title-2` with "See all {n}" `link`, then the next two needed requirements as two tappable cards side by side (2 columns, 10 apart): a status word in `caption` ("Taking now" `--blue-600`, "Next" `--slate-600`), the name `row-title` up to 2 lines, and "Counts for UC and Cal State" `caption` `--green-700` when it does. The taking-now card has a 2 px `--blue-600` border and `--blue-600` edge on white (no pale fill).
 
@@ -90,7 +90,7 @@ Under it, "Still needed" `title-2` with "See all {n}" `link`, then the next two 
 
 A tappable card, padding 14, two parts 10 apart:
 1. An icon circle 44 in the kind's color (Money `--yellow-400` with a navy `Medal`; Research `--blue-600` with `Flask`; Compete `--green-700` with `Trophy`; others `--indigo-600` with `Star`), 12, then the name `headline` and the organizer `label` `--slate-600`.
-2. A row of pills: the date pill (`due` at 14 days or less, `soon` up to 60, `neutral` beyond, "Dec 9, 31 days left"; an event shows its dates, "Feb 12 to 14"), then up to two `good` pills from the data ("Paid", "Free", "Fits you").
+2. A row of pills: the date pill (`due` at 14 days or less, `soon` up to 60, `neutral` beyond, "Dec 9, 31 days left"; an event shows its dates, "Feb 12 to 14"), then up to two `good` pills from the data ("Paid", "Free", "Fits you"). "Fits you" shows only in the feed with "Only ones that fit me" off; with it on, and on the Explore hub, every card fits.
 
 The hub's single "Opportunities for you" item uses the same card with the date tile in place of the icon circle, as on the board.
 

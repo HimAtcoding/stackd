@@ -103,11 +103,6 @@ export function pathwayProgress(pathway: Pathway, statuses: Statuses) {
   return { total: list.length, done: list.filter((s) => s === "done").length, taking: list.filter((s) => s === "in_progress").length, list };
 }
 
-// "4 of 9 done, 1 taking now"
-export function progressLine({ done, total, taking }: { done: number; total: number; taking: number }) {
-  return taking > 0 ? `${done} of ${total} done, ${taking} taking now` : `${done} of ${total} done`;
-}
-
 // The major the "Your major" panel shows: the plan's first major with data in Explore
 export function planMajor(targets: PlanTarget[], majors: ExploreMajor[]) {
   for (const target of targets) {

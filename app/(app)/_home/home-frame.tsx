@@ -15,6 +15,7 @@ import { FEATURES, unbuiltHref } from "@/lib/features";
 import { NextSteps } from "./next-steps";
 
 export type HomeArt = {
+  wordmark: ReactNode;
   husky: ReactNode;
   burst: ReactNode;
   clouds: ReactNode;
@@ -91,12 +92,12 @@ export function HomeFrame({ art, demo, name, subtitle, unread, card, body, scope
           </header>
         )}
 
-        {/* The greeting (23 → Home hero): the app's name, the name, and the route. Text stays clear of the 132-wide
+        {/* The greeting (23 → Home hero): the wordmark, the name, and the route. Text stays clear of the 132-wide
             husky at the right (112 under 360) */}
         <section className={notifications ? "px-6" : "mt-4 px-6"}>
-          <p className="text-blue-600 type-label">stackd</p>
+          {art.wordmark}
           <div className="max-w-[200px] max-[359px]:max-w-[calc(100%-120px)]">
-            <h1 className="mt-1 text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
+            <h1 className="mt-2 text-navy-900 [overflow-wrap:anywhere] type-title-1">{name ? `Hi, ${name}!` : "Hi there!"}</h1>
             {subtitle && <p className="mt-1 text-slate-600 type-body">{subtitle}</p>}
           </div>
         </section>

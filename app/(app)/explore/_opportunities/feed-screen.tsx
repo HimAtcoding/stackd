@@ -90,7 +90,7 @@ function FeedScreen() {
                 <ul className="mt-3 flex flex-col gap-3 px-4">
                   {g.rows.map((o) => (
                     <li key={o.id}>
-                      <OpportunityCard opportunity={o} today={today} fitsYou={fits(o, student)} />
+                      <OpportunityCard opportunity={o} today={today} fitsYou={!fitsOnly && fits(o, student)} />
                     </li>
                   ))}
                 </ul>

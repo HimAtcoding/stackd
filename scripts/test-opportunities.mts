@@ -120,7 +120,7 @@ check("nothing that fits: no groups", feedGroups([bio], { kind: null, fitsOnly: 
 
 // Words
 check("apply line", applyLine(opp("a", { deadline: "2026-11-20" })) === "Apply by Nov 20, 2026" && applyLine(opp("a")) === "Open now, no deadline");
-check("detail line: kind, cost, where", detailLine(opp("a", { location: "Davis" })) === "Research, paid, Davis" && detailLine(opp("a", { online: true, cost: "fee", kind: "event" })) === "Event, has a fee, Online");
+check("detail line: kind, cost, where", detailLine(opp("a", { location: "Davis" })) === "Research, paid, Davis" && detailLine(opp("a", { online: true, cost: "fee", kind: "event" })) === "Event, has a fee, online");
 check("source sentence", sourceSentence(opp("a")) === "From Test University, checked Nov 8, 2026.", sourceSentence(opp("a")));
 check("an unknown major slug reads as words", names("data-science") === "Data Science");
 

@@ -23,15 +23,15 @@ export function kindLook(kind: OpportunityKind): { tone: Tone; icon: Icon } {
 type OpportunityCardProps = {
   opportunity: Opportunity;
   today: string;
-  // Matched against the student's plan: shows the "Fits you" pill
-  fitsYou: boolean;
+  // Shows the "Fits you" pill: only in the feed with "Only ones that fit me" off, since otherwise every card fits
+  fitsYou?: boolean;
   // The hub leads with the date tile; the feed with the kind's icon circle
   lead?: "icon" | "date";
 };
 
 // One opportunity as a tappable card (23 → Opportunity card): the icon circle or date tile, the name and who runs it,
 // then the date pill and up to two good pills. The whole card is the button.
-export function OpportunityCard({ opportunity: o, today, fitsYou, lead = "icon" }: OpportunityCardProps) {
+export function OpportunityCard({ opportunity: o, today, fitsYou = false, lead = "icon" }: OpportunityCardProps) {
   const date = datePill(o, today);
   const good = goodPills(o, fitsYou);
   const { tone, icon: Glyph } = kindLook(o.kind);
