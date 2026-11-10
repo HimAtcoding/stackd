@@ -36,7 +36,7 @@ export default function SupportPage() {
       </DocSection>
 
       <DocSection title="Changing your plan">
-        <P>Open Settings from the gear on Home. Under Your plan, change your college, schools, or major.</P>
+        <P>Tap You in the tab bar to open Settings. Under Your plan, change your college, schools, or major.</P>
       </DocSection>
 
       <DocSection title="Deleting your account">
