@@ -147,7 +147,7 @@
     {
       "slug": "cerro-coso",
       "name": "Cerro Coso Community College",
-      "abbreviation": "CCCC",
+      "abbreviation": "COSO",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Ridgecrest",
@@ -1083,7 +1083,7 @@
     {
       "slug": "oxnard",
       "name": "Oxnard College",
-      "abbreviation": "OC",
+      "abbreviation": "OXN",
       "institution_type": "community_college",
       "system": "CCC",
       "city": "Oxnard",
@@ -1654,7 +1654,7 @@
     },
     {
       "slug": "csun",
-      "name": "CSUN",
+      "name": "CSU Northridge",
       "abbreviation": "CSUN",
       "institution_type": "university",
       "system": "CSU",
@@ -1746,7 +1746,7 @@
     {
       "slug": "cal-poly-san-luis-obispo",
       "name": "Cal Poly San Luis Obispo",
-      "abbreviation": "SLO",
+      "abbreviation": "CPSLO",
       "institution_type": "university",
       "system": "CSU",
       "city": "San Luis Obispo",
