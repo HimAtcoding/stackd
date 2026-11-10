@@ -741,9 +741,9 @@ for (const slug of ["uc-davis", "san-jose-state"]) {
 const abbrOf = new Map(realInst().institutions.map((r) => [r.slug, r.abbreviation]));
 check("every school in california-institutions.json has an abbreviation", realInst().institutions.every((r) => /^[A-Z0-9]{2,5}$/.test(r.abbreviation ?? "")));
 check("no two schools share one", new Set(abbrOf.values()).size === abbrOf.size);
-check("the spec's examples: UCSD, UCLA, SJSU, SLO, LPC, DVC, and UCB for Berkeley",
+check("the spec's examples: UCSD, UCLA, SJSU, CPSLO, LPC, DVC, and UCB for Berkeley",
   JSON.stringify(["uc-san-diego", "uc-los-angeles", "san-jose-state", "cal-poly-san-luis-obispo", "las-positas", "diablo-valley", "uc-berkeley"].map((s) => abbrOf.get(s))) ===
-    JSON.stringify(["UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC", "UCB"]));
+    JSON.stringify(["UCSD", "UCLA", "SJSU", "CPSLO", "LPC", "DVC", "UCB"]));
 check("every abbreviation todo has been picked and deleted", instTodos.length === 0, instTodos.map((r) => r.slug));
 check("the UC campuses carry no todo", !instTodos.some((r) => r.system === "UC"));
 check("the stored abbreviation matches the file", (await db.query("select abbreviation from institutions where slug = 'uc-san-diego'")).rows[0]?.abbreviation === "UCSD");

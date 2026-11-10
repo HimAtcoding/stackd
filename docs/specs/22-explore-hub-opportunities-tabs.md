@@ -87,7 +87,7 @@ A monogram tile replaces the generic icon wherever a school is listed: onboardin
 | Tile | 48 wide and 40 tall everywhere, so the names after it line up in every list; `--r-sm`, solid fill by system: UC `--blue-700`, Cal State `--amber-800`, community college `--slate-700`. White letters, centered. (Drafted as 40 × 40, and 32 in compact rows; neither holds 4–5 letters at 12) |
 | Where | Onboarding's college and school rows: the choice circle, then the tile, then the name. Settings → Your plan: the College row's tile before its value, and the Schools row's first 2 tiles, 4 apart, before "{n} schools"; under 375 wide Settings shows no tiles, because "Las Positas College" and "2 schools" don't fit beside them. Explore's campus rows: the tile in its own 48 column before the campus name (a campus without an abbreviation leaves it empty, so names line up). University page: the tile left of the name, on its first line |
 | No abbreviation | No tile; the row looks as it did before. Behind the `explore` flag with the rest of Explore |
-| Letters | The school's `abbreviation` (Data): "UCSD", "UCLA", "SJSU", "SLO", "LPC", "DVC". Never a logo, seal or mascot |
+| Letters | The school's `abbreviation` (Data): "UCSD", "UCLA", "SJSU", "CPSLO", "LPC", "DVC". Never a logo, seal or mascot |
 | Accessibility | `aria-hidden`; the row's name carries it |
 | Search | The school pickers also match the abbreviation: "sjsu", "slo", "ucsd" |
 
