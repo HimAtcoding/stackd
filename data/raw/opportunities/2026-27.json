@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Abyan Kashif to fill",
-  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline 2027-02-26 and the June 7 to August 13 session are the team's call (Ryan and Abyan, 2026-11-08); nasa.gov showed a March 1, 2027 deadline and no session dates that day. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it. Third pass (2026-11-08): Collegiate DECA ICDC, Point Foundation Community College Scholarship (its page gives January 27 to April 8 without a year; the funding period is fall 2027, so the dates are read as 2027) and the AMATYC fall round.",
+  "notes": "Opportunities for the Explore hub and the Opportunities feed (spec 22 → Data). Each row is in Stackd's own words, written from the official program page, which is its source_url. A post on Instagram or anywhere else is never the source and is never copied, quoted or embedded; the import refuses social media links. url is the page Open the official page opens, often the same as source_url. who_for lists what Stackd can't check (GPA, citizenship), shown as Check yourself. audience is community_college, admitted_transfer or any; major_slugs are Explore majors (data/raw/explore), empty for any major; systems is UC and/or CSU, empty for any; terms are transfer terms like fall-2027, empty for any. deadline is the last day to apply, or null for rolling. cost is free, paid (the student is paid, like a stipend) or fee (the student pays). Check each row on its source_url, fill in retrieved_at with the date you checked it, have a second person check it, then run: npm run import -- data/raw/opportunities/2026-27.json --dry-run First batch filled by Abyan on 2026-11-07: the two examples deleted and 20 real opportunities added, each checked on its official page that day. Rows with no published application deadline (TreeHacks, SF Hacks, CruzHacks, CodePath) have deadline null. Events use their own date as the deadline so they drop off once they're over. NASA internships: deadline from nasa.gov (March 1, 2027); no session dates published. Batch 2 added by Abyan on 2026-11-08: 22 more opportunities for the other majors (UC and Cal State transfer admission events, biology and health research, psychology and social science programs, and scholarships for any major), each checked on its official page that day. The NASA internships webinar row was removed at the team's request. Psi Beta's page gives its April 1 to June 1 window without a year, so the 2027 dates are read from it. Third pass (2026-11-08): Collegiate DECA ICDC, Point Foundation Community College Scholarship (its page gives January 27 to April 8 without a year; the funding period is fall 2027, so the dates are read as 2027) and the AMATYC fall round.",
   "opportunities": [
     {
       "slug": "cooke-undergraduate-transfer-scholarship-2027",
@@ -190,9 +190,9 @@
       "major_slugs": [],
       "systems": [],
       "terms": [],
-      "deadline": "2027-02-26",
-      "starts_on": "2027-06-07",
-      "ends_on": "2027-08-13",
+      "deadline": "2027-03-01",
+      "starts_on": null,
+      "ends_on": null,
       "location": "NASA centers",
       "online": false,
       "cost": "paid",
@@ -200,7 +200,7 @@
       "source_name": "NASA",
       "source_url": "https://www.nasa.gov/learning-resources/internship-programs/",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-07"
+      "retrieved_at": "2026-11-09"
     },
     {
       "slug": "nih-summer-internship-2027",
@@ -647,211 +647,6 @@
       "ends_on": "2026-11-09",
       "location": null,
       "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-spotlight-public-health-2026",
-      "kind": "event",
-      "title": "UC San Diego spotlight: School of Public Health",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "A Zoom session introducing UC San Diego's School of Public Health, open to prospective first-year and transfer students. 3:45 to 4:30 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-10",
-      "starts_on": "2026-11-10",
-      "ends_on": "2026-11-10",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-spotlight-pharmacy-2026",
-      "kind": "event",
-      "title": "UC San Diego spotlight: Pharmacy and Pharmaceutical Sciences",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "A Zoom session introducing UC San Diego's School of Pharmacy and Pharmaceutical Sciences, open to prospective first-year and transfer students. 5 to 5:45 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-10",
-      "starts_on": "2026-11-10",
-      "ends_on": "2026-11-10",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-ujamaa-uc-student-experience-2026",
-      "kind": "event",
-      "title": "UC San Diego: Ujamaa, the UC student experience",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "An evening Zoom session from UC San Diego admissions on the UC student experience, open to prospective first-year and transfer students. 6 to 7:15 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-10",
-      "starts_on": "2026-11-10",
-      "ends_on": "2026-11-10",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-spotlight-biological-sciences-2026",
-      "kind": "event",
-      "title": "UC San Diego spotlight: School of Biological Sciences",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "A Zoom session introducing UC San Diego's School of Biological Sciences, open to prospective first-year and transfer students. 3:45 to 4:30 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [
-        "biological-sciences"
-      ],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-12",
-      "starts_on": "2026-11-12",
-      "ends_on": "2026-11-12",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-creating-comunidad-uc-student-experience-2026",
-      "kind": "event",
-      "title": "UC San Diego: Creating Comunidad, the UC student experience",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "An evening Zoom session from UC San Diego admissions on the UC student experience, open to prospective first-year and transfer students. 6 to 7:15 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-12",
-      "starts_on": "2026-11-12",
-      "ends_on": "2026-11-12",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-insights-admissions-officer-2026",
-      "kind": "event",
-      "title": "UC San Diego: Insights from an admissions officer",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "A Zoom session where a UC San Diego admissions officer talks about applying, open to prospective first-year and transfer students. 5 to 5:45 p.m. Pacific.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-18",
-      "starts_on": "2026-11-18",
-      "ends_on": "2026-11-18",
-      "location": null,
-      "online": true,
-      "cost": "free",
-      "url": "https://admissions.ucsd.edu/visit/events/",
-      "source_name": "UC San Diego Undergraduate Admissions",
-      "source_url": "https://admissions.ucsd.edu/visit/events/",
-      "academic_year": "2026-27",
-      "retrieved_at": "2026-11-08"
-    },
-    {
-      "slug": "ucsd-enhanced-tour-2026-11-20",
-      "kind": "event",
-      "title": "UC San Diego enhanced campus tour",
-      "org_name": "UC San Diego Undergraduate Admissions",
-      "summary": "A two-hour in-person campus tour, 1 to 3 p.m., open to prospective first-year and transfer students.",
-      "who_for": [],
-      "wants": [
-        "Register on UC San Diego's events page"
-      ],
-      "offers": [],
-      "audience": "any",
-      "major_slugs": [],
-      "systems": [
-        "UC"
-      ],
-      "terms": [],
-      "deadline": "2026-11-20",
-      "starts_on": "2026-11-20",
-      "ends_on": "2026-11-20",
-      "location": "La Jolla",
-      "online": false,
       "cost": "free",
       "url": "https://admissions.ucsd.edu/visit/events/",
       "source_name": "UC San Diego Undergraduate Admissions",
