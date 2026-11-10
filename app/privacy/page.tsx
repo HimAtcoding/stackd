@@ -4,9 +4,9 @@ import { PRIVACY_UPDATED } from "@/lib/about";
 
 export const metadata: Metadata = { title: "Stackd privacy policy" };
 
-// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-10-28 (v1.1 adds
+// /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-11-09 (v1.1 adds
 // the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments; v1.3 adds
-// essay_drafts.notes and review_links.finished_at). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
+// essay_drafts.notes and review_links.finished_at; v1.4 adds user_topic_status and opportunity reminders on the phone). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
     <DocPage title="Privacy policy" updated={PRIVACY_UPDATED}>
@@ -37,7 +37,8 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong className="font-semibold text-navy-900">Your plan:</strong> your community college, the universities and
-            majors you pick, the schools you save, and any progress you mark.
+            majors you pick, the schools you save, and any progress you mark, including which courses for your major you&apos;ve
+            marked done or taking now.
           </li>
           <li>
             <strong className="font-semibold text-navy-900">Your deadlines:</strong> the term you plan to transfer, which
@@ -83,6 +84,7 @@ export default function PrivacyPage() {
           <li>To sign you in and keep your account secure.</li>
           <li>To save your plan and show it on every device you sign in on.</li>
           <li>To show your deadlines and checklist, and to set up the reminders you turn on.</li>
+          <li>To show which courses your major still needs.</li>
           <li>To save your essay drafts and show which answers are done.</li>
           <li>To show a reviewer the answer you shared, and show you their comments.</li>
           <li>To email you 6-digit codes that confirm your email or reset your password.</li>
@@ -118,6 +120,10 @@ export default function PrivacyPage() {
           they follow you to a new phone. The reminders switch and default days in Settings stay on the phone. Signing out
           cancels Stackd&apos;s reminders on that phone.
         </P>
+        <P>
+          Remind me keeps the chosen opportunities on the phone. They aren&apos;t saved to your account, their reminders are
+          local notifications like the deadline ones, and signing out clears the list.
+        </P>
       </DocSection>
 
       <DocSection title="How long we keep it">
@@ -132,7 +138,7 @@ export default function PrivacyPage() {
 
       <DocSection title="Deleting your account">
         <P>
-          In the app, open Settings from the gear on Home and tap Delete account. You can also email <SupportEmail /> from
+          In the app, tap You in the tab bar to open Settings, then tap Delete account. You can also email <SupportEmail /> from
           the address on your account and we&apos;ll delete it for you.
         </P>
       </DocSection>

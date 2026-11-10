@@ -13,5 +13,5 @@ export const SUPPORT_EMAIL = "joinstackd@gmail.com";
 export const ASSIST_HOME = "https://assist.org";
 
 // When Privacy and Terms last changed. Change each with its own text.
-export const PRIVACY_UPDATED = "October 28, 2026";
+export const PRIVACY_UPDATED = "November 9, 2026";
 export const TERMS_UPDATED = "October 21, 2026";
