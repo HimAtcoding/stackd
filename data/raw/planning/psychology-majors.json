@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Psychology majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's psychology. UC: every campus major the Psychology Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/psychology-majors.json --dry-run",
+  "notes": "Psychology majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's psychology. UC: every campus major the Psychology Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 6 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/psychology-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 18 rows; 2 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major.",
   "majors": [
     {
       "institution": "uc-berkeley",
@@ -167,6 +167,206 @@
       "source_url": "https://catalog.calpoly.edu/liberal-arts/psychology-child-development/psychology-bs/",
       "academic_year": "2026-27",
       "retrieved_at": ""
+    },
+    {
+      "institution": "csu-bakersfield",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Bakersfield catalog",
+      "source_url": "https://catalog.csub.edu/academic-degrees-programs/undergraduate-majors/psychology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-channel-islands",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Channel Islands catalog",
+      "source_url": "https://catalog.csuci.edu/preview_program.php?catoid=64&poid=16830",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "chico-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Chico State catalog",
+      "source_url": "https://catalog.csuchico.edu/colleges-departments/college-behavioral-social-sciences/psychology/psychology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-dominguez-hills",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Dominguez Hills catalog",
+      "source_url": "https://catalog.csudh.edu/academics/psychology/psychology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-east-bay",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU East Bay catalog",
+      "source_url": "https://catalog.csueastbay.edu/preview_program.php?catoid=44&poid=20438",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-east-bay",
+      "slug": "psychology-bs",
+      "name": "Psychology",
+      "degree_type": "BS",
+      "explore_slug": "psychology",
+      "source_name": "CSU East Bay catalog",
+      "source_url": "https://catalog.csueastbay.edu/preview_program.php?catoid=44&poid=20456",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "No umbrella page: the catalog lists this degree only by concentration (Ergonomic and Human Factors, Industrial/Organizational Psychology); source_url is the Ergonomic and Human Factors one. Confirm this is one degree."
+    },
+    {
+      "institution": "fresno-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Fresno State catalog",
+      "source_url": "https://catalog.fresnostate.edu/preview_program.php?catoid=7&poid=3816",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-fullerton",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Fullerton catalog",
+      "source_url": "https://fullerton.catalog.acalog.com/preview_program.php?catoid=101&poid=47435",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-humboldt",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Cal Poly Humboldt catalog",
+      "source_url": "https://catalog.humboldt.edu/preview_program.php?catoid=15&poid=9023",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-long-beach",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Long Beach catalog",
+      "source_url": "https://catalog.csulb.edu/preview_program.php?catoid=12&poid=6497",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-state-la",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Cal State LA catalog",
+      "source_url": "https://ecatalog.calstatela.edu/preview_program.php?catoid=77&poid=35382",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-monterey-bay",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU Monterey Bay catalog",
+      "source_url": "https://catalog.csumb.edu/preview_program.php?catoid=12&poid=2556",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-pomona",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Cal Poly Pomona catalog",
+      "source_url": "https://catalog.cpp.edu/preview_program.php?catoid=78&poid=24244",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "san-diego-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "San Diego State catalog",
+      "source_url": "https://catalog.sdsu.edu/preview_program.php?catoid=12&poid=12498",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "san-jose-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "San José State catalog",
+      "source_url": "https://catalog.sjsu.edu/preview_program.php?catoid=23&poid=18985",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-san-marcos",
+      "slug": "psychological-science-ba",
+      "name": "Psychological Science",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "CSU San Marcos catalog",
+      "source_url": "https://catalog.csusm.edu/preview_program.php?catoid=12&poid=2853",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "The catalog names this degree Psychological Science, not Psychology, and it's CSU San Marcos's only psychology bachelor's. Confirm it belongs under Psychology."
+    },
+    {
+      "institution": "sonoma-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Sonoma State catalog",
+      "source_url": "https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6085",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "stanislaus-state",
+      "slug": "psychology-ba",
+      "name": "Psychology",
+      "degree_type": "BA",
+      "explore_slug": "psychology",
+      "source_name": "Stanislaus State catalog",
+      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8452",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     }
   ]
 }

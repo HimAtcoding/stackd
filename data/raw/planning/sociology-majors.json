@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Sociology majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's sociology. UC: every campus major the Sociology Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/sociology-majors.json --dry-run",
+  "notes": "Sociology majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's sociology. UC: every campus major the Sociology Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/sociology-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 17 rows; 2 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major.",
   "majors": [
     {
       "institution": "uc-berkeley",
@@ -166,6 +166,195 @@
       "source_url": "https://catalog.calpoly.edu/liberal-arts/social-sciences/sociology-ba/",
       "academic_year": "2026-27",
       "retrieved_at": ""
+    },
+    {
+      "institution": "csu-bakersfield",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Bakersfield catalog",
+      "source_url": "https://catalog.csub.edu/academic-degrees-programs/undergraduate-majors/sociology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-channel-islands",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Channel Islands catalog",
+      "source_url": "https://catalog.csuci.edu/preview_program.php?catoid=64&poid=16837",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "chico-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Chico State catalog",
+      "source_url": "https://catalog.csuchico.edu/colleges-departments/college-behavioral-social-sciences/sociology/sociology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-dominguez-hills",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Dominguez Hills catalog",
+      "source_url": "https://catalog.csudh.edu/academics/sociology/sociology-ba/",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-east-bay",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU East Bay catalog",
+      "source_url": "https://catalog.csueastbay.edu/preview_program.php?catoid=44&poid=20420",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "fresno-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Fresno State catalog",
+      "source_url": "https://catalog.fresnostate.edu/preview_program.php?catoid=7&poid=3780",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-fullerton",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Fullerton catalog",
+      "source_url": "https://fullerton.catalog.acalog.com/preview_program.php?catoid=101&poid=47256",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-humboldt",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Cal Poly Humboldt catalog",
+      "source_url": "https://catalog.humboldt.edu/preview_program.php?catoid=15&poid=9038",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-long-beach",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Long Beach catalog",
+      "source_url": "https://catalog.csulb.edu/preview_program.php?catoid=12&poid=6557",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-state-la",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Cal State LA catalog",
+      "source_url": "https://ecatalog.calstatela.edu/preview_program.php?catoid=77&poid=35401",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-monterey-bay",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU Monterey Bay catalog",
+      "source_url": "https://catalog.csumb.edu/preview_program.php?catoid=12&poid=2693",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "cal-poly-pomona",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Cal Poly Pomona catalog",
+      "source_url": "https://catalog.cpp.edu/preview_program.php?catoid=78&poid=24245",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "No umbrella page: the catalog lists this degree only by subplan (General Sociology, Social Work); source_url is the General Sociology one. Confirm this is one degree."
+    },
+    {
+      "institution": "san-diego-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "San Diego State catalog",
+      "source_url": "https://catalog.sdsu.edu/preview_program.php?catoid=12&poid=12197",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "san-jose-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "San José State catalog",
+      "source_url": "https://catalog.sjsu.edu/preview_program.php?catoid=23&poid=18922",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "csu-san-marcos",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "CSU San Marcos catalog",
+      "source_url": "https://catalog.csusm.edu/preview_program.php?catoid=12&poid=2861",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08",
+      "todo": "No umbrella page: the catalog lists this degree only by concentration (Aging and the Life Course; Children, Youth, and Families; Critical Race Studies; Health, Education, and Welfare; Standard); source_url is the Standard one. Confirm this is one degree."
+    },
+    {
+      "institution": "sonoma-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Sonoma State catalog",
+      "source_url": "https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6090",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
+    },
+    {
+      "institution": "stanislaus-state",
+      "slug": "sociology-ba",
+      "name": "Sociology",
+      "degree_type": "BA",
+      "explore_slug": "sociology",
+      "source_name": "Stanislaus State catalog",
+      "source_url": "https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8463",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-08"
     }
   ]
 }
