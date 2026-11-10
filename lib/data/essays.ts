@@ -7,11 +7,13 @@ import { essaysHref } from "@/lib/features";
 import { readSessionUser } from "@/lib/profile";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
+import { readStamp } from "./fresh";
 import { createMarkQueue, type PushError } from "./mark-queue";
 
 // Essays for the screens (17): the verified personal insight questions, and the student's drafts.
 // Drafts are saved on this device first and then sent to essay_drafts, so writing works offline; the queue retries
-// the way deadline marks do (lib/data/mark-queue.ts). Opening Essays or the editor reads the account's copy again.
+// the way deadline marks do (lib/data/mark-queue.ts). Opening the editor reads the account's copy again; other screens
+// read it when it's older than a few minutes.
 
 export const DRAFTS_KEY = "stackd.essays";
 export const ESSAYS_QUEUE_KEY = "stackd.essaysQueue";
@@ -63,13 +65,14 @@ function subscribe(onChange: () => void) {
   };
 }
 
-// Questions are read once per app launch; drafts each time Essays or the editor opens
+// Questions are read once per app launch; drafts each time the editor opens, and otherwise once they're a few minutes old
 let promptsLoaded = false;
 let loading: Promise<void> | null = null;
+const draftsRead = readStamp();
 
 // Reads the verified questions and the account's drafts. A failed read keeps what's on screen; with nothing to show,
 // the screen shows its error.
-export function loadEssays(): Promise<void> {
+export function loadEssays(readDrafts = false): Promise<void> {
   if (!essaysHref()) return Promise.resolve();
   const supabase = getSupabase();
   if (!supabase) {
@@ -80,6 +83,9 @@ export function loadEssays(): Promise<void> {
     return Promise.resolve();
   }
   if (loading) return loading;
+  const userId = readSessionUser()?.id;
+  const pull = Boolean(userId) && (readDrafts || !draftsRead.fresh());
+  if (promptsLoaded && !pull) return Promise.resolve();
   loading = (async () => {
     if (!promptsLoaded) {
       try {
@@ -95,8 +101,7 @@ export function loadEssays(): Promise<void> {
       }
       notify();
     }
-    const userId = readSessionUser()?.id;
-    if (userId) await pullDrafts(supabase, userId).catch(() => {});
+    if (userId && pull && (await pullDrafts(supabase, userId).catch(() => false))) draftsRead.mark(userId);
   })().finally(() => {
     loading = null;
   });
@@ -227,17 +232,19 @@ export function onDraftsReplaced(listener: (keys: string[]) => void) {
   };
 }
 
-// Sends what's waiting, then reads the account's drafts and merges them in (lib/essays.ts → mergeDrafts)
-async function pullDrafts(supabase: SupabaseClient, userId: string) {
+// Sends what's waiting, then reads the account's drafts and merges them in (lib/essays.ts → mergeDrafts). False when the
+// read failed.
+async function pullDrafts(supabase: SupabaseClient, userId: string): Promise<boolean> {
   await sendQueue(supabase, userId).flush();
   const readFrom = editCount;
   const { data, error } = await supabase.from("essay_drafts").select("prompt_key, cycle, body, notes, word_count, chosen, done_at, updated_at");
-  if (error || readSessionUser()?.id !== userId) return;
+  if (error || readSessionUser()?.id !== userId) return false;
   const pending = (key: string) => queue.get().includes(key) || (lastEdit.get(key) ?? 0) > readFrom;
   const merged = mergeDrafts(drafts.get(), data as AccountDraft[], pending);
   drafts.set(() => merged.drafts);
   if (merged.dropped.length) queue.set((prev) => prev.filter((k) => !merged.dropped.includes(k)));
   if (merged.replaced.length) replacedListeners.forEach((l) => l(merged.replaced));
+  return true;
 }
 
 // Saves a change to one draft on this device and queues it for the account. The editor debounces typing. Notes go
@@ -269,13 +276,14 @@ export type EssaysState =
   | { status: "ok"; cycle: string | null; prompts: Prompt[]; drafts: Record<string, Draft> };
 
 // The questions for the student's term (or the newest cycle there is), with their drafts. `term` comes from the
-// deadlines data (lib/data/deadlines.ts → useTerm), so this file doesn't depend on it.
-export function useEssays(term: string | null): EssaysState {
+// deadlines data (lib/data/deadlines.ts → useTerm), so this file doesn't depend on it. `readDrafts`: the editor reads
+// the account's drafts each time it opens, so an answer changed on another device is there before typing starts.
+export function useEssays(term: string | null, readDrafts = false): EssaysState {
   const loaded = useSyncExternalStore(subscribe, getPrompts, () => LOADING);
   const own = drafts.use();
   useEffect(() => {
-    loadEssays();
-  }, []);
+    loadEssays(readDrafts);
+  }, [readDrafts]);
   return useMemo((): EssaysState => {
     if (loaded.status !== "ok") return loaded;
     const cycle = pickPromptCycle(loaded.prompts, term);

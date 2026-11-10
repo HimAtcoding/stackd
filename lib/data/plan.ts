@@ -2,6 +2,7 @@ import { useEffect, useSyncExternalStore } from "react";
 import { readSessionUser } from "@/lib/profile";
 import { readStorage, removeStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
+import { readStamp } from "./fresh";
 
 // The student's plan (10): their home college and the schools they want, each with a major, in the order chosen.
 // It lives in the account (profiles, user_targets). This device keeps a copy so Home can draw before the network answers.
@@ -123,6 +124,9 @@ function subscribe(onChange: () => void) {
 export const readPlanState = getState;
 export const subscribePlan = subscribe;
 
+const planRead = readStamp();
+let reading: Promise<void> | null = null;
+
 // Reads the plan again. A failed read keeps whatever copy is already on screen.
 export async function refreshPlan(): Promise<void> {
   const userId = readSessionUser()?.id ?? null;
@@ -132,9 +136,19 @@ export async function refreshPlan(): Promise<void> {
     if (readSessionUser()?.id !== userId) return;
     writeStorage(PLAN_KEY, JSON.stringify({ userId, plan }));
     setState(userId, { status: "ok", plan });
+    planRead.mark(userId);
   } catch {
     if (getState().status !== "ok") setState(userId, FAILED);
   }
+}
+
+// Reads the plan unless it was read in the last few minutes. Screens that open together share one read.
+export function loadPlan(): Promise<void> {
+  if (reading || planRead.fresh()) return reading ?? Promise.resolve();
+  reading = refreshPlan().finally(() => {
+    reading = null;
+  });
+  return reading;
 }
 
 // "Try again" after a failed load
@@ -146,15 +160,16 @@ export function retryPlan() {
 // Forgets this device's copy (sign-out, account deleted)
 export function clearPlan() {
   removeStorage(PLAN_KEY);
+  planRead.clear();
   current = null;
   listeners.forEach((l) => l());
 }
 
-// The plan for Home and Settings: the device's copy at once, then the account's.
+// The plan for every screen: the device's copy at once, then the account's when it's older than a few minutes.
 export function usePlan(): PlanState {
   const state = useSyncExternalStore(subscribe, getState, () => LOADING);
   useEffect(() => {
-    refreshPlan();
+    loadPlan();
   }, []);
   return state;
 }
