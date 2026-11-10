@@ -4,7 +4,7 @@ import { exploreHref } from "@/lib/features";
 import { collegeShortName } from "@/lib/format";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { getSupabase } from "@/lib/supabase/client";
-import { useLoaded } from "@/lib/use-loaded";
+import { preload, useLoaded } from "@/lib/use-loaded";
 import type { Plan } from "./plan";
 import { getAgreementLink } from "./university";
 
@@ -84,7 +84,7 @@ let loading: Promise<void> | null = null;
 let loaded = false;
 
 // Once per app launch (again with `force`). A failed read keeps the copy already on screen.
-function loadExplore(force = false) {
+export function loadExplore(force = false) {
   if (!exploreHref() || loading || (loaded && !force)) return;
   loading = fetchRecords()
     .then((records) => {
@@ -115,17 +115,35 @@ export function useMajors(): MajorsState {
 
 export type PlanAgreement = { url: string; academicYear: string; college: string | null };
 
-// The student's own agreement for this major: their college → the first UC in the plan with one on record (21)
-export function useAgreement(plan: Plan | null, slug: string): PlanAgreement | null {
+// The read behind a major's agreement: their college → the first UC in the plan with one on record. Null with nothing to read.
+function agreementRead(plan: Plan | null, slug: string) {
   const home = plan?.home ?? null;
   const targets = plan?.targets.filter((t) => t.exploreSlug === slug && t.majorId && t.system?.toUpperCase() === "UC") ?? [];
-  const key = home && targets.length > 0 ? `agreement:${home.id}:${targets.map((t) => t.majorId).join(",")}` : null;
-  const [link] = useLoaded(key, async () => {
-    for (const t of targets) {
-      const found = await getAgreementLink({ collegeId: home!.id, universityId: t.institutionId, majorId: t.majorId! });
-      if (found) return found;
-    }
-    return null;
-  });
+  if (!home || targets.length === 0) return null;
+  return {
+    key: `agreement:${home.id}:${targets.map((t) => t.majorId).join(",")}`,
+    load: async () => {
+      for (const t of targets) {
+        const found = await getAgreementLink({ collegeId: home.id, universityId: t.institutionId, majorId: t.majorId! });
+        if (found) return found;
+      }
+      return null;
+    },
+  };
+}
+
+// The student's own agreement for this major (21)
+export function useAgreement(plan: Plan | null, slug: string): PlanAgreement | null {
+  const read = agreementRead(plan, slug);
+  const [link] = useLoaded(read?.key ?? null, () => read?.load() ?? Promise.resolve(null));
+  const home = plan?.home;
   return link.status === "ok" && link.data && home ? { ...link.data, college: collegeShortName(home.name) } : null;
+}
+
+// Reads the agreement for each major in the plan, so Explore and the major page open with it
+export function preloadAgreements(plan: Plan) {
+  for (const slug of new Set(plan.targets.map((t) => t.exploreSlug))) {
+    const read = slug ? agreementRead(plan, slug) : null;
+    if (read) preload(read.key, read.load);
+  }
 }

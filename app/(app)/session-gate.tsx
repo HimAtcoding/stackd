@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
 import { takeExpiredOAuthReturn } from "@/lib/auth/oauth";
+import { preloadTabs } from "@/lib/data/preload";
+import { DEMO_MODE } from "@/lib/flags";
 import { startProgressSync } from "@/lib/progress/sync";
 import { cancelReminders } from "@/lib/reminders/native";
 import { startReminders } from "@/lib/reminders/sync";
@@ -23,6 +25,11 @@ export function SessionGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (signedIn) return startReminders((href) => router.push(href));
   }, [signedIn, router]);
+
+  // Every tab's data, read in the background once the plan is on screen
+  useEffect(() => {
+    if (signedIn && !DEMO_MODE) return preloadTabs();
+  }, [signedIn]);
 
   useEffect(() => {
     if (signedIn !== false) return;

@@ -65,7 +65,7 @@ function EditorScreen() {
   const router = useRouter();
   const q = useSearchParams().get("q");
   const { term } = useTerm();
-  const state = useEssays(term);
+  const state = useEssays(term, true);
   const prompt = state.status === "ok" ? state.prompts.find((p) => p.key === q) : undefined;
 
   // A question that isn't there (an old link, a typo) goes back to the list

@@ -67,7 +67,7 @@ let loading: Promise<void> | null = null;
 let loaded = false;
 
 // Once per app launch (again with `force`). A failed read keeps the copy already on screen.
-function load(force = false) {
+export function loadOpportunities(force = false) {
   if (!exploreHref() || loading || (loaded && !force)) return;
   loading = fetchRows()
     .then((rows) => {
@@ -85,12 +85,12 @@ function load(force = false) {
 
 export function retryOpportunities() {
   if (getState().status !== "ok") setState(LOADING);
-  load(true);
+  loadOpportunities(true);
 }
 
 export function useOpportunities(): OpportunitiesState {
   const current = useSyncExternalStore(subscribe, getState, () => LOADING);
-  useEffect(() => load(), []);
+  useEffect(() => loadOpportunities(), []);
   return current;
 }
 
