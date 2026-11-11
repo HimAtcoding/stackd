@@ -4,6 +4,7 @@
 //   data/raw/essays/<file>.json     UC personal insight questions (17)
 //   data/raw/explore/<major>.json   one major's UC Transfer Pathway and TMC, with requirements and campuses (21)
 //   data/raw/opportunities/<year>.json  research programs, scholarships, competitions and events (22)
+//   data/raw/planning/topic-order.json, cal-getc.json and college-courses-<college>.json  the Plan's data (24)
 //   node scripts/import/run.mjs data/raw/<folder>/<file>.json [--dry-run]
 // Stages (docs/12): raw (the file, kept untouched, with its hash) → parse → validate → upsert → review report.
 // Validation problems stop the run before the database is touched. The upsert is one transaction: all or nothing.
@@ -15,8 +16,9 @@ import { validateDeadlinesFile } from "./deadlines.mjs";
 import { validateEssaysFile } from "./essays.mjs";
 import { validateExploreFile } from "./explore.mjs";
 import { validateOpportunitiesFile } from "./opportunities.mjs";
+import { isPlanDataFile, validatePlanDataFile } from "./plan-data.mjs";
 import { validatePlanningFile } from "./planning.mjs";
-import { deadlineReportRows, essayReportRows, exploreReportRows, opportunityReportRows, reportRows, topicSections, writeReport } from "./report.mjs";
+import { deadlineReportRows, essayReportRows, exploreReportRows, opportunityReportRows, planDataReportRows, reportRows, topicSections, writeReport } from "./report.mjs";
 
 const KINDS = {
   planning: {
@@ -50,6 +52,12 @@ const KINDS = {
     importBatch: (db, ...args) => db.importOpportunities(...args),
     report: async (db, payload) => opportunityReportRows(payload, await db.opportunityRowsFor(payload)),
   },
+  planData: {
+    validate: (file) => validatePlanDataFile(file),
+    counted: (p) => Object.entries(p).map(([section, rows]) => `${rows.length} ${section.replace("_", " ")} rows`).join(", "),
+    importBatch: (db, ...args) => db.importPlanData(...args),
+    report: async (db, payload) => planDataReportRows(payload, await db.planDataRowsFor(payload)),
+  },
 };
 
 export function kindOf(rel) {
@@ -57,6 +65,7 @@ export function kindOf(rel) {
   if (rel.startsWith("data/raw/essays/")) return "essays";
   if (rel.startsWith("data/raw/explore/")) return "explore";
   if (rel.startsWith("data/raw/opportunities/")) return "opportunities";
+  if (isPlanDataFile(rel)) return "planData";
   return "planning";
 }
 
