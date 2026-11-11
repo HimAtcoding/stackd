@@ -24,6 +24,29 @@ export async function authorizeWithApple(hashedNonce: string): Promise<AppleAuth
   }
 }
 
+// ios/App/App/GoogleSignInPlugin.swift
+interface GoogleSignInPlugin {
+  authorize(options: { nonce: string }): Promise<{ idToken: string; givenName?: string }>;
+}
+
+const GoogleSignIn = registerPlugin<GoogleSignInPlugin>("GoogleSignIn");
+
+export type GoogleAuthorization =
+  | { ok: true; idToken: string; givenName: string | null }
+  | { ok: false; reason: "cancelled" | "not_configured" | "failed" };
+
+// Google's own sign-in sheet, through Google's iOS SDK. Takes the hashed nonce. "not_configured": this build has no iOS
+// client ID yet (the GOOGLE_IOS_CLIENT_ID_PREFIX build setting).
+export async function authorizeWithGoogle(hashedNonce: string): Promise<GoogleAuthorization> {
+  try {
+    const { idToken, givenName } = await GoogleSignIn.authorize({ nonce: hashedNonce });
+    return { ok: true, idToken, givenName: givenName?.trim() || null };
+  } catch (e) {
+    const code = (e as { code?: string }).code;
+    return { ok: false, reason: code === "cancelled" || code === "not_configured" ? code : "failed" };
+  }
+}
+
 export type BrowserReturn = { kind: "returned"; url: string } | { kind: "closed" };
 
 // Opens a provider's sign-in page in the in-app browser (SFSafariViewController, not a web view, as Google requires)
