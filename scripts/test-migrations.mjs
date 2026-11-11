@@ -655,8 +655,9 @@ const areaId = (await expectOk("service role adds a GE area", () => addArea("1A"
 await expectError("one area per code in a pattern", () => addArea("1A", { sort: 2 }), /duplicate key/);
 await expectError("one area per sort in a pattern", () => addArea("1B"), /duplicate key/);
 await expectError("an area code looks like 1A or 2", () => addArea("A1", { sort: 3 }), /code_check/);
-await expectError("an area needs at least one course", () => addArea("2", { sort: 3, courses: 0 }), /courses_check/);
-await expectError("an area's units are above 0", () => addArea("2", { sort: 3, units: 0 }), /units_check/);
+await expectOk("an area met inside another area's course can have 0 courses and 0 units", () => addArea("5C", { sort: 3, courses: 0, units: 0 }));
+await expectError("an area's courses can't be below 0", () => addArea("2", { sort: 4, courses: -1 }), /courses_check/);
+await expectError("an area with courses has units above 0", () => addArea("2", { sort: 4, units: 0 }), /units_check/);
 await expectRows("an unverified GE area is hidden", () => as("anon", null, "select * from ge_areas"), 0);
 await verifyRow("ge_areas", areaId);
 await expectRows("a verified GE area is readable", () => as("anon", null, "select * from ge_areas"), 1);

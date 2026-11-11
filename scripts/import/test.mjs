@@ -1022,6 +1022,13 @@ const swapped = areaFile();
 [swapped.ge_areas[0].sort, swapped.ge_areas[1].sort] = [2, 1];
 out = await runImport({ file: writePlanData("cal-getc", swapped), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("GE areas: two areas can swap places in one import", out.ok && out.counts.ge_areas.updated === 2, JSON.stringify(out.counts ?? out.problems));
+const withLab = swapped;
+withLab.ge_areas.push({ pattern: "test-ge", code: "5C", name: "Made-up lab area", courses: 0, units: 0, sort: 3, ...planProv, source_url: "https://example.org/ge" });
+out = await runImport({ file: writePlanData("cal-getc", withLab), dryRun: false, db: testDatabase, reportDir: REVIEW });
+planRows = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("GE areas: an area met inside another area's course imports with 0 courses and 0 units",
+  out.ok && out.counts.ge_areas.inserted === 1 && planRows.some((r) => r.record === "test-ge area 5C (sort 3): Made-up lab area, no course of its own (met inside another area's course), 0 units"),
+  JSON.stringify(out.counts ?? out.problems));
 
 out = await runImport({ file: writePlanData("college-courses-example", courseFile()), dryRun: false, db: testDatabase, reportDir: REVIEW });
 check("college courses: an import applies, unverified", out.ok && out.counts.college_courses.inserted === 2 && (await anonCount("college_courses")) === 0, JSON.stringify(out.counts ?? out.problems));
@@ -1063,6 +1070,8 @@ await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].academic_year =
 await badPlan("topic-order", orderFile, (d) => (d.ge_areas = []), /exactly one of/);
 await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].units = null), /units is empty/);
 await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].courses = 1.5), /courses must be a whole number/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].courses = -1), /courses must be a whole number, 0 or more/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].units = 0), /units can only be 0 when courses is 0/);
 await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].code = "A1"), /code must be an area code/);
 await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[1].sort = 1), /sort 1 is used twice/);
 await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].code = "cs1"), /code must be a course code/);

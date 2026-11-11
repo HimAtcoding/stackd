@@ -156,7 +156,7 @@ export function planDataReportRows(payload, stored, topics = exploreTopics()) {
   }
   for (const r of payload.ge_areas ?? []) {
     const s = stored.ge_areas.find((g) => g.pattern === r.pattern && g.code === r.code);
-    if (s) rows.push({ table: "ge_areas", ...s, record: `${s.pattern} area ${s.code} (sort ${s.sort}): ${s.name}, ${s.courses} course${s.courses === 1 ? "" : "s"}, ${units(s.units)}` });
+    if (s) rows.push({ table: "ge_areas", ...s, record: `${s.pattern} area ${s.code} (sort ${s.sort}): ${s.name}, ${s.courses === 0 ? "no course of its own (met inside another area's course)" : `${s.courses} course${s.courses === 1 ? "" : "s"}`}, ${units(s.units)}` });
   }
   for (const r of payload.college_courses ?? []) {
     const s = stored.college_courses.find((c) => instSlug.get(c.institution_id) === r.institution && c.code === r.code && c.academic_year === r.academic_year);

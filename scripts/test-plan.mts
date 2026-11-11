@@ -25,7 +25,7 @@ function check(name: string, ok: boolean, detail?: unknown) {
 // Made-up course types. "both" ones count for UC and Cal State.
 const need = (topic: string, sort: number, units: number | null = 4, systems: MajorNeed["systems"] = ["uc"]): MajorNeed => ({ topic, name: `Made-up ${topic}`, systems, sort, units });
 const both = (topic: string, sort: number, units: number | null = 4) => need(topic, sort, units, ["uc", "cal-state"]);
-const ge = (code: string, sort: number, units: number | null = 3): GeNeed => ({ code, name: `Made-up area ${code}`, sort, units });
+const ge = (code: string, sort: number, units: number | null = 3, courses: number | null = 1): GeNeed => ({ code, name: `Made-up area ${code}`, sort, units, courses });
 const item = (fields: Partial<PlanItem> & Pick<PlanItem, "kind">): PlanItem => ({
   topic: null, ge_area: null, term: null, position: 0, placed_by: "builder", course_code: null, course_name: null, units: null,
   status: fields.kind === "major" ? null : "not_started", ...fields,
@@ -155,6 +155,14 @@ r = build({ majors: chain, order: chainOrder, statuses: { first: "done" } });
 check("a done prerequisite lets the next course start now", termOf(r, "major:second") === "fall-2026" && termOf(r, "major:third") === "spring-2027" && !r.items.some((i) => i.key === "major:first"), where(r));
 r = build({ geAreas: [ge("1A", 1)], items: [item({ kind: "ge", ge_area: "1A", status: "done" })] });
 check("a done GE area isn't placed", r.items.length === 1 && r.items[0].status === "done" && r.doesntFit === 0);
+
+// An area met inside another area's course (a lab) gets no card
+r = build({ geAreas: [ge("5A", 1), ge("5C", 2, 0, 0)] });
+check("an area with 0 courses gets no card", r.items.length === 1 && r.items[0].key === "ge:5A", r.items.map((i) => i.key));
+r = build({ geAreas: [ge("5C", 1, 0, 0)], items: [item({ kind: "ge", ge_area: "5C", term: "fall-2026" })] });
+check("…and an old card for it drops out", r.items.length === 0 && r.doesntFit === 0, r.items.map((i) => i.key));
+r = build({ geAreas: [ge("5A", 1), ge("5C", 2, null, null)] });
+check("an area whose courses aren't known yet still gets a card", r.items.length === 2, r.items.map((i) => i.key));
 
 // Prerequisites outside the plan
 r = build({ majors: [need("needs-outside", 1)], order: [{ topic: "needs-outside", before_topic: "not-in-major" }, { topic: "needs-outside", before_topic: "done-elsewhere" }], statuses: { "done-elsewhere": "done" } });

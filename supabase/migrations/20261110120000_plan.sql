@@ -29,8 +29,9 @@ create table ge_areas (
   pattern text not null check (pattern ~ '^[a-z0-9-]+$'),
   code text not null check (code ~ '^\d[A-Z]?$'),
   name text not null check (length(trim(name)) > 0),
-  courses smallint not null check (courses > 0),
-  units numeric(3, 1) not null check (units > 0),
+  -- 0 courses for an area met inside another area's course, like a lab (5C) in a 5A or 5B course
+  courses smallint not null check (courses >= 0),
+  units numeric(3, 1) not null constraint ge_areas_units_check check (units > 0 or (units = 0 and courses = 0)),
   sort smallint not null check (sort > 0),
   source_name text not null,
   source_url text not null check (source_url ~ '^https://'),

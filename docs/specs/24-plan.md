@@ -104,9 +104,11 @@ Warnings are advice: nothing is blocked, and the student can leave a plan with w
 
 **Prerequisites outside the plan.** When a course's prerequisite (`topic_order`) isn't in the student's plan, because their major doesn't need it, and isn't done, the builder doesn't hold the course back and returns the pair (5). The card shows a quiet note on line 2, not a warning: "Needs {name} first, or placement" `caption` `--slate-600`. It isn't counted in "things to check".
 
+**Areas met inside another course.** A GE area with 0 `courses` (Cal-GETC 5C, the lab, usually met by the lab part of a 5A or 5B course) gets no card of its own; the builder skips it (5). Until a course with a lab is marked, the 5A and 5B cards show a quiet note on line 2, not a warning: "Take one science course with a lab (Cal-GETC 5C)" `caption` `--slate-600`. It isn't counted in "things to check".
+
 ## 5. Build my plan
 
-Pure function in `lib/plan/build.ts`, tested on its own. Inputs: the student's still-needed major topics for their systems (from the Explore pathways, minus done), the Cal-GETC areas not yet filled, their terms, unit limit, summers on or off, items they placed themselves (kept), and `topic_order`.
+Pure function in `lib/plan/build.ts`, tested on its own. Inputs: the student's still-needed major topics for their systems (from the Explore pathways, minus done), the Cal-GETC areas not yet filled (minus areas with 0 `courses`, which get no card), their terms, unit limit, summers on or off, items they placed themselves (kept), and `topic_order`.
 
 1. Taking now items go in the current term.
 2. Sort the rest: courses that count for both UC and Cal State first, then the rest of the major (the student's own systems only), then GE areas. Within a group, by `topic_order` depth (earlier courses first), then by the pathway's `sort`.
@@ -143,7 +145,7 @@ After the first successful "Build my plan", and after the 3rd course marked done
 | `plan_settings` | `user_id` (pk), `units_per_term int` (3–21), `include_summer bool`, `units_done numeric(4,1)` (nullable), `updated_at` | Owner-only row-level security |
 | `plan_items` | `id`, `user_id`, `kind` (`major`, `ge`, `custom`), `topic text` (major, matches `pathway_requirements.topic`), `ge_area text` (ge), `term text` (`fall-2026`, `spring-2027`, `summer-2027`, or null for Not in a term yet), `position int`, `placed_by` (`builder` or `student`), `college_course_id` (nullable), `course_code text`, `course_name text`, `units numeric(3,1)`, `status progress_status` (ge and custom only; major status lives in `user_topic_status`), `updated_at` | Owner-only row-level security; `unique (user_id, topic)` where `kind = 'major'`, `unique (user_id, ge_area)` where `kind = 'ge'`; deleted by `delete_my_account()` |
 | `topic_order` | `topic`, `before_topic`, provenance columns | `before_topic` is the prerequisite: `{ topic: cs2, before_topic: cs1 }` means take `cs1` first. Stackd data: "usual order", e.g. `cs1` before `cs2`, `calculus-single` (term 1) before term 2. Verified like every row; readable only when verified. Written from college catalogs' prerequisites, starting with Las Positas |
-| `ge_areas` | `pattern` (`cal-getc`), `code` (`1A` …), `name`, `courses int`, `units numeric`, `sort`, provenance columns | From the official Cal-GETC standards; verified |
+| `ge_areas` | `pattern` (`cal-getc`), `code` (`1A` …), `name`, `courses int` (0 for an area met inside another area's course, like 5C), `units numeric` (above 0, or 0 when `courses` is 0), `sort`, provenance columns | From the official Cal-GETC standards; verified |
 | `college_courses` | `id`, `institution_id`, `code`, `title`, `units`, `c_id text` (nullable), `topics text[]`, `academic_year`, provenance columns | Each college's own catalog, Las Positas first. Verified rows only. A course shows for a requirement only through `topics`, which a person sets and checks. For UC, the sheet says "Matches this course type at your college", never "counts for" a campus, until ASSIST or the campus confirms it (`15 → Course data track E`) |
 
 ### Data files

@@ -143,8 +143,11 @@ export function validatePlanDataFile(file, topics = exploreTopics()) {
         seen.add(`${row.pattern}/${row.code}`);
       }
       if (filled("name") && typeof row.name !== "string") say(where, "name must be text");
-      if (filled("courses") && wholeProblem(row.courses)) say(where, `courses ${wholeProblem(row.courses)}`);
-      if (filled("units") && unitsProblem(row.units)) say(where, `units ${unitsProblem(row.units)}`);
+      // 0 courses (and then 0 units) for an area met inside another area's course, like a lab
+      if (filled("courses") && row.courses !== 0 && wholeProblem(row.courses)) say(where, `courses must be a whole number, 0 or more`);
+      if (filled("units") && !(row.units === 0 && row.courses === 0) && unitsProblem(row.units)) {
+        say(where, row.units === 0 ? "units can only be 0 when courses is 0" : `units ${unitsProblem(row.units)}`);
+      }
       if (filled("sort")) {
         if (wholeProblem(row.sort)) say(where, `sort ${wholeProblem(row.sort)}`);
         else if (sorts.has(`${row.pattern}/${row.sort}`)) say(where, `sort ${row.sort} is used twice`);

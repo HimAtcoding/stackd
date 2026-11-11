@@ -10,8 +10,8 @@ export type PlanSystem = "uc" | "cal-state";
 
 // A major course type for the student's systems. Done ones are skipped by the builder.
 export type MajorNeed = { topic: string; name: string; systems: PlanSystem[]; sort: number; units: number | null };
-// A GE area from ge_areas
-export type GeNeed = { code: string; name: string; sort: number; units: number | null };
+// A GE area from ge_areas. courses 0 means it's met inside another area's course (a lab), so it gets no card.
+export type GeNeed = { code: string; name: string; sort: number; units: number | null; courses: number | null };
 // before_topic is the prerequisite: { topic: "cs2", before_topic: "cs1" } means take cs1 first
 export type OrderPair = { topic: string; before_topic: string };
 
@@ -152,7 +152,8 @@ function depths(order: OrderPair[]): Map<string, number> {
 }
 
 export function buildPlan(input: BuildInput): BuildResult {
-  const { majors, geAreas, statuses, terms, unitLimit, order } = input;
+  const { majors, statuses, terms, unitLimit, order } = input;
+  const geAreas = input.geAreas.filter((g) => g.courses !== 0);
   const current = terms[0] ?? null;
   const inTerms = (t: TermId | null): t is TermId => t !== null && terms.includes(t);
   const majorByTopic = new Map(majors.map((m) => [m.topic, m]));
