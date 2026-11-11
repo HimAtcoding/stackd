@@ -13,6 +13,9 @@ const V1 = {
   events: false,
   // Explore (21, 22): what to take for your major, the major page, How we check this, and opportunities. On from v1.4.
   explore: true,
+  // Plan (24): the Plan tab, Build my plan and plan settings. Off until topic order, Cal-GETC and Las Positas's courses are
+  // verified for Computer Science at least.
+  plan: false,
   notifications: false,
   // Deadlines (14, 15): Home's Up next stack, Home's Get ready, the Deadlines screen, and reminders in the iPhone app.
   // On from v1.1.

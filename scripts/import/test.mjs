@@ -1,6 +1,7 @@
 // End-to-end test of the import pipeline on an in-memory database (PGlite). Uses made-up schools, dates and majors
 // (Example College, Example University, "Test application", example-major, made-up opportunities), plus checked copies of
-// the real Explore, school and opportunities files in sections 17 and 19; nothing touches the real project. `npm run test:import`
+// the real Explore, school and opportunities files in sections 17 and 19, and the Plan's draft files in section 20; nothing touches the
+// real project. `npm run test:import`
 import fs from "node:fs";
 import path from "node:path";
 import { asRole, createTestDatabase } from "../test-db.mjs";
@@ -10,10 +11,11 @@ import { validateEssaysFile } from "./essays.mjs";
 import { sharedTopics, validateExploreFile } from "./explore.mjs";
 import { fetchSource } from "./fetch.mjs";
 import { validateOpportunitiesFile } from "./opportunities.mjs";
+import { validatePlanDataFile } from "./plan-data.mjs";
 import { validatePlanningFile } from "./planning.mjs";
 import { reopenFromReport, reopenRow } from "./reopen.mjs";
 import { readReportCsv } from "./report.mjs";
-import { runImport } from "./run.mjs";
+import { kindOf, runImport } from "./run.mjs";
 import { verifyFromCsv } from "./verify.mjs";
 
 const db = await createTestDatabase({ quiet: true });
@@ -64,6 +66,14 @@ const testDatabase = {
   },
   async opportunityRowsFor() {
     return { opportunities: (await asRole(db, "service_role", null, "select * from opportunities")).rows };
+  },
+  async importPlanData(payload, sourceFile, dryRun) {
+    const r = await asRole(db, "service_role", null, "select import_plan_data_batch($1::jsonb, $2, $3) as r", [JSON.stringify(payload), sourceFile, dryRun]);
+    return r.rows[0].r;
+  },
+  async planDataRowsFor() {
+    const q = async (t) => (await asRole(db, "service_role", null, `select * from ${t}`)).rows;
+    return { topic_order: await q("topic_order"), ge_areas: await q("ge_areas"), college_courses: await q("college_courses"), institutions: await q("institutions") };
   },
   async logFailure(sourceFile, dryRun, error) {
     await asRole(db, "service_role", null, "insert into import_runs (source_file, dry_run, status, error) values ($1, $2, 'failed', $3)", [sourceFile, dryRun, error]);
@@ -943,6 +953,148 @@ check("the examples show every field, each nullable one both set and empty",
   examples.every((o) => ["slug", "kind", "title", "org_name", "summary", "who_for", "wants", "offers", "audience", "major_slugs", "systems", "terms", ...nullable, "online", "cost", "url", "source_name", "source_url", "academic_year", "retrieved_at"].every((k) => k in o)) &&
     nullable.every((k) => examples.some((o) => o[k] === null) && examples.some((o) => o[k] !== null)));
 check("no social media link in any row", examples.every((o) => [o.url, o.source_url].every((u) => !SOCIAL_HOSTS.some((h) => new URL(u).hostname.endsWith(h)))));
+
+// 20. The Plan's data (24): topic order, GE areas and college courses, made up, through the same pipeline and rules
+const planProv = { source_name: "Test catalog", academic_year: "2026-27", retrieved_at: "2026-11-10" };
+const orderFile = () => ({
+  written_by: "test",
+  topic_order: [
+    { topic: "cs2", before_topic: "cs1", ...planProv, source_url: "https://example.org/catalog/cs2" },
+    { topic: "comp-org", before_topic: "cs2", ...planProv, source_url: "https://example.org/catalog/comp-org" },
+  ],
+});
+const areaFile = () => ({
+  written_by: "test",
+  ge_areas: [
+    { pattern: "test-ge", code: "1A", name: "Made-up area one", courses: 1, units: 3, sort: 1, ...planProv, source_url: "https://example.org/ge" },
+    { pattern: "test-ge", code: "2", name: "Made-up area two", courses: 2, units: 6, sort: 2, ...planProv, source_url: "https://example.org/ge" },
+  ],
+});
+const courseFile = () => ({
+  written_by: "test",
+  college_courses: [
+    { institution: "example-college", code: "TEST 1", title: "Made-up programming", units: 4, c_id: "COMP 122", topics: ["cs1"], ...planProv, source_url: "https://example.org/catalog/test-1" },
+    { institution: "example-college", code: "TEST 2A", title: "Made-up data structures", units: 4.5, c_id: null, topics: ["cs2", "comp-org"], ...planProv, source_url: "https://example.org/catalog/test-2a" },
+  ],
+});
+const writePlanData = (name, data) => {
+  const file = path.join(RAW_PLANNING, `${name}.json`);
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  return file;
+};
+const anonCount = async (t) => (await asRole(db, "anon", null, `select id from ${t}`)).rows.length;
+
+check("plan data: the three files go to the plan data import, other planning files don't",
+  kindOf("data/raw/planning/topic-order.json") === "planData" && kindOf("data/raw/planning/cal-getc.json") === "planData" &&
+    kindOf("data/raw/planning/college-courses-las-positas.json") === "planData" && kindOf("data/raw/planning/california-institutions.json") === "planning" &&
+    kindOf("data/raw/planning/.test-import/topic-order.json") === "planData");
+
+out = await runImport({ file: writePlanData("topic-order", orderFile()), dryRun: true, db: testDatabase, reportDir: REVIEW });
+check("topic order: a dry run reports what it would insert and keeps nothing", out.ok && out.status === "dry_run" && out.counts.topic_order.inserted === 2 && (await count("topic_order")) === 0, JSON.stringify(out));
+out = await runImport({ file: writePlanData("topic-order", orderFile()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("topic order: an import applies, unverified and hidden", out.ok && (await count("topic_order", "verification_status = 'unverified'")) === 2 && (await anonCount("topic_order")) === 0, JSON.stringify(out));
+const orderReport = `${out.report}.csv`;
+let planRows = out.ok ? readReportCsv(orderReport) : [];
+check("topic order: the review report spells out each pair with its names",
+  planRows.length === 2 && planRows.some((r) => r.table === "topic_order" && /^Take cs1 \(.+\) before cs2 \(.+\)$/.test(r.record)), JSON.stringify(planRows.map((r) => r.record)));
+out = await runImport({ file: writePlanData("topic-order", orderFile()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("topic order: re-importing the same file changes nothing", out.ok && out.counts.topic_order.unchanged === 2, JSON.stringify(out.counts));
+const orderCsv = fs.readFileSync(orderReport, "utf8").split("\n");
+fs.writeFileSync(orderReport, [orderCsv[0], ...orderCsv.slice(1).filter(Boolean).map((l) => l.replace(/,,$/, ",tester,2026-11-10"))].join("\n") + "\n");
+const planVerified = await verifyFromCsv({ file: orderReport, db: testDatabase });
+check("topic order: checked rows become verified and readable", planVerified.ok && planVerified.verified === 2 && (await anonCount("topic_order")) === 2, JSON.stringify(planVerified));
+const movedOrder = orderFile();
+movedOrder.topic_order[0].source_url = "https://example.org/catalog/cs2-new";
+out = await runImport({ file: writePlanData("topic-order", movedOrder), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("topic order: changing a verified row stops the import", !out.ok && /topic order cs2 after cs1 is verified and the file would change it/.test(out.problems[0]), JSON.stringify(out));
+const cs2Order = (await db.query("select id from topic_order where topic = 'cs2'")).rows[0].id;
+const orderReopened = await reopenRow({ id: cs2Order, by: "tester", reason: "new catalog page", apply: true, db: testDatabase });
+check("topic order: a pair can be reopened, and it's hidden", orderReopened.ok && orderReopened.record === "cs2 after cs1" && (await anonCount("topic_order")) === 1, JSON.stringify(orderReopened));
+out = await runImport({ file: writePlanData("topic-order", movedOrder), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("topic order: then the corrected file applies", out.ok && out.counts.topic_order.updated === 1 && out.counts.topic_order.unchanged === 1, JSON.stringify(out.counts ?? out.problems));
+
+out = await runImport({ file: writePlanData("cal-getc", areaFile()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("GE areas: an import applies, unverified", out.ok && out.counts.ge_areas.inserted === 2 && (await anonCount("ge_areas")) === 0, JSON.stringify(out.counts ?? out.problems));
+planRows = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("GE areas: the review report spells out courses and units",
+  planRows.some((r) => r.record === "test-ge area 2 (sort 2): Made-up area two, 2 courses, 6 units") && planRows.some((r) => r.record === "test-ge area 1A (sort 1): Made-up area one, 1 course, 3 units"), JSON.stringify(planRows.map((r) => r.record)));
+const swapped = areaFile();
+[swapped.ge_areas[0].sort, swapped.ge_areas[1].sort] = [2, 1];
+out = await runImport({ file: writePlanData("cal-getc", swapped), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("GE areas: two areas can swap places in one import", out.ok && out.counts.ge_areas.updated === 2, JSON.stringify(out.counts ?? out.problems));
+const withLab = swapped;
+withLab.ge_areas.push({ pattern: "test-ge", code: "5C", name: "Made-up lab area", courses: 0, units: 0, sort: 3, ...planProv, source_url: "https://example.org/ge" });
+out = await runImport({ file: writePlanData("cal-getc", withLab), dryRun: false, db: testDatabase, reportDir: REVIEW });
+planRows = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("GE areas: an area met inside another area's course imports with 0 courses and 0 units",
+  out.ok && out.counts.ge_areas.inserted === 1 && planRows.some((r) => r.record === "test-ge area 5C (sort 3): Made-up lab area, no course of its own (met inside another area's course), 0 units"),
+  JSON.stringify(out.counts ?? out.problems));
+
+out = await runImport({ file: writePlanData("college-courses-example", courseFile()), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("college courses: an import applies, unverified", out.ok && out.counts.college_courses.inserted === 2 && (await anonCount("college_courses")) === 0, JSON.stringify(out.counts ?? out.problems));
+const storedCourse = (await db.query("select * from college_courses where code = 'TEST 2A'")).rows[0];
+check("college courses: units, no C-ID and two topics are stored as written",
+  Number(storedCourse?.units) === 4.5 && storedCourse.c_id === null && storedCourse.topics.join() === "cs2,comp-org", JSON.stringify(storedCourse));
+planRows = out.ok ? readReportCsv(`${out.report}.csv`) : [];
+check("college courses: the review report spells out code, title, units, C-ID and topics",
+  planRows.some((r) => /^example-college TEST 1: Made-up programming, 4 units, C-ID COMP 122\. Set to cs1 \(.+\)$/.test(r.record)) &&
+    planRows.some((r) => /^example-college TEST 2A: Made-up data structures, 4\.5 units, no C-ID\. Set to cs2 \(.+\); comp-org \(.+\)$/.test(r.record)),
+  JSON.stringify(planRows.map((r) => r.record)));
+const atUniversity = courseFile();
+atUniversity.college_courses.forEach((c) => (c.institution = "example-university"));
+out = await runImport({ file: writePlanData("college-courses-example", atUniversity), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("college courses: a university's courses are refused, and nothing applies", !out.ok && /community college/.test(out.problems[0]) && (await count("college_courses")) === 2, JSON.stringify(out));
+const unknownSchool = courseFile();
+unknownSchool.college_courses[0].institution = "no-such-college";
+out = await runImport({ file: writePlanData("college-courses-example", unknownSchool), dryRun: false, db: testDatabase, reportDir: REVIEW });
+check("college courses: an unknown college stops the import", !out.ok && /names institution no-such-college/.test(out.problems[0]), JSON.stringify(out));
+
+// Bad plan data files never reach the database
+const beforePlan = await count("import_runs");
+const badPlan = async (name, make, mutate, pattern) => {
+  const data = make();
+  mutate(data);
+  const o = await runImport({ file: writePlanData(name, data), dryRun: true, db: testDatabase, reportDir: REVIEW });
+  check(`plan data: refused: ${pattern}`, !o.ok && o.stage === "validate" && o.problems.some((p) => pattern.test(p)), JSON.stringify(o.problems));
+};
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].todo = "check it"), /still has a todo/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].before_topic = ""), /before_topic is empty/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].source_url = ""), /source_url is empty/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].retrieved_at = ""), /retrieved_at is empty/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].topic = "made-up-topic"), /isn't a topic in any Explore file/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].before_topic = "cs2"), /can't come before itself/);
+await badPlan("topic-order", orderFile, (d) => d.topic_order.push({ ...d.topic_order[0] }), /appears twice/);
+await badPlan("topic-order", orderFile, (d) => d.topic_order.push({ ...d.topic_order[0], topic: "cs1", before_topic: "comp-org" }), /goes in a loop: /);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].verification_status = "verified"), /can't be set by an import/);
+await badPlan("topic-order", orderFile, (d) => (d.topic_order[0].academic_year = "2026"), /academic_year must look like 2026-27/);
+await badPlan("topic-order", orderFile, (d) => (d.ge_areas = []), /exactly one of/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].units = null), /units is empty/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].courses = 1.5), /courses must be a whole number/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].courses = -1), /courses must be a whole number, 0 or more/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].units = 0), /units can only be 0 when courses is 0/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[0].code = "A1"), /code must be an area code/);
+await badPlan("cal-getc", areaFile, (d) => (d.ge_areas[1].sort = 1), /sort 1 is used twice/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].code = "cs1"), /code must be a course code/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].c_id = ""), /c_id is empty/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].c_id = "COMP122"), /c_id must be a C-ID number/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].topics = []), /topics is empty/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].units = 4.25), /units must be a number above 0 with one decimal/);
+await badPlan("college-courses-example", courseFile, (d) => (d.college_courses[0].source_url = "http://example.org"), /must be an https/);
+check("plan data: validation failures never reach the database", (await count("import_runs")) === beforePlan);
+try {
+  await asRole(db, "authenticated", "00000000-0000-0000-0000-00000000000a", "select import_plan_data_batch('{}'::jsonb, 'x', false)");
+  check("plan data: a signed-in student can't run an import", false);
+} catch (e) {
+  check("plan data: a signed-in student can't run an import", /permission denied/.test(e.message), e.message);
+}
+
+// The three drafts: worklists for a person, refused only for their todos and the fields left empty for them
+for (const name of ["topic-order", "cal-getc", "college-courses-las-positas"]) {
+  const draft = JSON.parse(fs.readFileSync(`data/raw/planning/${name}.json`, "utf8"));
+  const { problems } = validatePlanDataFile(draft);
+  const other = problems.filter((p) => !/still has a todo|is empty/.test(p));
+  check(`${name}.json is refused only for its todos and empty fields`, problems.length > 0 && other.length === 0, JSON.stringify(other.slice(0, 3)));
+}
 
 fs.rmSync(RAW, { recursive: true, force: true });
 fs.rmSync(RAW_OPPS, { recursive: true, force: true });

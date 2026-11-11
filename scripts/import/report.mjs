@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pacificWall } from "./deadlines.mjs";
+import { exploreTopics } from "./plan-data.mjs";
 
 // cycle and confirm_on are for deadlines and essays files (cycle is an Explore pathway's effective term); a planning report leaves them blank
 export const REPORT_COLUMNS = [
@@ -136,6 +137,33 @@ export function opportunityReportRows(payload, stored) {
       table: "opportunities", ...s,
       record: `${s.title} (${s.org_name}) [${s.kind}, ${s.cost}, ${where}]: ${deadline}${dates}. For ${s.audience}, ${majors}, ${systems}${terms}. ${s.summary}` +
         `${list("Check yourself", s.who_for)}${list("Wants", s.wants)}${list("Offers", s.offers)} Opens ${s.url}`,
+    });
+  }
+  return finish(rows);
+}
+
+// The Plan's data rows as the database now holds them. The record column has what the reviewer checks against the
+// catalog or the standards: which course type comes first, an area's courses and units, a course's code, title, units,
+// C-ID and the course types it's set to.
+export function planDataReportRows(payload, stored, topics = exploreTopics()) {
+  const named = (t) => `${t} (${topics.get(t) ?? "not in Explore"})`;
+  const units = (n) => `${Number(n)} unit${Number(n) === 1 ? "" : "s"}`;
+  const instSlug = new Map((stored.institutions ?? []).map((i) => [i.id, i.slug]));
+  const rows = [];
+  for (const r of payload.topic_order ?? []) {
+    const s = stored.topic_order.find((t) => t.topic === r.topic && t.before_topic === r.before_topic);
+    if (s) rows.push({ table: "topic_order", ...s, record: `Take ${named(s.before_topic)} before ${named(s.topic)}` });
+  }
+  for (const r of payload.ge_areas ?? []) {
+    const s = stored.ge_areas.find((g) => g.pattern === r.pattern && g.code === r.code);
+    if (s) rows.push({ table: "ge_areas", ...s, record: `${s.pattern} area ${s.code} (sort ${s.sort}): ${s.name}, ${s.courses === 0 ? "no course of its own (met inside another area's course)" : `${s.courses} course${s.courses === 1 ? "" : "s"}`}, ${units(s.units)}` });
+  }
+  for (const r of payload.college_courses ?? []) {
+    const s = stored.college_courses.find((c) => instSlug.get(c.institution_id) === r.institution && c.code === r.code && c.academic_year === r.academic_year);
+    if (!s) continue;
+    rows.push({
+      table: "college_courses", ...s,
+      record: `${r.institution} ${s.code}: ${s.title}, ${units(s.units)}, ${s.c_id ? `C-ID ${s.c_id}` : "no C-ID"}. Set to ${s.topics.map(named).join("; ")}`,
     });
   }
   return finish(rows);

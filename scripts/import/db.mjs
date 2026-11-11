@@ -9,7 +9,7 @@ function readEnv(name) {
 }
 
 // Calls the database functions in supabase/migrations/20261005130000_import_functions.sql, 20261016120100_deadlines_import.sql,
-// 20261019120000_essays.sql, 20261026120000_explore.sql and 20261107120000_explore_hub.sql
+// 20261019120000_essays.sql, 20261026120000_explore.sql, 20261107120000_explore_hub.sql and 20261110120000_plan.sql
 export function supabaseDatabase() {
   const url = readEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = readEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -74,8 +74,32 @@ export function supabaseDatabase() {
       if (rows.error) throw new Error(rows.error.message);
       return { opportunities: rows.data };
     },
-    // supabase/migrations/20261017120000_reopen_verified.sql, 20261019120000_essays.sql, 20261026120000_explore.sql
-    // and 20261107120000_explore_hub.sql
+    importPlanData: (payload, sourceFile, dryRun) => call("import_plan_data_batch", { payload, source_file: sourceFile, dry_run: dryRun }),
+    // Topic order, GE areas and college courses as stored, for the review report
+    async planDataRowsFor(payload) {
+      const out = { topic_order: [], ge_areas: [], college_courses: [], institutions: [] };
+      if (payload.topic_order) {
+        const r = await client.from("topic_order").select("*").in("topic", [...new Set(payload.topic_order.map((t) => t.topic))]);
+        if (r.error) throw new Error(r.error.message);
+        out.topic_order = r.data;
+      }
+      if (payload.ge_areas) {
+        const r = await client.from("ge_areas").select("*").in("pattern", [...new Set(payload.ge_areas.map((g) => g.pattern))]);
+        if (r.error) throw new Error(r.error.message);
+        out.ge_areas = r.data;
+      }
+      if (payload.college_courses) {
+        const inst = await client.from("institutions").select("id, slug").in("slug", [...new Set(payload.college_courses.map((c) => c.institution))]);
+        if (inst.error) throw new Error(inst.error.message);
+        const r = await client.from("college_courses").select("*").in("institution_id", inst.data.map((i) => i.id));
+        if (r.error) throw new Error(r.error.message);
+        out.institutions = inst.data;
+        out.college_courses = r.data;
+      }
+      return out;
+    },
+    // supabase/migrations/20261017120000_reopen_verified.sql, 20261019120000_essays.sql, 20261026120000_explore.sql,
+    // 20261107120000_explore_hub.sql and 20261110120000_plan.sql
     reopenRow: (id, by, reason, dryRun) => call("reopen_verified_row", { p_id: id, p_by: by, p_reason: reason, p_dry_run: dryRun }),
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });

@@ -1,0 +1,528 @@
+{
+  "written_by": "Claude Code, as a worklist for a person to fill",
+  "notes": "The usual order of course types for the Plan (spec 24 → Data, topic_order), from Las Positas College's current catalog prerequisites. One row per course type in the 9 Explore majors (data/raw/explore), with nothing filled in: no order is drafted. before_topic is the prerequisite: { topic: cs2, before_topic: cs1 } means take cs1 first. For each row, find the LPC course for that course type and read its prerequisites. If a prerequisite is another course type in this file, write its topic in before_topic. Add a row for each further prerequisite, and delete the row if the course has none that are course types here (a prerequisite like precalculus that isn't a course type here isn't written). Fill in source_name, source_url (the catalog page), academic_year (the catalog's year, like 2026-27) and retrieved_at (the day you checked), and delete the todo. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/topic-order.json --dry-run",
+  "topic_order": [
+    {
+      "topic": "biology-sequence",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "General biology with lab, the full sequence (Biological Sciences, Biology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "chemistry-general",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "General chemistry with lab, a full year (Biological Sciences, Biology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "calculus-single",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, a full year (Biological Sciences, Computer Science, Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "chemistry-organic",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Organic chemistry with lab, a full year (Biological Sciences): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "calculus-first",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, first course (Biology, Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "microeconomics",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Microeconomics (Business Administration, Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "macroeconomics",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Macroeconomics (Business Administration, Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "calculus-year",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, a full year (Business Administration, Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "statistics",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Statistics (Business Administration, Communication, Economics, Psychology, Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "intro-business",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to business (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "financial-accounting",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Financial accounting (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "managerial-accounting",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Managerial accounting (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "business-law",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Business law (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "business-math",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One math course (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "business-intro-or-communication",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to business or business communication (Business Administration): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-intro",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to communication studies (Communication): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-logic-computing-culture",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One course in logic, computing or culture (Communication): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-three-more",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Three more courses (Communication): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "public-speaking",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Public speaking (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "interpersonal-communication",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Interpersonal communication (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-list-a-1",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, first of 3 (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-list-a-2",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, second of 3 (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-list-a-3",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, third of 3 (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comm-list-b",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Communication Studies): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "cs1",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to programming (CS 1) (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "cs2",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Data structures (CS 2) (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "comp-org",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Computer organization (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "calculus-multi",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Multivariable calculus (Computer Science, Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "discrete",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Discrete math (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "linear-algebra",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Linear algebra (Computer Science, Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "diff-eq",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Differential equations (Computer Science, Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "physics-year",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Physics with calculus, a full year (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "physics-mechanics",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Physics with calculus, first course (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "science-second",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more science course (Computer Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "econ-calculus",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One calculus course (Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "econ-list-a",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more math or business course (Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "econ-list-b",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One elective (Economics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "diff-eq-and-linear-algebra",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Differential equations and linear algebra (Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "math-list-a",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Programming or physics (Mathematics): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-core-1",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, first of 3 (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-core-2",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, second of 3 (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-core-3",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, third of 3 (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-list-a-1",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Political science elective, first of 2 (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-list-a-2",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Political science elective, second of 2 (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "polisci-list-b",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Political Science): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-intro",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to psychology (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "biology-first",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Biology for science majors, first course (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "science-extra",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more science course (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-social-science",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Two social science courses (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-research-methods",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Research methods in psychology (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-list-a",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One biology-based course (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-list-b",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course for the major (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "psych-list-c",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One elective (Psychology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "sociology-intro",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to sociology (Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "social-problems",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Social problems (Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "sociology-list-a-1",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Sociology elective, first of 2 (Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "sociology-list-a-2",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Sociology elective, second of 2 (Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    },
+    {
+      "topic": "sociology-list-b",
+      "before_topic": "",
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Sociology): find its prerequisite in LPC's catalog, or delete this row if it has none"
+    }
+  ]
+}
