@@ -5,10 +5,11 @@ import { readSessionUser } from "@/lib/profile";
 import { makeSecret, reviewUrl } from "@/lib/review";
 import { getSupabase } from "@/lib/supabase/client";
 import { draftSaved } from "./essays";
+import { readStamp } from "./fresh";
 
 // The student's review links and the comments on them (19 → Student side). Read through row-level security (owner
 // only) and changed only through the owner-checked database functions. Kept in memory, not on the phone: they're
-// read again whenever the editor, Essays or Home opens.
+// read again whenever the editor opens, and on Home once they're a few minutes old.
 
 export type ReviewComment = {
   id: string;
@@ -53,13 +54,16 @@ const LINK_COLUMNS = "id, draft_id, reviewer_label, snapshot_body, snapshot_at, 
 const COMMENT_COLUMNS = "id, link_id, reviewer_name, body, quote, created_at, resolved_at, read_at";
 
 let loading: Promise<void> | null = null;
+const reviewsRead = readStamp();
 
 // Reads the student's links, their drafts' keys and the comments. A failed read keeps what's there.
-export function loadReviews(): Promise<void> {
+// `ifStale`: only when the last read is a few minutes old.
+export function loadReviews(ifStale = false): Promise<void> {
   const supabase = getSupabase();
   const userId = readSessionUser()?.id;
   if (!essaysHref() || !supabase || !userId) return Promise.resolve();
   if (loading) return loading;
+  if (ifStale && reviewsRead.fresh()) return Promise.resolve();
   loading = (async () => {
     const [links, drafts, comments] = await Promise.all([
       supabase.from("review_links").select(LINK_COLUMNS).order("created_at", { ascending: false }),
@@ -76,6 +80,7 @@ export function loadReviews(): Promise<void> {
         .filter((l) => keyOf.has(l.draft_id))
         .map(({ draft_id, ...l }) => ({ ...l, key: keyOf.get(draft_id) as string, comments: byLink.get(l.id) ?? [] })),
     };
+    reviewsRead.mark(userId);
     notify();
   })()
     .catch(() => {})
@@ -103,7 +108,7 @@ export function useDraftReviews(key: string): ReviewLink[] {
 export function useUnreadComments(): number {
   const s = useSyncExternalStore(subscribe, getState, () => null);
   useEffect(() => {
-    loadReviews();
+    loadReviews(true);
   }, []);
   return ownLinks(s).reduce((n, l) => n + l.comments.filter((c) => !c.read_at).length, 0);
 }
@@ -139,8 +144,24 @@ export async function sendLatestVersion(link: ReviewLink): Promise<boolean> {
 
 export const turnOffLink = (linkId: string) => call("revoke_review_link", { p_link: linkId });
 
-export const setComment = (commentId: string, action: "resolve" | "unresolve" | "delete") =>
-  call("set_review_comment", { p_comment: commentId, p_action: action });
+// Shows the change at once, then saves it. A failed save reads the account's copy back.
+export async function setComment(commentId: string, action: "resolve" | "unresolve" | "delete"): Promise<boolean> {
+  if (state) {
+    const now = new Date().toISOString();
+    const change = (c: ReviewComment) => (c.id === commentId ? { ...c, resolved_at: action === "resolve" ? (c.resolved_at ?? now) : null } : c);
+    state = {
+      ...state,
+      links: state.links.map((l) => ({
+        ...l,
+        comments: action === "delete" ? l.comments.filter((c) => c.id !== commentId) : l.comments.map(change),
+      })),
+    };
+    notify();
+  }
+  const ok = await call("set_review_comment", { p_comment: commentId, p_action: action });
+  if (!ok) await loadReviews();
+  return ok;
+}
 
 // The editor shows a draft's comments: they're read. Marks them here first, so the count drops at once.
 export async function markRead(links: ReviewLink[]) {
@@ -160,5 +181,6 @@ export async function markRead(links: ReviewLink[]) {
 // Sign-out leaves nothing behind
 export function clearReviews() {
   state = null;
+  reviewsRead.clear();
   notify();
 }
