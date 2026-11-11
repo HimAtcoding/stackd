@@ -71,7 +71,7 @@ let syncing: Promise<void> | null = null;
 let syncedFor: string | null = null;
 
 // Once per app launch and account
-function loadStatuses() {
+export function loadStatuses() {
   const supabase = getSupabase();
   const userId = readSessionUser()?.id;
   if (!supabase || !userId || syncing || syncedFor === userId) return;
