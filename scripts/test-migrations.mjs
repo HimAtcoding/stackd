@@ -630,6 +630,105 @@ await expectError("students can't run the opportunities import", () =>
   as("authenticated", A, "select import_opportunities_batch('{}'::jsonb, 'x', false)"), /permission denied/);
 await expectError("students can't call the batch directly", () => as("authenticated", A, "select apply_opportunities_batch('{}'::jsonb)"), /permission denied/);
 
+// Plan (24): the plan data written only by the import and readable once verified, and each student's plan, owner-only
+const addOrder = (topic, before) => as("service_role", null, `insert into topic_order (topic, before_topic, source_name, source_url, academic_year, retrieved_at)
+  values ($1, $2, ${prov}) returning id`, [topic, before]);
+await expectError("anon can't add a topic order", () => as("anon", null, "insert into topic_order (topic, before_topic) values ('cs2', 'cs1')"), /permission denied/);
+await expectError("a student can't add a topic order", () => as("authenticated", A, "insert into topic_order (topic, before_topic) values ('cs2', 'cs1')"), /permission denied/);
+const orderId = (await expectOk("service role adds a topic order", () => addOrder("cs2", "cs1")))?.rows[0].id;
+await expectError("a topic can't come before itself", () => addOrder("cs1", "cs1"), /check/);
+await expectError("one row per pair", () => addOrder("cs2", "cs1"), /duplicate key/);
+await expectError("topics are slugs", () => addOrder("CS 2", "cs1"), /topic_check/);
+await expectRows("an unverified topic order is hidden from anon", () => as("anon", null, "select * from topic_order"), 0);
+await expectRows("…and from students", () => as("authenticated", A, "select * from topic_order"), 0);
+await verifyRow("topic_order", orderId);
+await expectRows("a verified topic order is readable", () => as("authenticated", A, "select * from topic_order"), 1);
+await expectError("a verified topic order can't be changed", () => as("service_role", null, "update topic_order set source_name = 'x' where id = $1", [orderId]), /refusing to update verified/);
+
+const addArea = (code, columns = {}) => {
+  const row = { pattern: "cal-getc", code, name: "Test area", courses: 1, units: 3, sort: 1, ...columns };
+  const entries = Object.entries(row);
+  return as("service_role", null, `insert into ge_areas (${entries.map(([k]) => k).join(", ")}, source_name, source_url, academic_year, retrieved_at)
+    values (${entries.map((_, i) => `$${i + 1}`).join(", ")}, ${prov}) returning id`, entries.map(([, v]) => v));
+};
+const areaId = (await expectOk("service role adds a GE area", () => addArea("1A")))?.rows[0].id;
+await expectError("one area per code in a pattern", () => addArea("1A", { sort: 2 }), /duplicate key/);
+await expectError("one area per sort in a pattern", () => addArea("1B"), /duplicate key/);
+await expectError("an area code looks like 1A or 2", () => addArea("A1", { sort: 3 }), /code_check/);
+await expectError("an area needs at least one course", () => addArea("2", { sort: 3, courses: 0 }), /courses_check/);
+await expectError("an area's units are above 0", () => addArea("2", { sort: 3, units: 0 }), /units_check/);
+await expectRows("an unverified GE area is hidden", () => as("anon", null, "select * from ge_areas"), 0);
+await verifyRow("ge_areas", areaId);
+await expectRows("a verified GE area is readable", () => as("anon", null, "select * from ge_areas"), 1);
+
+const addCourse = (institution, code, columns = {}) => {
+  const row = { institution_id: institution, code, title: "Test course", units: 4, c_id: null, topics: ["cs1"], ...columns };
+  const entries = Object.entries(row);
+  return as("service_role", null, `insert into college_courses (${entries.map(([k]) => k).join(", ")}, source_name, source_url, academic_year, retrieved_at)
+    values (${entries.map((_, i) => `$${i + 1}`).join(", ")}, ${prov}) returning id`, entries.map(([, v]) => v));
+};
+await expectError("a student can't add a college course", () =>
+  as("authenticated", A, "insert into college_courses (institution_id, code, title, units, topics) values ($1, 'CS 1', 'x', 4, '{cs1}')", [instId]), /permission denied/);
+const courseId = (await expectOk("service role adds a college course", () => addCourse(instId, "CS 1", { c_id: "COMP 122" })))?.rows[0].id;
+await expectOk("a common course number like ENGL C1000", () => addCourse(instId, "ENGL C1000", { topics: ["english-comp"] }));
+await expectError("a college course is at a community college", () => addCourse(uniId, "CS 2"), /community college/);
+await expectError("one course per code and year at a college", () => addCourse(instId, "CS 1"), /duplicate key/);
+await expectError("a course code looks like CS 1", () => addCourse(instId, "cs1"), /code_check/);
+await expectError("a C-ID number looks like COMP 122", () => addCourse(instId, "CS 3", { c_id: "COMP122" }), /c_id_check/);
+await expectError("a course is set to at least one topic", () => addCourse(instId, "CS 3", { topics: [] }), /topics_check/);
+await expectError("topics are slugs", () => addCourse(instId, "CS 3", { topics: ["CS 1"] }), /topics_check/);
+await expectError("units are above 0", () => addCourse(instId, "CS 3", { units: 0 }), /units_check/);
+await expectRows("unverified college courses are hidden", () => as("anon", null, "select * from college_courses"), 0);
+await verifyRow("college_courses", courseId);
+await expectRows("a verified college course is readable", () => as("authenticated", A, "select * from college_courses"), 1);
+for (const [table, id, record] of [["topic_order", orderId, "cs2 after cs1"], ["ge_areas", areaId, "cal-getc 1A: Test area"], ["college_courses", courseId, "example-college CS 1 (2026-27): Test course"]]) {
+  const reopened = await expectOk(`the service role reopens a ${table} row`, () => as("service_role", null, "select reopen_verified_row($1, 'tester', 'test', false) as r", [id]));
+  check(`…named ${record}`, reopened?.rows[0].r.table === table && reopened.rows[0].r.record === record, reopened?.rows[0].r);
+  await expectRows("…and it's hidden again", () => as("anon", null, `select * from ${table}`), 0);
+}
+await expectError("students can't run the plan data import", () => as("authenticated", A, "select import_plan_data_batch('{}'::jsonb, 'x', false)"), /permission denied/);
+await expectError("students can't call the batch directly", () => as("authenticated", A, "select apply_plan_data_batch('{}'::jsonb)"), /permission denied/);
+
+const settings = (sub, columns) => as("authenticated", sub, `insert into plan_settings (user_id${Object.keys(columns).map((k) => `, ${k}`).join("")})
+  values ($1${Object.keys(columns).map((_, i) => `, $${i + 2}`).join("")})`, [sub, ...Object.values(columns)]);
+await expectOk("a student saves plan settings", () => settings(A, {}));
+const defaults = (await db.query("select units_per_term, include_summer, units_done from plan_settings where user_id = $1", [A])).rows[0];
+check("settings default to full time, no summers, units done empty", defaults?.units_per_term === 15 && defaults.include_summer === false && defaults.units_done === null, defaults);
+await expectOk("a student sets 21 units and units done", () => as("authenticated", A, "update plan_settings set units_per_term = 21, units_done = 31.5"));
+await expectError("units per term are 3 to 21", () => as("authenticated", A, "update plan_settings set units_per_term = 22"), /units_per_term_check/);
+await expectError("…not under 3", () => as("authenticated", A, "update plan_settings set units_per_term = 2"), /units_per_term_check/);
+await expectError("units done can't be negative", () => as("authenticated", A, "update plan_settings set units_done = -1"), /units_done_check/);
+await expectError("a student can't save settings for someone else", () => settings(B, {}).then(() => as("authenticated", A, "insert into plan_settings (user_id) values ($1)", [B])), /row-level security/);
+await expectRows("a student sees only their own settings", () => as("authenticated", B, "select * from plan_settings"), 1);
+await expectError("anon can't read plan settings", () => as("anon", null, "select * from plan_settings"), /permission denied/);
+
+const addItem = (sub, columns) => {
+  const entries = Object.entries({ user_id: sub, ...columns });
+  return as("authenticated", sub, `insert into plan_items (${entries.map(([k]) => k).join(", ")}) values (${entries.map((_, i) => `$${i + 1}`).join(", ")}) returning id`,
+    entries.map(([, v]) => v));
+};
+await expectOk("a student adds a major item", () => addItem(A, { kind: "major", topic: "cs1", term: "fall-2026" }));
+await expectOk("…a GE item with its own status", () => addItem(A, { kind: "ge", ge_area: "1A", term: "spring-2027", status: "in_progress" }));
+await expectOk("…a custom course they placed", () => addItem(A, { kind: "custom", course_name: "Drawing", units: 3, placed_by: "student", status: "not_started" }));
+await expectOk("…and one with the college's course", () => addItem(A, { kind: "major", topic: "cs2", college_course_id: courseId, course_code: "CS 1", units: 4 }));
+await expectError("one item per topic", () => addItem(A, { kind: "major", topic: "cs1" }), /duplicate key/);
+await expectError("one item per GE area", () => addItem(A, { kind: "ge", ge_area: "1A", status: "not_started" }), /duplicate key/);
+await expectError("a major item names its topic", () => addItem(A, { kind: "major" }), /check/);
+await expectError("a GE item names its area, not a topic", () => addItem(A, { kind: "ge", topic: "cs3", ge_area: "2", status: "not_started" }), /check/);
+await expectError("a major item's status lives in user_topic_status", () => addItem(A, { kind: "major", topic: "cs3", status: "done" }), /check/);
+await expectError("a GE item has a status", () => addItem(A, { kind: "ge", ge_area: "2" }), /check/);
+await expectError("a custom course has a name and units", () => addItem(A, { kind: "custom", course_name: "Drawing", placed_by: "student", status: "not_started" }), /check/);
+await expectError("a custom course is placed by the student", () => addItem(A, { kind: "custom", course_name: "Drawing", units: 3, status: "not_started" }), /check/);
+await expectError("a term looks like fall-2026", () => addItem(A, { kind: "major", topic: "cs3", term: "Fall 2026" }), /term_check/);
+await expectError("there's no winter term in a plan", () => addItem(A, { kind: "major", topic: "cs3", term: "winter-2027" }), /term_check/);
+await expectError("units are above 0", () => addItem(A, { kind: "major", topic: "cs3", units: 0 }), /units_check/);
+await expectError("a student can't add an item to someone else's plan", () => as("authenticated", A, "insert into plan_items (user_id, kind, topic) values ($1, 'major', 'cs1')", [B]), /row-level security/);
+await expectOk("another student plans the same topic", () => addItem(B, { kind: "major", topic: "cs1" }));
+await expectRows("a student sees only their own items", () => as("authenticated", B, "select * from plan_items"), 1);
+await expectOk("a student can't change someone else's item (nothing matches)", () => as("authenticated", B, "update plan_items set term = 'spring-2027' where user_id = $1", [A]));
+check("…and it's unchanged", (await db.query("select term from plan_items where user_id = $1 and topic = 'cs1'", [A])).rows[0]?.term === "fall-2026");
+await expectError("anon can't read plan items", () => as("anon", null, "select * from plan_items"), /permission denied/);
+
 // Deleting an account: only the caller's, with every per-student row
 const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
@@ -638,7 +737,7 @@ await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major
 await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
 const PER_STUDENT = [
   "profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps",
-  "essay_drafts", "essay_feedback", "user_topic_status",
+  "essay_drafts", "essay_feedback", "user_topic_status", "plan_settings", "plan_items",
 ];
 const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
   PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));
@@ -661,6 +760,7 @@ check("…and the reviewer page shows the ended message", (await open(TOKEN)).st
 check("another student's review link is untouched", (await reviewCounts(B)).links === 1);
 const others = await rowCounts(B);
 check("another student's rows are untouched", others.profiles === 1 && others.user_targets === 1 && others.saved_schools === 1, others);
+check("another student's plan is untouched", others.plan_settings === 1 && others.plan_items === 1, others);
 check("another student's draft and feedback are untouched", others.essay_drafts === 1 && others.essay_feedback === 1, others);
 const leftover = (await db.query("select (select count(*)::int from essay_drafts where id = $1) as d, (select count(*)::int from essay_feedback where id = $2) as f", [draftA, feedbackA])).rows[0];
 check("the deleted student's draft and feedback are gone by id", leftover.d === 0 && leftover.f === 0, leftover);

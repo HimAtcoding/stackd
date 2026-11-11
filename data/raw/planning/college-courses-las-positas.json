@@ -1,0 +1,876 @@
+{
+  "written_by": "Claude Code, as a worklist for a person to fill",
+  "notes": "Las Positas College's own courses for the Plan (spec 24 → Data, college_courses), from LPC's current catalog. One row per course type in the 9 Explore majors (data/raw/explore), with only the course type filled in: no course, unit or C-ID is drafted. For each row, find the LPC course or courses for that course type in the catalog and fill in code and title exactly as the catalog prints them, units, and c_id (the C-ID number the catalog prints, or null if it prints none). A course type met by more than one course (a year of physics, a list to pick from) gets a row per course. A course that fits more than one course type is one row with each topic in topics; delete the duplicate rows. Delete a row if LPC has no course for it. topics is what makes a course show for a requirement, so set it only when the catalog or the C-ID number makes the match plain; for UC the app says \"Matches this course type at your college\", never \"counts for\" a campus. Fill in source_name, source_url (the catalog page), academic_year (the catalog's year, like 2026-27) and retrieved_at (the day you checked), and delete the todo. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-las-positas.json --dry-run",
+  "college_courses": [
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "biology-sequence"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "General biology with lab, the full sequence (Biological Sciences, Biology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "chemistry-general"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "General chemistry with lab, a full year (Biological Sciences, Biology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "calculus-single"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, a full year (Biological Sciences, Computer Science, Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Organic chemistry with lab, a full year (Biological Sciences): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "calculus-first"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, first course (Biology, Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "microeconomics"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Microeconomics (Business Administration, Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "macroeconomics"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Macroeconomics (Business Administration, Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "calculus-year"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Calculus, a full year (Business Administration, Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "statistics"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Statistics (Business Administration, Communication, Economics, Psychology, Sociology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "intro-business"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to business (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "financial-accounting"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Financial accounting (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "managerial-accounting"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Managerial accounting (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "business-law"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Business law (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "business-math"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One math course (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "business-intro-or-communication"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to business or business communication (Business Administration): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-intro"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to communication studies (Communication): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-logic-computing-culture"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One course in logic, computing or culture (Communication): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-three-more"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Three more courses (Communication): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "public-speaking"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Public speaking (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "interpersonal-communication"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Interpersonal communication (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-list-a-1"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, first of 3 (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-list-a-2"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, second of 3 (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-list-a-3"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Communication elective, third of 3 (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Communication Studies): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "cs1"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to programming (CS 1) (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "cs2"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Data structures (CS 2) (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "comp-org"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Computer organization (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "calculus-multi"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Multivariable calculus (Computer Science, Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Discrete math (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "linear-algebra"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Linear algebra (Computer Science, Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "diff-eq"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Differential equations (Computer Science, Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "physics-year"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Physics with calculus, a full year (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "physics-mechanics"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Physics with calculus, first course (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "science-second"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more science course (Computer Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "econ-calculus"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One calculus course (Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "econ-list-a"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more math or business course (Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "econ-list-b"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One elective (Economics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "diff-eq-and-linear-algebra"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Differential equations and linear algebra (Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Programming or physics (Mathematics): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-core-1"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, first of 3 (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-core-2"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, second of 3 (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-core-3"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Core political science course, third of 3 (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-list-a-1"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Political science elective, first of 2 (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-list-a-2"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Political science elective, second of 2 (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Political Science): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-intro"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to psychology (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "biology-first"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Biology for science majors, first course (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "science-extra"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more science course (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Two social science courses (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-research-methods"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Research methods in psychology (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-list-a"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One biology-based course (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-list-b"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course for the major (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One elective (Psychology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "sociology-intro"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Intro to sociology (Sociology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "social-problems"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Social problems (Sociology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "sociology-list-a-1"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Sociology elective, first of 2 (Sociology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "sociology-list-a-2"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "Sociology elective, second of 2 (Sociology): find the LPC course or courses for this course type"
+    },
+    {
+      "institution": "las-positas",
+      "code": "",
+      "title": "",
+      "units": null,
+      "c_id": "",
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "",
+      "source_url": "",
+      "academic_year": "",
+      "retrieved_at": "",
+      "todo": "One more course (Sociology): find the LPC course or courses for this course type"
+    }
+  ]
+}
