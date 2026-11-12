@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Political science majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's political-science. UC: every campus major the Political Science Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/political-science-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 16 rows; 1 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major.",
+  "notes": "Political science majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's political-science. UC: every campus major the Political Science Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/political-science-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 16 rows; 1 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major. Checked 2026-11-11 (Claude Code, plain requests): every Cal State row from CSUN, Sacramento State, CSU San Bernardino, San Francisco State and Cal Poly San Luis Obispo against its catalog page (2026-27; Cal Poly's 2026-28), and each campus's program list for a matching bachelor's left out. CSUN's todo is cleared: all three option pages name Political Science, B.A. The other 17 campuses' catalogs still answer an automated request with a bot check (AWS WAF challenge), so their todos stay for a person with a browser.",
   "majors": [
     {
       "institution": "uc-berkeley",
@@ -110,8 +110,7 @@
       "source_name": "CSUN catalog",
       "source_url": "https://catalog.csun.edu/academics/pols/programs/ba-political-science-i/politics-and-government-option/",
       "academic_year": "2026-27",
-      "retrieved_at": "",
-      "todo": "Three options; source_url is first option page. Confirm this is one degree."
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "sacramento-state",
@@ -122,7 +121,7 @@
       "source_name": "Sacramento State catalog",
       "source_url": "https://catalog.csus.edu/colleges/social-sciences-interdisciplinary-studies/political-science/ba-political-science/",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "csu-san-bernardino",
@@ -133,7 +132,7 @@
       "source_name": "CSU San Bernardino catalog",
       "source_url": "https://catalog.csusb.edu/colleges-schools-departments/social-behavioral-sciences/political-science/political-science-ba/",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "san-francisco-state",
@@ -144,7 +143,7 @@
       "source_name": "San Francisco State bulletin",
       "source_url": "https://bulletin.sfsu.edu/colleges/liberal-creative-arts/political-science/ba-political-science/",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "cal-poly-san-luis-obispo",
@@ -155,7 +154,7 @@
       "source_name": "Cal Poly San Luis Obispo catalog",
       "source_url": "https://catalog.calpoly.edu/liberal-arts/political-science/political-science-ba/",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "csu-bakersfield",

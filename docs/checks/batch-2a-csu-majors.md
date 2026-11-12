@@ -203,3 +203,7 @@ File: `data/raw/planning/mathematics-majors.json`. Matching names: Mathematics o
 | CSU San Marcos | Yes | Mathematics, B.S. (todo) | https://catalog.csusm.edu/preview_program.php?catoid=12&poid=2900 |
 | Sonoma State | Yes | Mathematics, BA<br>Mathematics, BS | https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6030<br>https://catalog.sonoma.edu/preview_program.php?catoid=13&poid=6044 |
 | Stanislaus State | Yes | Mathematics B.A./B.S.<br>Mathematics B.A./B.S. | https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8419<br>https://catalog.csustan.edu/preview_program.php?catoid=37&poid=8419 |
+
+## Still to open in a browser (2026-11-11)
+
+Every "(todo)" above is still a todo in its file. These 17 catalogs answer an automated request with a bot check, so only a person with a browser can settle them. The rows from the other 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo) were checked on 2026-11-11; `docs/build-status.md` has what changed.
