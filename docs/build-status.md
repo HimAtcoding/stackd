@@ -544,10 +544,17 @@ Spec `24-plan.md`, Data and section 5, on branch `plan-a`. **The migration isn't
 
 **The three files drafted** (2026-11-11, branch `plan-data-draft`, not imported, nothing verified):
 - **Sources.** LPC's current catalog is on `laspositas.curriqunet.com`, which answers 403 to a plain request, so it wasn't used. The courses and prerequisites come from LPC's 2025-2026 catalog on laspositascollege.edu, the newest LPC hosts itself (its Fall 2025 addendum changes none of these courses), with `academic_year` `2025-26`. Cal-GETC comes from ICAS's Cal-GETC Standards 1.4 (2026, approved May 15, 2026), section 2.
-- `college-courses-las-positas.json`: 78 courses with code, title and units copied from the course pages, the first unconditional C-ID (CHEM 1B and CHEM 12B print only a series C-ID), and topics from the C-ID, the title, or LPC's own AA-T/AS-T lists for the TMC list topics. 4 rows keep a todo: CMST 48's units (the catalog prints 1 - 4), and `comm-intro`, `comm-logic-computing-culture` and `science-extra`, which the catalog doesn't settle.
+- `college-courses-las-positas.json`: 79 courses with code, title and units copied from the course pages, and topics from the C-ID, the title, or LPC's own AA-T/AS-T lists for the TMC list topics. Ryan's decisions on PR #43 (2026-11-11):
+  - `comm-intro`, `comm-logic-computing-culture` and `science-extra` have no LPC course; students type their own.
+  - CMST 48 is 3 units, as LPC's Communication Studies AA-T counts it (the course page prints 1 - 4).
+  - CHEM 1B and CHEM 12B have no C-ID: the one they print covers the sequence with CHEM 1A or 12A.
+  - A course printing two C-IDs keeps the one its topics' pathway requirements name, else none (CHEM 12A, CS 7). When both match, the one printed without "(if taken with …)"; PSYC 25 matches both and keeps PSY 205B, the 4-unit option with lab.
+  - STAT C1000 is also in `math-list-a`, as LPC's Mathematics AS-T lists it.
+  - Rows can't hold a note, so these are in the file's `notes`, and an empty C-ID is `null` (the import refuses `""`).
 - `topic-order.json`: 14 pairs from the Prerequisite lines; concurrent prerequisites, recommended preparation and prerequisites of only some choices in a pick-one topic are left out (the file's notes list them).
 - `cal-getc.json`: the 11 areas. The drafted names were wrong for 5A, 5B and 5C ("Physical Science", "Biological Science", "Laboratory"); area 4 is 2 courses, 6 units; 5C is 0 and 0 as the file's notes say.
-- **Dry runs:** `cal-getc.json` 11 rows and `topic-order.json` 14 rows pass against the project; `college-courses-las-positas.json` stops only on its 4 todo rows, and a copy without them passed with 78 rows. `test:import`'s draft check now allows a draft with nothing left to fill.
+- **Dry runs** after the decisions: `cal-getc.json` 11 rows, `topic-order.json` 14 rows and `college-courses-las-positas.json` 79 rows all pass against the project. `test:import`'s draft check now allows a draft with nothing left to fill, and passes.
+- **Next:** Ryan checks the course codes against LPC's 2026-27 catalog, then the import and verify.
 
 ## Native Google sign-in on iOS (2026-11-10)
 
