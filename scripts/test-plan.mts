@@ -16,7 +16,19 @@ import {
   type PlanItem,
   type TermId,
 } from "../lib/plan/build";
-import { applyBuild, DEFAULT_SETTINGS, moveItem, planNeeds, planView, transferTermOf, type StoredItem, type ViewInput } from "../lib/plan/view";
+import {
+  applyBuild,
+  DEFAULT_SETTINGS,
+  finishChoices,
+  markFinished,
+  moveItem,
+  planNeeds,
+  planView,
+  transferTermOf,
+  withDefaultUnits,
+  type StoredItem,
+  type ViewInput,
+} from "../lib/plan/view";
 import { planWarnings, termHeader, type WarnCard, type WarnInput } from "../lib/plan/warnings";
 import { afterBuild, afterDoneMark } from "../lib/rating";
 
@@ -289,6 +301,36 @@ check("view: a custom course is counted in the over-limit header", v.terms[0].he
 v = viewOf({ needs: [need("first", 1), need("second", 2)], order: chainOrder, items: [stored("x", { kind: "major", topic: "second", term: "fall-2026" }), stored("y", { kind: "major", topic: "first", term: "spring-2027" })] });
 check("view: Data structures above Intro to programming warns on the later course", v.cardsByKey.get("major:second")?.line?.kind === "warning" && v.checks === 1 && v.firstCheck === "major:second");
 check("view: …and the earlier course says what it's needed before", Boolean(v.cardsByKey.get("major:first")?.reasons.includes("Needed before Made-up second")));
+
+// The college's only matching course stands in until the student picks (24 → 5, Default course)
+const ONE = { id: "lpc-cs1", code: "CS 1", units: 4 };
+const onlyCs1 = (t: string) => (t === "first" ? ONE : null);
+v = viewOf({ needs: [need("first", 1, 3), need("second", 2, 8)], defaultCourse: onlyCs1 });
+let c1 = v.cardsByKey.get("major:first")!;
+check("default course: the card shows its code and real units", c1.code === "CS 1" && c1.units === 4 && !c1.unitsEstimated && c1.courseId === "lpc-cs1", c1);
+const c2 = v.cardsByKey.get("major:second")!;
+check("default course: with 2 or more (none here), units stay about the pathway's", c2.code === null && c2.units === 8 && c2.unitsEstimated, c2);
+v = viewOf({ needs: [need("first", 1, 3)], defaultCourse: onlyCs1, items: [stored("p", { kind: "major", topic: "first", term: "fall-2026", course_code: "CS 1H", units: 5 })] });
+c1 = v.cardsByKey.get("major:first")!;
+check("default course: the student's own course wins", c1.code === "CS 1H" && c1.units === 5 && c1.courseId === null, c1);
+v = viewOf({ needs: [need("first", 1, 3)], defaultCourse: onlyCs1, items: [stored("p", { kind: "major", topic: "first", term: "fall-2026", course_code: "MATH 9" })] });
+check("default course: a typed code without units is about the pathway's", v.cardsByKey.get("major:first")?.unitsEstimated === true && v.cardsByKey.get("major:first")?.units === 3);
+const defaulted = withDefaultUnits([need("first", 1, 3), need("second", 2, 3)], onlyCs1);
+check("default course: the builder counts its units", defaulted[0].units === 4 && defaulted[1].units === 3);
+const fives = applyBuild([], { majors: withDefaultUnits([need("first", 1, 3), need("x2", 2, 4), need("x3", 3, 4), need("x4", 4, 3)], onlyCs1), geAreas: [], statuses: {}, terms: TWO, unitLimit: 15, order: [] }, () => `d-${Math.random()}`);
+check("default course: 4 + 4 + 4 + 3 fits 15 in one term", fives.items.every((i) => i.term === "fall-2026"), fives.items.map((i) => [i.topic, i.term]));
+
+// What's already finished, before the first build (24 → 5)
+v = viewOf({ needs: [both("shared", 1), need("uc-only", 2)], geAreas: lab, statuses: { "uc-only": "in_progress" } });
+const choices = finishChoices(v);
+check("finished: lists every course and area the builder would place, majors first", choices.map((c) => c.key).join() === "major:shared,major:uc-only,ge:5A,ge:5B", choices.map((c) => c.key));
+const marked = markFinished([], choices, new Set(["major:shared", "ge:5A"]));
+check("finished: a major course is marked through its topic", marked.topics.join() === "shared");
+check("finished: an area becomes a done item", marked.areasDone.length === 1 && marked.areasDone[0].ge_area === "5A" && marked.areasDone[0].status === "done" && marked.items.length === 1);
+const afterFinished = applyBuild(marked.items, { majors: [both("shared", 1), need("uc-only", 2)], geAreas: lab, statuses: { shared: "done", "uc-only": "in_progress" }, terms: TWO, unitLimit: 15, order: [] }, () => `f-${Math.random()}`);
+check("finished: the build leaves both out of the terms", afterFinished.items.filter((i) => i.term && (i.topic === "shared" || i.ge_area === "5A")).length === 0 &&
+  afterFinished.items.some((i) => i.ge_area === "5A" && i.status === "done"), afterFinished.items.map((i) => [i.topic ?? i.ge_area, i.term, i.status]));
+check("finished: nothing checked changes nothing", markFinished([], choices, new Set()).items.length === 0);
 
 // Saving a build and moving cards
 const NEED2 = [need("first", 1), need("second", 2)];

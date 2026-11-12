@@ -24,7 +24,21 @@ import { setTopicStatus, useTopicStatus } from "@/lib/data/topic-status";
 import type { ExploreMajor, TopicStatus } from "@/lib/explore";
 import { planHref } from "@/lib/features";
 import { currentTerm, planTerms, type TermId } from "@/lib/plan/build";
-import { applyBuild, moveItem, planNeeds, planSystems, planView, termInSentence, transferTermOf, type Card, type StoredItem } from "@/lib/plan/view";
+import {
+  applyBuild,
+  finishChoices,
+  markFinished,
+  moveItem,
+  planNeeds,
+  planSystems,
+  planView,
+  termInSentence,
+  transferTermOf,
+  withDefaultUnits,
+  type Card,
+  type DefaultCourse,
+  type StoredItem,
+} from "@/lib/plan/view";
 import { termLabel } from "@/lib/plan/warnings";
 import { noteBuilt, noteDoneMark } from "@/lib/rating";
 import { unitsShort } from "./course-card";
@@ -32,6 +46,7 @@ import { CourseSheet } from "./course-sheet";
 import { CustomCourseSheet } from "./custom-course-sheet";
 import { PlanBoard } from "./plan-board";
 import { PlanHero } from "./plan-hero";
+import { FinishedSheet } from "./finished-sheet";
 import { SettingsSheet } from "./settings-sheet";
 
 // The Plan tab exists only with its flag on; otherwise the address goes Home (13: no dead ends)
@@ -47,8 +62,11 @@ const madeUpId = (key: string) => {
   return madeUpIds.get(key)!;
 };
 
-type Sheet = { kind: "course"; key: string } | { kind: "settings" } | { kind: "custom"; term: TermId } | { kind: "rebuild" };
+type Sheet = { kind: "course"; key: string } | { kind: "settings" } | { kind: "custom"; term: TermId } | { kind: "rebuild" } | { kind: "finished" };
 type ToastState = { message: string; undo?: () => void; id: number };
+
+// A bottom sheet slides out over 200 ms (00 → Bottom sheet)
+const SHEET_EXIT_MS = 220;
 
 function Header({ plan, transfer }: { plan: Plan | null; transfer: { term: TermId; guessed: boolean } | null }) {
   const first = plan?.targets[0];
@@ -156,7 +174,14 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
   const statuses = useTopicStatus();
   const { items, settings } = useCoursePlan();
   const courses = useCollegeCourses(plan.home?.id ?? null);
-  const [sheet, setSheet] = useState<Sheet | null>(null);
+  const [sheet, setSheetState] = useState<Sheet | null>(null);
+  // False from a sheet opening until it has slid away (200 ms), so a toast doesn't land on it
+  const [settled, setSettled] = useState(true);
+  const setSheet = (next: Sheet | null) => {
+    setSheetState(next);
+    if (next) setSettled(false);
+    else setTimeout(() => setSettled(true), SHEET_EXIT_MS);
+  };
   const [lastCard, setLastCard] = useState<Card | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [doneOpen, setDoneOpen] = useState(false);
@@ -168,15 +193,23 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
     for (const major of majors) for (const p of [major.uc, major.calState]) for (const r of p?.requirements ?? []) if (!m.has(r.topic)) m.set(r.topic, r.name);
     return m;
   }, [majors]);
+  // The college's course for a course type when it has exactly one: the card's code and units until the student picks
+  const defaultCourse = useMemo(() => {
+    const list = courses.status === "ok" ? courses.data : [];
+    return (topic: string): DefaultCourse | null => {
+      const matches = list.filter((c) => c.topics.includes(topic));
+      return matches.length === 1 ? { id: matches[0].id, code: matches[0].code, units: matches[0].units } : null;
+    };
+  }, [courses]);
   const current = currentTerm(today);
   const terms = useMemo(() => planTerms(current, transfer.term, settings.include_summer), [current, transfer.term, settings.include_summer]);
   const view = useMemo(
     () =>
       planView({
         needs, geAreas: data.geAreas, order: data.order, statuses, items, terms, settings, systems,
-        nameOf: (t) => names.get(t) ?? t, newId: madeUpId,
+        nameOf: (t) => names.get(t) ?? t, newId: madeUpId, defaultCourse,
       }),
-    [needs, data, statuses, items, terms, settings, systems, names],
+    [needs, data, statuses, items, terms, settings, systems, names, defaultCourse],
   );
 
   const college = plan.home?.name ?? null;
@@ -188,12 +221,25 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
   const coursesFor = (card: Card | null): CollegeCourse[] =>
     card?.kind === "major" && courses.status === "ok" ? courses.data.filter((c) => c.topics.includes(card.topic!)) : [];
 
-  function build(includeSummer = settings.include_summer) {
+  // Builds or rebuilds. The first build can first mark what the student has finished (24 → 5).
+  function build({ includeSummer = settings.include_summer, finished }: { includeSummer?: boolean; finished?: Set<string> } = {}) {
+    let base = items;
+    let known = statuses;
+    let areasDone: StoredItem[] = [];
+    if (finished?.size) {
+      const marked = markFinished(items, [...view.cardsByKey.values()], finished);
+      for (const t of marked.topics) setTopicStatus(t, "done");
+      known = { ...statuses, ...Object.fromEntries(marked.topics.map((t) => [t, "done" as const])) };
+      base = marked.items;
+      areasDone = marked.areasDone;
+    }
     const buildTerms = planTerms(current, transfer.term, includeSummer);
-    const r = applyBuild(items, { majors: needs, geAreas: data.geAreas, statuses, terms: buildTerms, unitLimit: settings.units_per_term, order: data.order }, () =>
-      crypto.randomUUID(),
+    const r = applyBuild(
+      base,
+      { majors: withDefaultUnits(needs, defaultCourse), geAreas: data.geAreas, statuses: known, terms: buildTerms, unitLimit: settings.units_per_term, order: data.order },
+      () => crypto.randomUUID(),
     );
-    saveItems(r.items, r.changed, r.removed);
+    saveItems(r.items, [...r.changed, ...areasDone.filter((a) => !r.changed.some((c) => c.id === a.id))], r.removed);
     say(view.built ? "Plan rebuilt" : "Plan built");
     noteBuilt();
   }
@@ -237,7 +283,7 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
           coursesLeft={view.coursesLeft}
           terms={terms.length}
           built={view.built}
-          onBuild={() => (view.built ? setSheet({ kind: "rebuild" }) : build())}
+          onBuild={() => setSheet({ kind: view.built ? "rebuild" : "finished" })}
         />
       </div>
 
@@ -261,7 +307,7 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
                   type="button"
                   onClick={() => {
                     saveSettings({ include_summer: true });
-                    build(true);
+                    build({ includeSummer: true });
                   }}
                   className="-my-[13px] py-[13px] text-blue-600 type-label pressed:underline focus-ring:underline"
                 >
@@ -356,6 +402,21 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
           say("Course added");
         }}
       />
+      <FinishedSheet
+        open={sheet?.kind === "finished"}
+        onClose={() => setSheet(null)}
+        cards={sheet?.kind === "finished" ? finishChoices(view) : []}
+        unitsDone={settings.units_done}
+        onBuild={(finished, unitsDone) => {
+          if (unitsDone !== undefined && unitsDone !== settings.units_done) saveSettings({ units_done: unitsDone });
+          setSheet(null);
+          build({ finished });
+        }}
+        onSkip={() => {
+          setSheet(null);
+          build();
+        }}
+      />
       <ConfirmSheet
         open={sheet?.kind === "rebuild"}
         id="rebuild-title"
@@ -369,7 +430,8 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
         }}
         onClose={() => setSheet(null)}
       />
-      {toast && (
+      {/* A toast never covers a sheet: it waits until the sheet has closed */}
+      {toast && sheet === null && settled && (
         <Toast
           key={toast.id}
           message={toast.message}
@@ -385,7 +447,6 @@ function Planner({ plan, majors, data, transfer, today }: PlannerProps) {
               : undefined
           }
           bottom={TAB_TOAST_BOTTOM}
-          overSheet={sheet !== null}
           onDone={() => setToast(null)}
         />
       )}

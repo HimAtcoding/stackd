@@ -47,7 +47,8 @@ type CourseSheetProps = {
 };
 
 function YourCourse({ card, college, courses, onChoose, onType }: Pick<CourseSheetProps, "college" | "courses" | "onChoose" | "onType"> & { card: Card }) {
-  const chosen = courses.find((c) => c.id === card.item.college_course_id);
+  // Picked, or the college's only matching course by default
+  const chosen = courses.find((c) => c.id === card.courseId);
   const [typing, setTyping] = useState(courses.length === 0 || (card.code !== null && !chosen));
   const [code, setCode] = useState(chosen ? "" : (card.code ?? ""));
   const [units, setUnits] = useState(chosen || card.item.units === null ? "" : String(card.item.units));

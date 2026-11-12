@@ -78,9 +78,12 @@ export type Card = {
   topic: string | null;
   geArea: string | null;
   name: string;
-  // The student's course code, when known
+  // The student's course code: the one they picked or typed, else their college's only matching course
   code: string | null;
+  // The college course the card uses, picked or by default
+  courseId: string | null;
   units: number;
+  // True until the student's own course is known: "about 4 u"
   unitsEstimated: boolean;
   progress: TopicStatus;
   // null: Not in a term yet
@@ -122,7 +125,18 @@ export type ViewInput = {
   nameOf: (topic: string) => string;
   // A made-up id for a need without a saved item
   newId: (key: string) => string;
+  // The home college's course for a course type when it has exactly one, used until the student picks another
+  defaultCourse?: (topic: string) => DefaultCourse | null;
 };
+
+export type DefaultCourse = { id: string; code: string; units: number };
+
+// The needs with the college's only matching course's units, so Build my plan counts those
+export const withDefaultUnits = (needs: MajorNeed[], defaultCourse: (topic: string) => DefaultCourse | null): MajorNeed[] =>
+  needs.map((n) => {
+    const course = defaultCourse(n.topic);
+    return course ? { ...n, units: course.units } : n;
+  });
 
 export const itemKey = (item: Pick<StoredItem, "kind" | "topic" | "ge_area" | "id">) =>
   item.kind === "major" ? `major:${item.topic}` : item.kind === "ge" ? `ge:${item.ge_area}` : `custom:${item.id}`;
@@ -154,7 +168,11 @@ export function planView(input: ViewInput): PlanView {
   const cards: Card[] = [...keyed.entries()].map(([key, { item, saved }]) => {
     const need = item.kind === "major" ? needByTopic.get(item.topic!) : undefined;
     const area = item.kind === "ge" ? areaByCode.get(item.ge_area!) : undefined;
-    const from = item.units ?? need?.units ?? area?.units ?? null;
+    // Until the student picks or types a course, the college's only matching one stands in
+    const own = item.college_course_id !== null || item.course_code !== null;
+    const fallback = item.kind === "major" && !own ? (input.defaultCourse?.(item.topic!) ?? null) : null;
+    const known = item.units ?? fallback?.units ?? null;
+    const from = known ?? need?.units ?? area?.units ?? null;
     const progress: TopicStatus = (item.kind === "major" ? statuses[item.topic!] : item.status) ?? "not_started";
     const detail: CardDetail =
       item.kind === "ge"
@@ -167,9 +185,10 @@ export function planView(input: ViewInput): PlanView {
     return {
       key, item, saved, kind: item.kind, topic: item.topic, geArea: item.ge_area,
       name: need?.name ?? area?.name ?? item.course_name ?? "",
-      code: item.course_code,
+      code: item.course_code ?? fallback?.code ?? null,
+      courseId: item.college_course_id ?? fallback?.id ?? null,
       units: from !== null ? Number(from) : item.kind === "ge" ? DEFAULT_GE_UNITS : DEFAULT_MAJOR_UNITS,
-      unitsEstimated: from === null,
+      unitsEstimated: known === null,
       progress,
       term: item.term !== null && terms.includes(item.term) ? item.term : null,
       detail, line: null, reasons: [],
@@ -222,6 +241,22 @@ export function planView(input: ViewInput): PlanView {
     firstCheck: warnings.first,
     cardsByKey: new Map(cards.map((c) => [c.key, c])),
   };
+}
+
+// What the first build asks about (24 → 5): every course and area the builder would place, major courses first
+export const finishChoices = (view: PlanView) =>
+  [...view.cardsByKey.values()]
+    .filter((c) => c.kind !== "custom" && c.progress !== "done")
+    .sort((a, b) => Number(a.kind === "ge") - Number(b.kind === "ge") || (a.kind === "ge" ? a.key.localeCompare(b.key) : 0));
+
+// The courses and areas the student says they've finished before the first build. The caller marks the topics done in
+// user_topic_status; the areas become done items.
+export function markFinished(items: StoredItem[], cards: Card[], keys: Set<string>) {
+  const chosen = cards.filter((c) => keys.has(c.key) && c.kind !== "custom");
+  const topics = chosen.filter((c) => c.kind === "major").map((c) => c.topic!);
+  const areasDone = chosen.filter((c) => c.kind === "ge").map((c): StoredItem => ({ ...c.item, status: "done" }));
+  const ids = new Set(areasDone.map((i) => i.id));
+  return { topics, areasDone, items: [...items.filter((i) => !ids.has(i.id)), ...areasDone] };
 }
 
 // The plan's items after Build my plan or Rebuild: the builder's placements as saved items, which ones changed, and

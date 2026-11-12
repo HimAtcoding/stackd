@@ -533,6 +533,11 @@ Spec `24-plan.md` sections 1 to 4, 6 and 7, on branch `plan-b`, behind `plan` (s
   - `test:db`, with `course_suggestions`' checks and delete account removing them.
   - In the browser (Chromium, 393 × 852 and 320 × 568) against the real project's verified rows (Computer Science, the 14 order pairs, the 11 Cal-GETC areas, LPC's courses), with the test student's own rows (Las Positas, UC San Diego and SJSU in Computer Science, fall 2027, Discrete math taking now) in a stand-in, since plan rows are owner-only: spec 24's test items 1 to 10 pass, touch dragging (long press and handle) passes, and the release build with `plan` off shows four tabs and sends `/plan/` Home. Not checked: VoiceOver and real touch on an iPhone, and the rating prompt on a device.
   - `npm test`, `test:import`, lint and build pass.
+- **Review fixes** (2026-11-12, Ryan; spec 24 section 5 and test items 13 to 15 added):
+  - **Default course:** when Las Positas has exactly one verified course for a course type, the card shows its code and real units ("CS 1", "4 u"), the sheet shows it chosen, and Build my plan counts its units, until the student picks or types another. Nothing is saved for a default. With 2 or more (Calculus, Discrete math), and for every unit count not from the student's own course, the card says "about N u".
+  - **What's already finished:** on an empty plan, Build my plan first opens "What have you already finished?" (`finished-sheet.tsx`): every course and Cal-GETC area the builder would place as checkbox rows, and "Units you've finished". Its Build my plan marks the checked major courses done in `user_topic_status`, saves the checked areas as done items and the units in plan settings, then builds; "Skip, build now" builds with nothing marked.
+  - **Toasts and sheets:** on the Plan tab a toast never shows while a sheet is open; one raised meanwhile waits until the sheet has slid away, and keeps its Undo.
+  - Tested: `test:plan` 128 checks (11 more); in the browser at 393 and 320, test items 13 to 15 pass, and items 1 to 10 and the touch checks pass again.
 - **After merge** (each with Ryan's OK): `npx supabase db push` for the suggestions migration; build on the Mac to check the in-app review package resolves; then `plan` stays off until Ryan decides to turn it on.
 
 ## Plan, PR A (step 30, 2026-11-11)
