@@ -1,231 +1,1224 @@
 {
-  "written_by": "Claude Code, as a worklist for a person to fill",
-  "notes": "Las Positas College's own courses for the Plan (spec 24 → Data, college_courses), from LPC's current catalog. One row per course type in the 9 Explore majors (data/raw/explore), with only the course type filled in: no course, unit or C-ID is drafted. For each row, find the LPC course or courses for that course type in the catalog and fill in code and title exactly as the catalog prints them, units, and c_id (the C-ID number the catalog prints, or null if it prints none). A course type met by more than one course (a year of physics, a list to pick from) gets a row per course. A course that fits more than one course type is one row with each topic in topics; delete the duplicate rows. Delete a row if LPC has no course for it. topics is what makes a course show for a requirement, so set it only when the catalog or the C-ID number makes the match plain; for UC the app says \"Matches this course type at your college\", never \"counts for\" a campus. Fill in source_name, source_url (the catalog page), academic_year (the catalog's year, like 2026-27) and retrieved_at (the day you checked), and delete the todo. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-las-positas.json --dry-run",
+  "written_by": "Claude Code, drafted from Las Positas College's 2025-2026 catalog for Ryan Saleh to check",
+  "notes": "Las Positas College's own courses for the Plan (spec 24 → Data, college_courses). Code, title, units and C-ID are copied from the course pages of LPC's 2025-2026 catalog on laspositascollege.edu, the newest catalog LPC hosts itself. LPC's current catalog is on laspositas.curriqunet.com, which answers 403 to scripts, so nothing here was compared with it: a person checks each row against it. c_id is the first C-ID the course page prints without a condition; CHEM 1B and CHEM 12B print only a series C-ID (\"CHEM 120 S (if taken with CHEM 1A)\"), written here as CHEM 120S and CHEM 160S. Topics come from the C-ID number, the course title against the topic, or, for the TMC lists (comm-list-*, econ-list-*, polisci-*, psych-list-*, sociology-list-*, business-math, econ-calculus, math-list-a, diff-eq-and-linear-algebra), the list in LPC's own AA-T or AS-T page for that major in the same catalog (https://laspositascollege.edu/catalog/2025-2026/<subject>/<degree>-aa-t.php or -as-t.php). LPC has no CS AS-T. A course in an ADT list also gets the later list topics that say \"any List A course not already used\". The three rows with empty fields are course types the catalog doesn't settle; each says what to find. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-las-positas.json --dry-run",
   "college_courses": [
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BIO 1A",
+      "title": "General Botany",
+      "units": 5,
+      "c_id": "BIOL 155",
       "topics": [
-        "biology-sequence"
+        "biology-sequence",
+        "biology-first"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "General biology with lab, the full sequence (Biological Sciences, Biology): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/bio/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BIO 1B",
+      "title": "General Zoology",
+      "units": 5,
+      "c_id": "BIOL 150",
       "topics": [
-        "chemistry-general"
+        "biology-sequence",
+        "biology-first"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "General chemistry with lab, a full year (Biological Sciences, Biology): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/bio/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BIO 1C",
+      "title": "Cell and Molecular Biology",
+      "units": 5,
+      "c_id": "BIOL 190",
       "topics": [
-        "calculus-single"
+        "biology-sequence",
+        "science-second"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Calculus, a full year (Biological Sciences, Computer Science, Mathematics): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/bio/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BIO 10",
+      "title": "Introduction to the Science of Biology",
+      "units": 4,
+      "c_id": null,
       "topics": [
-        "chemistry-organic"
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Organic chemistry with lab, a full year (Biological Sciences): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/bio/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BIO 30",
+      "title": "Introduction to College Biology",
+      "units": 4,
+      "c_id": null,
       "topics": [
-        "calculus-first"
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Calculus, first course (Biology, Psychology): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/bio/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BUSN 1A",
+      "title": "Financial Accounting",
+      "units": 4,
+      "c_id": "ACCT 110",
       "topics": [
-        "microeconomics"
+        "financial-accounting",
+        "econ-list-a",
+        "econ-list-b"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Microeconomics (Business Administration, Economics): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/busn/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BUSN 1B",
+      "title": "Managerial Accounting",
+      "units": 4,
+      "c_id": "ACCT 120",
       "topics": [
-        "macroeconomics"
+        "managerial-accounting",
+        "econ-list-a",
+        "econ-list-b"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Macroeconomics (Business Administration, Economics): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/busn/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "calculus-year"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Calculus, a full year (Business Administration, Economics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "statistics"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Statistics (Business Administration, Communication, Economics, Psychology, Sociology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "intro-business"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Intro to business (Business Administration): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "financial-accounting"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Financial accounting (Business Administration): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "managerial-accounting"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Managerial accounting (Business Administration): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BUSN 18",
+      "title": "Business Law",
+      "units": 3,
+      "c_id": "BUS 125",
       "topics": [
         "business-law"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Business law (Business Administration): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/busn/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
+      "code": "BUSN 40",
+      "title": "Introduction to Business",
+      "units": 3,
+      "c_id": "BUS 110",
       "topics": [
-        "business-math"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One math course (Business Administration): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
+        "intro-business",
         "business-intro-or-communication"
       ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Intro to business or business communication (Business Administration): find the LPC course or courses for this course type"
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/busn/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CHEM 1A",
+      "title": "General College Chemistry I",
+      "units": 5,
+      "c_id": "CHEM 110",
+      "topics": [
+        "chemistry-general",
+        "science-second"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/chem/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CHEM 1B",
+      "title": "General College Chemistry II",
+      "units": 5,
+      "c_id": "CHEM 120S",
+      "topics": [
+        "chemistry-general"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/chem/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CHEM 12A",
+      "title": "Organic Chemistry I",
+      "units": 5,
+      "c_id": "CHEM 150",
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/chem/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CHEM 12B",
+      "title": "Organic Chemistry II",
+      "units": 5,
+      "c_id": "CHEM 160S",
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/chem/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CIS 50",
+      "title": "Introduction to Computing Information Technology",
+      "units": 3,
+      "c_id": "BUS 140",
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cis/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "COMM C1000",
+      "title": "Introduction to Public Speaking",
+      "units": 3,
+      "c_id": "COMM 110",
+      "topics": [
+        "public-speaking",
+        "comm-three-more"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 2",
+      "title": "Oral Interpretation of Literature",
+      "units": 3,
+      "c_id": "COMM 170",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 3",
+      "title": "Group Communication",
+      "units": 3,
+      "c_id": "COMM 140",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 4",
+      "title": "Introduction to Communication Studies",
+      "units": 3,
+      "c_id": "COMM 115",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 10",
+      "title": "Interpersonal Communication",
+      "units": 3,
+      "c_id": "COMM 130",
+      "topics": [
+        "interpersonal-communication"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 11",
+      "title": "Intercultural Communication",
+      "units": 3,
+      "c_id": "COMM 150",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 46",
+      "title": "Argumentation and Debate",
+      "units": 3,
+      "c_id": "COMM 120",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CMST 48",
+      "title": "Activities in Forensics",
+      "units": null,
+      "c_id": "COMM 160B",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cmst/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11",
+      "todo": "The catalog prints 1 - 4 units (a variable-unit course); LPC's Communication Studies 2.0 AA-T counts it as 3. units needs one number: decide which, then delete this todo"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CS 1",
+      "title": "Computing Fundamentals I",
+      "units": 4,
+      "c_id": "COMP 122",
+      "topics": [
+        "cs1",
+        "math-list-a",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CS 2",
+      "title": "Computing Fundamentals II",
+      "units": 4,
+      "c_id": "COMP 132",
+      "topics": [
+        "cs2"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CS 7",
+      "title": "Introduction to Computer Programming Concepts",
+      "units": 3,
+      "c_id": "COMP 112",
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CS 17",
+      "title": "Discrete Mathematical Structures",
+      "units": 4,
+      "c_id": "COMP 152",
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "CS 21",
+      "title": "Computer Organization and Assembly Language Programming",
+      "units": 4,
+      "c_id": "COMP 142",
+      "topics": [
+        "comp-org"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/cs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ECON 1",
+      "title": "Principles of Microeconomics",
+      "units": 3,
+      "c_id": "ECON 201",
+      "topics": [
+        "microeconomics"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/econ/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ECON 2",
+      "title": "Principles of Macroeconomics",
+      "units": 3,
+      "c_id": "ECON 202",
+      "topics": [
+        "macroeconomics"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/econ/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ENG 4",
+      "title": "Critical Thinking and Writing about Literature",
+      "units": 3,
+      "c_id": "ENGL 120",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/eng/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ENGL C1001",
+      "title": "Critical Thinking and Writing",
+      "units": 3,
+      "c_id": "ENGL 105",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/eng/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ANTR 1",
+      "title": "Biological Anthropology",
+      "units": 3,
+      "c_id": "ANTH 110",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/antr/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ANTR 3",
+      "title": "Cultural Anthropology",
+      "units": 3,
+      "c_id": "ANTH 120",
+      "topics": [
+        "comm-list-b",
+        "psych-social-science",
+        "psych-list-c",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/antr/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ANTR 4",
+      "title": "Language and Culture",
+      "units": 3,
+      "c_id": "ANTH 130",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/antr/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ETHS 5",
+      "title": "Psychology of Race and Identity",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/eths/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "ETHS 6",
+      "title": "Introduction to Race and Ethnicity",
+      "units": 3,
+      "c_id": "SOCI 150",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/eths/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "GS 1",
+      "title": "Introduction to Global Studies",
+      "units": 3,
+      "c_id": "GLST 101",
+      "topics": [
+        "polisci-list-b",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/gs/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "HIST 7",
+      "title": "US History Through Reconstruction",
+      "units": 3,
+      "c_id": "HIST 130",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/hist/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "HIST 8",
+      "title": "US History Post-Reconstruction",
+      "units": 3,
+      "c_id": "HIST 140",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/hist/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "JAMS 1",
+      "title": "Introduction to Mass Communications",
+      "units": 3,
+      "c_id": "JOUR 100",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/jams/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "JAMS 11",
+      "title": "Introduction to Reporting and Newswriting",
+      "units": 3,
+      "c_id": "JOUR 110",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/jams/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 1",
+      "title": "Calculus I",
+      "units": 5,
+      "c_id": "MATH 211",
+      "topics": [
+        "calculus-single",
+        "calculus-first",
+        "calculus-year",
+        "business-math",
+        "econ-calculus",
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 2",
+      "title": "Calculus II",
+      "units": 5,
+      "c_id": "MATH 221",
+      "topics": [
+        "calculus-single",
+        "calculus-year",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 3",
+      "title": "Multivariable Calculus",
+      "units": 5,
+      "c_id": "MATH 230",
+      "topics": [
+        "calculus-multi",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 5",
+      "title": "Ordinary Differential Equations",
+      "units": 3.5,
+      "c_id": "MATH 240",
+      "topics": [
+        "diff-eq",
+        "diff-eq-and-linear-algebra"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 7",
+      "title": "Elementary Linear Algebra",
+      "units": 3.5,
+      "c_id": "MATH 250",
+      "topics": [
+        "linear-algebra",
+        "diff-eq-and-linear-algebra",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 10",
+      "title": "Discrete Mathematical Structures",
+      "units": 4,
+      "c_id": "COMP 152",
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 33",
+      "title": "Finite Mathematics",
+      "units": 4,
+      "c_id": "MATH 130",
+      "topics": [
+        "business-math",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "MATH 34",
+      "title": "Business Calculus",
+      "units": 4,
+      "c_id": "MATH 140",
+      "topics": [
+        "business-math",
+        "econ-calculus"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/math/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PHIL 6",
+      "title": "Introduction to Logic",
+      "units": 3,
+      "c_id": "PHIL 110",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/phil/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PHIL 8",
+      "title": "Logic and Argumentation",
+      "units": 4,
+      "c_id": "PHIL 110",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/phil/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PHYS 1A",
+      "title": "General Physics I",
+      "units": 5,
+      "c_id": "PHYS 205",
+      "topics": [
+        "physics-year",
+        "physics-mechanics",
+        "math-list-a"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/phys/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PHYS 1C",
+      "title": "General Physics III",
+      "units": 5,
+      "c_id": "PHYS 210",
+      "topics": [
+        "physics-year",
+        "science-second"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/phys/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "POLS C1000",
+      "title": "American Government and Politics",
+      "units": 3,
+      "c_id": "POLS 110",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/poli/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "POLI 12",
+      "title": "Introduction to California State and Local Government",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/poli/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "POLI 20",
+      "title": "Comparative Government",
+      "units": 3,
+      "c_id": "POLS 130",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/poli/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "POLI 25",
+      "title": "Introduction to Political Theory",
+      "units": 3,
+      "c_id": "POLS 120",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/poli/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "POLI 30",
+      "title": "International Relations",
+      "units": 3,
+      "c_id": "POLS 140",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/poli/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC C1000",
+      "title": "Introduction to Psychology",
+      "units": 3,
+      "c_id": "PSY 110",
+      "topics": [
+        "psych-intro",
+        "comm-three-more",
+        "comm-list-b",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 3",
+      "title": "Introduction to Social Psychology",
+      "units": 3,
+      "c_id": "PSY 170",
+      "topics": [
+        "psych-list-b",
+        "psych-list-c",
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 4",
+      "title": "Brain, Mind, and Behavior",
+      "units": 3,
+      "c_id": "PSY 150",
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 6",
+      "title": "Abnormal Psychology",
+      "units": 3,
+      "c_id": "PSY 120",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 10",
+      "title": "Psychology of Human Sexuality",
+      "units": 3,
+      "c_id": "PSY 130",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 12",
+      "title": "Life-Span Psychology",
+      "units": 3,
+      "c_id": "PSY 180",
+      "topics": [
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 13",
+      "title": "Psychology of Women",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 15",
+      "title": "Abnormal Child Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 17",
+      "title": "The Psychology of Sleep and Dreams",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 21",
+      "title": "Psychology of Race and Identity",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "PSYC 25",
+      "title": "Research Methods",
+      "units": 4,
+      "c_id": "PSY 200",
+      "topics": [
+        "psych-research-methods"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/psyc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 1",
+      "title": "Principles of Sociology",
+      "units": 3,
+      "c_id": "SOCI 110",
+      "topics": [
+        "sociology-intro",
+        "comm-three-more",
+        "comm-list-b",
+        "psych-social-science",
+        "psych-list-c"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 3",
+      "title": "Introduction to Race and Ethnicity",
+      "units": 3,
+      "c_id": "SOCI 150",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 4",
+      "title": "Marriage and Family Relations",
+      "units": 3,
+      "c_id": "SOCI 130",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 5",
+      "title": "Introduction to Global Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-b",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 6",
+      "title": "Social Problems",
+      "units": 3,
+      "c_id": "SOCI 115",
+      "topics": [
+        "social-problems"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 7",
+      "title": "Sociology of Sexuality",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 11",
+      "title": "Sociology of Gender",
+      "units": 3,
+      "c_id": "SOCI 140",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 12",
+      "title": "Popular Culture",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "SOC 13",
+      "title": "Research Methods",
+      "units": 4,
+      "c_id": "SOCI 120",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/soc/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
+    },
+    {
+      "institution": "las-positas",
+      "code": "STAT C1000",
+      "title": "Introduction to Statistics",
+      "units": 4,
+      "c_id": "MATH 110",
+      "topics": [
+        "statistics",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Las Positas College Catalog 2025-2026",
+      "source_url": "https://laspositascollege.edu/catalog/2025-2026/stat/courses.php",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
@@ -240,7 +1233,7 @@
       "source_url": "",
       "academic_year": "",
       "retrieved_at": "",
-      "todo": "Intro to communication studies (Communication): find the LPC course or courses for this course type"
+      "todo": "Intro to communication studies (UC Communication pathway: a survey of mass and interpersonal communication, one or two courses). Not plain from LPC's catalog: CMST 4 covers interpersonal, small group and public speaking but not mass communication, and JAMS 1 covers mass communication. Find which LPC course or pair UC accepts (ASSIST or the campus), add those topics to the course rows, and delete this row"
     },
     {
       "institution": "las-positas",
@@ -255,457 +1248,7 @@
       "source_url": "",
       "academic_year": "",
       "retrieved_at": "",
-      "todo": "One course in logic, computing or culture (Communication): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comm-three-more"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Three more courses (Communication): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "public-speaking"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Public speaking (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "interpersonal-communication"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Interpersonal communication (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comm-list-a-1"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Communication elective, first of 3 (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comm-list-a-2"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Communication elective, second of 3 (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comm-list-a-3"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Communication elective, third of 3 (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comm-list-b"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more course (Communication Studies): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "cs1"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Intro to programming (CS 1) (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "cs2"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Data structures (CS 2) (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "comp-org"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Computer organization (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "calculus-multi"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Multivariable calculus (Computer Science, Mathematics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "discrete"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Discrete math (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "linear-algebra"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Linear algebra (Computer Science, Mathematics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "diff-eq"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Differential equations (Computer Science, Mathematics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "physics-year"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Physics with calculus, a full year (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "physics-mechanics"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Physics with calculus, first course (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "science-second"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more science course (Computer Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "econ-calculus"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One calculus course (Economics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "econ-list-a"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more math or business course (Economics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "econ-list-b"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One elective (Economics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "diff-eq-and-linear-algebra"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Differential equations and linear algebra (Mathematics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "math-list-a"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Programming or physics (Mathematics): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-core-1"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Core political science course, first of 3 (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-core-2"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Core political science course, second of 3 (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-core-3"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Core political science course, third of 3 (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-list-a-1"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Political science elective, first of 2 (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-list-a-2"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Political science elective, second of 2 (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "polisci-list-b"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more course (Political Science): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-intro"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Intro to psychology (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "biology-first"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Biology for science majors, first course (Psychology): find the LPC course or courses for this course type"
+      "todo": "One of symbolic logic, intro to computer science, or intro to cultural studies (UC Communication pathway). Not plain from LPC's catalog: PHIL 6 and PHIL 8 are intro logic (C-ID PHIL 110), not called symbolic logic; CS 1 or CS 7 could be the computer science choice; LPC has no course named cultural studies. Confirm which ones UC accepts, add the topic to those course rows, and delete this row"
     },
     {
       "institution": "las-positas",
@@ -720,157 +1263,7 @@
       "source_url": "",
       "academic_year": "",
       "retrieved_at": "",
-      "todo": "One more science course (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-social-science"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Two social science courses (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-research-methods"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Research methods in psychology (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-list-a"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One biology-based course (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-list-b"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more course for the major (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "psych-list-c"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One elective (Psychology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "sociology-intro"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Intro to sociology (Sociology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "social-problems"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Social problems (Sociology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "sociology-list-a-1"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Sociology elective, first of 2 (Sociology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "sociology-list-a-2"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "Sociology elective, second of 2 (Sociology): find the LPC course or courses for this course type"
-    },
-    {
-      "institution": "las-positas",
-      "code": "",
-      "title": "",
-      "units": null,
-      "c_id": "",
-      "topics": [
-        "sociology-list-b"
-      ],
-      "source_name": "",
-      "source_url": "",
-      "academic_year": "",
-      "retrieved_at": "",
-      "todo": "One more course (Sociology): find the LPC course or courses for this course type"
+      "todo": "One more science course in biology, chemistry or physics (UC Psychology pathway). The catalog doesn't say which LPC science courses UC accepts here. Confirm, add the topic to those course rows, and delete this row"
     }
   ]
 }
