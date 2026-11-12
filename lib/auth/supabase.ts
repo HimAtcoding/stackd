@@ -38,6 +38,10 @@ const PER_ACCOUNT_KEYS = [
   // Course statuses from Explore and the ones not yet sent (lib/data/topic-status.ts)
   "stackd.topicStatus",
   "stackd.topicQueue",
+  // The plan's items and settings, the ones not yet sent, and when to ask for a rating (lib/data/course-plan.ts, lib/rating.ts)
+  "stackd.coursePlan",
+  "stackd.coursePlanQueue",
+  "stackd.rating",
   // Reminder switch, default days and the card's dismissal (lib/reminders)
   "stackd.reminders",
   // Opportunities with Remind me on (lib/reminders/opportunities.ts)

@@ -73,6 +73,9 @@ export const essaysHref = (path = ""): string | null => (FEATURES.essays && !DEM
 // demo mode: a student's course status needs a signed-in account.
 export const exploreHref = (path = ""): string | null => (FEATURES.explore && !DEMO_MODE ? `/explore/${path}` : null);
 
+// The Plan tab (24), or null while its flag is off. Also null in demo mode: the plan is saved to an account.
+export const planHref = (): string | null => (FEATURES.plan && !DEMO_MODE ? "/plan/" : null);
+
 // How we check this (21), or null while Explore's flag is off
 export const aboutDataHref = (): string | null => (FEATURES.explore ? "/about/data/" : null);
 

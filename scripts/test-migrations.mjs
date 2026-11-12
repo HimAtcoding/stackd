@@ -730,6 +730,27 @@ await expectOk("a student can't change someone else's item (nothing matches)", (
 check("…and it's unchanged", (await db.query("select term from plan_items where user_id = $1 and topic = 'cs1'", [A])).rows[0]?.term === "fall-2026");
 await expectError("anon can't read plan items", () => as("anon", null, "select * from plan_items"), /permission denied/);
 
+// Courses students type, saved for us to check (24 → 3)
+const suggest = (sub, columns) => {
+  const entries = Object.entries({ user_id: sub, institution_id: instId, course_code: "MATH 1", ...columns });
+  return as("authenticated", sub, `insert into course_suggestions (${entries.map(([k]) => k).join(", ")}) values (${entries.map((_, i) => `$${i + 1}`).join(", ")})`,
+    entries.map(([, v]) => v));
+};
+await expectOk("a student saves a typed course for a topic", () => suggest(A, { topic: "calculus-single", units: 5 }));
+await expectOk("…and one for a GE area, without units", () => suggest(A, { ge_area: "3A", course_code: "ARTH 1" }));
+await expectOk("another student saves one", () => suggest(B, { topic: "cs1" }));
+await expectError("a suggestion names a topic or an area", () => suggest(A, {}), /check/);
+await expectError("…not both", () => suggest(A, { topic: "cs1", ge_area: "2" }), /check/);
+await expectError("a code isn't empty", () => suggest(A, { topic: "cs1", course_code: " " }), /course_code_check/);
+await expectError("units are above 0", () => suggest(A, { topic: "cs1", units: 0 }), /units_check/);
+await expectError("a student can't save one as someone else", () => suggest(A, { user_id: B, topic: "cs1" }), /row-level security/);
+await expectRows("a student sees only their own suggestions", () => as("authenticated", B, "select * from course_suggestions"), 1);
+await expectError("a student can't change a suggestion", () => as("authenticated", A, "update course_suggestions set course_code = 'MATH 2'"), /permission denied/);
+await expectError("…or delete one", () => as("authenticated", A, "delete from course_suggestions"), /permission denied/);
+await expectError("anon can't read suggestions", () => as("anon", null, "select * from course_suggestions"), /permission denied/);
+await expectError("anon can't add one", () => as("anon", null, "insert into course_suggestions (user_id, institution_id, topic, course_code) values ($1, $2, 'cs1', 'CS 1')", [A, instId]), /permission denied/);
+await expectRows("the service role reads every suggestion", () => as("service_role", null, "select * from course_suggestions"), 3);
+
 // Deleting an account: only the caller's, with every per-student row
 const course =await as("service_role", null, `insert into courses (institution_id, subject, course_number, title, source_name, source_url, academic_year, retrieved_at)
   values ($1, 'TEST', '1', 'Test course', ${prov}) returning id`, [instId]);
@@ -738,7 +759,7 @@ await savePlan("authenticated", B, instId, true, [{ institution_id: uniId, major
 await as("authenticated", B, "insert into saved_schools (user_id, institution_id) values ($1, $2)", [B, uniId]);
 const PER_STUDENT = [
   "profiles", "user_targets", "user_requirement_status", "saved_courses", "saved_schools", "user_deadlines", "user_checklist_steps",
-  "essay_drafts", "essay_feedback", "user_topic_status", "plan_settings", "plan_items",
+  "essay_drafts", "essay_feedback", "user_topic_status", "plan_settings", "plan_items", "course_suggestions",
 ];
 const rowCounts = async (sub) => Object.fromEntries(await Promise.all(
   PER_STUDENT.map(async (t) => [t, (await db.query(`select count(*)::int as n from ${t} where user_id = $1`, [sub])).rows[0].n])));
@@ -761,7 +782,7 @@ check("…and the reviewer page shows the ended message", (await open(TOKEN)).st
 check("another student's review link is untouched", (await reviewCounts(B)).links === 1);
 const others = await rowCounts(B);
 check("another student's rows are untouched", others.profiles === 1 && others.user_targets === 1 && others.saved_schools === 1, others);
-check("another student's plan is untouched", others.plan_settings === 1 && others.plan_items === 1, others);
+check("another student's plan is untouched", others.plan_settings === 1 && others.plan_items === 1 && others.course_suggestions === 1, others);
 check("another student's draft and feedback are untouched", others.essay_drafts === 1 && others.essay_feedback === 1, others);
 const leftover = (await db.query("select (select count(*)::int from essay_drafts where id = $1) as d, (select count(*)::int from essay_feedback where id = $2) as f", [draftA, feedbackA])).rows[0];
 check("the deleted student's draft and feedback are gone by id", leftover.d === 0 && leftover.f === 0, leftover);
