@@ -1,9 +1,11 @@
-import { exploreHref } from "@/lib/features";
+import { exploreHref, planHref } from "@/lib/features";
+import { loadCoursePlan } from "./course-plan";
 import { loadDeadlines } from "./deadlines";
 import { loadEssays } from "./essays";
 import { loadExplore, preloadAgreements } from "./explore";
 import { loadOpportunities } from "./opportunities";
 import { loadPlan, readPlanState, subscribePlan } from "./plan";
+import { preloadPlanData } from "./plan-data";
 import { loadReviews } from "./reviews";
 import { loadStatuses } from "./topic-status";
 
@@ -25,7 +27,13 @@ export function preloadTabs(): () => void {
         loadOpportunities();
         loadStatuses();
       }
+      if (planHref()) {
+        loadExplore();
+        loadStatuses();
+        loadCoursePlan();
+      }
     }
+    if (planHref()) preloadPlanData(plan.plan.home?.id ?? null);
     // Again when the plan changes, for a major just added
     if (exploreHref()) preloadAgreements(plan.plan);
   };

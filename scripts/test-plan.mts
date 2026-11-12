@@ -1,7 +1,8 @@
 // Checks Build my plan (lib/plan/build.ts, spec 24 → 5) on made-up course types, units and order, plus majorNeeds on
 // the real Computer Science file. `npm run test:plan`
 import fs from "node:fs";
-import { buildMajors, type ExploreRecords, type Statuses } from "../lib/explore";
+import type { PlanTarget } from "../lib/data/plan";
+import { buildMajors, type ExploreRecords, type Statuses, type TopicStatus } from "../lib/explore";
 import {
   buildPlan,
   currentTerm,
@@ -15,6 +16,9 @@ import {
   type PlanItem,
   type TermId,
 } from "../lib/plan/build";
+import { applyBuild, DEFAULT_SETTINGS, moveItem, planNeeds, planView, transferTermOf, type StoredItem, type ViewInput } from "../lib/plan/view";
+import { planWarnings, termHeader, type WarnCard, type WarnInput } from "../lib/plan/warnings";
+import { afterBuild, afterDoneMark } from "../lib/rating";
 
 let failed = 0;
 function check(name: string, ok: boolean, detail?: unknown) {
@@ -207,6 +211,133 @@ check("majorNeeds: units come from the rows, the larger when both have them",
 r = build({ majors: ucAndCsu, terms: planTerms("fall-2026", "fall-2027", false) });
 check("the real major builds into fall 2026 and spring 2027 within 15 units", unitsIn(r, "fall-2026") <= 15 && unitsIn(r, "spring-2027") <= 15 && r.items.length === ucAndCsu.length);
 check("…courses that count for both placed before the rest", r.items.filter((i) => i.term === "fall-2026").every((i) => ucAndCsu.find((n) => n.topic === i.topic)!.systems.length === 2), where(r));
+
+// Warnings and quiet notes (24 → 4)
+const NAMES: Record<string, string> = { first: "Made-up first", second: "Made-up second" };
+const wcard = (key: string, fields: Partial<WarnCard>): WarnCard => ({ key, kind: "major", topic: key, geArea: null, term: null, progress: "not_started", ...fields });
+const warn = (cards: WarnCard[], over: Partial<WarnInput> = {}) =>
+  planWarnings({ cards, terms: TWO, order: chainOrder, done: new Set(), geAreas: [], unitLimit: 15, unitsIn: () => 0, nameOf: (t) => NAMES[t] ?? t, ...over });
+let w = warn([wcard("first", { term: "fall-2026" }), wcard("second", { term: "fall-2026" })]);
+check("order: same term warns, naming the term", w.lines.get("second")?.text === "Take Made-up first first (Fall 2026)" && w.lines.get("second")?.kind === "warning", w.lines.get("second"));
+check("…and counts as a thing to check, the first one", w.count === 1 && w.first === "second");
+w = warn([wcard("first", { term: "spring-2027" }), wcard("second", { term: "fall-2026" })]);
+check("order: an earlier term warns too", w.lines.get("second")?.text === "Take Made-up first first (Spring 2027)");
+w = warn([wcard("first", { term: "fall-2026" }), wcard("second", { term: "spring-2027" })]);
+check("order: moved back to a later term, the warning clears", !w.lines.has("second") && w.count === 0);
+w = warn([wcard("first", { term: null }), wcard("second", { term: "fall-2026" })]);
+check("order: a prerequisite not in a term says so without a term", w.lines.get("second")?.text === "Take Made-up first first");
+w = warn([wcard("first", { term: "fall-2026", progress: "in_progress" }), wcard("second", { term: "fall-2026" })]);
+check("order: a prerequisite taking now in the same term still warns", w.lines.get("second")?.kind === "warning");
+w = warn([wcard("first", { term: "fall-2026", progress: "in_progress" }), wcard("second", { term: "spring-2027" })]);
+check("…and the next term is fine", !w.lines.has("second"));
+w = warn([wcard("second", { term: "fall-2026" })], { done: new Set(["first"]) });
+check("order: a done prerequisite is fine", !w.lines.has("second"));
+w = warn([wcard("second", { term: "fall-2026" })]);
+check("a prerequisite outside the plan is a quiet note", w.lines.get("second")?.kind === "note" && w.lines.get("second")?.text === "Needs Made-up first first, or placement");
+check("…that isn't counted", w.count === 0 && w.first === null);
+const lab = [ge("5A", 1), ge("5B", 2), ge("5C", 3, 0, 0)];
+const gecard = (code: string, progress: TopicStatus = "not_started") => wcard(`ge:${code}`, { kind: "ge", topic: null, geArea: code, term: "fall-2026", progress });
+w = warn([gecard("5A"), gecard("5B")], { geAreas: lab });
+check("5C: the lab note on 5A and 5B", w.lines.get("ge:5A")?.text === "Take one science course with a lab (Cal-GETC 5C)" && w.lines.get("ge:5B")?.kind === "note");
+check("…not counted", w.count === 0);
+w = warn([gecard("5A", "done"), gecard("5B")], { geAreas: lab });
+check("…and gone once either is done", w.lines.size === 0);
+check("term header: within the limit", termHeader(15, 15).text === "15 units" && !termHeader(15, 15).over);
+check("term header: 16 is over a 15 limit", termHeader(16, 15).text === "16 units, over your limit" && termHeader(16, 15).over);
+check("term header: 19 needs approval", termHeader(19, 21).text === "19 units. Most colleges need approval above 18" && termHeader(19, 15).over);
+w = warn([wcard("first", { term: "spring-2027" }), wcard("second", { term: "spring-2027" })], { unitsIn: (t) => (t === "fall-2026" ? 16 : 3) });
+check("a term over the limit counts, and comes first top to bottom", w.count === 2 && w.first === "fall-2026", { count: w.count, first: w.first });
+
+// What the Plan tab draws
+const stored = (id: string, fields: Partial<StoredItem> & Pick<StoredItem, "kind">): StoredItem => ({ ...item(fields), id, college_course_id: null, ...fields });
+const viewOf = (over: Partial<ViewInput>) =>
+  planView({
+    needs: [], geAreas: [], order: [], statuses: {}, items: [], terms: TWO, settings: DEFAULT_SETTINGS, systems: new Set(["uc", "cal-state"]),
+    nameOf: (t) => t, newId: (k) => `new-${k}`, ...over,
+  });
+let v = viewOf({ needs: [both("shared", 1), need("uc-only", 2, null)], geAreas: lab });
+check("view: an empty plan isn't built, and every need waits in Not in a term yet", !v.built && v.unplaced.length === 4 && v.coursesLeft === 4, v.unplaced.map((c) => c.key));
+check("view: line 2 counts for both, UC only, or the area", v.cardsByKey.get("major:shared")?.detail?.kind === "both" &&
+  JSON.stringify(v.cardsByKey.get("major:uc-only")?.detail) === JSON.stringify({ kind: "system", system: "uc" }) && v.cardsByKey.get("ge:5A")?.detail?.kind === "ge");
+check("view: a course with no units is about 4", v.cardsByKey.get("major:uc-only")?.units === 4 && v.cardsByKey.get("major:uc-only")?.unitsEstimated === true);
+v = viewOf({ needs: [need("uc-only", 2)], systems: new Set(["uc"]) });
+check("view: UC only isn't said when the plan is only UC", v.cardsByKey.get("major:uc-only")?.detail === null);
+const planned = [
+  stored("a", { kind: "major", topic: "shared", term: "fall-2026", position: 0 }),
+  stored("b", { kind: "major", topic: "uc-only", term: "spring-2027", position: 0, placed_by: "student" }),
+  stored("c", { kind: "custom", course_name: "Drawing", units: 3, term: "fall-2026", position: 1, placed_by: "student" }),
+  stored("d", { kind: "ge", ge_area: "5A", term: null, status: "not_started" }),
+  stored("e", { kind: "ge", ge_area: "5B", term: "fall-2026", position: 2, status: "done" }),
+];
+v = viewOf({ needs: [both("shared", 1), need("uc-only", 2)], geAreas: lab, items: planned });
+check("view: built, with cards in their terms by position", v.built && v.terms[0].cards.map((c) => c.key).join() === "major:shared,custom:c" && v.terms[1].cards.map((c) => c.key).join() === "major:uc-only");
+check("view: the current term is Now", v.terms[0].now && !v.terms[1].now && v.terms[0].label === "Fall 2026");
+check("view: a custom course counts toward the term's units", v.terms[0].header.units === 7, v.terms[0].header);
+check("view: …and never toward courses left", v.coursesLeft === 3, v.coursesLeft);
+check("view: done items leave the terms for Already done", v.done.map((c) => c.key).join() === "ge:5B" && !v.terms[0].cards.some((c) => c.key === "ge:5B"));
+check("view: units done counts the done items", v.unitsDone === 3);
+check("view: units done from settings wins", viewOf({ items: planned, settings: { ...DEFAULT_SETTINGS, units_done: 31 } }).unitsDone === 31);
+check("view: a builder item left out is Doesn't fit", v.doesntFit === 1 && v.unplaced[0].key === "ge:5A");
+check("view: reasons are true for the plan as it is",
+  v.cardsByKey.get("major:shared")?.reasons.join("|") === "Counts for UC and Cal State|Fits your 15 units in Fall 2026" &&
+  v.cardsByKey.get("major:uc-only")?.reasons.join("|") === "You moved it here" &&
+  v.cardsByKey.get("custom:c")?.reasons.join("|") === "You added it", [...v.cardsByKey.values()].map((c) => `${c.key}: ${c.reasons.join("|")}`));
+check("view: a done 5B clears the lab note on 5A", v.cardsByKey.get("ge:5A")?.line === null);
+v = viewOf({ needs: [both("shared", 1)], items: planned, settings: { ...DEFAULT_SETTINGS, units_per_term: 4 } });
+check("view: no Fits reason in a term over the limit", !v.cardsByKey.get("major:shared")?.reasons.some((r) => r.startsWith("Fits")) && v.terms[0].header.over);
+check("view: a custom course is counted in the over-limit header", v.terms[0].header.text === "7 units, over your limit");
+v = viewOf({ needs: [need("first", 1), need("second", 2)], order: chainOrder, items: [stored("x", { kind: "major", topic: "second", term: "fall-2026" }), stored("y", { kind: "major", topic: "first", term: "spring-2027" })] });
+check("view: Data structures above Intro to programming warns on the later course", v.cardsByKey.get("major:second")?.line?.kind === "warning" && v.checks === 1 && v.firstCheck === "major:second");
+check("view: …and the earlier course says what it's needed before", Boolean(v.cardsByKey.get("major:first")?.reasons.includes("Needed before Made-up second")));
+
+// Saving a build and moving cards
+const NEED2 = [need("first", 1), need("second", 2)];
+let ids = 0;
+let built = applyBuild([], { majors: NEED2, geAreas: [], statuses: {}, terms: TWO, unitLimit: 15, order: chainOrder }, () => `id-${++ids}`);
+check("build: every placed item gets an id and is saved", built.items.length === 2 && built.changed.length === 2 && built.items.every((i) => i.id.startsWith("id-")) && built.removed.length === 0);
+const again = applyBuild(built.items, { majors: NEED2, geAreas: [], statuses: {}, terms: TWO, unitLimit: 15, order: chainOrder }, () => `id-${++ids}`);
+check("rebuild: the same plan keeps its ids and changes nothing", again.changed.length === 0 && again.items.map((i) => i.id).sort().join() === built.items.map((i) => i.id).sort().join());
+const dropped = applyBuild(built.items, { majors: [need("first", 1)], geAreas: [], statuses: {}, terms: TWO, unitLimit: 15, order: chainOrder }, () => `id-${++ids}`);
+check("rebuild: a course type no longer in the plan is deleted", dropped.removed.length === 1 && dropped.items.length === 1);
+built = applyBuild([], { majors: NEED2, geAreas: [], statuses: { first: "in_progress" }, terms: TWO, unitLimit: 15, order: chainOrder }, () => `id-${++ids}`);
+const second = built.items.find((i) => i.topic === "second")!;
+const moved = moveItem(built.items, second, "fall-2026", null);
+check("move: to another term, at the end, as the student's placement",
+  moved.items.find((i) => i.id === second.id)?.term === "fall-2026" && moved.items.find((i) => i.id === second.id)?.placed_by === "student" && moved.items.find((i) => i.id === second.id)?.position === 1);
+check("move: only what changed is saved", moved.changed.length === 1, moved.changed.map((i) => i.topic));
+const rebuiltAfterMove = applyBuild(moved.items, { majors: NEED2, geAreas: [], statuses: { first: "in_progress" }, terms: TWO, unitLimit: 15, order: chainOrder }, () => `id-${++ids}`);
+check("rebuild keeps the moved course and the one taking now", rebuiltAfterMove.items.find((i) => i.topic === "second")?.term === "fall-2026" && rebuiltAfterMove.items.find((i) => i.topic === "first")?.term === "fall-2026");
+const first = moved.items.find((i) => i.topic === "first")!;
+const reordered = moveItem(moved.items, moved.items.find((i) => i.topic === "second")!, "fall-2026", first.id);
+check("move: within a term reorders and keeps who placed it", reordered.items.find((i) => i.topic === "second")?.position === 0 && reordered.items.find((i) => i.topic === "first")?.position === 1 &&
+  reordered.items.find((i) => i.topic === "first")?.placed_by === first.placed_by);
+const fresh = stored("new", { kind: "ge", ge_area: "1A", term: null, status: "not_started" });
+check("move: a card the plan didn't hold yet is added", moveItem(moved.items, fresh, "spring-2027", null).items.some((i) => i.id === "new" && i.term === "spring-2027" && i.placed_by === "student"));
+
+// The student's needs and transfer term
+const target = (system: string, slug: string | null): PlanTarget => ({ institutionId: system, slug: system, name: system, system, majorId: "m", majorName: "m", degreeType: null, exploreSlug: slug, majorNotListed: false });
+check("needs: UC San Diego and SJSU in Computer Science mark the shared courses", planNeeds([target("UC", "computer-science"), target("CSU", "computer-science")], [cs]).filter((n) => n.systems.length === 2).length === 5);
+check("needs: a school without a major adds nothing", planNeeds([target("UC", null)], [cs]).length === 0);
+check("transfer term: the student's own", JSON.stringify(transferTermOf({ asked: true, term: "fall-2028" }, new Date(2026, 10, 11))) === JSON.stringify({ term: "fall-2028", guessed: false }));
+check("transfer term: not sure yet plans to fall of next year", JSON.stringify(transferTermOf({ asked: true, term: null }, new Date(2026, 10, 11))) === JSON.stringify({ term: "fall-2027", guessed: true }));
+check("transfer term: never asked, the screen asks", transferTermOf({ asked: false, term: null }, new Date(2026, 10, 11)) === null);
+
+// Apple's rating prompt (24 → 7)
+const day = (d: number) => new Date(2026, 10, d, 12);
+let rs = afterBuild({ builtOn: null, laterDone: 0, askedAfterDone: false }, day(11));
+check("rating: asks after the first build", rs.ask && rs.state.builtOn === "2026-11-11");
+check("rating: not after the next build", !afterBuild(rs.state, day(12)).ask);
+let st = rs.state;
+for (let i = 0; i < 3; i++) st = afterDoneMark(st, day(11)).state;
+check("rating: done marks on the build day don't count", st.laterDone === 0);
+const asks: boolean[] = [];
+for (const d of [12, 12, 13, 14]) {
+  rs = afterDoneMark(st, day(d));
+  st = rs.state;
+  asks.push(rs.ask);
+}
+check("rating: asks on the 3rd done mark on a later day, once", asks.join() === "false,false,true,false", asks);
+check("rating: no done-mark ask before any build", !afterDoneMark({ builtOn: null, laterDone: 5, askedAfterDone: false }, day(20)).ask);
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);
