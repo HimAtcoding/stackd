@@ -554,7 +554,13 @@ Spec `24-plan.md`, Data and section 5, on branch `plan-a`. **The migration isn't
 - `topic-order.json`: 14 pairs from the Prerequisite lines; concurrent prerequisites, recommended preparation and prerequisites of only some choices in a pick-one topic are left out (the file's notes list them).
 - `cal-getc.json`: the 11 areas. The drafted names were wrong for 5A, 5B and 5C ("Physical Science", "Biological Science", "Laboratory"); area 4 is 2 courses, 6 units; 5C is 0 and 0 as the file's notes say.
 - **Dry runs** after the decisions: `cal-getc.json` 11 rows, `topic-order.json` 14 rows and `college-courses-las-positas.json` 79 rows all pass against the project. `test:import`'s draft check now allows a draft with nothing left to fill, and passes.
-- **Next:** Ryan checks the course codes against LPC's 2026-27 catalog, then the import and verify.
+- **Codes checked by Ryan** against LPC's Fall 2026 course list in CurriQunet (2026-11-11): 73 of 79 still active. From Fall 2026:
+  - BIO 1R (Organismal Biology, 5 units) replaces BIO 1A and BIO 1B and takes both their topics (`biology-sequence`, `biology-first`).
+  - ECON C2001 and C2002 replace ECON 1 and ECON 2; HIST C1001 and C1002 replace HIST 7 and HIST 8.
+  - These rows are `2026-27`. CurriQunet's outlines answer 403 to scripts, so BIO 1R's C-ID and the four new courses' units, C-IDs and outline links are todos for Ryan.
+  - `topic-order.json`: no pair pointed at BIO 1A or 1B. The `biology-sequence` after `chemistry-general` pair has a todo: check that BIO 1C's Fall 2026 outline still needs CHEM 1A.
+- **Dry runs** after the code check: `cal-getc.json` passes; `topic-order.json` and `college-courses-las-positas.json` stop only on their 1 and 5 todos, and copies without those rows passed (13 pairs, 73 courses). `test:import` passes.
+- **Next:** Ryan fills the 6 todos from the outlines, then the import and verify.
 
 ## Native Google sign-in on iOS (2026-11-10)
 
