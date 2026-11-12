@@ -1,6 +1,6 @@
 {
   "written_by": "Claude Code, for Ryan Saleh to check",
-  "notes": "Communication majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's communication. UC: every campus major the Communication Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/communication-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 16 rows; 4 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major. Checked 2026-11-11 (Claude Code, plain requests): every Cal State row from CSUN, Sacramento State, CSU San Bernardino, San Francisco State and Cal Poly San Luis Obispo against its catalog page (2026-27; Cal Poly's 2026-28), and each campus's program list for a matching bachelor's left out. Sacramento State's todo is cleared: all five concentration pages name the same B.A. in Communication Studies. The other 17 campuses' catalogs still answer an automated request with a bot check (AWS WAF challenge), so their todos stay for a person with a browser.",
+  "notes": "Communication majors so a student at any school can pick one in onboarding (spec 21, batch 2). Import after california-institutions.json, which adds the schools. Every row links to Explore's communication. UC: every campus major the Communication Transfer Pathway page lists, with the page's names and capitals, from that page; a line like \"B.A. and B.S.\" is two rows, and a major the page lists twice is one row. Cal State: each campus's bachelor's from its own 2026-27 catalog, 5 rows from 5 campuses (CSUN, Sacramento State, CSU San Bernardino, San Francisco State, Cal Poly San Luis Obispo). The other 17 campuses aren't here: Bakersfield, Channel Islands, Chico, Dominguez Hills, East Bay, Fresno, Fullerton, Humboldt, Long Beach, Cal State LA, Monterey Bay, Cal Poly Pomona, San Diego State, San José State, San Marcos, Sonoma and Stanislaus. Their catalogs showed a human-verification check to the automated lookup, so those campuses weren't checked at all. A missing campus doesn't mean it lacks the major. calstate.edu's degree search has the same check. docs/checks/batch-2a-csu-majors.md is the sheet for adding those rows by hand from each catalog. Cal Poly San Luis Obispo's catalog is a 2026-28 edition; academic_year says 2026-27 because the field takes one year. A row with a todo needs a decision, and the import refuses it until the todo is deleted. Check each row against its source_url, fill in retrieved_at, then run: npm run import -- data/raw/planning/communication-majors.json --dry-run Batch 2a by hand (Abyan, 2026-11-08): the other 17 Cal State campuses checked in each 2026-27 catalog in a browser, adding 16 rows; 4 carry a todo where the catalog lists the degree only by concentration or prints a different name. docs/checks/batch-2a-csu-majors.md has every campus's answer, including the ones without this major. Checked 2026-11-11 (Claude Code, plain requests): every Cal State row from CSUN, Sacramento State, CSU San Bernardino, San Francisco State and Cal Poly San Luis Obispo against its catalog page (2026-27; Cal Poly's 2026-28), and each campus's program list for a matching bachelor's left out. Sacramento State's todo is cleared: all five concentration pages name the same B.A. in Communication Studies. The other 17 campuses' catalogs still answer an automated request with a bot check (AWS WAF challenge), so their todos stay for a person with a browser. UC rows checked 2026-11-11 (Claude Code, plain requests) against the current Transfer Pathway page (last changed Sep 15, 2026; the page prints no academic year): every row's name, letters and campus match a line under Applicable majors, and every line there has a row.",
   "majors": [
     {
       "institution": "uc-davis",
@@ -11,7 +11,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/communication.html",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "uc-los-angeles",
@@ -22,7 +22,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/communication.html",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "uc-san-diego",
@@ -33,7 +33,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/communication.html",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "uc-santa-barbara",
@@ -44,7 +44,7 @@
       "source_name": "UC Admissions",
       "source_url": "https://admission.universityofcalifornia.edu/admission-requirements/transfer-requirements/uc-transfer-programs/transfer-pathways/communication.html",
       "academic_year": "2026-27",
-      "retrieved_at": ""
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "csun",
