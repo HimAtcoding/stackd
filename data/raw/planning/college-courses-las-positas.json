@@ -1,13 +1,13 @@
 {
   "written_by": "Claude Code, drafted from Las Positas College's 2025-2026 catalog for Ryan Saleh to check; codes checked by Ryan Saleh against LPC's Fall 2026 course list",
-  "notes": "Las Positas College's own courses for the Plan (spec 24 → Data, college_courses). Code, title, units and C-ID are copied from the course pages of LPC's 2025-2026 catalog on laspositascollege.edu, the newest catalog LPC hosts itself. LPC's current catalog is on laspositas.curriqunet.com, which answers 403 to scripts, so nothing here was compared with it: a person checks each row against it. c_id is the C-ID the course page prints; null where it prints none. Where it prints two, c_id is the one a pathway requirement for that course's topics names (data/raw/explore), preferring one printed without \"(if taken with ...)\" when both match; null when neither matches (CHEM 12A, CS 7). PSYC 25 prints PSY 200 and PSY 205 B and both match; c_id is PSY 205B, the 4-unit option with lab, like PSYC 25. CHEM 1B and CHEM 12B have c_id null: the C-ID they print (\"CHEM 120 S (if taken with CHEM 1A)\", \"CHEM 160 S (if taken with CHEM 12A)\") covers the sequence with CHEM 1A or CHEM 12A, not the course alone. CMST 48 is 3 units: the course page prints 1 - 4, and LPC's Communication Studies AA-T counts it as 3 units. Topics come from the C-ID number, the course title against the topic, or, for the TMC lists (comm-list-*, econ-list-*, polisci-*, psych-list-*, sociology-list-*, business-math, econ-calculus, math-list-a, diff-eq-and-linear-algebra), the list in LPC's own AA-T or AS-T page for that major in the same catalog (https://laspositascollege.edu/catalog/2025-2026/<subject>/<degree>-aa-t.php or -as-t.php). LPC has no CS AS-T. A course in an ADT list also gets the later list topics that say \"any List A course not already used\". STAT C1000 is in math-list-a because LPC's Mathematics AS-T lists it there. comm-intro, comm-logic-computing-culture and science-extra have no LPC course here: the catalog doesn't make a match plain, so students type their own course for those. Codes checked against LPC's curriculum database for Fall 2026 on 2026-11-11. From Fall 2026: BIO 1R (Organismal Biology, 5 units, prerequisite eligibility for college-level math) replaces BIO 1A and BIO 1B and takes both their topics; ECON C2001 and ECON C2002 replace ECON 1 and ECON 2; HIST C1001 and HIST C1002 replace HIST 7 and HIST 8. These five rows are academic_year 2026-27 from the course outlines, which answer 403 to scripts, so their units, C-IDs and outline links are for a person to fill (each has a todo). The other rows are still the 2025-2026 catalog, as drafted. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-las-positas.json --dry-run",
+  "notes": "Las Positas College's own courses for the Plan (spec 24 → Data, college_courses). Code, title, units and C-ID are copied from the course pages of LPC's 2025-2026 catalog on laspositascollege.edu, the newest catalog LPC hosts itself. LPC's current catalog is on laspositas.curriqunet.com, which answers 403 to scripts, so nothing here was compared with it: a person checks each row against it. c_id is the C-ID the course page prints; null where it prints none. Where it prints two, c_id is the one a pathway requirement for that course's topics names (data/raw/explore), preferring one printed without \"(if taken with ...)\" when both match; null when neither matches (CHEM 12A, CS 7). PSYC 25 prints PSY 200 and PSY 205 B and both match; c_id is PSY 205B, the 4-unit option with lab, like PSYC 25. CHEM 1B and CHEM 12B have c_id null: the C-ID they print (\"CHEM 120 S (if taken with CHEM 1A)\", \"CHEM 160 S (if taken with CHEM 12A)\") covers the sequence with CHEM 1A or CHEM 12A, not the course alone. CMST 48 is 3 units: the course page prints 1 - 4, and LPC's Communication Studies AA-T counts it as 3 units. Topics come from the C-ID number, the course title against the topic, or, for the TMC lists (comm-list-*, econ-list-*, polisci-*, psych-list-*, sociology-list-*, business-math, econ-calculus, math-list-a, diff-eq-and-linear-algebra), the list in LPC's own AA-T or AS-T page for that major in the same catalog (https://laspositascollege.edu/catalog/2025-2026/<subject>/<degree>-aa-t.php or -as-t.php). LPC has no CS AS-T. A course in an ADT list also gets the later list topics that say \"any List A course not already used\". STAT C1000 is in math-list-a because LPC's Mathematics AS-T lists it there. comm-intro, comm-logic-computing-culture and science-extra have no LPC course here: the catalog doesn't make a match plain, so students type their own course for those. Codes checked against LPC's curriculum database for Fall 2026 on 2026-11-11. From Fall 2026: BIO 1R (Organismal Biology, 5 units, prerequisite eligibility for college-level math) replaces BIO 1A and BIO 1B and takes both their topics; ECON C2001 and ECON C2002 replace ECON 1 and ECON 2; HIST C1001 and HIST C1002 replace HIST 7 and HIST 8. These five rows are academic_year 2026-27, with units, C-ID and source from their Fall 2026 course outlines, which Ryan Saleh read in a browser (CurriQunet answers 403 to scripts); none of the five outlines prints a C-ID. The other rows are still the 2025-2026 catalog, as drafted. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-las-positas.json --dry-run",
   "college_courses": [
     {
       "institution": "las-positas",
       "code": "BIO 1R",
       "title": "Organismal Biology",
       "units": 5,
-      "c_id": "",
+      "c_id": null,
       "topics": [
         "biology-sequence",
         "biology-first"
@@ -15,8 +15,7 @@
       "source_name": "Las Positas College curriculum database (CurriQunet), course outline",
       "source_url": "https://laspositas.curriqunet.com/DynamicReports/AllFieldsReportByEntity/6165?entityType=Course&reportId=347",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-11",
-      "todo": "c_id: the course outline answers 403 to scripts, so it was not read. Write the C-ID it prints, or null if it prints none, then delete this todo"
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
@@ -404,31 +403,29 @@
       "institution": "las-positas",
       "code": "ECON C2001",
       "title": "Principles of Microeconomics",
-      "units": null,
-      "c_id": "",
+      "units": 3,
+      "c_id": null,
       "topics": [
         "microeconomics"
       ],
-      "source_name": "Las Positas College curriculum database (CurriQunet), course outline",
-      "source_url": "",
+      "source_name": "Las Positas College course outline, Fall 2026",
+      "source_url": "https://laspositas.curriqunet.com/DynamicReports/AllFieldsReportByEntity/6173?entityType=Course&reportId=347",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-11",
-      "todo": "Replaces ECON 1 (Principles of Microeconomics) from Fall 2026. Fill in units, c_id (the C-ID the course outline prints, or null) and source_url (the course outline) from the outline, then delete this todo"
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
       "code": "ECON C2002",
       "title": "Principles of Macroeconomics",
-      "units": null,
-      "c_id": "",
+      "units": 3,
+      "c_id": null,
       "topics": [
         "macroeconomics"
       ],
-      "source_name": "Las Positas College curriculum database (CurriQunet), course outline",
-      "source_url": "",
+      "source_name": "Las Positas College course outline, Fall 2026",
+      "source_url": "https://laspositas.curriqunet.com/DynamicReports/AllFieldsReportByEntity/6174?entityType=Course&reportId=347",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-11",
-      "todo": "Replaces ECON 2 (Principles of Macroeconomics) from Fall 2026. Fill in units, c_id (the C-ID the course outline prints, or null) and source_url (the course outline) from the outline, then delete this todo"
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
@@ -552,31 +549,29 @@
       "institution": "las-positas",
       "code": "HIST C1001",
       "title": "United States History to 1877",
-      "units": null,
-      "c_id": "",
+      "units": 3,
+      "c_id": null,
       "topics": [
         "polisci-list-b"
       ],
-      "source_name": "Las Positas College curriculum database (CurriQunet), course outline",
-      "source_url": "",
+      "source_name": "Las Positas College course outline, Fall 2026",
+      "source_url": "https://laspositas.curriqunet.com/DynamicReports/AllFieldsReportByEntity/6180?entityType=Course&reportId=347",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-11",
-      "todo": "Replaces HIST 7 (US History Through Reconstruction) from Fall 2026. Fill in units, c_id (the C-ID the course outline prints, or null) and source_url (the course outline) from the outline, then delete this todo"
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
       "code": "HIST C1002",
       "title": "United States History since 1865",
-      "units": null,
-      "c_id": "",
+      "units": 3,
+      "c_id": null,
       "topics": [
         "polisci-list-b"
       ],
-      "source_name": "Las Positas College curriculum database (CurriQunet), course outline",
-      "source_url": "",
+      "source_name": "Las Positas College course outline, Fall 2026",
+      "source_url": "https://laspositas.curriqunet.com/DynamicReports/AllFieldsReportByEntity/6179?entityType=Course&reportId=347",
       "academic_year": "2026-27",
-      "retrieved_at": "2026-11-11",
-      "todo": "Replaces HIST 8 (US History Post-Reconstruction) from Fall 2026. Fill in units, c_id (the C-ID the course outline prints, or null) and source_url (the course outline) from the outline, then delete this todo"
+      "retrieved_at": "2026-11-11"
     },
     {
       "institution": "las-positas",
