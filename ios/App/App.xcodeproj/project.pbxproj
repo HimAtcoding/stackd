@@ -126,7 +126,7 @@
 					504EC3031FED79650016851F = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
-						DevelopmentTeam = 4JNCSTKTHQ;
+						DevelopmentTeam = PJ7K7ZK7W9;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -320,7 +320,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JNCSTKTHQ;
+				DEVELOPMENT_TEAM = PJ7K7ZK7W9;
 				CURRENT_PROJECT_VERSION = 8;
 				GOOGLE_IOS_CLIENT_ID_PREFIX = "565100661784-cosb8gifragr6a66n4vhus8qknimbuho";
 				INFOPLIST_FILE = App/Info.plist;
@@ -345,7 +345,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JNCSTKTHQ;
+				DEVELOPMENT_TEAM = PJ7K7ZK7W9;
 				CURRENT_PROJECT_VERSION = 8;
 				GOOGLE_IOS_CLIENT_ID_PREFIX = "565100661784-cosb8gifragr6a66n4vhus8qknimbuho";
 				INFOPLIST_FILE = App/Info.plist;
