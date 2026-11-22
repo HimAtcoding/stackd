@@ -559,7 +559,7 @@ Following Right after Ryan accepts in `docs/app-transfer.md`.
 - Web Apple secret made 2026-11-21 for `app.stackd.transfer.signin` with that key, kept outside the repo. It expires 2027-05-23. Apple's token endpoint accepts it, so the Services ID moved with the app. **Left:** paste it into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. Until then, Apple sign-in on the website uses the old team's secret.
 - Xcode: `DEVELOPMENT_TEAM` and the App target's `DevelopmentTeam` are `PJ7K7ZK7W9`. The certificate and provisioning profile on the new team aren't made yet.
 - Google iOS client `Stackd iOS`: still has Team ID `4JNCSTKTHQ`. Sign-in doesn't depend on it (no App Check). **Left:** change it to `PJ7K7ZK7W9` in the Google Cloud console.
-- **Pending: the Apple user exchange.** It waits for `transfer-subs.csv` from Shikhar. Apple's deadline is 2027-01-16. Check for Apple accounts made since 2026-11-17 before running the SQL (the query is in `docs/app-transfer.md`).
+- **The Apple user exchange won't happen (2026-11-22).** The old team's key was deleted before `transfer-subs.csv` reached Ryan, and the CSV can't be made again. The 3 Apple users with a real email are linked to their old account by email. The 3 Hide My Email users get new accounts and lose only a few school picks and a 5-word draft. Details are in Apple users without the exchange in `docs/app-transfer.md`.
 
 ## App Store transfer started (2026-11-16)
 
