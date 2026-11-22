@@ -18,10 +18,9 @@ export default function PrivacyPage() {
 
       <DocSection title="Who runs Stackd">
         <P>
-          Stackd is made and run by its developers, Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila
-          (&quot;we&quot; in this policy). We decide what Stackd collects and how it&apos;s used. On the App Store, Stackd is
-          published from Shikhar Sisodia&apos;s individual Apple developer account, so Apple lists him as the seller. To
-          reach us about your information, email <SupportEmail />.
+          Stackd is built by Ryan Saleh and team (&quot;we&quot; in this policy). We decide what Stackd collects and how
+          it&apos;s used. On the App Store, Stackd is published under Toufic Saleh&apos;s Apple developer account. To reach
+          us about your information, email <SupportEmail />.
         </P>
       </DocSection>
 

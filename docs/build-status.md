@@ -521,7 +521,7 @@ On branch `privacy-plan`, content only, for 1.5 (before `plan` turns on). `app/p
 - **How we use it:** placing courses into terms with unit totals and order warnings, and checking typed codes against the catalog.
 - **How long we keep it:** account deletion also lists the term-by-term plan and its settings and the typed codes (`delete_my_account()` deletes `plan_items`, `plan_settings` and `course_suggestions`).
 - App Store Connect's App Privacy answers don't change: this is Other User Content, linked, App Functionality, as declared since 1.2.
-- **Not changed, for Ryan:** "Who runs Stackd" still says the app is published from Shikhar Sisodia's account with him as seller. Since the transfer on 2026-11-17 the account holder is Toufic Saleh (App Store transfer done, below), so that paragraph is out of date.
+- **Who runs Stackd** (Ryan, 2026-11-22): "Stackd is built by Ryan Saleh and team", published on the App Store under Toufic Saleh's Apple developer account (the account holder since the transfer on 2026-11-17), with the same contact email. The four-name `DEVELOPER_CREDIT` in Settings and the page footers isn't changed.
 
 ## Plan, PR B (step 31, 2026-11-11)
 
