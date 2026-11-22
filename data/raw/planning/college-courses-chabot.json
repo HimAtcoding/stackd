@@ -1,0 +1,1413 @@
+{
+  "written_by": "Claude Code, drafted from Chabot College's 2025-2026 catalog for Ryan Saleh to check",
+  "notes": "Chabot College's own courses for the Plan (spec 24 → Data, college_courses). Code, title and units are copied from the course descriptions in Chabot's 2025-2026 catalog PDF on chabotcollege.edu (linked from https://www.chabotcollege.edu/courses/archives.php), the newest catalog Chabot hosts itself. Chabot's current catalog, the 2026-27 online catalog on chabot.curriqunet.com (linked from https://www.chabotcollege.edu/courses/index.php), answers 403 to scripts, so nothing here was compared with it: a person checks each row against it. source_url is the PDF with #page= set to the PDF page (two more than the printed page number) that holds the course description. The 2025-2026 catalog prints no C-ID on any course description, so c_id is null on every row; nothing was looked up elsewhere. Topics come from the course title against the topic, or, for the TMC lists (comm-list-*, econ-list-*, polisci-*, psych-list-*, sociology-list-*, business-math, econ-calculus, math-list-a, statistics slots), the list in Chabot's own AA-T or AS-T page for that major in the same catalog (PDF pages: Biology AS-T 171-172, Business Administration 2.0 AS-T 175, Communication Studies 2.0 AA-T 200-201, Economics AA-T 226-227, Mathematics AS-T 304, Political Science AA-T 351-352, Psychology AA-T 368, Sociology AA-T 377-378). Chabot has no CS AS-T (only an AS). A course in an ADT list also gets the later list topics that say any course not already used (psych List A to B to C, comm List A to B, sociology List A to B, econ List A to B, polisci core to List A to List B, math List A to List B). Chabot's Mathematics AS-T has List A (one of MTH 4 or MTH 6) and List B (programming, physics, discrete math, statistics, or the unused List A course); math-list-a is given to Chabot's List B courses, the closest list, the way LPC gave STAT C1000 math-list-a; diff-eq-and-linear-algebra is given to MTH 4 and MTH 6 by title. biology-first is BIOS 21A, the one course of the BIOS 21A-21C series with no biology or chemistry prerequisite. cs1 is on CSCI 15 and CSCI 19A, which the catalog says are designed for CS I, and on CSCI 14 with a todo. PHIL 55 Symbolic Logic gets comm-logic-computing-culture because the topic names symbolic logic. physics-year is on the courses covering mechanics or electricity and magnetism (PHYS 4A, 4B, 7A, 7C), as LPC did. comm-intro and science-extra have no Chabot course here: the catalog doesn't make a match plain, so students type their own course for those (LPC did the same). Left out: courses with no topic a Chabot page plainly supports, including ANTH 1, CSCI 7, ECN 10, MTH 33S, PHYS 4C, PHYS 5, PHYS 7D, HLTH 8 and the HIS courses. Todos: COMM 48 units (catalog prints 1-4), CSCI 14 cs1, ECN 1 and ECN 2 (Las Positas renumbered ECON 1 and 2 as ECON C2001 and C2002 from Fall 2026; check Chabot's 2026-27 catalog), MTH 43S statistics, PHYS 7B science-second. Every row is the 2025-2026 catalog and may have changed in 2026-27, so a person checks each row against Chabot's 2026-27 catalog. Then run: npm run import -- data/raw/planning/college-courses-chabot.json --dry-run",
+  "college_courses": [
+    {
+      "institution": "chabot",
+      "code": "ANTH 3",
+      "title": "Social and Cultural Anthropology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-b",
+        "psych-social-science",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=148",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "ANTH 4",
+      "title": "Language and Culture",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=148",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BIOS 1",
+      "title": "Introduction to the Science of Biology",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=173",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BIOS 21A",
+      "title": "Principles of Plant Biology and Ecology",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "biology-sequence",
+        "biology-first"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=173",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BIOS 21B",
+      "title": "Principles of Animal Biology and Evolution",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "biology-sequence"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=173",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BIOS 21C",
+      "title": "Principles of Cell and Molecular Biology",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "biology-sequence",
+        "science-second"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=174",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BIOS 41",
+      "title": "Fundamentals of Biology for Health Sciences",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=174",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 1A",
+      "title": "Financial Accounting",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "financial-accounting",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=185",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 1B",
+      "title": "Managerial Accounting",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "managerial-accounting",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=185",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 10",
+      "title": "Business Law",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "business-law",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=186",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 12",
+      "title": "Introduction to Business",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "intro-business",
+        "business-intro-or-communication",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=186",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 14",
+      "title": "Business Communications",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "business-intro-or-communication",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=186",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "BUS 19",
+      "title": "Business Statistics",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "statistics",
+        "math-list-a",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=187",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CAS 50",
+      "title": "Introduction to Computer Application Systems",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=193",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CHEM 1A",
+      "title": "General College Chemistry I",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-general",
+        "science-second"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=196",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CHEM 1B",
+      "title": "General College Chemistry II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-general"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=196",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CHEM 12A",
+      "title": "Organic Chemistry I",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=196",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CHEM 12B",
+      "title": "Organic Chemistry II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=196",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM C1000",
+      "title": "Introduction to Public Speaking",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "public-speaking",
+        "comm-three-more"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=202",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 2",
+      "title": "Oral Interpretation of Literature",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=202",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 3",
+      "title": "Group Communication",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=202",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 6",
+      "title": "Introduction to Performance Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=202",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 10",
+      "title": "Interpersonal Communication",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "interpersonal-communication"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=202",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 11",
+      "title": "Intercultural Communication",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 12",
+      "title": "Gender, Sexual Identity, and Communication",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 20",
+      "title": "Persuasion and Communication",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 46",
+      "title": "Argumentation and Debate",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 48",
+      "title": "Activities in Forensics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "Units: the course page prints 1-4 units (may be repeated 3 times) and the Communication Studies 2.0 AA-T lists it at 1-4, so Chabot's own pages give no single number. 3 is a placeholder. Set the units the AA-T counts it at, or leave the course out."
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 50",
+      "title": "Introduction to Communication Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "COMM 70A",
+      "title": "Introduction to Communication Tutor Training",
+      "units": 2,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=203",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 8",
+      "title": "Computer Literacy",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=204",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 10",
+      "title": "Introduction to Programming Using Visual BASIC.NET",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=204",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 14",
+      "title": "Introduction to Structured Programming In C++",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "cs1",
+        "math-list-a",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=204",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "cs1: CSCI 14 is Chabot's first C++ programming course (no programming experience needed), but the catalog says CSCI 15 and CSCI 19A are the courses designed for CS I, and it prints no C-ID. Check which course Chabot counts as CS 1 (COMP 122) and drop cs1 here if it isn't CSCI 14."
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 15",
+      "title": "Object-Oriented Programming Methods",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "cs1",
+        "math-list-a"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=205",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 19A",
+      "title": "Object-Oriented Programming Methods in Java",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "cs1",
+        "math-list-a",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=205",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 20",
+      "title": "Introduction to Data Structures",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "cs2",
+        "math-list-a"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=205",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 21",
+      "title": "Computer Organization and Assembly Language Programming",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "comp-org"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=205",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "CSCI 28",
+      "title": "Discrete Mathematics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=205",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "ECN 1",
+      "title": "Principles of Microeconomics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "microeconomics",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=227",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "Common Course Numbering: Las Positas (same district) replaced ECON 1 with ECON C2001 from Fall 2026. Check Chabot's 2026-27 catalog (CurriQunet, 403 to scripts) for whether ECN 1 still exists or has a new code, title and units."
+    },
+    {
+      "institution": "chabot",
+      "code": "ECN 2",
+      "title": "Principles of Macroeconomics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "macroeconomics",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=227",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "Common Course Numbering: Las Positas (same district) replaced ECON 2 with ECON C2002 from Fall 2026. Check Chabot's 2026-27 catalog (CurriQunet, 403 to scripts) for whether ECN 2 still exists or has a new code, title and units."
+    },
+    {
+      "institution": "chabot",
+      "code": "ENGL C1001",
+      "title": "Critical Thinking and Writing",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=232",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "ENGL 4A",
+      "title": "Critical Thinking and Writing about Literature",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=232",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "ES 1",
+      "title": "Introduction to Ethnic Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=253",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "ES 7",
+      "title": "Women of Color in the United States: Introduction to Race, Gender, and Sexuality Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=253",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MCOM 20",
+      "title": "Introduction to Journalism Reporting and News Writing",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=298",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MCOM 41",
+      "title": "Introduction to Mass Communications",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=299",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 1",
+      "title": "Calculus I",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "calculus-single",
+        "calculus-first",
+        "calculus-year",
+        "business-math",
+        "econ-calculus"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 2",
+      "title": "Calculus II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "calculus-single",
+        "calculus-year",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 3",
+      "title": "Multivariable Calculus",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "calculus-multi",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 4",
+      "title": "Elementary Differential Equations",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "diff-eq",
+        "diff-eq-and-linear-algebra",
+        "math-list-a",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 6",
+      "title": "Elementary Linear Algebra",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "linear-algebra",
+        "diff-eq-and-linear-algebra",
+        "math-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 8",
+      "title": "Discrete Mathematics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "discrete",
+        "math-list-a"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=305",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 15",
+      "title": "Applied Calculus I",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "calculus-first",
+        "business-math",
+        "econ-calculus"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=306",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 16",
+      "title": "Applied Calculus II",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=306",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 33",
+      "title": "Finite Mathematics",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "business-math",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=306",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "MTH 43S",
+      "title": "Introduction to Probability and Statistics with Support",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "statistics"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=307",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "statistics: the title is plainly an intro statistics course and the page says it is MTH 43 with extra lab hours (MTH 43 is now STAT C1000), but none of Chabot's AA-T or AS-T pages list MTH 43S in a statistics slot (they list STAT C1000, PSY 5 and BUS 19). Check it should count, or leave it out."
+    },
+    {
+      "institution": "chabot",
+      "code": "PHIL 55",
+      "title": "Symbolic Logic",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-social-science",
+        "comm-logic-computing-culture"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=329",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PHYS 4A",
+      "title": "General Physics I",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "physics-year",
+        "physics-mechanics",
+        "math-list-a"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=347",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PHYS 4B",
+      "title": "General Physics II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "physics-year",
+        "science-second"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=347",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PHYS 7A",
+      "title": "Physics for Scientists and Engineers: Classical Mechanics",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "physics-year",
+        "physics-mechanics",
+        "math-list-a"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=348",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PHYS 7B",
+      "title": "Physics for Scientists and Engineers: Fluid mechanics, Wave phenomena, Thermodynamics, Optics",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "science-second"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=348",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "science-second: Chabot calls PHYS 7B the recommended second course of the 7A-7D sequence, but PHYS 7C (Electromagnetism) can be taken right after 7A and is the one that stands in for PHYS 4B (the PHYS 4B page says no credit if PHYS 7C is done). The catalog prints no C-ID. Check which course is the second calculus-physics course for science-second, move the topic to PHYS 7C if it is that one, and leave PHYS 7B out if it has no topic left."
+    },
+    {
+      "institution": "chabot",
+      "code": "PHYS 7C",
+      "title": "Physics for Scientists and Engineers: Electromagnetism",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "physics-year"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=348",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POLS C1000",
+      "title": "American Government and Politics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=352",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POSC 12",
+      "title": "Introduction to California State and Local Government",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=352",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POSC 20",
+      "title": "Comparative Politics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=353",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POSC 25",
+      "title": "Introduction to Political Theory",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=353",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POSC 30",
+      "title": "International Relations",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=353",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "POSC 35",
+      "title": "Politics of Race and Gender: History, Governance, and Public Policy",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=353",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSYC C1000",
+      "title": "Introduction to Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-intro",
+        "comm-three-more",
+        "comm-list-b",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=369",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 2",
+      "title": "Introduction to Psychological Methodology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-research-methods"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=369",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 3",
+      "title": "Social Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=369",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 4",
+      "title": "Brain, Mind and Behavior",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=369",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 5",
+      "title": "Introductory Statistics for the Behavioral and Social Sciences",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "statistics",
+        "math-list-a",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 6",
+      "title": "Abnormal Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 7",
+      "title": "Introduction to Counseling Theory and Skills",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 8",
+      "title": "Human Sexuality",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 12",
+      "title": "Lifespan Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 25",
+      "title": "Happiness, Health, and Wellness Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=370",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 33",
+      "title": "Psychology of Personal and Social Adjustment",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=371",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "PSY 45",
+      "title": "Psychology of Creativity and Innovation",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=371",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 1",
+      "title": "Principles of Sociology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-intro",
+        "comm-three-more",
+        "comm-list-b",
+        "psych-social-science"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=378",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 2",
+      "title": "Social Problems",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "social-problems"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 3",
+      "title": "Introduction to Race and Ethnicity",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 4",
+      "title": "Marriage and Family Relations",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 5",
+      "title": "Introduction to Social Research Methods",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 6",
+      "title": "Introduction to Gender",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 7",
+      "title": "Women of Color in the United States: Introduction to Race, Gender, and Sexuality Studies",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 8",
+      "title": "Human Sexuality",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=379",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "SOCI 10",
+      "title": "Asian Americans in U.S. Society",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=380",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "chabot",
+      "code": "STAT C1000",
+      "title": "Introduction to Statistics",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "statistics",
+        "math-list-a",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Chabot College Catalog 2025-2026",
+      "source_url": "https://www.chabotcollege.edu/academics/docs/catalogs/2025-2026%20catalog.pdf#page=384",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22"
+    }
+  ]
+}
