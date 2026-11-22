@@ -77,6 +77,11 @@ Set up once, in GitHub → Settings → Secrets and variables → Actions → Ne
 | `NEXT_PUBLIC_SUPABASE_URL` | The project's Supabase URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The anon key from Supabase → Project Settings → API |
 
+Also once: register one iPhone on team `PJ7K7ZK7W9`. Automatic signing signs the archive for development first, and Apple won't make a development profile for a team with no devices (run #1 failed on this with "Your team has no devices").
+
+1. Get the iPhone's UDID on Windows: install Apple Devices from the Microsoft Store (or iTunes), plug in the iPhone, unlock it and tap Trust. On the phone's General page, click the serial number until it shows the UDID, then copy it.
+2. developer.apple.com/account → Certificates, IDs & Profiles → Devices → the + button. Platform iOS, a name like "Ryan's iPhone", the UDID as Device ID, then Continue and Register. An Admin can do this; if Devices isn't there for Ryan, the Account Holder does it.
+
 Each build:
 
 1. Raise the version above the last one sent to Apple: `version` in `package.json` and `MARKETING_VERSION` in `ios/App/App.xcodeproj/project.pbxproj` (both configurations). Apple takes no more builds for a version that's already live. Merge to `main`.
@@ -86,7 +91,7 @@ Each build:
 
 If it fails:
 
-- "Your team has no devices": the archive signs for development first, which needs one registered device. Add an iPhone's UDID in Certificates, Identifiers & Profiles → Devices (on Windows, the Apple Devices app shows the UDID when you click the serial number), then run it again.
+- "Your team has no devices": no iPhone is registered on the team yet. Do the one-time device step above, then run it again.
 - Each run is a fresh Mac, so Xcode may add an Apple Development certificate to the team each time. Revoke old ones in Certificates, Identifiers & Profiles if they pile up. Builds already uploaded aren't affected.
 
 ## Not Apple: decide separately
