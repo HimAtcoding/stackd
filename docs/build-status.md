@@ -538,6 +538,7 @@ Spec `24-plan.md` sections 1 to 4, 6 and 7, on branch `plan-b`, behind `plan` (s
   - **What's already finished:** on an empty plan, Build my plan first opens "What have you already finished?" (`finished-sheet.tsx`): every course and Cal-GETC area the builder would place as checkbox rows, and "Units you've finished". Its Build my plan marks the checked major courses done in `user_topic_status`, saves the checked areas as done items and the units in plan settings, then builds; "Skip, build now" builds with nothing marked.
   - **Toasts and sheets:** on the Plan tab a toast never shows while a sheet is open; one raised meanwhile waits until the sheet has slid away, and keeps its Undo.
   - Tested: `test:plan` 128 checks (11 more); in the browser at 393 and 320, test items 13 to 15 pass, and items 1 to 10 and the touch checks pass again.
+- **Code shown once** (2026-11-22, Ryan): a card whose name ends with its course's code in parentheses ("Intro to programming (CS 1)" with CS 1 picked or by default) drops it on that card and its sheet (`shortTitle` in `lib/plan/view.ts`). Display only: warnings and reasons on other cards keep the full name. `test:plan` 136 checks (8 more); items 13 to 15 pass again at 393 and 320.
 - **After merge** (each with Ryan's OK): `npx supabase db push` for the suggestions migration; build on the Mac to check the in-app review package resolves; then `plan` stays off until Ryan decides to turn it on.
 
 ## Plan, PR A (step 30, 2026-11-11)

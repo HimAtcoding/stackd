@@ -146,6 +146,15 @@ const blankItem = (id: string, kind: "major" | "ge", topic: string | null, geAre
   course_name: null, units: null, status: kind === "ge" ? "not_started" : null,
 });
 
+// "Intro to programming (CS 1)" with CS 1 as the course reads "Intro to programming", so the code shows once. Display
+// only: other cards' warnings and reasons still use the full name.
+export function shortTitle(name: string, code: string | null): string {
+  if (!code) return name;
+  const tidy = (s: string) => s.replace(/\s+/g, " ").trim().toUpperCase();
+  const m = name.match(/^(.*\S)\s*\(([^()]+)\)\s*$/);
+  return m && tidy(m[2]) === tidy(code) ? m[1] : name;
+}
+
 const sum = (cards: Card[]) => Number(cards.reduce((n, c) => n + c.units, 0).toFixed(1));
 
 export function planView(input: ViewInput): PlanView {
@@ -184,7 +193,7 @@ export function planView(input: ViewInput): PlanView {
             : null;
     return {
       key, item, saved, kind: item.kind, topic: item.topic, geArea: item.ge_area,
-      name: need?.name ?? area?.name ?? item.course_name ?? "",
+      name: shortTitle(need?.name ?? area?.name ?? item.course_name ?? "", item.course_code ?? fallback?.code ?? null),
       code: item.course_code ?? fallback?.code ?? null,
       courseId: item.college_course_id ?? fallback?.id ?? null,
       units: from !== null ? Number(from) : item.kind === "ge" ? DEFAULT_GE_UNITS : DEFAULT_MAJOR_UNITS,
@@ -216,7 +225,7 @@ export function planView(input: ViewInput): PlanView {
     if (c.kind === "ge") reasons.push(`Cal-GETC Area ${c.geArea}, ${c.name}`);
     if (c.kind === "major") {
       const next = open.find((o) => o.kind === "major" && order.some((p) => p.topic === o.topic && p.before_topic === c.topic));
-      if (next) reasons.push(`Needed before ${next.name}`);
+      if (next) reasons.push(`Needed before ${needByTopic.get(next.topic!)?.name ?? next.name}`);
     }
     if (c.term && c.item.placed_by === "builder" && c.kind !== "custom" && unitsIn(c.term) <= settings.units_per_term) {
       reasons.push(`Fits your ${settings.units_per_term} units in ${termLabel(c.term)}`);

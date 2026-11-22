@@ -24,6 +24,7 @@ import {
   moveItem,
   planNeeds,
   planView,
+  shortTitle,
   transferTermOf,
   withDefaultUnits,
   type StoredItem,
@@ -319,6 +320,19 @@ const defaulted = withDefaultUnits([need("first", 1, 3), need("second", 2, 3)], 
 check("default course: the builder counts its units", defaulted[0].units === 4 && defaulted[1].units === 3);
 const fives = applyBuild([], { majors: withDefaultUnits([need("first", 1, 3), need("x2", 2, 4), need("x3", 3, 4), need("x4", 4, 3)], onlyCs1), geAreas: [], statuses: {}, terms: TWO, unitLimit: 15, order: [] }, () => `d-${Math.random()}`);
 check("default course: 4 + 4 + 4 + 3 fits 15 in one term", fives.items.every((i) => i.term === "fall-2026"), fives.items.map((i) => [i.topic, i.term]));
+
+// The code shows once: a title ending in the chosen course's code drops it, on that card only
+check("short title: drops a parenthetical that is the course's code", shortTitle("Intro to programming (CS 1)", "CS 1") === "Intro to programming");
+check("short title: matches spacing and case", shortTitle("Data structures ( cs  2 )", "CS 2") === "Data structures");
+check("short title: keeps it when the course is another", shortTitle("Intro to programming (CS 1)", "CS 1H") === "Intro to programming (CS 1)");
+check("short title: keeps it with no course", shortTitle("Intro to programming (CS 1)", null) === "Intro to programming (CS 1)");
+check("short title: keeps a parenthetical that isn't a code", shortTitle("Physics (a full year)", "PHYS 1") === "Physics (a full year)");
+const dup = [{ ...need("first", 1, 3), name: "Intro to programming (CS 1)" }, { ...need("second", 2, 3), name: "Data structures (CS 2)" }];
+v = viewOf({ needs: dup, order: chainOrder, defaultCourse: onlyCs1, nameOf: (t) => dup.find((n) => n.topic === t)?.name ?? t, items: [stored("a", { kind: "major", topic: "first", term: "spring-2027" }), stored("b", { kind: "major", topic: "second", term: "fall-2026" })] });
+check("short title: the card with CS 1 by default reads Intro to programming", v.cardsByKey.get("major:first")?.name === "Intro to programming" && v.cardsByKey.get("major:first")?.code === "CS 1");
+check("short title: a card without that course keeps its full name", v.cardsByKey.get("major:second")?.name === "Data structures (CS 2)");
+check("short title: other cards still say the full name", v.cardsByKey.get("major:second")?.line?.text === "Take Intro to programming (CS 1) first (Spring 2027)" &&
+  v.cardsByKey.get("major:first")?.reasons.includes("Needed before Data structures (CS 2)") === true, [v.cardsByKey.get("major:second")?.line, v.cardsByKey.get("major:first")?.reasons]);
 
 // What's already finished, before the first build (24 → 5)
 v = viewOf({ needs: [both("shared", 1), need("uc-only", 2)], geAreas: lab, statuses: { "uc-only": "in_progress" } });
