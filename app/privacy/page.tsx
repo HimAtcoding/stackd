@@ -6,7 +6,8 @@ export const metadata: Metadata = { title: "Stackd privacy policy" };
 
 // /privacy/ (12): what Stackd actually stores, checked against supabase/migrations and lib/ on 2026-11-09 (v1.1 adds
 // the deadlines tables and profiles.transfer_term; v1.2 adds essay_drafts, review_links and review_comments; v1.3 adds
-// essay_drafts.notes and review_links.finished_at; v1.4 adds user_topic_status and opportunity reminders on the phone). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
+// essay_drafts.notes and review_links.finished_at; v1.4 adds user_topic_status and opportunity reminders on the phone; v1.5
+// adds plan_items, plan_settings and course_suggestions). Change it, and PRIVACY_UPDATED, whenever what the app collects changes.
 export default function PrivacyPage() {
   return (
     <DocPage title="Privacy policy" updated={PRIVACY_UPDATED}>
@@ -17,10 +18,9 @@ export default function PrivacyPage() {
 
       <DocSection title="Who runs Stackd">
         <P>
-          Stackd is made and run by its developers, Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila
-          (&quot;we&quot; in this policy). We decide what Stackd collects and how it&apos;s used. On the App Store, Stackd is
-          published from Shikhar Sisodia&apos;s individual Apple developer account, so Apple lists him as the seller. To
-          reach us about your information, email <SupportEmail />.
+          Stackd is built by Ryan Saleh and team (&quot;we&quot; in this policy). We decide what Stackd collects and how
+          it&apos;s used. On the App Store, Stackd is published under Toufic Saleh&apos;s Apple developer account. To reach
+          us about your information, email <SupportEmail />.
         </P>
       </DocSection>
 
@@ -39,6 +39,18 @@ export default function PrivacyPage() {
             <strong className="font-semibold text-navy-900">Your plan:</strong> your community college, the universities and
             majors you pick, the schools you save, and any progress you mark, including which courses for your major you&apos;ve
             marked done or taking now.
+          </li>
+          <li>
+            <strong className="font-semibold text-navy-900">Your term-by-term plan:</strong> which courses and Cal-GETC areas
+            you put in each term and in what order, the course you pick or type for each one with its units, any courses you
+            add yourself, how many units you plan to take a term, whether you include summer terms, and the transferable units
+            you say you&apos;ve finished.
+          </li>
+          <li>
+            <strong className="font-semibold text-navy-900">Course codes you type:</strong> when you type your own course
+            code for a requirement (like MATH 1), we also save that code, its units, your college and the requirement, linked
+            to your account. We use it only to check the code against your college&apos;s catalog, so we can add courses we
+            have checked for every student. It&apos;s never shown to anyone else.
           </li>
           <li>
             <strong className="font-semibold text-navy-900">Your deadlines:</strong> the term you plan to transfer, which
@@ -85,6 +97,8 @@ export default function PrivacyPage() {
           <li>To save your plan and show it on every device you sign in on.</li>
           <li>To show your deadlines and checklist, and to set up the reminders you turn on.</li>
           <li>To show which courses your major still needs.</li>
+          <li>To place your courses into terms, add up each term&apos;s units, and say when a course comes before the one it needs.</li>
+          <li>To check course codes you type against your college&apos;s catalog.</li>
           <li>To save your essay drafts and show which answers are done.</li>
           <li>To show a reviewer the answer you shared, and show you their comments.</li>
           <li>To email you 6-digit codes that confirm your email or reset your password.</li>
@@ -130,8 +144,8 @@ export default function PrivacyPage() {
         <P>
           We keep your information while you have an account. A review link stops working after 14 days, or as soon as you
           turn it off; its comments stay with you until you delete them or the answer. When you delete your account, your
-          account, profile, plan, saved schools, progress, deadline marks, reminder choices, essay drafts and notes, review links, and
-          the comments on them are deleted right away. Copies in our providers&apos; routine backups and logs are
+          account, profile, plan, term-by-term plan and its settings, course codes you typed, saved schools, progress, deadline marks,
+          reminder choices, essay drafts and notes, review links, and the comments on them are deleted right away. Copies in our providers&apos; routine backups and logs are
           overwritten on their normal schedule.
         </P>
       </DocSection>

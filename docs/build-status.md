@@ -514,6 +514,15 @@ Merged in PR #7. Still behind the deadline flags, so the release build doesn't c
 - **The bell** is behind the `notifications` flag, which is off in v1 and v1.1. It showed in the review screenshots only because `NEXT_PUBLIC_FEATURES=all` turns every flag on. No change.
 - `NEXT_PUBLIC_FEATURES` only takes `all`. There's no `customDeadlines` flag in `lib/features.ts` yet; spec 14 names it for custom dates, which aren't built.
 
+## Privacy page for the Plan (2026-11-22)
+
+On branch `privacy-plan`, content only, for 1.5 (before `plan` turns on). `app/privacy/page.tsx`, dated November 22, 2026:
+- **What we collect:** "Your term-by-term plan" (the courses and Cal-GETC areas in each term and their order, the course picked or typed with its units, courses the student adds, units per term, summers, units finished) and "Course codes you type" (the code, units, college and requirement, linked to the account, used only to check against the college's catalog, never shown to anyone else).
+- **How we use it:** placing courses into terms with unit totals and order warnings, and checking typed codes against the catalog.
+- **How long we keep it:** account deletion also lists the term-by-term plan and its settings and the typed codes (`delete_my_account()` deletes `plan_items`, `plan_settings` and `course_suggestions`).
+- App Store Connect's App Privacy answers don't change: this is Other User Content, linked, App Functionality, as declared since 1.2.
+- **Who runs Stackd** (Ryan, 2026-11-22): "Stackd is built by Ryan Saleh and team", published on the App Store under Toufic Saleh's Apple developer account (the account holder since the transfer on 2026-11-17), with the same contact email. The four-name `DEVELOPER_CREDIT` in Settings and the page footers isn't changed.
+
 ## Cloud iOS builds (2026-11-22)
 
 - `.github/workflows/ios-testflight.yml`: manual only (`workflow_dispatch`), from `main` on `HimAtcoding/stackd`. On `macos-26` with Node 24: `npm ci`, `npm run ios:prepare` (env check, static export, `cap sync ios`), archive with automatic signing through App Store Connect API key `99329B9MCR`, then export with `destination` upload to App Store Connect.
