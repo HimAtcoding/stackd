@@ -1,38 +1,22 @@
-// Spec 24 → Test in a browser: items 1 to 10 and 13 to 15 at 393 × 852 and 320 × 568, and dragging by touch.
-// Schools, pathways, topic order, Cal-GETC and Las Positas's courses come from the real project as anon; the test
-// student's own rows are a stand-in (standin.mjs), so nothing is written to the project.
-//   npm run test:e2e                      starts next dev with plan on, port 3107
-//   npm run test:e2e -- --base http://localhost:3000 --shots <folder>
-// Needs .env.local (the project's URL and anon key) and Chromium for Playwright (npx playwright install chromium).
-import fs from "node:fs";
-import { chromium } from "playwright";
-import { startDevServer } from "./server.mjs";
-import { install, makeState } from "./standin.mjs";
-
-const arg = (name) => {
-  const at = process.argv.indexOf(`--${name}`);
-  return at > 0 ? process.argv[at + 1] : undefined;
-};
-const SHOTS = arg("shots");
-if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
-
-let failed = 0;
-const check = (name, ok, detail) => {
-  if (!ok) failed++;
-  console.log(ok ? "ok   " : "FAIL ", name, ok ? "" : JSON.stringify(detail ?? null).slice(0, 400));
-};
+// Spec 24 → Test in a browser: items 1 to 10 and 13 to 15 at 393 × 852 and 320 × 568, and dragging by touch. Run by
+// run.mjs (npm run test:e2e).
 
 // The course types the checks name, as their cards show them
 const CS1 = "Intro to programming";
 const CS1_FULL = "Intro to programming (CS 1)";
 const CS2 = "Data structures";
 
-const server = arg("base") ? { base: arg("base"), stop: () => {} } : await startDevServer();
-const BASE = server.base;
-const browser = await chromium.launch();
+// Set by planSuite from the run
+let check, settle, shot, phone, BASE;
 
-const settle = (page, ms = 600) => page.waitForTimeout(ms);
-const shot = (page, name, fullPage = false) => (SHOTS ? page.screenshot({ path: `${SHOTS}/${name}.png`, fullPage }) : null);
+export async function planSuite(run) {
+  ({ check, settle, shot, base: BASE } = run);
+  phone = (width, height) => run.open("/plan/", width, height);
+  await mainList();
+  for (const [w, h] of [[393, 852], [320, 568]]) await firstBuildAndSheets(w, h);
+  await touchDragging();
+}
+
 const section = (page, label) => page.locator("section").filter({ has: page.getByRole("heading", { name: label, exact: true }) });
 const labelsIn = (page, label) => section(page, label).locator("li .card-tap").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
 const allLabels = (page) => page.locator("section li .card-tap").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
@@ -48,17 +32,6 @@ const termOf = async (page, name) => {
 };
 const checksLine = (page) => page.getByRole("button", { name: /to check$/ });
 const toastShown = (page) => page.getByRole("status").filter({ hasText: /Moved to|Plan built|Course/ }).count();
-
-async function phone(width, height) {
-  const state = makeState();
-  const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
-  await install(context, state);
-  const page = await context.newPage();
-  page.on("pageerror", (e) => check(`no page error (${e.message.slice(0, 80)})`, false));
-  await page.goto(`${BASE}/plan/`, { waitUntil: "networkidle" });
-  await settle(page, 1500);
-  return { state, context, page };
-}
 
 // Build my plan with nothing marked
 async function buildSkipping(page) {
@@ -379,14 +352,3 @@ async function touchDragging() {
   check("touch: the handle picks it up at once", termOfTopic("cs2") === "fall-2026", termOfTopic("cs2"));
   await context.close();
 }
-
-try {
-  await mainList();
-  for (const [w, h] of [[393, 852], [320, 568]]) await firstBuildAndSheets(w, h);
-  await touchDragging();
-} finally {
-  await browser.close();
-  server.stop();
-}
-console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
-process.exit(failed ? 1 : 0);

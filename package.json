@@ -24,7 +24,7 @@
     "test:explore": "tsx scripts/test-explore.mts",
     "test:opportunities": "tsx scripts/test-opportunities.mts",
     "test:plan": "tsx scripts/test-plan.mts",
-    "test:e2e": "node scripts/e2e/plan.mjs",
+    "test:e2e": "node scripts/e2e/run.mjs",
     "test:oauth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-oauth.mjs",
     "apple:secret": "node scripts/make-apple-secret.mjs",
     "ios:assets": "node scripts/ios-assets.mjs",

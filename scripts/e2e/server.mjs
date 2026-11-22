@@ -3,9 +3,10 @@ import { execSync, spawn } from "node:child_process";
 
 export async function startDevServer({ port = 3107, features = "plan" } = {}) {
   const base = `http://localhost:${port}`;
-  const child = spawn("npx", ["next", "dev", "-p", String(port)], {
+  // One command string: Node warns about arguments passed alongside a shell
+  const child = spawn(`npx next dev -p ${Number(port)}`, {
     env: { ...process.env, NEXT_PUBLIC_FEATURES: features },
-    shell: process.platform === "win32",
+    shell: true,
     stdio: "ignore",
   });
   const stop = () => {

@@ -22,8 +22,9 @@ export function session() {
   };
 }
 
-export function makeState() {
-  return { tables: Object.fromEntries([...STANDIN].map((t) => [t, []])), ids: null, base: null, apikey: null, seeded: false };
+// noPlan: a student who hasn't picked a college or schools yet. statuses: course types marked, by topic.
+export function makeState({ noPlan = false, statuses = { discrete: "in_progress" } } = {}) {
+  return { tables: Object.fromEntries([...STANDIN].map((t) => [t, []])), ids: null, base: null, apikey: null, seeded: false, noPlan, statuses };
 }
 
 // The real ids of the test student's schools and majors, read as anon
@@ -39,12 +40,14 @@ async function realIds(state, request) {
 
 function seed(state, { by, majorAt }) {
   const strip = ({ id, slug, name, system, abbreviation }) => ({ id, slug, name, system, abbreviation });
-  state.tables.profiles = [{ user_id: USER_ID, first_name: "Sam", home: strip(by["las-positas"]), transfer_term: "fall-2027", transfer_term_asked: true }];
-  state.tables.user_targets = ["uc-san-diego", "san-jose-state"].map((slug) => {
-    const m = majorAt(by[slug].id);
-    return { user_id: USER_ID, major_not_listed: false, institution: strip(by[slug]), major: { id: m.id, name: m.name, degree_type: m.degree_type, explore_slug: m.explore_slug } };
-  });
-  state.tables.user_topic_status = [{ user_id: USER_ID, topic: "discrete", status: "in_progress" }];
+  state.tables.profiles = [{ user_id: USER_ID, first_name: "Sam", home: state.noPlan ? null : strip(by["las-positas"]), transfer_term: "fall-2027", transfer_term_asked: true }];
+  state.tables.user_targets = state.noPlan
+    ? []
+    : ["uc-san-diego", "san-jose-state"].map((slug) => {
+        const m = majorAt(by[slug].id);
+        return { user_id: USER_ID, major_not_listed: false, institution: strip(by[slug]), major: { id: m.id, name: m.name, degree_type: m.degree_type, explore_slug: m.explore_slug } };
+      });
+  state.tables.user_topic_status = Object.entries(state.statuses).map(([topic, status]) => ({ user_id: USER_ID, topic, status }));
 }
 
 // eq. filters only; the app's other filters on these tables don't change which of one student's rows come back
