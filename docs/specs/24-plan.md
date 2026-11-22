@@ -89,6 +89,8 @@ Bottom sheet (`00`), opened by tapping a card.
 | Move to… | A secondary button opening a list of terms plus Not in a term yet; picking one moves the card and closes both sheets with toast "Moved to Spring 2027" + Undo |
 | Remove from plan | Only for custom courses (5): a text button in `--coral-700`, with Undo in the toast |
 
+Toasts on the Plan tab never cover an open sheet: a toast raised while one is open waits until it has slid away.
+
 ## 4. Warnings
 
 Computed live from the plan, never stored. Each shows on the card it's about (line 2) and is counted in a quiet line under the hero: "2 things to check" `label` `--coral-700`, which scrolls to the first.
@@ -114,7 +116,11 @@ Pure function in `lib/plan/build.ts`, tested on its own. Inputs: the student's s
 2. Sort the rest: courses that count for both UC and Cal State first, then the rest of the major (the student's own systems only), then GE areas. Within a group, by `topic_order` depth (earlier courses first), then by the pathway's `sort`.
 3. Fill terms in date order. A course goes in the first term where everything before it is done, taking now, or in an earlier term, and the term has room under the unit limit. Each placement records its reasons for the sheet.
 4. Anything that doesn't fit goes to Not in a term yet, and the hero shows the Doesn't fit warning. A prerequisite that isn't in the plan and isn't done doesn't hold a course back; the builder returns those pairs for the card's note (4).
-5. Units: the student's course units when chosen; otherwise the pathway row's units; otherwise 3 for a GE area and 4 for a major course, shown as "about 4 u" until the student picks their course.
+5. Units: the student's course units when chosen; otherwise, when their college has exactly one verified `college_courses` row for that course type, that course's units; otherwise the pathway row's units; otherwise 3 for a GE area and 4 for a major course. Shown as "about 4 u" until the student's course is known (chosen, typed with units, or the college's only one).
+
+**Default course.** When the home college has exactly one verified `college_courses` row for a course type, the card uses it until the student picks another: its code ("CS 1") and real units ("4 u"), and the builder counts those units. The course sheet shows it chosen. With 2 or more matching courses the card keeps "about N u" and the student chooses in the sheet. Nothing is saved for a default; picking or typing a course saves it as usual.
+
+**What's already finished.** On an empty plan, "Build my plan" first opens a sheet, "What have you already finished?" ("Check what you've passed. Your plan leaves those out."): every course and Cal-GETC area the builder would place, under "Your major" and "Cal-GETC", each a checkbox row; then "Units you've finished", optional, the same value as plan settings (6). Its primary button "Build my plan" marks the checked major courses done in `user_topic_status` (the same marks Explore uses), saves the checked GE areas as done items, saves the units, and builds. "Skip, build now", a text button under it, builds without changes. The list scrolls; the two buttons stay below it. Rebuild plan doesn't show it.
 
 "Rebuild plan" runs the same function on everything that isn't done, taking now, or placed by the student. A rebuild after changing major or schools in Settings is the "what if": the plan changes in front of them, and what's done stays done.
 
@@ -191,3 +197,6 @@ At 393 × 852 and 320 × 568, light mode, with a test student (Las Positas, UC S
 10. A custom course counts toward units and never toward requirements.
 11. Another student can't read `plan_items` or `plan_settings` (test:db); delete account removes them.
 12. `npm test`, `test:import`, `test:db`, lint and build pass. The builder has unit tests for order, unit limits, summers, kept items and the Doesn't fit case.
+13. On an empty plan, "Build my plan" opens "What have you already finished?". Checking Intro to programming and Cal-GETC 1A, typing 12 units and building leaves both out of the terms, lists them in Already done, shows 12 of 60 on the hero, and Explore shows Intro to programming done. "Skip, build now" builds with nothing marked.
+14. At Las Positas, Intro to programming shows "CS 1" and "4 u" before the student picks anything, its sheet shows CS 1 chosen, and the builder counts 4 units; Calculus, a full year (two Las Positas courses) shows "about 8 u".
+15. No toast covers an open sheet: one raised while a sheet is open shows after the sheet has closed.

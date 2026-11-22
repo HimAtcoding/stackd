@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { accountStore } from "@/lib/account-store";
 import type { Statuses, TopicStatus } from "@/lib/explore";
 import { readSessionUser } from "@/lib/profile";
+import { noteDoneMark } from "@/lib/rating";
 import { getSupabase } from "@/lib/supabase/client";
 import { createMarkQueue, mergeFromAccount, type PushError } from "./mark-queue";
 
@@ -91,6 +92,7 @@ export function useTopicStatus(): Statuses {
 }
 
 export function setTopicStatus(topic: string, status: TopicStatus) {
+  if (status === "done" && statuses.get()[topic] !== "done") noteDoneMark();
   statuses.set((prev) => {
     const next = { ...prev };
     if (status === "not_started") delete next[topic];
