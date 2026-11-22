@@ -8,6 +8,8 @@ Everything App Store Connect asks for. Written 2026-10-13 from the code on `feat
 
 **Updated 2026-11-09 for version 1.4** (build 1.4.0 (7), Explore on): What's New 1.4 and the 1.4 reviewer notes below, entered in App Store Connect and submitted. Description, keywords, privacy answers and screenshots unchanged.
 
+**Updated 2026-11-22 for version 1.5** (branch `release/v1.5`, Plan on): What's New 1.5 and the 1.5 reviewer notes below, not entered in App Store Connect yet. App Privacy answers unchanged: the term-by-term plan, its settings and typed course codes are Other User Content, linked, App Functionality, as below. Description, keywords and screenshots unchanged for now; new screenshots with the Plan tab come later.
+
 **Updated 2026-10-21 for version 1.2** (Essays, specs 17 and 19, on branch `release/v1.2`): description, privacy answers, age rating, reviewer notes, screenshots and the checklist. 1.1 was never submitted. Version 1.0 was still Waiting for Review on 2026-10-21, and Shikhar chose to withdraw it and turn that same App Store version into 1.2 with build 1.2.0 (3). That makes 1.2 the app's first public release, so App Store Connect shows no What's New field (it's kept below for the record).
 
 ## Credits
@@ -83,6 +85,12 @@ Developed by Ryan Saleh, Shikhar Sisodia, Abyan Kashif, and Antonio Avila.
 ```
 
 Kept truthful on purpose: no course matches, no statewide coverage, no admission chances, no AI (`essayFeedback` is off in 1.2). Course matches stay out until ASSIST grants data access (`docs/16-open-questions.md → Decided`).
+
+**What's New in Version 1.5:**
+
+```
+Plan is here. Build a term-by-term plan to transfer: your major's courses for UC and Cal State plus Cal-GETC, placed in the terms before your transfer, within the units you can take, with the reason for each one. Drag a course to another term or tap Move to, and Stackd tells you when a course comes before the one it needs or a term goes over your units. At Las Positas College, pick the college's own course for each requirement.
+```
 
 **What's New in Version 1.4:**
 
@@ -176,6 +184,12 @@ Expected result: **4+** (1.0 and 1.1). With the 1.2 user-content answer App Stor
 | Contact phone | The account holder's (App Store Connect requires one) |
 
 The review account: first name "Taylor", email confirmed, plan Las Positas College → UC San Diego, Computer Science (B.S.). Nothing personal in it. Since 2026-10-21 it also has a made-up 102-word "Your major" draft, so Essays isn't empty for the reviewer.
+
+**Notes for the reviewer** (1.5): the 1.4 notes, plus this paragraph after the Explore one:
+
+```
+Plan (Plan in the tab bar): tap "Build my plan". A sheet asks what the student has already finished (check any, or tap "Skip, build now"), then the plan places the major's courses and Cal-GETC areas into the terms before the transfer term. If the app first asks when you plan to transfer, pick any term. Tap a course to see why it's there, pick the college's course, mark it Taking now or Done, or use "Move to..." to change its term; courses can also be dragged by the handle on their left. "Units and terms" changes the units per term and turns on summer terms. After the first plan, iOS may show Apple's standard rating request; Stackd has no rating screen of its own.
+```
 
 **Notes for the reviewer** (1.4): the 1.3 notes as entered in App Store Connect, plus this paragraph before "You can also create a new account":
 
