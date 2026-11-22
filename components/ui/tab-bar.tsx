@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
-import { CompassIcon, HouseIcon, PencilLineIcon, UserCircleIcon } from "@phosphor-icons/react/ssr";
+import { CompassIcon, HouseIcon, ListChecksIcon, PencilLineIcon, UserCircleIcon } from "@phosphor-icons/react/ssr";
 import { cn } from "@/lib/cn";
-import { essaysHref, exploreHref } from "@/lib/features";
+import { essaysHref, exploreHref, planHref } from "@/lib/features";
 import { DEMO_MODE } from "@/lib/flags";
 
-export type TabId = "home" | "explore" | "essays" | "you";
+export type TabId = "home" | "plan" | "explore" | "essays" | "you";
 
-// Only the tabs whose screens are switched on (22 → 1). You is Settings, which needs a real account.
+// Only the tabs whose screens are switched on (22 → 1, 24 → 1). You is Settings, which needs a real account.
 const TABS = [
   { id: "home", label: "Home", href: "/", Icon: HouseIcon },
+  { id: "plan", label: "Plan", href: planHref(), Icon: ListChecksIcon },
   { id: "explore", label: "Explore", href: exploreHref(), Icon: CompassIcon },
   { id: "essays", label: "Essays", href: essaysHref(), Icon: PencilLineIcon },
   { id: "you", label: "You", href: DEMO_MODE ? null : "/settings/", Icon: UserCircleIcon },
