@@ -1,6 +1,6 @@
 # Moving Stackd to Ryan's Apple team
 
-Written 2026-11-11. Stackd is moving from Shikhar's Apple Developer team (`4JNCSTKTHQ`) to Ryan's. This page covers the App Store app and the Apple pieces that change hands with it. Apple's rules come from the App Store Connect help pages ("Transfer an app") and the Sign in with Apple guide "Transferring your apps and users to another team".
+Written 2026-11-11. Stackd moved from Shikhar's Apple Developer team (`4JNCSTKTHQ`) to team `PJ7K7ZK7W9` on 2026-11-17. That team is an individual membership: Toufic Saleh is the Account Holder and Ryan is an Admin. "Ryan's team" below means `PJ7K7ZK7W9`. Steps that only the Account Holder can do go to Toufic. This page covers the App Store app and the Apple pieces that change hands with it. Apple's rules come from the App Store Connect help pages ("Transfer an app") and the Sign in with Apple guide "Transferring your apps and users to another team".
 
 ## Where it stands
 
@@ -9,10 +9,11 @@ Written 2026-11-11. Stackd is moving from Shikhar's Apple Developer team (`4JNCS
 | App | Stackd: Transfer Planner, Apple ID 6822523006, `app.stackd.transfer` |
 | Live | 1.4 (build 7) |
 | In review | Nothing. 1.4.1 (build 8) went live 2026-11-13 |
-| Transfer | Requested 2026-11-16 to team `PJ7K7ZK7W9` (Account Holder Toufic Medhat Saleh). Waiting for the recipient to accept |
+| Transfer | Requested 2026-11-16, done 2026-11-17. Team `PJ7K7ZK7W9`, individual membership, Account Holder Toufic Saleh, Ryan is Admin |
+| Apple user exchange | **Pending.** Waiting for `transfer-subs.csv` from Shikhar. Apple's deadline is 2027-01-16 (60 days after accepting) |
 | Blocks the transfer | Apple won't transfer an app while a version is Waiting for Review, In Review, Pending Developer Release or Processing for Distribution. **The transfer can only start after 1.4.1 is live.** |
 | Already fine | No in-app purchases, subscriptions, Game Center, app groups, iCloud, push keys, Apple Pay or Xcode Cloud. The app keeps no keychain items of its own, so nobody gets signed out by the team change. |
-| Needs work | Sign in with Apple users (6 on 2026-11-11), TestFlight, the web Apple sign-in secret, signing for Ryan's builds |
+| Needs work | Sign in with Apple users (6 on 2026-11-11), pasting the new web Apple secret into Supabase, the Google iOS client's Team ID, signing for Ryan's builds |
 
 ## What Ryan needs to have
 
@@ -41,18 +42,22 @@ Written 2026-11-11. Stackd is moving from Shikhar's Apple Developer team (`4JNCS
 ## Right after Ryan accepts (Ryan)
 
 1. **Move the Apple users the same day.** Every Apple sign-in before this runs makes a duplicate account.
-   - Make a Sign in with Apple key on Ryan's team, primary App ID `app.stackd.transfer`.
+   - **Still pending (2026-11-21):** waiting for `transfer-subs.csv` from Shikhar. The key is ready.
+   - Make a Sign in with Apple key on Ryan's team, primary App ID `app.stackd.transfer`. Done: key `JT9XTAW78K`, `.p8` kept outside the repo.
+   - Before running the SQL, check for Apple accounts made since 2026-11-17: `select user_id, created_at from auth.identities where provider = 'apple' and created_at >= '2026-11-17' order by created_at;`. If one of the 6 users signed in after the transfer, they already have a second account with their new ID, and the update for them fails on the unique identity. Sort those out first.
    - `node scripts/apple-user-transfer.mjs exchange <AuthKey.p8> <RyanTeamId> <keyId> transfer-subs.csv apple-update.sql`
    - Run `apple-update.sql` in the Supabase SQL editor. It updates `auth.identities` for each user and nothing else.
    - The deadline is 60 days after accepting. After that, Apple stops exchanging the identifiers.
 2. **Fix Apple sign-in on the website.** The Services ID `app.stackd.transfer.signin` moves with the app, because it's grouped with its App ID, but the key behind Supabase's Apple secret stays on Shikhar's team. Run `npm run apple:secret -- <Ryan's AuthKey.p8> <RyanTeamId> <keyId> app.stackd.transfer.signin <file outside the repo>` and paste the result into Supabase → Authentication → Sign In / Providers → Apple → Secret Key. Apple sign-in in the iOS app doesn't use this secret: it checks Apple's identity token against the App ID.
+   - Secret made 2026-11-21 with key `JT9XTAW78K`, kept outside the repo. It expires 2027-05-23, so make a new one before then. Apple's token endpoint accepts it for `app.stackd.transfer.signin`, which confirms the Services ID moved. Pasting it into Supabase is still to do.
 3. **Check the Supabase Apple client IDs** still read `app.stackd.transfer.signin,app.stackd.transfer`. The IDs keep their names, so nothing should change.
 4. **Look at the Google iOS client** "Stackd iOS" in Google Cloud `stackd-508823` (Ryan is already an Owner). If it has a Team ID set, change it to Ryan's.
+   - It was set up with `4JNCSTKTHQ`. Google only uses an iOS client's Team ID for App Check, which the app doesn't use, so Google sign-in keeps working either way. Change it to `PJ7K7ZK7W9` to keep it accurate. Google Cloud has no command for this, so it's done in the console.
 5. Private relay email to Apple users stops working for anyone who uses no other app from Ryan's team, until Ryan registers `joinstackd@gmail.com` as an email source on his team (Sign in with Apple for Email Communication).
 
 ## Ryan's first build
 
-- Set `DEVELOPMENT_TEAM` to Ryan's Team ID in `ios/App/App.xcodeproj/project.pbxproj` (both configurations), in place of `4JNCSTKTHQ`.
+- Set `DEVELOPMENT_TEAM` to Ryan's Team ID in `ios/App/App.xcodeproj/project.pbxproj` (both configurations), in place of `4JNCSTKTHQ`. Done 2026-11-21: both configurations and the App target's `DevelopmentTeam` attribute are `PJ7K7ZK7W9`.
 - Make an Apple Distribution certificate and an App Store provisioning profile for `app.stackd.transfer` on Ryan's team, with Sign in with Apple. Shikhar's certificate, profile and App Store Connect API key don't move.
 - The next version has to be above 1.4.1, and the build number above 8.
 - Signing gotcha: since the Google Sign-In packages arrived, a provisioning profile set for the whole build on the `xcodebuild` command line fails ("does not support provisioning profiles"). Set manual signing and the profile on the App target only, or use Xcode's automatic signing with an Admin account.
