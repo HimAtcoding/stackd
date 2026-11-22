@@ -259,7 +259,7 @@ The release checklist for `explore: true` (`lib/features.ts`), from steps 26 to 
 The release checklist for `plan: true` (`lib/features.ts`), on branch `release/v1.5` (version 1.5.0 in `package.json` and `MARKETING_VERSION`). The build number isn't set here: the `ios-testflight.yml` workflow (macOS runner, signed with an App Store Connect API key on team `PJ7K7ZK7W9`) uses its run number. Written 2026-11-22.
 1. ~~Topic order, Cal-GETC and Las Positas's courses verified for Computer Science at least.~~ Done 2026-11-11: 14, 11 and 78 rows (PR #43).
 2. ~~`course_suggestions` pushed.~~ Done 2026-11-22 (Plan PR B, below).
-3. Privacy page says what the Plan stores (PR #50). Merge it before submitting. **Ryan's call:** its Who runs Stackd paragraph still names Shikhar's account as the seller, out of date since the transfer.
+3. Privacy page says what the Plan stores (PR #50). Merge it, then redeploy the website (Vercel project `joinstackd`), since the App Store's Privacy Policy URL is `joinstackd-chi.vercel.app/privacy/`, before submitting. **Ryan's call:** its Who runs Stackd paragraph still names Shikhar's account as the seller, out of date since the transfer.
 4. ~~App Privacy answers.~~ Checked 2026-11-22: unchanged. The plan, its settings and typed codes are Other User Content, linked, App Functionality (`docs/app-store/listing.md`).
 5. What's New 1.5 and the 1.5 reviewer notes written (`docs/app-store/listing.md`); enter them in App Store Connect with the build. New screenshots with the Plan tab: later, Ryan's call.
 6. Browser tests: `npm run test:e2e` passes (PR #53).
