@@ -29,7 +29,8 @@
     "ios:assets": "node scripts/ios-assets.mjs",
     "ios:sync": "cap sync ios",
     "ios:prepare": "node scripts/check-ios-env.mjs && npm run build && cap sync ios",
-    "ios:open": "cap open ios"
+    "ios:open": "cap open ios",
+    "suggestions": "node scripts/import/suggestions.mjs"
   },
   "dependencies": {
     "@capacitor-community/in-app-review": "8.0.0",
