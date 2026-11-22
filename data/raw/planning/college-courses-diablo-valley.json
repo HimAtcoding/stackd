@@ -1,0 +1,1483 @@
+{
+  "written_by": "Claude Code, drafted from Diablo Valley College's 2026-2027 catalog for Ryan Saleh to check",
+  "notes": "Diablo Valley College's own courses for the Plan (spec 24 → Data, college_courses). Code, title, units and C-ID are copied from the course pages of DVC's 2026-2027 catalog, the newest one DVC links to from dvc.edu (https://www.dvc.edu/academics/class-schedule-catalog → https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/). The catalog is an eLumen app; its pages load from eLumen's public publish endpoint, which answered plain requests, so nothing was blocked. Each source_url is the course's own page, https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/<subject><number>. c_id is the C-ID the course page prints under \"Comparable course\"; null where it prints none. Where it prints a stand-alone C-ID and a sequence one, c_id is the stand-alone one a pathway requirement for that course's topics names (BIOL 130 → BIOL 190, CHEM 120 → CHEM 110, PHYS 130 → PHYS 205, PHYS 230 → PHYS 210). BIOL 131, CHEM 121 and CHEM 227 have c_id null: they print only a sequence C-ID (BIOL 135S, CHEM 120S, CHEM 160S) that needs the other course. CHEM 226 and COMSC 110 have c_id null too: CHEM 226 prints CHEM 150 and CHEM 160S (with CHEM 227), COMSC 110 prints COMP 112 and ITIS 130, and no pathway requirement for their topics names any of these, like LPC's CHEM 12A and CS 7. COMM 163 is 3 units: the course page prints 1.5-4.0, and DVC's Communication Studies AA-T 2.0 says at most 3 units of it count (todo to confirm). Topics come from the C-ID number, the course title against the topic, or, for the TMC lists (comm-list-*, econ-list-*, polisci-*, psych-list-*, sociology-list-*, business-math, econ-calculus, math-list-a, diff-eq-and-linear-algebra), the list in DVC's own AA-T or AS-T page for that major in the same catalog (https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/program/<degree>). A course in an ADT list also gets the later list topics that say \"any List A course not already used\". DVC's Political Science AA-T isn't labeled List A and List B: its 9-unit block (statistics, POLS 120, 210, 220, 240, 250) is read as List A and its 6-unit block (ANTHR 130, ECON C2001, ECON C2002, HIST 140, HIST 141, POLS 127, POLS 151, SOCSC 101) as List B. DVC's Sociology AA-T is read the same way: the 6-unit block after the stats/social problems/research block (PSYC 225, SOCIO 122, 124, 125, 135) is List A, the last 3-unit block (SOCIO 131, SOCSC 120) is List B. POLS 122, POLS 123 and POLS 210 print C-ID POLS 110 or POLS 120, so they get the core topics. BIOL 130 is biology-first because BIOL 131 lists BIOL 130 as an advisory. COMSC 110 prints C-ID COMP 112, not COMP 122, so it isn't cs1; COMSC 165 prints COMP 122 and is cs1. PHYS 231 (the third physics course) and MATH 183 (second business calculus) are left out: no topic plainly fits them. PHILO 170 Symbolic Logic is comm-logic-computing-culture and ENGL 124 (An Introduction to Linguistics) is comm-three-more, both from the title. comm-intro and science-extra have no DVC course here: the catalog doesn't make a match plain, so students type their own course for those. SOCIO 120 Introduction to Sociology is from the 2025-2026 catalog (academic_year 2025-26): it isn't on the 2026-2027 sociology course list and its 2026-2027 page is empty, though 2026-2027 AA-Ts still list it (todo). BUS 250 and MATH 195 have todos: topic from the title only, no C-ID, and DVC's own ADT doesn't use them there. A second person checks each row against the catalog. Then run: npm run import -- data/raw/planning/college-courses-diablo-valley.json --dry-run",
+  "college_courses": [
+    {
+      "institution": "diablo-valley",
+      "code": "ANTHR 130",
+      "title": "Cultural Anthropology",
+      "units": 3,
+      "c_id": "ANTH 120",
+      "topics": [
+        "comm-list-b",
+        "psych-social-science",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/anthr130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BIOL 130",
+      "title": "Principles of Cellular and Molecular Biology",
+      "units": 5,
+      "c_id": "BIOL 190",
+      "topics": [
+        "biology-sequence",
+        "biology-first",
+        "science-second"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/biol130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BIOL 131",
+      "title": "Principles of Organismal Biology, Evolution, and Ecology",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "biology-sequence"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/biol131",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BIOL C1000",
+      "title": "Introduction to Biology with Lab",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/biolc1000",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BIOL 117",
+      "title": "Human Biology with Laboratory",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/biol117",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUS 109",
+      "title": "Introduction to Business",
+      "units": 3,
+      "c_id": "BUS 110",
+      "topics": [
+        "intro-business",
+        "business-intro-or-communication"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/bus109",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUS 240",
+      "title": "Business Statistics",
+      "units": 3,
+      "c_id": "MATH 110",
+      "topics": [
+        "statistics",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/bus240",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUS 250",
+      "title": "Business Communications",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "business-intro-or-communication"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/bus250",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22",
+      "todo": "The page prints no C-ID, and DVC's Business Administration AS-T 2.0 lists only BUS 109 for this requirement. Topic is from the title (business communication). Check that BUS 250 should count here, or drop the topic."
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUS 294",
+      "title": "Business Law",
+      "units": 3,
+      "c_id": "BUS 125",
+      "topics": [
+        "business-law"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/bus294",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUSAC 186",
+      "title": "Financial Accounting",
+      "units": 4,
+      "c_id": "ACCT 110",
+      "topics": [
+        "financial-accounting",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/busac186",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "BUSAC 187",
+      "title": "Managerial Accounting",
+      "units": 4,
+      "c_id": "ACCT 120",
+      "topics": [
+        "managerial-accounting",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/busac187",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "CHEM 120",
+      "title": "General College Chemistry I",
+      "units": 5,
+      "c_id": "CHEM 110",
+      "topics": [
+        "chemistry-general",
+        "science-second"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/chem120",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "CHEM 121",
+      "title": "General College Chemistry II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-general"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/chem121",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "CHEM 226",
+      "title": "Organic Chemistry I",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/chem226",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "CHEM 227",
+      "title": "Organic Chemistry II",
+      "units": 5,
+      "c_id": null,
+      "topics": [
+        "chemistry-organic"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/chem227",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 121",
+      "title": "Persuasion and Critical Thinking",
+      "units": 3,
+      "c_id": "COMM 190",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm121",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 123",
+      "title": "Argumentation and Debate",
+      "units": 3,
+      "c_id": "COMM 120",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm123",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 124",
+      "title": "Voice and Diction",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm124",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 125",
+      "title": "Intercultural Communication",
+      "units": 3,
+      "c_id": "COMM 150",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm125",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 128",
+      "title": "Interpersonal Communication",
+      "units": 3,
+      "c_id": "COMM 130",
+      "topics": [
+        "interpersonal-communication"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm128",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 130",
+      "title": "Small Group Communication",
+      "units": 3,
+      "c_id": "COMM 140",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 148",
+      "title": "Performance of Literature",
+      "units": 3,
+      "c_id": "COMM 170",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm148",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 163",
+      "title": "Forensics - Speech and Debate",
+      "units": 3,
+      "c_id": "COMM 160B",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm163",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22",
+      "todo": "Variable units: the course page prints 1.5-4.0. Units set to 3 because DVC's Communication Studies AA-T 2.0 says a maximum of 3 units may be used from COMM-163. Confirm 3 is the right value to store."
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM 180",
+      "title": "Introduction to Communication Theory",
+      "units": 3,
+      "c_id": "COMM 180",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comm180",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMM C1000",
+      "title": "Introduction to Public Speaking",
+      "units": 3,
+      "c_id": "COMM 110",
+      "topics": [
+        "public-speaking",
+        "comm-three-more"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/commc1000",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 110",
+      "title": "Introduction to Programming",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc110",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 140",
+      "title": "Python Programming",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc140",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 165",
+      "title": "Advanced Programming with C and C++",
+      "units": 4,
+      "c_id": "COMP 122",
+      "topics": [
+        "cs1",
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc165",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 200",
+      "title": "Object Oriented Programming C++",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc200",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 210",
+      "title": "Program Design and Data Structures",
+      "units": 4,
+      "c_id": "COMP 132",
+      "topics": [
+        "cs2"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc210",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 230",
+      "title": "Discrete Mathematical Structures for Computer Science",
+      "units": 3,
+      "c_id": "COMP 152",
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc230",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 255",
+      "title": "Programming With Java",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc255",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 256",
+      "title": "Advanced Java Programming",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc256",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "COMSC 260",
+      "title": "Assembly Language Programming/Computer Organization",
+      "units": 4,
+      "c_id": "COMP 142",
+      "topics": [
+        "comp-org",
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/comsc260",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ECON 101",
+      "title": "Economics of Public Issues",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/econ101",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ECON 210",
+      "title": "Economic Justice",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/econ210",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ECON C2001",
+      "title": "Principles of Microeconomics",
+      "units": 3,
+      "c_id": "ECON 201",
+      "topics": [
+        "microeconomics",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/econc2001",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ECON C2002",
+      "title": "Principles of Macroeconomics",
+      "units": 3,
+      "c_id": "ECON 202",
+      "topics": [
+        "macroeconomics",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/econc2002",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ENGL 124",
+      "title": "The Nature of Language: An Introduction to Linguistics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "comm-three-more"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/engl124",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ENGL C1001",
+      "title": "Critical Thinking and Writing",
+      "units": 3,
+      "c_id": "ENGL 105",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/englc1001",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "ENGL C1003",
+      "title": "Critical Thinking and Writing through Literature",
+      "units": 4,
+      "c_id": "ENGL 110",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/englc1003",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "HIST 140",
+      "title": "History of Western Civilization to the Renaissance",
+      "units": 3,
+      "c_id": "HIST 170",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/hist140",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "HIST 141",
+      "title": "History of Western Civilization since the Renaissance",
+      "units": 3,
+      "c_id": "HIST 180",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/hist141",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "JRNAL 110",
+      "title": "Mass Media of Communication",
+      "units": 3,
+      "c_id": "JOUR 100",
+      "topics": [
+        "comm-list-a-1",
+        "comm-list-a-2",
+        "comm-list-a-3",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/jrnal110",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "JRNAL 120",
+      "title": "Introduction to Newswriting and Reporting",
+      "units": 3,
+      "c_id": "JOUR 110",
+      "topics": [
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/jrnal120",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 181",
+      "title": "Finite Mathematics",
+      "units": 3,
+      "c_id": "MATH 130",
+      "topics": [
+        "business-math",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math181",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 182",
+      "title": "Calculus for Management, Life Science, and Social Science I",
+      "units": 4,
+      "c_id": "MATH 140",
+      "topics": [
+        "calculus-first",
+        "business-math",
+        "econ-calculus"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math182",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 192",
+      "title": "Analytic Geometry and Calculus I",
+      "units": 5,
+      "c_id": "MATH 210",
+      "topics": [
+        "calculus-single",
+        "calculus-first",
+        "calculus-year",
+        "business-math",
+        "econ-calculus"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math192",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 193",
+      "title": "Analytic Geometry and Calculus II",
+      "units": 5,
+      "c_id": "MATH 220",
+      "topics": [
+        "calculus-single",
+        "calculus-year",
+        "econ-list-a",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math193",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 194",
+      "title": "Linear Algebra",
+      "units": 3,
+      "c_id": "MATH 250",
+      "topics": [
+        "linear-algebra",
+        "diff-eq-and-linear-algebra",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math194",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 195",
+      "title": "Discrete Mathematics",
+      "units": 4,
+      "c_id": null,
+      "topics": [
+        "discrete"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math195",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22",
+      "todo": "The page prints no C-ID, and DVC's Computer Science AS-T uses COMSC 230 for discrete math. Topic is from the title (Discrete Mathematics). Check that MATH 195 should count as discrete math."
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 292",
+      "title": "Analytic Geometry and Calculus III",
+      "units": 5,
+      "c_id": "MATH 230",
+      "topics": [
+        "calculus-multi",
+        "econ-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math292",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "MATH 294",
+      "title": "Differential Equations",
+      "units": 5,
+      "c_id": "MATH 240",
+      "topics": [
+        "diff-eq",
+        "diff-eq-and-linear-algebra"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/math294",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PHILO 130",
+      "title": "Logic and Critical Thinking",
+      "units": 3,
+      "c_id": "PHIL 110",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/philo130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PHILO 170",
+      "title": "Symbolic Logic",
+      "units": 3,
+      "c_id": "PHIL 210",
+      "topics": [
+        "psych-social-science",
+        "comm-logic-computing-culture"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/philo170",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PHILO 225",
+      "title": "History of Western Philosophy: Descartes to Present",
+      "units": 3,
+      "c_id": "PHIL 140",
+      "topics": [
+        "psych-social-science"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/philo225",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PHYS 130",
+      "title": "Physics for Engineers and Scientists A: Mechanics and Wave Motion",
+      "units": 4,
+      "c_id": "PHYS 205",
+      "topics": [
+        "physics-year",
+        "physics-mechanics",
+        "math-list-a"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/phys130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PHYS 230",
+      "title": "Physics for Engineers and Scientists B: Heat and Electro-Magnetism",
+      "units": 4,
+      "c_id": "PHYS 210",
+      "topics": [
+        "physics-year",
+        "science-second"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/phys230",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 120",
+      "title": "Introduction to Politics",
+      "units": 3,
+      "c_id": "POLS 150",
+      "topics": [
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols120",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 122",
+      "title": "Latinx Politics and American Government",
+      "units": 3,
+      "c_id": "POLS 110",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols122",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 123",
+      "title": "Black Politics and American Government",
+      "units": 3,
+      "c_id": "POLS 110",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols123",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 127",
+      "title": "Introduction to Law and Democracy",
+      "units": 3,
+      "c_id": "LPPS 110",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols127",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 151",
+      "title": "California Politics",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols151",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 210",
+      "title": "Political Ideology",
+      "units": 3,
+      "c_id": "POLS 120",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols210",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 220",
+      "title": "Comparative Politics",
+      "units": 3,
+      "c_id": "POLS 130",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols220",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 240",
+      "title": "Political Theory",
+      "units": 3,
+      "c_id": "POLS 120",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols240",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS 250",
+      "title": "International Relations",
+      "units": 3,
+      "c_id": "POLS 140",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/pols250",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "POLS C1000",
+      "title": "American Government and Politics",
+      "units": 3,
+      "c_id": "POLS 110",
+      "topics": [
+        "polisci-core-1",
+        "polisci-core-2",
+        "polisci-core-3",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/polsc1000",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC C1000",
+      "title": "Introduction to Psychology",
+      "units": 3,
+      "c_id": "PSY 110",
+      "topics": [
+        "psych-intro",
+        "comm-three-more",
+        "comm-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psycc1000",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 122",
+      "title": "Psychology in Modern Life",
+      "units": 3,
+      "c_id": "PSY 115",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc122",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 130",
+      "title": "Introduction to Biological Psychology",
+      "units": 3,
+      "c_id": "PSY 150",
+      "topics": [
+        "psych-list-a",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc130",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 140",
+      "title": "Psychology of African-Americans in a Multicultural Society",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc140",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 141",
+      "title": "Psychology of Latinos/Chicanos in the U.S.",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc141",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 145",
+      "title": "Critical Thinking in Psychology",
+      "units": 3,
+      "c_id": "ENGL 105",
+      "topics": [
+        "comm-list-b",
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc145",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 160",
+      "title": "Psychology of Women",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc160",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 190",
+      "title": "Psychology of Adolescence",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc190",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 195",
+      "title": "Psychology of Adult Development and Aging",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc195",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 200",
+      "title": "Life Span Development",
+      "units": 3,
+      "c_id": "PSY 180",
+      "topics": [
+        "psych-list-b",
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc200",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 214",
+      "title": "Introduction to Statistics for Psychology",
+      "units": 4,
+      "c_id": "MATH 110",
+      "topics": [
+        "statistics"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc214",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 215",
+      "title": "Introduction to Research Methods in Psychology",
+      "units": 3,
+      "c_id": "PSY 200",
+      "topics": [
+        "psych-research-methods"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc215",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 220",
+      "title": "Psychology of Personality: Personal, Social, Cultural Differences",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc220",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 225",
+      "title": "Social Psychology",
+      "units": 3,
+      "c_id": "PSY 170",
+      "topics": [
+        "psych-list-b",
+        "psych-list-c",
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc225",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 230",
+      "title": "Abnormal Psychology",
+      "units": 3,
+      "c_id": "PSY 120",
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc230",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "PSYC 240",
+      "title": "Transpersonal Psychology",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "psych-list-c"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/psyc240",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 121",
+      "title": "Introduction to Social Problems",
+      "units": 3,
+      "c_id": "SOCI 115",
+      "topics": [
+        "social-problems"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio121",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 122",
+      "title": "Critical Thinking About Social and Cultural Issues",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio122",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 123",
+      "title": "Introduction to Social Research",
+      "units": 3,
+      "c_id": "SOCI 120",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio123",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 124",
+      "title": "Gender, Culture, and Society",
+      "units": 3,
+      "c_id": "SOCI 140",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio124",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 125",
+      "title": "Families, Relationships, and Commitment",
+      "units": 3,
+      "c_id": "SOCI 130",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio125",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 131",
+      "title": "The Urban Community",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio131",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 135",
+      "title": "Introduction to Race and Ethnicity",
+      "units": 3,
+      "c_id": "SOCI 150",
+      "topics": [
+        "sociology-list-a-1",
+        "sociology-list-a-2",
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socio135",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCSC 101",
+      "title": "Introduction to Social Justice",
+      "units": 3,
+      "c_id": "SJS 110",
+      "topics": [
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socsc101",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCSC 120",
+      "title": "Women and Social Change in the United States: 1890-Present",
+      "units": 3,
+      "c_id": null,
+      "topics": [
+        "sociology-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/socsc120",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "STAT C1000",
+      "title": "Introduction to Statistics",
+      "units": 4,
+      "c_id": "MATH 110",
+      "topics": [
+        "statistics",
+        "polisci-list-a-1",
+        "polisci-list-a-2",
+        "polisci-list-b"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/statc1000",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "STAT C1000E",
+      "title": "Introduction to Statistics",
+      "units": 5,
+      "c_id": "MATH 110",
+      "topics": [
+        "statistics"
+      ],
+      "source_name": "Diablo Valley College Catalog 2026-2027",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2026-2027Catalog/course/statc1000e",
+      "academic_year": "2026-27",
+      "retrieved_at": "2026-11-22"
+    },
+    {
+      "institution": "diablo-valley",
+      "code": "SOCIO 120",
+      "title": "Introduction to Sociology",
+      "units": 3,
+      "c_id": "SOCI 110",
+      "topics": [
+        "sociology-intro",
+        "comm-three-more",
+        "comm-list-b",
+        "psych-social-science"
+      ],
+      "source_name": "Diablo Valley College Catalog 2025-2026",
+      "source_url": "https://dvc.elumenapp.com/catalog/DVC2025-2026Catalog/course/socio120",
+      "academic_year": "2025-26",
+      "retrieved_at": "2026-11-22",
+      "todo": "SOCIO 120 is not on the 2026-2027 catalog's sociology course list and its 2026-2027 course page comes back empty, but DVC's 2026-2027 Sociology AA-T and Communication Studies AA-T 2.0 still list it. Row copied from the 2025-2026 catalog. Check whether DVC still offers it under this code."
+    }
+  ]
+}

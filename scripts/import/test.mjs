@@ -1088,8 +1088,8 @@ try {
   check("plan data: a signed-in student can't run an import", /permission denied/.test(e.message), e.message);
 }
 
-// The three drafts: anything still refused is only a todo or a field left empty for a person
-for (const name of ["topic-order", "cal-getc", "college-courses-las-positas"]) {
+// The plan data drafts: anything still refused is only a todo or a field left empty for a person
+for (const name of ["topic-order", "cal-getc", "college-courses-las-positas", "college-courses-chabot", "college-courses-diablo-valley"]) {
   const draft = JSON.parse(fs.readFileSync(`data/raw/planning/${name}.json`, "utf8"));
   const { problems } = validatePlanDataFile(draft);
   const other = problems.filter((p) => !/still has a todo|is empty/.test(p));
