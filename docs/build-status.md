@@ -1526,7 +1526,7 @@ Still placeholders or missing: `app-icon` (temporary icons above until it exists
 | 8 | Essays (04) | |
 | 9 | Task complete and the run loop (05) | `motion` is installed (step 7 uses it for the springs); `canvas-confetti` isn't yet. Open the celebration from `onJourneyStepCompleted()` (see above) |
 
-Not built yet, though 00 and 02 describe them: each tab keeping its own scroll position (tab bar), and Home's "View progress" node animation (it needs the step 9 celebration). Home does come back at the same scroll position after Back from the university screen.
+Each tab keeps its own scroll position since 2026-11-22 (branch `native-fixes`, flows-and-states → Navigation): leaving a tab through the tab bar remembers where it was, and coming back through the tab bar returns there; a tab opened for the first time, or by its address or another link, starts at the top. Kept for the launch only. Not built yet, though 02 describes it: Home's "View progress" node animation (it needs the step 9 celebration). Home does come back at the same scroll position after Back from the university screen.
 
 ## Open items
 
@@ -1591,7 +1591,7 @@ Not built yet, though 00 and 02 describe them: each tab keeping its own scroll p
 - **"Done and past" header** is a button inside an `h2`, so the heading stays a heading.
 - **The steps sheet's ring at 40** has no number inside (it doesn't fit); "2 of 6" and "Due Nov 30" sit beside it.
 - **Peek titles use the record's title,** so the third layer reads "UC Transfer Academic Update" where the mockup drew "UC grade update".
-- **No light haptic on Mark done.** `@capacitor/haptics` isn't installed; adding it needs a Mac sync. The web vibrate call (as on University) stands in.
+- ~~**No light haptic on Mark done.**~~ Added 2026-11-22 (branch `native-fixes`): `lib/haptics.ts` → `lightTap()` plays iOS's light impact through `@capacitor/haptics` 8.0.2 in the iPhone app, and the 10 ms web vibration elsewhere. Used where `navigator.vibrate(10)` was: Mark done on Deadlines, Home's Get ready steps, and University requirements. The package went into `CapApp-SPM/Package.swift` with `npx cap update ios`; the cloud TestFlight build picks it up, no Mac needed. Explore's and the Plan's course statuses don't tap: they share the path that marks many courses at once in "What have you already finished?".
 - **Nothing for 14's offline line** ("Showing dates from your last visit") yet. Since Abyan's part the dates come from the database with a copy on the device, so the data for it exists; the caption itself is a screen change still to do.
 
 ### v1 launch build (step 14)

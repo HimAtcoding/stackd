@@ -15,6 +15,7 @@ import { cn } from "@/lib/cn";
 import { markDeadline, markStep, type DeadlinesState } from "@/lib/data/deadlines";
 import { checklistSubtitle, checklistTitle, cycleLabel, shortDate, SOON_DAYS, windowProgress, type ChecklistView, type Deadline } from "@/lib/deadlines";
 import { deadlinesHref } from "@/lib/features";
+import { lightTap } from "@/lib/haptics";
 import { DateSheet } from "../deadlines/_deadlines/date-sheet";
 import { useStepCaption } from "./step-caption";
 import { StepSheet } from "./step-sheet";
@@ -50,9 +51,7 @@ export function NextSteps({ state, lead, husky, showUpNext, showPath, toastBotto
     const finishes = done && c.doneCount === c.steps.length - 1 && c.steps.some((s) => s.step.id === stepId && !s.done);
     const ready = finishes && claimChecklistReady(c.checklist.id);
     markStep(stepId, done);
-    try {
-      navigator.vibrate?.(10);
-    } catch {}
+    lightTap();
     if (ready || (done && fromPath)) {
       // The toast follows the all-done title: "Your UC application is ready!" (18 → All-done wording)
       setToast((t) => ({ key: (t?.key ?? 0) + 1, text: ready ? `${checklistTitle(c)}!` : "Marked complete", undoStep: stepId }));

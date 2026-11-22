@@ -26,6 +26,7 @@ import { FEATURES } from "@/lib/features";
 import { onboardingUrl } from "@/lib/onboarding";
 import { dismissRemindersCard, turnOnReminders } from "@/lib/reminders";
 import { onReminderTap } from "@/lib/reminders/choice";
+import { lightTap } from "@/lib/haptics";
 import { DateSheet } from "./date-sheet";
 import { TermQuestion, TermSheet } from "./term-question";
 import { DonePast, Timeline } from "./timeline";
@@ -78,9 +79,7 @@ function DeadlinesScreen({ husky }: { husky: ReactNode }) {
 
   function markDone(id: string, done: boolean, withToast: boolean) {
     markDeadline(id, done);
-    try {
-      navigator.vibrate?.(10);
-    } catch {}
+    lightTap();
     if (done) {
       setSettling((ids) => [...ids, id]);
       // Reduced motion: no collapse, the row swaps out at once
