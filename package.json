@@ -24,13 +24,13 @@
     "test:explore": "tsx scripts/test-explore.mts",
     "test:opportunities": "tsx scripts/test-opportunities.mts",
     "test:plan": "tsx scripts/test-plan.mts",
+    "test:e2e": "node scripts/e2e/plan.mjs",
     "test:oauth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-oauth.mjs",
     "apple:secret": "node scripts/make-apple-secret.mjs",
     "ios:assets": "node scripts/ios-assets.mjs",
     "ios:sync": "cap sync ios",
     "ios:prepare": "node scripts/check-ios-env.mjs && npm run build && cap sync ios",
-    "ios:open": "cap open ios",
-    "test:e2e": "node scripts/e2e/plan.mjs"
+    "ios:open": "cap open ios"
   },
   "dependencies": {
     "@capacitor-community/in-app-review": "8.0.0",
