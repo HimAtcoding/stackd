@@ -58,10 +58,36 @@ Written 2026-11-11. Stackd moved from Shikhar's Apple Developer team (`4JNCSTKTH
 ## Ryan's first build
 
 - Set `DEVELOPMENT_TEAM` to Ryan's Team ID in `ios/App/App.xcodeproj/project.pbxproj` (both configurations), in place of `4JNCSTKTHQ`. Done 2026-11-21: both configurations and the App target's `DevelopmentTeam` attribute are `PJ7K7ZK7W9`.
-- Make an Apple Distribution certificate and an App Store provisioning profile for `app.stackd.transfer` on Ryan's team, with Sign in with Apple. Shikhar's certificate, profile and App Store Connect API key don't move.
+- Make an Apple Distribution certificate and an App Store provisioning profile for `app.stackd.transfer` on Ryan's team, with Sign in with Apple. Shikhar's certificate, profile and App Store Connect API key don't move. The GitHub build (How to ship a build, below) makes these itself through automatic signing with the API key.
 - The next version has to be above 1.4.1, and the build number above 8.
 - Signing gotcha: since the Google Sign-In packages arrived, a provisioning profile set for the whole build on the `xcodebuild` command line fails ("does not support provisioning profiles"). Set manual signing and the profile on the App target only, or use Xcode's automatic signing with an Admin account.
 - Reviews, ratings and existing users stay with the app. Sales and Trends history stays, but Shikhar loses App Analytics.
+
+## How to ship a build
+
+A GitHub Actions Mac builds the app and uploads it to TestFlight (`.github/workflows/ios-testflight.yml`), so no Mac is needed. It only runs by hand, only from `main`, and only on `HimAtcoding/stackd`.
+
+Set up once, in GitHub → Settings → Secrets and variables → Actions → New repository secret:
+
+| Secret | Value |
+| --- | --- |
+| `ASC_KEY_ID` | The App Store Connect API key's Key ID (`99329B9MCR`, Admin) |
+| `ASC_ISSUER_ID` | The Issuer ID from App Store Connect → Users and Access → Integrations |
+| `ASC_KEY_P8` | The whole `.p8` file, including the BEGIN and END lines. The file stays outside the repo |
+| `NEXT_PUBLIC_SUPABASE_URL` | The project's Supabase URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The anon key from Supabase → Project Settings → API |
+
+Each build:
+
+1. Raise the version above the last one sent to Apple: `version` in `package.json` and `MARKETING_VERSION` in `ios/App/App.xcodeproj/project.pbxproj` (both configurations). Apple takes no more builds for a version that's already live. Merge to `main`.
+2. GitHub → Actions → iOS TestFlight → Run workflow, on `main`.
+3. The build number is the workflow's run number, so every run is a new build. If a run fails after the upload, start a new run instead of Re-run, which reuses the number.
+4. When Apple finishes processing, the build shows in App Store Connect → TestFlight. Test it there, then choose it for the version and submit.
+
+If it fails:
+
+- "Your team has no devices": the archive signs for development first, which needs one registered device. Add an iPhone's UDID in Certificates, Identifiers & Profiles → Devices (on Windows, the Apple Devices app shows the UDID when you click the serial number), then run it again.
+- Each run is a fresh Mac, so Xcode may add an Apple Development certificate to the team each time. Revoke old ones in Certificates, Identifiers & Profiles if they pile up. Builds already uploaded aren't affected.
 
 ## Not Apple: decide separately
 
