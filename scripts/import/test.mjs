@@ -15,6 +15,7 @@ import { validatePlanDataFile } from "./plan-data.mjs";
 import { validatePlanningFile } from "./planning.mjs";
 import { reopenFromReport, reopenRow } from "./reopen.mjs";
 import { readReportCsv } from "./report.mjs";
+import { formatSuggestions, suggestionsCsv, summarizeSuggestions, tidyCode } from "./suggestions.mjs";
 import { kindOf, runImport } from "./run.mjs";
 import { verifyFromCsv } from "./verify.mjs";
 
@@ -1095,6 +1096,36 @@ for (const name of ["topic-order", "cal-getc", "college-courses-las-positas"]) {
   const other = problems.filter((p) => !/still has a todo|is empty/.test(p));
   check(`${name}.json is refused only for its todos and empty fields`, other.length === 0, JSON.stringify(other.slice(0, 3)));
 }
+
+// 21. Typed course codes (24 → 3), summed up for a person to check: counts only, matched to college_courses
+const S1 = "00000000-0000-0000-0000-0000000005a1";
+const S2 = "00000000-0000-0000-0000-0000000005a2";
+await db.query("insert into auth.users (id) values ($1), ($2)", [S1, S2]);
+const college = (await db.query("select id from institutions where slug = 'example-college'")).rows[0].id;
+const suggest = (sub, topic, geArea, code, units) =>
+  asRole(db, "authenticated", sub, "insert into course_suggestions (user_id, institution_id, topic, ge_area, course_code, units) values ($1, $2, $3, $4, $5, $6)", [sub, college, topic, geArea, code, units]);
+await suggest(S1, "cs1", null, "test 1", 4);
+await suggest(S2, "cs1", null, "TEST1", 4);
+await suggest(S2, "cs1", null, "TEST 1", 4);
+await suggest(S1, "cs2", null, "TEST 9", null);
+await suggest(S1, "linear-algebra", null, "TEST 2A", 3);
+await suggest(S2, null, "3A", "ARTH 1", 3);
+const suggestionRows = (await asRole(db, "service_role", null, `select s.topic, s.ge_area, s.course_code, s.units, s.user_id, s.created_at::text as created_at,
+  json_build_object('slug', i.slug, 'name', i.name) as institution from course_suggestions s join institutions i on i.id = s.institution_id`)).rows;
+const testCourses = (await asRole(db, "service_role", null, "select c.code, c.topics, c.verification_status::text, i.slug as institution_slug from college_courses c join institutions i on i.id = c.institution_id")).rows;
+const lines = summarizeSuggestions(suggestionRows, testCourses, new Map([["cs1", "Intro to programming"]]));
+const line = (code, req) => lines.find((l) => l.code === code && l.requirement.includes(req));
+check("suggestions: the same code typed three ways is one line, two students", line("TEST 1", "cs1")?.students === 2 && line("TEST 1", "cs1")?.times === 3 && line("TEST 1", "cs1")?.units.join() === "4", lines);
+check("suggestions: it names the requirement", line("TEST 1", "cs1")?.requirement === "Intro to programming (cs1)" && Boolean(line("ARTH 1", "Cal-GETC Area 3A")));
+const verifiedTest1 = testCourses.find((c) => c.code === "TEST 1")?.verification_status === "verified";
+check("suggestions: says what college_courses already has for that code", line("TEST 9", "cs2")?.catalog === "not in college_courses" &&
+  line("TEST 1", "cs1")?.catalog === (verifiedTest1 ? "verified for this requirement" : "imported, not verified yet") &&
+  line("TEST 2A", "linear-algebra")?.catalog === (testCourses.find((c) => c.code === "TEST 2A")?.verification_status === "verified" ? "verified, set to other requirements" : "imported, not verified yet"), lines.map((l) => [l.code, l.catalog]));
+check("suggestions: no units given is said plainly", formatSuggestions(lines).includes("TEST 9 for cs2: 1 student, no units given"), formatSuggestions(lines));
+check("suggestions: the printout and CSV hold no student id", !formatSuggestions(lines).includes(S1) && !suggestionsCsv(lines).includes(S1) && !suggestionsCsv(lines).includes(S2));
+check("suggestions: most students first within a college", lines[0].code === "TEST 1", lines.map((l) => l.code));
+check("suggestions: codes are tidied", tidyCode("cs1") === "CS 1" && tidyCode(" math  1a ") === "MATH 1A" && tidyCode("ENGL C1000") === "ENGL C1000" && tidyCode("bio1r") === "BIO 1R");
+check("suggestions: nothing typed yet says so", formatSuggestions(summarizeSuggestions([], [])) === "No typed courses yet.");
 
 fs.rmSync(RAW, { recursive: true, force: true });
 fs.rmSync(RAW_OPPS, { recursive: true, force: true });

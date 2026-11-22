@@ -565,6 +565,12 @@ Following `docs/app-transfer.md`. Only the Stackd app was transferred.
 - Transfer requested in App Store Connect to team `PJ7K7ZK7W9` (Account Holder Toufic Medhat Saleh). The recipient has 60 days to accept. The listing can't be edited until then.
 - **Next, on the day the recipient accepts:** run `exchange` with a Sign in with Apple key on the new team and apply the SQL (Right after Ryan accepts, in `docs/app-transfer.md`).
 
+## Typed courses report (2026-11-22)
+
+On branch `suggestions-report`. `npm run suggestions` (`scripts/import/suggestions.mjs`) reads `course_suggestions` with the service role and prints, per college, each typed code and the requirement it was typed for: how many students, the units they gave, the dates, and what `college_courses` already has for that code ("not in college_courses", "imported, not verified yet", "verified for this requirement", "verified, set to other requirements"). The same code typed as "cs1", "CS1" or "CS 1" counts once. Counts only: no student id, name or email is printed or written. `--college <slug>`, `--since <date>` and `--csv <file>` narrow it or save it.
+- A code worth adding goes through the usual path: into `data/raw/planning/college-courses-<college>.json` from the catalog page, then import, review report and verify. The report never writes `college_courses` itself.
+- Tested: `test:import` section 21 (8 checks) on made-up students and codes; run against the real project on 2026-11-22, "No typed courses yet."
+
 ## Plan, PR A (step 30, 2026-11-11)
 
 Spec `24-plan.md`, Data and section 5, on branch `plan-a`. **The migration isn't pushed and nothing is imported.** The three data files are worklists for a person to fill from Las Positas's catalog and the Cal-GETC standards; nothing in them is drafted except the Cal-GETC area codes and names, each with a todo to confirm. Decisions from Ryan on 2026-11-11: `before_topic` is the prerequisite; a rebuild always keeps student-placed items (spec 24 sections 1 and 5 changed to match); the larger units when a topic's two pathway rows differ; a prerequisite outside the plan doesn't hold a course back and gets a quiet note on the card (spec 24 section 4).

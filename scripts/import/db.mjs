@@ -104,5 +104,26 @@ export function supabaseDatabase() {
     async logFailure(sourceFile, dryRun, message) {
       await client.from("import_runs").insert({ source_file: sourceFile, dry_run: dryRun, status: "failed", error: message });
     },
+    // Typed course codes (supabase/migrations/20261112120000_course_suggestions.sql), for scripts/import/suggestions.mjs
+    async courseSuggestions({ college, since } = {}) {
+      let q = client
+        .from("course_suggestions")
+        .select("topic, ge_area, course_code, units, user_id, created_at, institution:institutions!institution_id!inner(slug, name)")
+        .order("created_at", { ascending: false });
+      if (college) q = q.eq("institution.slug", college);
+      if (since) q = q.gte("created_at", since);
+      const { data, error } = await q;
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    async collegeCoursesAt(slugs) {
+      if (!slugs.length) return [];
+      const { data, error } = await client
+        .from("college_courses")
+        .select("code, topics, verification_status, institution:institutions!institution_id!inner(slug)")
+        .in("institution.slug", slugs);
+      if (error) throw new Error(error.message);
+      return data.map(({ institution, ...c }) => ({ ...c, institution_slug: institution.slug }));
+    },
   };
 }
