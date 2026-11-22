@@ -30,6 +30,31 @@ export const TAB_TOAST_BOTTOM = HAS_TAB_BAR ? "calc(92px + var(--safe-bottom))" 
 // Where the pill was on the last tab screen, so it can slide from there to this one
 let lastIndex: number | null = null;
 
+// Each tab keeps its own scroll position (flows-and-states → Navigation): where it was when the student left it through
+// the tab bar, and the tab they're switching to that way. Kept for this launch only.
+const scrollOf = new Map<TabId, number>();
+let switchingTo: TabId | null = null;
+
+// Scrolls back to where a tab was. Its content can still be arriving, so it tries again for about a second, and stops
+// as soon as the student scrolls themselves.
+function restoreScroll(y: number) {
+  window.scrollTo(0, y);
+  if (y === 0) return () => {};
+  let frames = 0;
+  let raf = requestAnimationFrame(function again() {
+    if (Math.abs(window.scrollY - y) < 2 || ++frames > 60) return;
+    window.scrollTo(0, y);
+    raf = requestAnimationFrame(again);
+  });
+  const stop = () => cancelAnimationFrame(raf);
+  const events = ["touchstart", "wheel", "keydown"] as const;
+  events.forEach((e) => window.addEventListener(e, stop, { once: true, passive: true }));
+  return () => {
+    stop();
+    events.forEach((e) => window.removeEventListener(e, stop));
+  };
+}
+
 // The floating capsule (00 → Tab bar): white, 2 px border, its own edge, and a solid blue pill under the active tab.
 // Each tab screen renders its own; the pill starts where the last screen left it and
 // slides to this tab. `still` renders it in the page flow for /dev/components.
@@ -44,6 +69,13 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
     const frame = requestAnimationFrame(() => setPill(index));
     return () => cancelAnimationFrame(frame);
   }, [index, still]);
+
+  // Arriving through the tab bar: back to where this tab was, or its top the first time
+  useLayoutEffect(() => {
+    if (still || !active || switchingTo !== active) return;
+    switchingTo = null;
+    return restoreScroll(scrollOf.get(active) ?? 0);
+  }, [active, still]);
 
   if (!HAS_TAB_BAR) return null;
   const width = 100 / TABS.length;
@@ -70,6 +102,13 @@ export function TabBar({ active, still }: { active?: TabId; still?: boolean }) {
             <Link
               key={id}
               href={href}
+              // The tab sets its own scroll position when it opens
+              scroll={false}
+              onClick={() => {
+                if (isActive || still) return;
+                if (active) scrollOf.set(active, window.scrollY);
+                switchingTo = id as TabId;
+              }}
               aria-current={isActive ? "page" : undefined}
               className="relative my-1 flex h-[54px] flex-1 flex-col items-center justify-center gap-0.5 rounded-[18px] focus-ring:outline-offset-1"
             >

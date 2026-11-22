@@ -11,6 +11,7 @@ import { Toast } from "@/components/ui/toast";
 import { claimCelebration } from "@/lib/celebration";
 import { unbuiltHref } from "@/lib/features";
 import { previousStatus, setRequirementStatus, toggleRequirement, useRequirementStatuses } from "@/lib/requirements";
+import { lightTap } from "@/lib/haptics";
 import type { Requirement, RequirementStatus } from "@/lib/seed";
 
 const STATUS_TEXT: Record<RequirementStatus, string> = {
@@ -43,9 +44,7 @@ export function RequirementList({ slug, requirements, journeySteps }: Requiremen
   function toggle(requirement: Requirement) {
     const { from, to, saved } = toggleRequirement(requirement);
     if (!saved) setStorageBlocked(true);
-    try {
-      navigator.vibrate?.(10);
-    } catch {}
+    lightTap();
     if (to !== "done") {
       setToast(null);
       return;
