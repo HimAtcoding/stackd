@@ -29,7 +29,8 @@
     "ios:assets": "node scripts/ios-assets.mjs",
     "ios:sync": "cap sync ios",
     "ios:prepare": "node scripts/check-ios-env.mjs && npm run build && cap sync ios",
-    "ios:open": "cap open ios"
+    "ios:open": "cap open ios",
+    "test:e2e": "node scripts/e2e/plan.mjs"
   },
   "dependencies": {
     "@capacitor-community/in-app-review": "8.0.0",
@@ -60,6 +61,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "playwright": "1.62.1",
     "sharp": "^0.35.4",
     "supabase": "^2.119.0",
     "tailwindcss": "^4",
